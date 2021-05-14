@@ -1,7 +1,6 @@
 <style lang='less' scoped>
 .AutoTextHeight{
   margin: 0;
-  width: 100%;
   word-wrap: break-word;
   word-break: break-all;
   &.auto{
@@ -26,7 +25,7 @@
     v-on="$listeners"
   >
     <a-tooltip v-bind="tipOption" >
-      <span class="AutoTextHeightText" ref="text" >{{ showText }}</span>
+      <span v-show="showText || emptyShow" class="AutoTextHeightText" ref="text" >{{ showText }}</span>
     </a-tooltip>
   </p>
 </template>
@@ -79,15 +78,6 @@ export default {
       required: false,
       default: ''
     },
-    auto: {
-      type: Boolean,
-      required: false,
-      default: true
-    },
-    tip: {
-      type: [String, Object],
-      required: false
-    },
     height: {
       type: Number,
       required: false,
@@ -102,24 +92,38 @@ export default {
       type: Number,
       required: false,
       default: 2
+    },
+    tip: {
+      type: [String, Object],
+      required: false
+    },
+    auto: {
+      type: Boolean,
+      required: false,
+      default: true
+    },
+    emptyShow: {
+      type: Boolean,
+      required: false,
+      default: false
     }
   },
   watch: {
     text: function() {
-      this.autoStart()
+      this.initCount()
     },
     auto: function() {
-      this.autoStart()
+      this.initCount()
     }
   },
   mounted () {
-    this.autoStart()
+    this.initCount()
   },
   methods: {
-    autoStart() {
+    initCount() {
       this.showText = this.text
       this.isEllipsis = false
-      if (this.auto) {
+      if (this.auto && this.showText) {
         this.startCount()
       } else {
         this.stopCount()
@@ -129,7 +133,7 @@ export default {
       this.isCount = false
     },
     startCount() {
-      // 不在计算中进行计算，否则的话不错任何操作，之前的回调自会再nextTick中去重新触发
+      // 未计算时触发计算操作，计算过程中无需重新触发，之前的回调会在nextTick中重新触发
       if (!this.isCount) {
         this.isCount = true
         this.doCount()
@@ -146,16 +150,15 @@ export default {
     doCount() {
       this.$nextTick(() => {
         if (this.isCount) {
-          let mainHeight = this.maxHeight
+          let maxHeight = this.maxHeight
           let currentHeight = this.$refs['text'].offsetHeight
-          if (currentHeight > mainHeight) {
+          if (currentHeight > maxHeight) {
             // 高于当前数据时
-            let step = (currentHeight - mainHeight) / this.height
-            step = Math.floor(step)
-            if (step < 1) {
-              step = 1
+            let rate = Math.floor((currentHeight - maxHeight) / this.height)
+            if (rate < 1) {
+              rate = 1
             }
-            this.reCountText(step)
+            this.reCountText(rate)
             this.doCount()
           } else {
             this.stopCount()
