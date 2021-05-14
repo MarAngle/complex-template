@@ -1,0 +1,27 @@
+{
+  "name": "complex-component-antd",
+  "version": "2.0.0",
+  "description": "a complex component-antd",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/MarAngle/complex-component-antd.git"
+  },
+  "dependencies": {
+    "complex-data-option-antd": "^2.0.x",
+    "ant-design-vue": "1.5.2"
+  },
+  "devDependencies": {
+    "webpack": "^5.36.1",
+    "webpack-cli": "^4.6.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "complex",
+    "component"
+  ],
+  "author": "MarAngle",
+  "license": "ISC"
+}
