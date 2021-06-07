@@ -14,6 +14,8 @@
 </template>
 
 <script>
+import _func from 'complex-func'
+
 export default {
   name: 'InputFile',
   data () {
@@ -150,7 +152,7 @@ export default {
         }
       }
       if (!next.act) {
-        this._func.showmsg(next.msg, 'error')
+        _func.showmsg(next.msg, 'error')
       }
       return next
     }

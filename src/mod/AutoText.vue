@@ -25,12 +25,13 @@
 </template>
 
 <script>
+import _func from 'complex-func'
 
 export default {
   name: 'AutoText',
   data () {
     return {
-      page: this._func.page,
+      page: _func.page,
       isEllipsis: false
     }
   },

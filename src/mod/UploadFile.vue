@@ -121,6 +121,7 @@
 </template>
 
 <script>
+import _func from 'complex-func'
 import InputFile from './InputFile'
 
 export default {
@@ -253,7 +254,7 @@ export default {
             this.emitData()
           })
         } else {
-          this._func.showmsg('未定义上传文件函数，请检查代码!', 'error')
+          _func.showmsg('未定义上传文件函数，请检查代码!', 'error')
         }
       }
     },
@@ -277,7 +278,7 @@ export default {
       } else {
         // 多选模式
         let isEmpty = false
-        let isArray = this._func.isArray(data)
+        let isArray = _func.isArray(data)
         // 传值为空或者为空数组时判断为空数据
         if (!data) {
           isEmpty = true
@@ -302,7 +303,7 @@ export default {
             // 传入列表和当前列表不相对一致
             if (this.maxNum && this.file.list.length + data.length > this.maxNum) {
               data.length = this.maxNum - this.file.list.length
-              this._func.showmsg(`文件数量限制${this.maxNum}!`, 'error')
+              _func.showmsg(`文件数量限制${this.maxNum}!`, 'error')
             }
             // 添加不同新数据
             for (let n = 0; n < data.length; n++) {
@@ -325,7 +326,7 @@ export default {
     // 创建文件对象
     buildFileData(targetdata, origindata, type) {
       if (!type) {
-        type = this._func.getType(origindata)
+        type = _func.getType(origindata)
       }
       if (type == 'file') {
         targetdata.name = origindata.name
@@ -347,7 +348,7 @@ export default {
       for (let n = 0; n < data.length; n++) {
         // 对传入的数组数据进行数据的格式化
         let oitem = data[n]
-        let oitemType = this._func.getType(oitem)
+        let oitemType = _func.getType(oitem)
         if (oitemType != 'object') {
           let item = {}
           this.buildFileData(item, oitem, oitemType)

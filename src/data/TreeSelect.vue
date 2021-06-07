@@ -23,6 +23,7 @@
   </div>
 </template>
 <script>
+import _func from 'complex-func'
 import TreeSelectMenu from './TreeSelectMenu'
 export default {
   name: 'TreeSelect',
@@ -58,9 +59,9 @@ export default {
           parent: false
         }
       }
-      data.check = this._func.mergeData(data.check, this.checkOption)
-      data.select = this._func.mergeData(data.select, this.selectOption)
-      data.expand = this._func.mergeData(data.expand, this.expandOption)
+      data.check = _func.mergeData(data.check, this.checkOption)
+      data.select = _func.mergeData(data.select, this.selectOption)
+      data.expand = _func.mergeData(data.expand, this.expandOption)
       return data
     }
   },

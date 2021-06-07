@@ -441,7 +441,7 @@ export default {
       if (this.footMenu) {
         for (let i = 0; i < this.footMenu.length; i++) {
           let menuItem = this.footMenu[i]
-          if (!menuItem.props || this._func.getType(menuItem.props) != 'object') {
+          if (!menuItem.props || _func.getType(menuItem.props) != 'object') {
             // 传值不存在时说明此时使用简单数据传值，所有传值默认传递到props中=>
             menuItem = {
               props: {
@@ -582,7 +582,7 @@ export default {
             ...payload
           })
         }
-        mainOption = this._func.mergeData(mainOption, item.edit.localOption.main)
+        mainOption = _func.mergeData(mainOption, item.edit.localOption.main)
         renderItem = (
           <a-form-model-item {...mainOption} >
             {this.renderTip(item, mainSlot, payload)}
@@ -683,7 +683,7 @@ export default {
               disabled: itemData[dict.disabled] || false
             }
           }
-          optionOption = this._func.mergeData(optionOption, item.edit.localOption.option)
+          optionOption = _func.mergeData(optionOption, item.edit.localOption.option)
           return <a-select-option {...optionOption}>{itemData[dict.label]}</a-select-option>
         })
         if (item.edit.pagination) {
@@ -705,7 +705,7 @@ export default {
               }
             }
           }
-          paginationOption = this._func.mergeData(paginationOption, item.edit.localOption.pagination)
+          paginationOption = _func.mergeData(paginationOption, item.edit.localOption.pagination)
           let paginationAreaOption = {
             style: {
               borderTop: '1px #ccc solid',
@@ -720,7 +720,7 @@ export default {
               }
             }
           }
-          paginationAreaOption = this._func.mergeData(paginationAreaOption, item.edit.localOption.paginationArea)
+          paginationAreaOption = _func.mergeData(paginationAreaOption, item.edit.localOption.paginationArea)
           let pagination = <PaginationView {...paginationOption} />
           itemOption.props.dropdownRender = (menuNode, props) => {
             return (

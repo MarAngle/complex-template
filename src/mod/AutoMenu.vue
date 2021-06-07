@@ -35,6 +35,7 @@
 </template>
 
 <script>
+import _func from 'complex-func'
 
 export default {
   name: 'AutoMenu',
@@ -65,7 +66,7 @@ export default {
   },
   data() {
     return {
-      page: this._func.page,
+      page: _func.page,
       menu: {
         show: false,
         open: this.defaultOpen
