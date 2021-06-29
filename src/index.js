@@ -1,15 +1,14 @@
 import Vue from 'vue'
+import _func from 'complex-func'
 
-const _mainviews = require.context('./data', false, /(\.vue)|(\.js)$/)
-const _modviews = require.context('./mod', false, /(\.vue)|(\.js)$/)
-function LoadViews (_views, mod = '') {
-  let viewlist = _views.keys()
-  viewlist.forEach(item => {
-    let viewitem = _views(item)
-    let viewdata = viewitem.default || viewitem
-    Vue.component(`Complex${mod}${viewdata.name}`, viewdata)
-  })
-}
+const contents = require.context('./data', false, /(\.vue)|(\.js)$/)
+const modContents = require.context('./mod', false, /(\.vue)|(\.js)$/)
 
-LoadViews(_mainviews)
-LoadViews(_modviews, 'Mod')
+_func.LoadContents(contents, function(item) {
+  let data = item.default || item
+  Vue.component(`Complex${data.name}`, data)
+})
+_func.LoadContents(modContents, function(item) {
+  let data = item.default || item
+  Vue.component(`ComplexMod${data.name}`, data)
+})
