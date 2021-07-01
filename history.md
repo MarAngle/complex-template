@@ -1,5 +1,6 @@
-### 2.0.2ing
+### 2.0.2
 - 使用loadContents加载
+- index修改
 
 ### 2.0.1
 - AutoTextHeight组件扩展优化
