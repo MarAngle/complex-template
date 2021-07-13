@@ -1,4 +1,4 @@
-### 2.0.5ing
+### 2.0.5
 - 添加HighText组件
 - AutoTextHeight优化
 
