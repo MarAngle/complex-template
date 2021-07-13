@@ -78,6 +78,10 @@ export default {
       required: false,
       default: ''
     },
+    recount: {
+      required: false,
+      default: 0
+    },
     height: {
       type: Number,
       required: false,
@@ -91,7 +95,7 @@ export default {
     line: {
       type: Number,
       required: false,
-      default: 2
+      default: 1
     },
     tip: {
       type: [String, Object],
@@ -110,6 +114,9 @@ export default {
   },
   watch: {
     text: function() {
+      this.initCount()
+    },
+    recount: function() {
       this.initCount()
     },
     auto: function() {

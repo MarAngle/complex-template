@@ -1,3 +1,7 @@
+### 2.0.5ing
+- 添加HighText组件
+- AutoTextHeight优化
+
 ### 2.0.4
 - jsx组件错误修复
 
