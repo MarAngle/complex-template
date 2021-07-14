@@ -1,3 +1,6 @@
+### 2.0.6
+- 删除开发依赖
+
 ### 2.0.5
 - 添加HighText组件
 - AutoTextHeight优化
