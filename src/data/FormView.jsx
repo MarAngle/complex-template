@@ -518,17 +518,15 @@ export default {
         return this.renderItem(item, index)
       })
       if (this.currentFootMenu && this.currentFootMenu.length > 0) {
-        let menuList = []
-        for (let i = 0; i < this.currentFootMenu.length; i++) {
-          let menuItem = this.currentFootMenu[i]
-          menuList.push((
+        let menuList = this.currentFootMenu.map((menuItem) => {
+          return (
             <a-button
               { ...menuItem }
             >
               { menuItem.props.name }
             </a-button>
-          ))
-        }
+          )
+        })
         let footMenu = (
           <a-form-model-item {...this.currentFootMenuArea} >
             { menuList }

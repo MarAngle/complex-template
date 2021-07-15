@@ -1,6 +1,6 @@
 {
   "name": "complex-component-antd",
-  "version": "2.0.6",
+  "version": "2.0.7",
   "description": "a complex component by antd",
   "main": "index.js",
   "repository": {
@@ -8,10 +8,15 @@
     "url": "https://github.com/MarAngle/complex-component-antd.git"
   },
   "dependencies": {
-    "complex-data-option-antd": "^2.0.6",
-    "ant-design-vue": "1.5.2"
+    "vue": "^2.6.0",
+    "vue-template-compiler": "^2.6.0",
+    "ant-design-vue": "1.5.2",
+    "complex-data-option-antd": "^2.0.6"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "@vue/babel-helper-vue-jsx-merge-props": "^1.2.1",
+    "@vue/babel-preset-jsx": "^1.2.4"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
