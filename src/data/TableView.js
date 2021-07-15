@@ -1,4 +1,5 @@
 import _func from 'complex-func'
+import Vue from 'vue'
 import AutoText from './../mod/AutoText'
 import PaginationView from './../mod/PaginationView'
 
@@ -142,7 +143,7 @@ export default {
                   tip: this.formatAutoTextTipOption(pitem.tip, this.autoTextTipOption)
                 }
               }
-              return <AutoText { ...AutoTextOption } />
+              return this.$createElement(AutoText, AutoTextOption)
             } else {
               return data
             }
