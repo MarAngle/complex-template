@@ -614,9 +614,11 @@ export default {
     },
     // typeItem模板
     renderTypeItem(item, mainSlot, payload) {
+      let tag
       let itemOption = {
         on: {}
       }
+      let children
       let renderTypeItem = null
       let typeFormatData = typeFormat.getData(item.edit.type)
       itemOption = typeFormatData.option(itemOption, item, payload)
@@ -631,19 +633,20 @@ export default {
           option: itemOption
         })
       } else if (item.edit.type == 'input') {
-        renderTypeItem = this.$createElement('a-input', itemOption)
+        tag = 'a-input'
       } else if (item.edit.type == 'inputNumber') {
-        renderTypeItem = this.$createElement('a-input-number', itemOption)
+        tag = 'a-input-number'
       } else if (item.edit.type == 'switch') {
-        renderTypeItem = this.$createElement('a-switch', itemOption)
+        tag = 'a-switch'
       } else if (item.edit.type == 'select') {
+        tag = 'a-select'
         let dict = {
           key: item.edit.option.optionValue || 'value',
           value: item.edit.option.optionValue || 'value',
           label: item.edit.option.optionLabel || 'label',
           disabled: item.edit.option.optionDisabled || 'disabled'
         }
-        let optionList = item.edit.option.list.map((itemData, indexData) => {
+        children = item.edit.option.list.map((itemData, indexData) => {
           let optionOption = {
             props: {
               key: itemData[dict.key],
@@ -697,17 +700,20 @@ export default {
             ])
           }
         }
-        renderTypeItem = this.$createElement('a-select', itemOption, optionList)
       } else if (item.edit.type == 'date') {
-        renderTypeItem = this.$createElement('a-date-picker', itemOption)
+        tag = 'a-date-picker'
       } else if (item.edit.type == 'dateRange') {
-        renderTypeItem = this.$createElement('a-range-picker', itemOption)
+        tag = 'a-range-picker'
       } else if (item.edit.type == 'file') {
-        renderTypeItem = this.$createElement(UploadFile, itemOption)
+        tag = UploadFile
       } else if (item.edit.type == 'button') {
-        renderTypeItem = this.$createElement('a-button', itemOption, [ item.edit.option.name.getData(payload.type) ])
+        tag = 'a-button'
+        children = [ item.edit.option.name.getData(payload.type) ]
       } else if (item.edit.type == 'slot') {
         console.error(`${item.prop}未定义slot`)
+      }
+      if (tag) {
+        renderTypeItem = this.$createElement(tag, itemOption, children)
       }
       return renderTypeItem
     }

@@ -192,11 +192,11 @@ export default {
       let tipOption = pitemTip || mainTip
       return tipOption
     },
-    renderList(h) {
+    renderList() {
       let renderList = []
       return renderList
     },
-    renderPagination(h) {
+    renderPagination() {
       let renderPagination = null
       if (this.currentPaginationData) {
         const paginationSlotList = [
@@ -227,7 +227,7 @@ export default {
           let slotData = this.$scopedSlots[dictData.prop]
           option.scopedSlots[dictData.originProp] = slotData
         }
-        renderPagination = h(PaginationView, option)
+        renderPagination = this.$createElement(PaginationView, option)
       }
       return renderPagination
     },
@@ -256,9 +256,11 @@ export default {
   },
   // 主模板
   render(h) {
-    let renderList = this.renderList(h)
-    let renderPagination = this.renderPagination(h)
-    let mainRenderList = [h('a-table', this.currentTableOption, renderList)]
+    let renderList = this.renderList()
+    let renderPagination = this.renderPagination()
+    let mainRenderList = [
+      h('a-table', this.currentTableOption, renderList)
+    ]
     if (renderPagination) {
       mainRenderList.push(renderPagination)
     }
