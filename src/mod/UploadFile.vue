@@ -326,7 +326,7 @@ export default {
     // 创建文件对象
     buildFileData(targetdata, origindata, type) {
       if (!type) {
-        type = _func.getType(origindata)
+        type = _func.getType(origindata, true)
       }
       if (type == 'file') {
         targetdata.name = origindata.name
@@ -348,7 +348,7 @@ export default {
       for (let n = 0; n < data.length; n++) {
         // 对传入的数组数据进行数据的格式化
         let oitem = data[n]
-        let oitemType = _func.getType(oitem)
+        let oitemType = _func.getType(oitem, true)
         if (oitemType != 'object') {
           let item = {}
           this.buildFileData(item, oitem, oitemType)
