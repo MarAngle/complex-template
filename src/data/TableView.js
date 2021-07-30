@@ -117,7 +117,7 @@ export default {
         let pitem = this.columnList[i]
         if (!pitem.customRender) {
           pitem.customRender = (text, record, index) => {
-            let data = pitem.func.show(text, { type: this.listType })
+            let data = pitem.func.show(text, { item: pitem, targetitem: record, type: this.listType, index: index })
             let type = _func.getType(data)
             if (type == 'object') {
               data = JSON.stringify(data)
