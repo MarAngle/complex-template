@@ -1,5 +1,4 @@
 import _func from 'complex-func'
-import Vue from 'vue'
 import AutoText from './../mod/AutoText'
 import PaginationView from './../mod/PaginationView'
 

@@ -1,3 +1,6 @@
+### 2.1.2-beta
+- TableView 无用引用删除
+
 ### 2.1.1
 - 扩展Ditem的show函数
 
