@@ -1,6 +1,6 @@
 {
   "name": "complex-component-antd",
-  "version": "2.1.2-beta",
+  "version": "2.1.2",
   "description": "a complex component by antd",
   "main": "index.js",
   "repository": {
@@ -8,8 +8,8 @@
     "url": "https://github.com/MarAngle/complex-component-antd.git"
   },
   "dependencies": {
-    "ant-design-vue": "1.5.2",
-    "complex-data-option-antd": "~2.1.0"
+    "ant-design-vue": "^1.5",
+    "complex-func": "^2.1.12"
   },
   "devDependencies": {},
   "scripts": {
