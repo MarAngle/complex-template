@@ -363,7 +363,7 @@ const refName = 'FormView'
 export default {
   name: 'FormView',
   props: {
-    type: { // 表单布局	'horizontal'|'vertical'|'inline'
+    type: { // formType
       type: String,
       required: true
     },
@@ -400,17 +400,13 @@ export default {
       type: Array,
       required: true
     },
-    footMenuArea: {
+    footMenuOption: {
       type: Object,
-      required: false,
-      default: function() {
-        return null
-      }
+      required: false
     },
     footMenu: {
-      type: [Object, Array],
-      required: false,
-      default: null
+      type: Array,
+      required: false
     }
   },
   data() {
@@ -418,17 +414,20 @@ export default {
     }
   },
   computed: {
-    currentFootMenuArea() {
-      let currentFootMenuArea = this.footMenuArea
-      if (!currentFootMenuArea) {
-        currentFootMenuArea = {
-          props: {}
-        }
+    currentFootMenuOption() {
+      const defaultFootOption = {
+        type: 'auto',
+        data: 'props',
+        style: 'auto',
+        option: {}
       }
-      if (!currentFootMenuArea.style) {
-        if (this.layout != 'inline') {
-          // 居中删除底部空间
-          currentFootMenuArea.style = {
+      let currentFootMenuOption = _func.mergeData(defaultFootOption, this.footMenuOption)
+      if (currentFootMenuOption.type == 'auto') {
+        currentFootMenuOption.type = this.layout == 'inline' ? 'single' : 'multiple'
+      }
+      if (!currentFootMenuOption.option.style && currentFootMenuOption.style == 'auto') {
+        if (currentFootMenuOption.type == 'multiple') {
+          currentFootMenuOption.option.style = {
             display: 'flex',
             flexDirection: 'row',
             justifyContent: 'center',
@@ -437,14 +436,19 @@ export default {
           }
         }
       }
-      return currentFootMenuArea
+      return currentFootMenuOption
     },
     currentFootMenu() {
-      let currentFootMenu = []
-      if (this.footMenu) {
-        for (let i = 0; i < this.footMenu.length; i++) {
-          let menuItem = this.footMenu[i]
-          if (!menuItem.props || _func.getType(menuItem.props) != 'object') {
+      let currentFootMenuOption = this.currentFootMenuOption
+      let currentFootMenu
+      let menuList = this.footMenu
+      if (menuList && menuList.length > 0) {
+        let size = menuList.length
+        let list = []
+        for (let i = 0; i < size; i++) {
+          let menuItem = menuList[i]
+          const parentOption = menuItem.parentOption
+          if (currentFootMenuOption.data == 'props') {
             // 传值不存在时说明此时使用简单数据传值，所有传值默认传递到props中=>
             menuItem = {
               props: {
@@ -452,10 +456,12 @@ export default {
               }
             }
           }
-          if (!menuItem.style) {
-            menuItem.style = {
-              flex: 'none',
-              marginRight: i < this.footMenu.length ? '16px' : '0px'
+          if (!menuItem.style && currentFootMenuOption.style == 'auto') {
+            if (currentFootMenuOption.type == 'multiple') {
+              menuItem.style = {
+                flex: 'none',
+                marginRight: i < size ? '16px' : '0px'
+              }
             }
           }
           if (!menuItem.on) {
@@ -473,7 +479,21 @@ export default {
               })
             }
           }
-          currentFootMenu.push(menuItem)
+          if (currentFootMenuOption.type == 'single') {
+            // 单独模式
+            let button = this.$createElement('a-button', menuItem, [ menuItem.props.name ])
+            list.push(this.$createElement('a-form-model-item', _func.mergeData(currentFootMenuOption.option, parentOption), [ button ]))
+          } else {
+            // 共享模式
+            list.push(this.$createElement('a-button', menuItem, [ menuItem.props.name ]))
+          }
+        }
+        if (currentFootMenuOption.type == 'single') {
+          // 单独模式
+          currentFootMenu = list
+        } else {
+          // 共享模式
+          currentFootMenu = this.$createElement('a-form-model-item', currentFootMenuOption.option, list)
         }
       }
       return currentFootMenu
@@ -520,12 +540,8 @@ export default {
       const renderFormList = this.mainlist.map((item, index) => {
         return this.renderItem(item, index)
       })
-      if (this.currentFootMenu && this.currentFootMenu.length > 0) {
-        let menuList = this.currentFootMenu.map((menuItem) => {
-          return this.$createElement('a-button', menuItem, [ menuItem.props.name ])
-        })
-        let footMenu = this.$createElement('a-form-model-item', this.currentFootMenuArea, menuList)
-        renderFormList.push(footMenu)
+      if (this.currentFootMenu) {
+        renderFormList.push(this.currentFootMenu)
       }
       return renderFormList
     },
