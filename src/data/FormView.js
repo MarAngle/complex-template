@@ -734,7 +734,7 @@ export default {
     let renderForm = h('a-form-model', this.currentFormOption, renderFormList)
     let render = h('div', {
       class: config.FormView.className
-    }, [renderForm])
+    }, [ renderForm ])
     return render
   }
 }

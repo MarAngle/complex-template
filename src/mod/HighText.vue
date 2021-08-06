@@ -3,7 +3,7 @@
 </style>
 <template>
   <span class="complex-high-text">
-    <span v-for="(val,key) in list" :key="key" :class="{ 'complex-high-text-item': true, 'complex-high-text-item-is-high': val.high }" :style="val.high ? highStyle : defaultStyle" >{{ val.data }}</span>
+    <span v-for="(val,key) in list" :key="key" class="complex-high-text-item" :class="{ 'complex-high-text-item-is-high': val.high }" :style="val.high ? highStyle : defaultStyle" >{{ val.data }}</span>
   </span>
 </template>
 

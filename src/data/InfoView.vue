@@ -11,27 +11,27 @@
 </style>
 <template>
   <div class="complex-info-view">
-    <div class="listArea">
-      <div class="item" v-for="(val, index) in mainlist" :key="val.prop" >
+    <div class="complex-info-view-list">
+      <div class="complex-info-view-item" v-for="(val, index) in mainlist" :key="val.prop" >
         <a-row type="flex" v-if="val.layout.type == 'grid'">
-          <a-col class="itemLabel" v-bind="val.layout.label" >
+          <a-col class="complex-info-view-item-label" v-bind="val.layout.label" >
             <slot :name="val.prop + '-label'" :data="val" :index="index" >
               <p>{{ val.label }}</p>
             </slot>
           </a-col>
-          <a-col class="itemContent" v-bind="val.layout.content" >
+          <a-col class="complex-info-view-item-content" v-bind="val.layout.content" >
             <slot :name="val.prop + '-content'" :data="val" :index="index" >
               <p>{{ val.data }}</p>
             </slot>
           </a-col>
         </a-row>
         <div v-else >
-          <div class="itemLabel" :style="{ width: val.layout.width }" >
+          <div class="complex-info-view-item-label" :style="{ width: val.layout.width }" >
             <slot :name="val.prop + '-label'" :data="val" :index="index" >
               <p>{{ val.label }}</p>
             </slot>
           </div>
-          <div class="itemContent" >
+          <div class="complex-info-view-item-content" >
             <slot :name="val.prop + '-content'" :data="val" :index="index" >
               <p>{{ val.data }}</p>
             </slot>
