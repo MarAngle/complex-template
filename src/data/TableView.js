@@ -2,6 +2,9 @@ import _func from 'complex-func'
 import AutoText from './../mod/AutoText'
 import PaginationView from './../mod/PaginationView'
 
+const className = 'complex-table-view'
+const refName = 'TableView'
+
 export default {
   name: 'TableView',
   props: {
@@ -98,7 +101,7 @@ export default {
         currentTableOption.props.expandedRowRender = this.$scopedSlots.expandedRowRender
       }
       if (!currentTableOption.ref) {
-        currentTableOption.ref = 'TableView'
+        currentTableOption.ref = refName
       }
       return currentTableOption
     },
@@ -263,7 +266,9 @@ export default {
     if (renderPagination) {
       mainRenderList.push(renderPagination)
     }
-    let render = h('div', mainRenderList)
+    let render = h('div', {
+      class: className
+    }, mainRenderList)
     return render
   }
 }

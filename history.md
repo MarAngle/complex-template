@@ -1,3 +1,7 @@
+### 2.1.3-beta
+- TableView/FormView添加默认class
+- 考虑FormView的扩展
+
 ### 2.1.2
 - TableView 无用引用删除
 - 依赖修改

@@ -357,6 +357,9 @@ typeFormat.buildFunc = function(typeData, itemOption, item, payload) {
 
 typeFormat.init()
 
+const className = 'complex-form-view'
+const refName = 'FormView'
+
 export default {
   name: 'FormView',
   props: {
@@ -484,7 +487,7 @@ export default {
   methods: {
     // 设置form的ref
     setFormRef(check, clear) {
-      this.form.ref = this.$refs.formView
+      this.form.ref = this.$refs[refName]
       if (check) {
         this.triggerRuleCheck()
       } else if (clear) {
@@ -727,10 +730,13 @@ export default {
         labelAlign: this.labelAlign,
         validateOnRuleChange: this.checkOnRuleChange
       },
-      ref: 'formView'
+      ref: refName
     }
     let renderFormList = this.renderFormList()
-    let render = h('a-form-model', option, renderFormList)
+    let renderForm = h('a-form-model', option, renderFormList)
+    let render = h('div', {
+      class: className
+    }, [renderForm])
     return render
   }
 }
