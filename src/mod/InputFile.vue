@@ -3,6 +3,7 @@
 </style>
 <template>
   <input
+    class="complex-input-file"
     ref="file"
     type="file"
     :multiple="multiple"

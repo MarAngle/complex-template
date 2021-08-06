@@ -1,5 +1,5 @@
 <style lang='less' scoped >
-.InfoView{
+.complex-info-view{
   padding: 10px 10px;
   p{
     // min-height: 40px;
@@ -10,7 +10,7 @@
 }
 </style>
 <template>
-  <div class="InfoView">
+  <div class="complex-info-view">
     <div class="listArea">
       <div class="item" v-for="(val, index) in mainlist" :key="val.prop" >
         <a-row type="flex" v-if="val.layout.type == 'grid'">

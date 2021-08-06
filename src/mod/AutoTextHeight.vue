@@ -1,15 +1,15 @@
 <style lang='less' scoped>
-.AutoTextHeight{
+.complex-auto-text-height{
   margin: 0;
   word-wrap: break-word;
   word-break: break-all;
-  &.auto{
+  &.complex-auto-text-height-auto{
     overflow: hidden;
-    &.isAuto{
+    &.complex-auto-text-height-is-auto{
       cursor: pointer;
     }
   }
-  .AutoTextHeightText{
+  .complex-auto-text-height-text{
     display: inline-block;
     width: 100%;
   }
@@ -18,14 +18,14 @@
 <template>
   <p
     ref="main"
-    class="AutoTextHeight"
+    class="complex-auto-text-height"
     :style="style"
-    :class="{ auto: auto, isAuto: isEllipsis }"
+    :class="{ 'complex-auto-text-height-auto': auto, 'complex-auto-text-height-is-auto': isEllipsis }"
     v-bind="$attrs"
     v-on="$listeners"
   >
     <a-tooltip v-bind="tipOption" >
-      <span v-show="showText || emptyShow" class="AutoTextHeightText" ref="text" >{{ showText }}</span>
+      <span v-show="showText || emptyShow" class="complex-auto-text-height-text" ref="text" >{{ showText }}</span>
     </a-tooltip>
   </p>
 </template>

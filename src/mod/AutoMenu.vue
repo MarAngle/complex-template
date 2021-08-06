@@ -1,11 +1,11 @@
 <style lang='less' scoped>
-.AutoMenu{
-  &.menuShow{
+.complex-auto-menu{
+  &.complex-auto-menu-is-show{
     position: relative;
     padding-right: 100px;
     overflow: hidden;
   }
-  .menu{
+  .complex-auto-menu-main{
     cursor: pointer;
     position: absolute;
     top: 0;
@@ -13,7 +13,7 @@
     text-align: center;
     P{
       margin: 0;
-      .icon{
+      .complex-auto-menu-main-icon{
         margin-right: 5px;
       }
     }
@@ -21,12 +21,12 @@
 }
 </style>
 <template>
-  <div ref="mainContent" class="AutoMenu" :class="{ menuShow: menu.show }" :style="currentMainStyle">
+  <div ref="mainContent" class="complex-auto-menu" :class="menu.show ? 'complex-auto-menu-is-show' : ''" :style="currentMainStyle">
     <slot ref="content"></slot>
-    <div v-show="menu.show" class="menu" :style="currentMenuStyle" @click="toggleOpen" >
+    <div v-show="menu.show" class="complex-auto-menu-main" :style="currentMenuStyle" @click="toggleOpen" >
       <div>
         <p>
-          <a-icon class="icon" :type="currentMenuOption.icon" />
+          <a-icon class="complex-auto-menu-main-icon" :type="currentMenuOption.icon" />
           <span>{{ currentMenuOption.text }}</span>
         </p>
       </div>

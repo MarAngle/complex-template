@@ -1,10 +1,10 @@
 <style scoped>
-.AutoIndex{
+.complex-auto-index{
   cursor: default;
 }
 </style>
 <template>
-  <span class="AutoIndex" v-bind="$attrs" v-on="$listeners">{{ currentIndex }}</span>
+  <span class="complex-auto-index" v-bind="$attrs" v-on="$listeners">{{ currentIndex }}</span>
 </template>
 
 <script>

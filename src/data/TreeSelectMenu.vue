@@ -2,11 +2,11 @@
 p{
   margin: 0;
 }
-.TreeSelectMenu-title {
+.complex-tree-select-menu-title {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  .TreeSelectMenu-titleitem {
+  .complex-tree-select-menu-titleitem {
     cursor: pointer;
     display: flex;
     justify-content: flex-start;
@@ -14,11 +14,11 @@ p{
     &:last-child {
       justify-content: flex-end;
     }
-    .TreeSelectMenu-title-check {
+    .complex-tree-select-menu-title-check {
       margin-right: 5px;
     }
-    .TreeSelectMenu-title-select {
-      &.selected{
+    .complex-tree-select-menu-title-select {
+      &.complex-tree-select-menu-selected{
         color: #01dcea;
       }
     }
@@ -26,28 +26,28 @@ p{
 }
 </style>
 <template>
-  <div :style="{ marginLeft: indent * depth + indentUnit }" class="TreeSelectMenu">
-    <div class="TreeSelectMenu-title">
-      <div class="TreeSelectMenu-titleitem">
-        <div class="TreeSelectMenu-title-check">
+  <div :style="{ marginLeft: indent * depth + indentUnit }" class="complex-tree-select-menu">
+    <div class="complex-tree-select-menu-title">
+      <div class="complex-tree-select-menu-titleitem">
+        <div class="complex-tree-select-menu-title-check">
           <a-checkbox
             :checked="checked"
             :indeterminate="indeterminate"
             @change="onCheck"
           ></a-checkbox>
         </div>
-        <div class="TreeSelectMenu-title-select" :class="{ selected: selected }" @click="onSelect">
+        <div class="complex-tree-select-menu-title-select" :class="{ 'complex-tree-select-menu-selected': selected }" @click="onSelect">
           <p>{{ data[name] }}</p>
         </div>
       </div>
-      <div class="TreeSelectMenu-titleitem">
-        <div class="TreeSelectMenu-title-expand" v-if="hasChild" :class="{ expanded: selected }" @click="onExpand">
+      <div class="complex-tree-select-menu-titleitem">
+        <div class="complex-tree-select-menu-title-expand" v-if="hasChild" :class="{ expanded: selected }" @click="onExpand">
           <a-icon :type=" expanded ? 'minus' : 'plus'" />
         </div>
       </div>
     </div>
     <template v-if="hasChild">
-      <div v-show="expanded" class="TreeSelectMenu-Children">
+      <div v-show="expanded" class="complex-tree-select-menu-Children">
         <TreeSelectMenu
           v-for="(val, key) in data[children]"
           :key="key"

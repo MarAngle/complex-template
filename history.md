@@ -1,6 +1,7 @@
 ### 2.1.3-beta
 - TableView/FormView添加默认class
 - 考虑FormView的扩展
+- class整理
 - FootMenu
   - 1.可设置单独FormModelItem或者公用FormModelItem
   - 2.设置项数据为props或者为全部

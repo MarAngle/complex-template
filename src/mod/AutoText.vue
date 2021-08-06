@@ -1,23 +1,23 @@
 <style scoped>
-.AutoText{
+.complex-auto-text{
   display: inline-block;
   width: 100%;
   margin: 0;
   word-wrap: break-word;
   word-break: break-all;
 }
-.auto{
+.complex-auto-text-auto{
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.isAuto{
+.complex-auto-text-is-auto{
   cursor: pointer;
 }
 
 </style>
 <template>
-  <p ref="main" class="AutoText" :class="{ auto: auto, isAuto: isEllipsis }" v-bind="$attrs" v-on="$listeners" >
+  <p ref="main" class="complex-auto-text" :class="{ 'complex-auto-text-auto': auto, 'complex-auto-text-is-auto': isEllipsis }" v-bind="$attrs" v-on="$listeners" >
     <a-tooltip v-bind="tipOption" >
       <span ref="size" >{{ text }}</span>
     </a-tooltip>

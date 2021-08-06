@@ -1,34 +1,34 @@
 <style lang="less" scoped>
-.UploadFile{
+.complex-upload-file{
   *{
     box-sizing: border-box;
   }
   width: 100%;
-  .UploadFileDataArea{
+  .complex-upload-file-data-area{
     border-radius: 1px;
     line-height: 28px;
     height: 28px;
     padding: 3px 5px 3px 5px;
-    .delete{
+    .complex-upload-file-icon{
       visibility: hidden;
     }
     &:hover{
       background-color: #eee;
-      .delete{
+      .complex-upload-file-icon{
         visibility: visible;
       }
     }
   }
-  &.bottom{
+  &.complex-upload-file-bottom{
     display: inline-block;
-    .UploadFileMenu{
+    .complex-upload-file-menu{
       display: block;
     }
-    .UploadFileData{
+    .complex-upload-file-data{
       width: 100%;
       margin-top: 10px;
       display: block;
-      .UploadFileDataArea{
+      .complex-upload-file-data-area{
         display: block;
         width: 100%;
         display: flex;
@@ -40,31 +40,31 @@
           text-overflow:ellipsis;
           white-space: nowrap;
         }
-        >.delete{
+        >.complex-upload-file-icon{
           margin-left: 10px;
           flex: none;
         }
       }
     }
   }
-  &.end, &.start{
-    .UploadFileMenu{
+  &.complex-upload-file-end, &.complex-upload-file-start{
+    .complex-upload-file-menu{
       display: inline;
     }
-    .delete{
+    .complex-upload-file-icon{
       margin-left: 10px;
     }
   }
-  &.end{
-    .UploadFileData{
-      .UploadFileDataArea{
+  &.complex-upload-file-end{
+    .complex-upload-file-data{
+      .complex-upload-file-data-area{
         margin-left: 10px;
       }
     }
   }
-  &.start{
-    .UploadFileData{
-      .UploadFileDataArea{
+  &.complex-upload-file-start{
+    .complex-upload-file-data{
+      .complex-upload-file-data-area{
         margin-right: 10px;
       }
     }
@@ -72,7 +72,7 @@
 }
 </style>
 <template>
-  <span class="UploadFile" :class="layout">
+  <span class="complex-upload-file" :class="currentLayoutClassName">
     <InputFile
       style="display: none"
       ref="inputfile"
@@ -84,36 +84,36 @@
       :maxSize="maxSize"
       @change="onChange"
     />
-    <span class="UploadFileData" v-if="layout == 'start'">
+    <span class="complex-upload-file-data" v-if="layout == 'start'">
       <template v-if="!multiple && file.name">
-        <span class="UploadFileDataArea">
+        <span class="complex-upload-file-data-area">
           <span>{{ file.name }}</span>
-          <a-icon class="delete" type="delete" @click="onDelete()" ></a-icon>
+          <a-icon class="complex-upload-file-icon" type="delete" @click="onDelete()" ></a-icon>
         </span>
       </template>
       <template v-else-if="multiple && file.list.length > 0">
-        <span class="UploadFileDataArea" v-for="(val, index) in file.list" :key="index">
+        <span class="complex-upload-file-data-area" v-for="(val, index) in file.list" :key="index">
           <span>{{ val.name }}</span>
-          <a-icon class="delete" type="delete" @click="onDelete(index, val)" ></a-icon>
+          <a-icon class="complex-upload-file-icon" type="delete" @click="onDelete(index, val)" ></a-icon>
         </span>
       </template>
     </span>
-    <span class="UploadFileMenu" @click="onOpen">
+    <span class="complex-upload-file-menu" @click="onOpen">
       <slot>
-        <a-button :loading="loading" :disabled="disabled" icon="upload" >{{ placeholder }}</a-button>
+        <a-button class="complex-upload-file-button" :loading="loading" :disabled="disabled" icon="upload" >{{ placeholder }}</a-button>
       </slot>
     </span>
-    <span class="UploadFileData" v-if="layout != 'start'">
+    <span class="complex-upload-file-data" v-if="layout != 'start'">
       <template v-if="!multiple && file.name">
-        <span class="UploadFileDataArea">
+        <span class="complex-upload-file-data-area">
           <span>{{ file.name }}</span>
-          <a-icon class="delete" type="delete" @click="onDelete" ></a-icon>
+          <a-icon class="complex-upload-file-icon" type="delete" @click="onDelete" ></a-icon>
         </span>
       </template>
       <template v-else-if="multiple && file.list.length > 0">
-        <span class="UploadFileDataArea" v-for="(val, index) in file.list" :key="index">
+        <span class="complex-upload-file-data-area" v-for="(val, index) in file.list" :key="index">
           <span>{{ val.name }}</span>
-          <a-icon class="delete" type="delete" @click="onDelete(index, val)" ></a-icon>
+          <a-icon class="complex-upload-file-icon" type="delete" @click="onDelete(index, val)" ></a-icon>
         </span>
       </template>
     </span>
@@ -146,6 +146,11 @@ export default {
       handler: function(data) {
         this.setData(data, 'value')
       }
+    }
+  },
+  computed: {
+    currentLayoutClassName() {
+      return 'complex-upload-file-' + this.layout
     }
   },
   props: {

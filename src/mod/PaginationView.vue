@@ -1,10 +1,10 @@
 <style lang='less' scoped>
-.PaginationView{
+.complex-pagination-view{
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   align-items: stretch;
-  .PaginationViewLine{
+  .complex-pagination-view-line{
     display: flex;
     flex-direction: row;
     justify-content: flex-start;
@@ -17,10 +17,10 @@
 </style>
 <template>
   <div
-    class="PaginationView"
+    class="complex-pagination-view"
     v-bind="currentMainOption.props"
   >
-    <div class="PaginationViewLine">
+    <div class="complex-pagination-view-line">
       <slot
         :data="data"
         :page="data.data.page.current"
@@ -29,8 +29,8 @@
         :totalNum="data.data.num.total"
       ></slot>
     </div>
-    <div class="PaginationViewLine">
-      <div class="PaginationViewLineItem">
+    <div class="complex-pagination-view-line">
+      <div class="complex-pagination-view-line-item">
         <slot
           name="front"
           :data="data"
@@ -40,14 +40,14 @@
           :totalNum="data.data.num.total"
         ></slot>
       </div>
-      <div class="PaginationViewLineItem">
+      <div class="complex-pagination-view-line-item">
         <a-pagination
           v-bind="currentOption.props"
           @change="onChange"
           @showSizeChange="onSizeChange"
         />
       </div>
-      <div class="PaginationViewLineItem">
+      <div class="complex-pagination-view-line-item">
         <slot
           name="end"
           :data="data"

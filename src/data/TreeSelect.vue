@@ -1,10 +1,10 @@
 <style lang='less' scoped >
-.TreeSelect{
+.complex-tree-select{
   padding: 10px 10px;
 }
 </style>
 <template>
-  <div class="TreeSelect">
+  <div class="complex-tree-select">
     <TreeSelectMenu
       v-for="(val, key) in data"
       :key="key"

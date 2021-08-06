@@ -2,6 +2,8 @@ import _func from 'complex-func'
 import moment from 'moment'
 import PaginationView from './../mod/PaginationView'
 import UploadFile from './../mod/UploadFile'
+import config from './../config'
+
 // 事件相关
 class EventData {
   constructor () {
@@ -357,9 +359,6 @@ typeFormat.buildFunc = function(typeData, itemOption, item, payload) {
 
 typeFormat.init()
 
-const className = 'complex-form-view'
-const refName = 'FormView'
-
 export default {
   name: 'FormView',
   props: {
@@ -370,31 +369,36 @@ export default {
     layout: { // 表单布局	'horizontal'|'vertical'|'inline'
       type: String,
       required: false,
-      default: 'horizontal'
+      default: config.FormView.layout
     },
     labelAlign: { // label 标签的文本对齐方式
       type: String,
       required: false,
-      default: 'right'
+      default: config.FormView.right
     },
     checkOnRuleChange: { // 是否在 rules 属性改变后立即触发一次验证
       type: Boolean,
       required: false,
-      default: true
+      default: config.FormView.checkOnRuleChange
     },
     checkOnInit: {
       type: Boolean,
       required: false,
-      default: false
+      default: config.FormView.checkOnInit
     },
     clearCheckOnInit: {
       type: Boolean,
       required: false,
-      default: true
+      default: config.FormView.clearCheckOnInit
     },
     form: {
       type: Object,
       required: true
+    },
+    formOption: {
+      type: Object,
+      required: false,
+      default: null
     },
     mainlist: {
       type: Array,
@@ -414,6 +418,19 @@ export default {
     }
   },
   computed: {
+    currentFormOption() {
+      let defaultFormOption = {
+        props: {
+          model: this.form.data,
+          layout: this.layout,
+          labelAlign: this.labelAlign,
+          validateOnRuleChange: this.checkOnRuleChange
+        },
+        ref: config.FormView.ref
+      }
+      let currentFormOption = _func.mergeData(defaultFormOption, this.formOption)
+      return currentFormOption
+    },
     currentFootMenuOption() {
       const defaultFootOption = {
         type: 'auto',
@@ -426,15 +443,7 @@ export default {
         currentFootMenuOption.type = this.layout == 'inline' ? 'single' : 'multiple'
       }
       if (!currentFootMenuOption.option.style && currentFootMenuOption.style == 'auto') {
-        if (currentFootMenuOption.type == 'multiple') {
-          currentFootMenuOption.option.style = {
-            display: 'flex',
-            flexDirection: 'row',
-            justifyContent: 'center',
-            alignItems: 'center',
-            marginBottom: '0px'
-          }
-        }
+        currentFootMenuOption.option.style = config.FormView.footMenu.mainStyle[currentFootMenuOption.type]
       }
       return currentFootMenuOption
     },
@@ -457,12 +466,7 @@ export default {
             }
           }
           if (!menuItem.style && currentFootMenuOption.style == 'auto') {
-            if (currentFootMenuOption.type == 'multiple') {
-              menuItem.style = {
-                flex: 'none',
-                marginRight: i < size ? '16px' : '0px'
-              }
-            }
+            menuItem.style = config.FormView.footMenu.style[currentFootMenuOption.type]
           }
           if (!menuItem.on) {
             menuItem.on = {
@@ -507,7 +511,7 @@ export default {
   methods: {
     // 设置form的ref
     setFormRef(check, clear) {
-      this.form.ref = this.$refs[refName]
+      this.form.ref = this.$refs[config.FormView.ref]
       if (check) {
         this.triggerRuleCheck()
       } else if (clear) {
@@ -696,20 +700,7 @@ export default {
             }
           }
           paginationOption = _func.mergeData(paginationOption, item.edit.localOption.pagination)
-          let paginationAreaOption = {
-            style: {
-              borderTop: '1px #ccc solid',
-              display: 'flex',
-              justifyContent: 'flex-end',
-              padding: '4px 12px',
-              alignItems: 'center'
-            },
-            on: {
-              mousedown: function (e) {
-                e.preventDefault()
-              }
-            }
-          }
+          let paginationAreaOption = config.FormView.select.paginationAreaOption
           paginationAreaOption = _func.mergeData(paginationAreaOption, item.edit.localOption.paginationArea)
           let pagination = this.$createElement(PaginationView, paginationOption)
           itemOption.props.dropdownRender = (menuNode, props) => {
@@ -739,19 +730,10 @@ export default {
   },
   // 主模板
   render(h) {
-    let option = {
-      props: {
-        model: this.form.data,
-        layout: this.layout,
-        labelAlign: this.labelAlign,
-        validateOnRuleChange: this.checkOnRuleChange
-      },
-      ref: refName
-    }
     let renderFormList = this.renderFormList()
-    let renderForm = h('a-form-model', option, renderFormList)
+    let renderForm = h('a-form-model', this.currentFormOption, renderFormList)
     let render = h('div', {
-      class: className
+      class: config.FormView.className
     }, [renderForm])
     return render
   }

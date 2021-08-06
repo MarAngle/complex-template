@@ -1,5 +1,5 @@
 <style lang='less' scoped>
-.AutoSearchMenu{
+.complex-auto-search-menu{
   margin-top: 19px;
   /deep/.ant-form-inline{
     .ant-form-item{
@@ -12,7 +12,7 @@
 }
 </style>
 <template>
-  <AutoMenu v-bind="$attrs" v-on="$listeners" class="AutoSearchMenu">
+  <AutoMenu v-bind="$attrs" v-on="$listeners" class="complex-auto-search-menu">
     <slot ref="content"></slot>
   </AutoMenu>
 </template>
