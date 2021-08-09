@@ -84,7 +84,7 @@
       :maxSize="maxSize"
       @change="onChange"
     />
-    <span class="complex-upload-file-data" v-if="layout == 'start'">
+    <span class="complex-upload-file-data" v-show="hasData" v-if="layout == 'start'">
       <template v-if="!multiple && file.name">
         <span class="complex-upload-file-data-area">
           <span>{{ file.name }}</span>
@@ -103,14 +103,14 @@
         <a-button class="complex-upload-file-button" :loading="loading" :disabled="disabled" icon="upload" >{{ placeholder }}</a-button>
       </slot>
     </span>
-    <span class="complex-upload-file-data" v-if="layout != 'start'">
-      <template v-if="!multiple && file.name">
+    <span class="complex-upload-file-data" v-show="hasData" v-if="layout != 'start'">
+      <template v-if="!multiple">
         <span class="complex-upload-file-data-area">
           <span>{{ file.name }}</span>
           <a-icon class="complex-upload-file-icon" type="delete" @click="onDelete" ></a-icon>
         </span>
       </template>
-      <template v-else-if="multiple && file.list.length > 0">
+      <template v-else>
         <span class="complex-upload-file-data-area" v-for="(val, index) in file.list" :key="index">
           <span>{{ val.name }}</span>
           <a-icon class="complex-upload-file-icon" type="delete" @click="onDelete(index, val)" ></a-icon>
@@ -151,6 +151,17 @@ export default {
   computed: {
     currentLayoutClassName() {
       return 'complex-upload-file-' + this.layout
+    },
+    hasData() {
+      let hasData = false
+      if (!this.multiple) {
+        if (this.file.name) {
+          hasData = true
+        }
+      } else if (this.file.list.length > 0) {
+        hasData = true
+      }
+      return hasData
     }
   },
   props: {

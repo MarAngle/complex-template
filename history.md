@@ -1,3 +1,6 @@
+### 2.1.7
+- UploadFile界面逻辑优化
+
 ### 2.1.6
 - FormView中的footMenu的slot设置
 
