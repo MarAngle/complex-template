@@ -1,3 +1,6 @@
+### 2.1.5
+- 修复错误的complex-data版本引用
+
 ### 2.1.4
 - 同步complex-data的reloadData改动
 
