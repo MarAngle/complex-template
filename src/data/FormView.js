@@ -457,6 +457,10 @@ export default {
         for (let i = 0; i < size; i++) {
           let menuItem = menuList[i]
           const parentOption = menuItem.parentOption
+          let mainSlot
+          if (menuItem.slot) {
+            mainSlot = this.$scopedSlots[menuItem.slot]
+          }
           if (currentFootMenuOption.data == 'props') {
             // 传值不存在时说明此时使用简单数据传值，所有传值默认传递到props中=>
             menuItem = {
@@ -485,11 +489,28 @@ export default {
           }
           if (currentFootMenuOption.type == 'single') {
             // 单独模式
-            let button = this.$createElement('a-button', menuItem, [ menuItem.props.name ])
+            let button
+            if (!mainSlot) {
+              button = this.$createElement('a-button', menuItem, [ menuItem.props.name ])
+            } else {
+              button = mainSlot({
+                data: menuItem,
+                index: i
+              })
+            }
             list.push(this.$createElement('a-form-model-item', _func.mergeData(currentFootMenuOption.option, parentOption), [ button ]))
           } else {
             // 共享模式
-            list.push(this.$createElement('a-button', menuItem, [ menuItem.props.name ]))
+            let button
+            if (!mainSlot) {
+              button = this.$createElement('a-button', menuItem, [ menuItem.props.name ])
+            } else {
+              button = mainSlot({
+                data: menuItem,
+                index: i
+              })
+            }
+            list.push(button)
           }
         }
         if (currentFootMenuOption.type == 'single') {

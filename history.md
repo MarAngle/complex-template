@@ -1,3 +1,6 @@
+### 2.1.6
+- FormView中的footMenu的slot设置
+
 ### 2.1.5
 - 修复错误的complex-data版本引用
 
