@@ -238,12 +238,16 @@ export default {
         if (this.paginationChange === true) {
           // auto
           this.maindata.reloadData({
-            prop: prop,
-            data: current
-          }, {
-            from: 'page',
-            act: prop
-          }, true).then(() => {}, (err) => { console.error(err) })
+            sync: true,
+            page: {
+              prop: prop,
+              data: current
+            },
+            choice: {
+              from: 'page',
+              act: prop
+            }
+          })
         } else {
           this.paginationChange(prop, current)
         }
