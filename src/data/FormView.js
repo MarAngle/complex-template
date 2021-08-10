@@ -680,7 +680,7 @@ export default {
         if (gridType != 'object') {
           gridOption = {
             props: {
-              gutter: item.layout.grid
+              span: item.layout.grid
             }
           }
         } else {

@@ -1,3 +1,6 @@
+### 2.1.10
+- FormView/Grid栅格设置项BUG修复
+
 ### 2.1.9
 - FormView/Grid栅格设置项BUG修复
 
