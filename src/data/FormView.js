@@ -675,7 +675,18 @@ export default {
       if (this.layout === 'inline') {
         return renderItem
       } else {
-        return this.$createElement('a-col', { ...item.layout.grid }, [
+        let gridType = _func.getType(item.layout.grid)
+        let gridOption
+        if (gridType != 'object') {
+          gridOption = {
+            props: {
+              gutter: item.layout.grid
+            }
+          }
+        } else {
+          gridOption = { ...item.layout.grid }
+        }
+        return this.$createElement('a-col', gridOption, [
           renderItem
         ])
       }
