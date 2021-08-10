@@ -1,5 +1,5 @@
-### 2.1.8-beta
-- UploadFile界面逻辑优化
+### 2.1.8
+- FormView实现Grid栅格
 
 ### 2.1.7
 - UploadFile界面逻辑优化

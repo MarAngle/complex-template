@@ -374,7 +374,9 @@ export default {
     layoutOption: { // 表单布局	'horizontal'|'vertical'|'inline'
       type: Object,
       required: false,
-      default: config.FormView.layoutOption
+      default: function() {
+        return config.FormView.layoutOption
+      }
     },
     labelAlign: { // label 标签的文本对齐方式
       type: String,
@@ -534,7 +536,7 @@ export default {
         if (this.layout === 'inline') {
           currentFootMenu = footMenu
         } else {
-          currentFootMenu = this.$createElement('a-row', currentFootMenuOption.layout, [
+          currentFootMenu = this.$createElement('a-col', currentFootMenuOption.layout, [
             footMenu
           ])
         }
@@ -673,7 +675,7 @@ export default {
       if (this.layout === 'inline') {
         return renderItem
       } else {
-        return this.$createElement('a-row', item.layout.grid, [
+        return this.$createElement('a-col', { ...item.layout.grid }, [
           renderItem
         ])
       }
@@ -829,7 +831,7 @@ export default {
       renderForm = h('a-form-model', this.currentFormOption, renderFormList)
     } else {
       renderForm = h('a-form-model', this.currentFormOption, [
-        h('a-row', this.layoutOption, renderFormList)
+        h('a-row', { ...this.layoutOption }, renderFormList)
       ])
     }
     let render = h('div', {
