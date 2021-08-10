@@ -1,3 +1,6 @@
+### 2.1.11-beta
+- labelAlign错误引用修复
+
 ### 2.1.10
 - FormView/Grid栅格设置项BUG修复
 

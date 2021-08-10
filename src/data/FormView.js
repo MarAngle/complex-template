@@ -381,7 +381,7 @@ export default {
     labelAlign: { // label 标签的文本对齐方式
       type: String,
       required: false,
-      default: config.FormView.right
+      default: config.FormView.labelAlign
     },
     checkOnRuleChange: { // 是否在 rules 属性改变后立即触发一次验证
       type: Boolean,
