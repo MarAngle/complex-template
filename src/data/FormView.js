@@ -371,6 +371,11 @@ export default {
       required: false,
       default: config.FormView.layout
     },
+    layoutOption: { // 表单布局	'horizontal'|'vertical'|'inline'
+      type: Object,
+      required: false,
+      default: config.FormView.layoutOption
+    },
     labelAlign: { // label 标签的文本对齐方式
       type: String,
       required: false,
@@ -436,6 +441,11 @@ export default {
         type: 'auto',
         data: 'props',
         style: 'auto',
+        layout: {
+          props: {
+            span: 24
+          }
+        },
         option: {}
       }
       let currentFootMenuOption = _func.mergeData(defaultFootOption, this.footMenuOption)
@@ -513,12 +523,20 @@ export default {
             list.push(button)
           }
         }
+        let footMenu
         if (currentFootMenuOption.type == 'single') {
           // 单独模式
-          currentFootMenu = list
+          footMenu = list
         } else {
           // 共享模式
-          currentFootMenu = this.$createElement('a-form-model-item', currentFootMenuOption.option, list)
+          footMenu = this.$createElement('a-form-model-item', currentFootMenuOption.option, list)
+        }
+        if (this.layout === 'inline') {
+          currentFootMenu = footMenu
+        } else {
+          currentFootMenu = this.$createElement('a-row', currentFootMenuOption.layout, [
+            footMenu
+          ])
         }
       }
       return currentFootMenu
@@ -530,7 +548,11 @@ export default {
     })
   },
   methods: {
-    // 设置form的ref
+    /**
+     * 设置form的ref
+     * @param {*} check 是否进行规则检查
+     * @param {*} clear 在不进行规则检查的基础上是否清除规则检查
+     */
     setFormRef(check, clear) {
       this.form.ref = this.$refs[config.FormView.ref]
       if (check) {
@@ -539,19 +561,27 @@ export default {
         this.clearRuleCheck()
       }
     },
-    // 清除指定检查
+    /**
+     * 清除指定检查
+     * @param {*} prop 需要清除检查的属性值
+     */
     clearRuleCheck(prop) {
       if (this.form.ref) {
         this.form.ref.clearValidate(prop)
       }
     },
-    // 重置检查
+    /**
+     * 重置检查
+     */
     resetRuleCheck() {
       if (this.form.ref) {
         this.form.ref.resetFields()
       }
     },
-    // 触发检查
+    /**
+     * 触发检查
+     * @param {*} [prop] 需要触发检查的属性值
+     */
     triggerRuleCheck(prop) {
       if (this.form.ref) {
         if (prop) {
@@ -561,6 +591,10 @@ export default {
         }
       }
     },
+    /**
+     * 构建列表模板
+     * @returns {VNode}
+     */
     renderFormList() {
       const renderFormList = this.mainlist.map((item, index) => {
         return this.renderItem(item, index)
@@ -570,9 +604,15 @@ export default {
       }
       return renderFormList
     },
-    // forviewItem模板
+    /**
+     * 构建forviewItem模板
+     * @param {*} item 数据
+     * @param {*} index index
+     * @returns {VNode}
+     */
     renderItem(item, index) {
       let renderItem = null
+      // 插槽传递的值
       let payload = {
         form: this.form,
         formData: this.form.data,
@@ -583,8 +623,10 @@ export default {
         index: index,
         target: this
       }
+      // 获取主要插槽，存在插槽会根据type在指定位置替换
       let mainSlot = this.$scopedSlots[item.edit.slot.name]
       if (item.edit.slot.type != 'main') {
+        // 非主要替换模式下构建主要参数
         let mainOption = {
           props: {
             prop: item.prop,
@@ -610,13 +652,16 @@ export default {
           }
         }
         if (this.$scopedSlots[item.edit.slot.label]) {
+          // 存在label插槽则替换label
           mainOption.props.label = this.$scopedSlots[item.edit.slot.label]({
             ...payload
           })
         }
         mainOption = _func.mergeData(mainOption, item.edit.localOption.main)
+        // 获取tips插槽
         renderItem = this.$createElement('a-form-model-item', mainOption, [ this.renderTip(item, mainSlot, payload) ])
       } else {
+        // 主要模式下替换
         if (mainSlot) {
           renderItem = mainSlot({
             ...payload
@@ -625,11 +670,24 @@ export default {
           console.error(`${item.prop}/${item.name}需要设置插槽!`)
         }
       }
-      return renderItem
+      if (this.layout === 'inline') {
+        return renderItem
+      } else {
+        return this.$createElement('a-row', item.layout.grid, [
+          renderItem
+        ])
+      }
     },
-    // tips模板
+    /**
+     * tips模板
+     * @param {*} item 数据
+     * @param {*} mainSlot 主要插槽
+     * @param {*} payload 插槽数据
+     * @returns {VNode}
+     */
     renderTip(item, mainSlot, payload) {
       let typeItem = null
+      // auto/item模式下替换内部数据，此时保存外部的tips
       if (mainSlot && (item.edit.slot.type == 'auto' || item.edit.slot.type == 'item')) {
         typeItem = mainSlot({
           ...payload
@@ -643,7 +701,11 @@ export default {
         return typeItem
       }
     },
-    // typeItem宽度设置
+    /**
+     * typeItem宽度设置
+     * @param {*} itemOption 主要的option
+     * @param {*} width 宽度数据
+     */
     autoSetItemWidth(itemOption, width) {
       if (!itemOption.style) {
         itemOption.style = {}
@@ -656,7 +718,13 @@ export default {
         }
       }
     },
-    // typeItem模板
+    /**
+     * typeItem模板:数据绑定模板
+     * @param {*} item 数据
+     * @param {*} mainSlot 主要插槽
+     * @param {*} payload 插槽数据
+     * @returns {VNode}
+     */
     renderTypeItem(item, mainSlot, payload) {
       let tag
       let itemOption = {
@@ -749,10 +817,21 @@ export default {
       return renderTypeItem
     }
   },
-  // 主模板
+  /**
+   * 主要模板
+   * @param {*} h createElement
+   * @returns {VNode}
+   */
   render(h) {
     let renderFormList = this.renderFormList()
-    let renderForm = h('a-form-model', this.currentFormOption, renderFormList)
+    let renderForm
+    if (this.layout == 'inline') {
+      renderForm = h('a-form-model', this.currentFormOption, renderFormList)
+    } else {
+      renderForm = h('a-form-model', this.currentFormOption, [
+        h('a-row', this.layoutOption, renderFormList)
+      ])
+    }
     let render = h('div', {
       class: config.FormView.className
     }, [ renderForm ])

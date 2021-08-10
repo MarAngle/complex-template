@@ -7,6 +7,11 @@ let config = {
     className: 'complex-form-view',
     ref: 'FormView',
     layout: 'horizontal',
+    layoutOption: {
+      props: {
+        gutter: 24
+      }
+    },
     labelAlign: 'right',
     checkOnRuleChange: true,
     checkOnInit: false,
