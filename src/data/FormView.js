@@ -660,6 +660,11 @@ export default {
           })
         }
         mainOption = _func.mergeData(mainOption, item.edit.localOption.main)
+        // 首先根据mainwidth设置宽度，在width模式下再进行layout的全局数据赋值，权重比由小到大
+        this.autoSetWidthOption(mainOption, item.mainwidth)
+        if (item.layout.type == 'width') {
+          this.autoSetWidthOption(mainOption, item.layout.width)
+        }
         // 获取tips插槽
         renderItem = this.$createElement('a-form-model-item', mainOption, [ this.renderTip(item, mainSlot, payload) ])
       } else {
@@ -716,18 +721,24 @@ export default {
     },
     /**
      * typeItem宽度设置
-     * @param {*} itemOption 主要的option
+     * @param {*} option 主要的option
      * @param {*} width 宽度数据
      */
-    autoSetItemWidth(itemOption, width) {
-      if (!itemOption.style) {
-        itemOption.style = {}
-      }
-      if (!itemOption.style.width) {
-        if (_func.getType(width) == 'number') {
-          itemOption.style.width = width + 'px'
-        } else if (width) {
-          itemOption.style.width = width
+    autoSetWidthOption(option, ...widthList) {
+      for (let i = 0; i < widthList.length; i++) {
+        const width = widthList[i]
+        if (width) {
+          if (!option.style) {
+            option.style = {}
+          }
+          if (!option.style.width) {
+            if (_func.getType(width) == 'number') {
+              option.style.width = width + 'px'
+            } else if (width) {
+              option.style.width = width
+            }
+          }
+          return true
         }
       }
     },
@@ -747,11 +758,8 @@ export default {
       let renderTypeItem = null
       let typeFormatData = typeFormat.getData(item.edit.type)
       itemOption = typeFormatData.option(itemOption, item, payload)
-      if (item.layout.type == 'width') {
-        this.autoSetItemWidth(itemOption, item.layout.width)
-      } else if (item.edit.option.innerWidth) {
-        this.autoSetItemWidth(itemOption, item.edit.option.innerWidth)
-      }
+      this.autoSetWidthOption(itemOption, item.edit.width, config.FormView.itemWidth[this.layout])
+      // 考虑一个默认的值，inline模式下和其他模式下的默认值，避免出现问题
       if (mainSlot && item.edit.slot.type == 'model') {
         renderTypeItem = mainSlot({
           ...payload,

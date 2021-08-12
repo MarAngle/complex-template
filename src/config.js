@@ -16,6 +16,11 @@ let config = {
     checkOnRuleChange: true,
     checkOnInit: false,
     clearCheckOnInit: true,
+    itemWidth: {
+      inline: '100px',
+      horizontal: '100%',
+      vertical: '100%'
+    },
     footMenu: {
       style: {
         multiple: {

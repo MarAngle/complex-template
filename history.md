@@ -1,5 +1,9 @@
 ### 2.1.11-beta
 - labelAlign错误引用修复
+- FormView宽度设置优化
+  - 删除innerWidth选项
+  - 启用mainwidth/width选项
+  - width不存在值的情况下，通过config获取默认值
 
 ### 2.1.10
 - FormView/Grid栅格设置项BUG修复
