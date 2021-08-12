@@ -1,6 +1,6 @@
 {
   "name": "complex-component-antd",
-  "version": "2.1.12",
+  "version": "2.1.13-beta",
   "description": "a complex component by antd",
   "main": "index.js",
   "repository": {

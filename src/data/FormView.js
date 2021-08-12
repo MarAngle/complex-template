@@ -331,7 +331,7 @@ typeFormat.buildFunc = function(typeData, itemOption, item, payload) {
       funcData.data[funcName](formData, item.prop, args)
     })
   }
-  // 加载单独设置的事件监控
+  // 加载单独设置的事件监控,false仅生成函数不做回调
   for (let funcName in item.edit.on) {
     onEvent.add(funcName, payload.target, item.prop, item.edit.on[funcName] ? function (...args) {
       args.push(payload)
