@@ -1,8 +1,10 @@
-### 2.1.11-beta
+### 2.1.11
 - labelAlign错误引用修复
 - FormView宽度设置优化
   - 删除innerWidth选项
   - 启用mainwidth/width选项
+  - mainwidth将会设置到a-form-model-item，权重比从item.edit.localOption.main.style.width > mainwidth > (item.layout.type == 'width'模式下的item.layout.width）
+  - width将会设置到对应的双向绑定模组上，权重比从item.edit.localOption.item.style.width > width > config.FormView.itemWidth[this.layout]
   - width不存在值的情况下，通过config获取默认值
 
 ### 2.1.10
