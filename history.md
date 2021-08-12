@@ -1,4 +1,4 @@
-### 2.1.11
+### 2.1.12
 - labelAlign错误引用修复
 - FormView宽度设置优化
   - 删除innerWidth选项
