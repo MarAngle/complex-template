@@ -10,7 +10,7 @@
   "dependencies": {
     "ant-design-vue": "^1.5",
     "complex-func": "^2.1.12",
-    "complex-data": "^2.1.8"
+    "complex-data": "^2.1.14"
   },
   "devDependencies": {},
   "scripts": {
