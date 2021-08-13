@@ -1,7 +1,9 @@
 let config = {
   TableView: {
     className: 'complex-table-view',
-    ref: 'TableView'
+    ref: 'TableView',
+    size: 'default',
+    bordered: true
   },
   FormView: {
     className: 'complex-form-view',

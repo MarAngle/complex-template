@@ -4,13 +4,21 @@ import PaginationView from './../mod/PaginationView'
 import UploadFile from './../mod/UploadFile'
 import config from './../config'
 
-// 事件相关
+/**
+ * 事件处理
+ */
 class EventData {
   constructor () {
-    this.data = {
-    }
+    this.data = {}
     this.on = {}
   }
+  /**
+   * 创建事件对象
+   * @param {string} name 事件名称
+   * @param {*} target Vue实例
+   * @param {*} prop Vue emit prop
+   * @param {*} list data[name]初始值
+   */
   build(name, target, prop, list = []) {
     this.data[name] = list
     this.on[name] = (...args) => {
@@ -19,6 +27,14 @@ class EventData {
       target.$emit('eventEnd', prop, name, args)
     }
   }
+  /**
+   * 添加事件
+   * @param {string} name 事件名称
+   * @param {*} target Vue实例
+   * @param {*} prop Vue emit prop
+   * @param {*} data 事件回调
+   * @param {*} method 加入事件回调列表的方法
+   */
   add(name, target, prop, data, method = 'push') {
     if (!this.data[name]) {
       this.build(name, target, prop)
@@ -27,6 +43,11 @@ class EventData {
       this.data[name][method](data)
     }
   }
+  /**
+   * 触发事件
+   * @param {string} name 事件名称
+   * @param  {...any} args 参数
+   */
   trigger(name, ...args) {
     if (this.data[name]) {
       for (let n = 0; n < this.data[name].length; n++) {
@@ -34,6 +55,10 @@ class EventData {
       }
     }
   }
+  /**
+   * 获取事件对象on{event}
+   * @returns {object}
+   */
   getData() {
     return this.on
   }
@@ -43,7 +68,8 @@ let showLogs = {
   init: false,
   model: false
 }
-// 函数列表
+
+// 基本函数列表
 const funcList = {
   valueInit: function (itemOption, formData, prop) {
     if (showLogs.init) { console.log(itemOption, formData, prop) }
@@ -66,7 +92,13 @@ const funcList = {
     formdata[prop] = args[0]
   }
 }
-// moment兼容
+
+/**
+ * moment兼容
+ * @param {object} data 属性对象
+ * @param {string[]} propList 值列表
+ * @param {string[]} formatList 格式化列表
+ */
 function formatMoment(data, propList, formatList) {
   for (let n = 0; n < propList.length; n++) {
     let prop = propList[n]
@@ -280,6 +312,9 @@ let typeFormat = {
   }
 }
 
+/**
+ * 加载类型格式化数据
+ */
 typeFormat.init = function() {
   for (let n in this.data) {
     let item = this.data[n]
@@ -301,6 +336,11 @@ typeFormat.init = function() {
   }
 }
 
+/**
+ * 获取类型格式化func数据
+ * @param {string} type 类型
+ * @returns {object}
+ */
 typeFormat.getFunc = function(type) {
   let typeName = 'a' + type
   if (this.data[typeName]) {
@@ -309,6 +349,11 @@ typeFormat.getFunc = function(type) {
     return this.base.func
   }
 }
+/**
+ * 获取类型格式化数据
+ * @param {string} type 类型
+ * @returns {object}
+ */
 typeFormat.getData = function(type) {
   let typeName = 'a' + type
   if (this.data[typeName]) {
@@ -317,7 +362,13 @@ typeFormat.getData = function(type) {
     return this.base
   }
 }
-
+/**
+ * 根据item.edit.on创建onEvent
+ * @param {object} typeData 对应的类型格式化数据对象
+ * @param {object} itemOption Vue的数据对象
+ * @param {object} item pitem数据对象
+ * @param {object} payload 回调的统一payload
+ */
 typeFormat.buildFunc = function(typeData, itemOption, item, payload) {
   let formData = payload.formData
   let funcData = typeData.func
@@ -371,7 +422,7 @@ export default {
       required: false,
       default: config.FormView.layout
     },
-    layoutOption: { // 表单布局	'horizontal'|'vertical'|'inline'
+    layoutOption: { // layout != inline时的a-row的参数设置项
       type: Object,
       required: false,
       default: function() {
@@ -388,44 +439,44 @@ export default {
       required: false,
       default: config.FormView.checkOnRuleChange
     },
-    checkOnInit: {
+    checkOnInit: { // 是否在加载时进行检查
       type: Boolean,
       required: false,
       default: config.FormView.checkOnInit
     },
-    clearCheckOnInit: {
+    clearCheckOnInit: { // 是否在加载时不检查情况下清除检查结果
       type: Boolean,
       required: false,
       default: config.FormView.clearCheckOnInit
     },
-    form: {
+    form: { // form数据{ data, num }
       type: Object,
       required: true
     },
-    formOption: {
+    formOption: { // form-model-view设置项
       type: Object,
       required: false,
       default: null
     },
-    mainlist: {
+    mainlist: { // pitem列表
       type: Array,
       required: true
     },
-    footMenuOption: {
+    footMenuOption: { // 底部菜单设置项
       type: Object,
       required: false
     },
-    footMenu: {
+    footMenu: { // 底部菜单
       type: Array,
       required: false
     }
   },
   data() {
-    return {
-    }
+    return {}
   },
   computed: {
     currentFormOption() {
+      // formOption格式化
       let defaultFormOption = {
         props: {
           model: this.form.data,
@@ -439,6 +490,7 @@ export default {
       return currentFormOption
     },
     currentFootMenuOption() {
+      // 底部菜单选项格式化
       const defaultFootOption = {
         type: 'auto',
         data: 'props',
@@ -460,6 +512,7 @@ export default {
       return currentFootMenuOption
     },
     currentFootMenu() {
+      // 底部菜单的VNode
       let currentFootMenuOption = this.currentFootMenuOption
       let currentFootMenu
       let menuList = this.footMenu
@@ -698,9 +751,9 @@ export default {
     },
     /**
      * tips模板
-     * @param {*} item 数据
+     * @param {object} item 数据
      * @param {*} mainSlot 主要插槽
-     * @param {*} payload 插槽数据
+     * @param {object} payload 插槽数据
      * @returns {VNode}
      */
     renderTip(item, mainSlot, payload) {
@@ -721,8 +774,8 @@ export default {
     },
     /**
      * typeItem宽度设置
-     * @param {*} option 主要的option
-     * @param {*} width 宽度数据
+     * @param {object} option 主要的option
+     * @param {*} widthList 宽度数据列表
      */
     autoSetWidthOption(option, ...widthList) {
       for (let i = 0; i < widthList.length; i++) {
@@ -773,6 +826,7 @@ export default {
         tag = 'a-switch'
       } else if (item.edit.type == 'select') {
         tag = 'a-select'
+        // 设置字典
         let dict = {
           key: item.edit.option.optionValue || 'value',
           value: item.edit.option.optionValue || 'value',
@@ -791,6 +845,7 @@ export default {
           return this.$createElement('a-select-option', optionOption, [ itemData[dict.label] ])
         })
         if (item.edit.pagination) {
+          // 分页器相关设置
           let paginationOption = {
             props: {
               data: item.edit.pagination,
@@ -849,6 +904,7 @@ export default {
     if (this.layout == 'inline') {
       renderForm = h('a-form-model', this.currentFormOption, renderFormList)
     } else {
+      // 非inline模式下加载栅格布局
       renderForm = h('a-form-model', this.currentFormOption, [
         h('a-row', { ...this.layoutOption }, renderFormList)
       ])

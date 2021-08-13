@@ -6,64 +6,60 @@ import config from './../config'
 export default {
   name: 'TableView',
   props: {
-    maindata: {
-      // ListData的实例
+    maindata: { // ListData的实例
       type: Object,
       required: true
     },
-    columnList: {
-      // 定制列配置
+    columnList: { // 定制列配置
       type: Array,
       required: true
     },
-    formatColumn: {
+    formatColumn: { // 对依照pitem格式化完成的columnItem做格式化
       type: Function,
       required: false
     },
-    listType: {
+    listType: { // 列表的mod
       type: String,
       required: false,
       default: 'list'
     },
-    listData: {
-      // 定制列表数据
+    listData: { // 单独指定列表数据，不从maindata.data.list中取值
       type: Array,
       required: false
     },
-    size: {
+    size: { // default / middle / small
       type: String,
       required: false,
-      default: 'default' // default / middle / small
+      default: config.TableView.size
     },
-    bordered: {
+    bordered: { // 是否网格
       type: Boolean,
       required: false,
-      default: true
+      default: config.TableView.bordered
     },
-    tableOption: {
+    tableOption: { // table的设置项
       type: Object,
       required: false,
       default: null
     },
-    autoTextTipOption: {
+    autoTextTipOption: { // tips全局option
       type: [String, Object],
       required: false,
       default: ''
     },
-    paginationData: {
+    paginationData: { // 单独制定分页器数据，不从maindata中取值
       type: Object,
       required: false,
       default: null
     },
-    paginationChange: {
+    paginationChange: { // 分页器回调，指定则不自动进行回调
       type: [Boolean, Function],
       required: false,
       default: true
     }
   },
   data() {
-    return {
-    }
+    return {}
   },
   computed: {
     currentTableOption() {
@@ -188,14 +184,20 @@ export default {
   mounted() {
   },
   methods: {
+    /**
+     * 获取Tips设置项
+     * @param {object} pitemTip pitem定义的设置项
+     * @param {object} mainTip 总设置项
+     * @returns {object}
+     */
     formatAutoTextTipOption(pitemTip, mainTip) {
       let tipOption = pitemTip || mainTip
       return tipOption
     },
-    renderList() {
-      let renderList = []
-      return renderList
-    },
+    /**
+     * 加载分页器
+     * @returns {VNode}
+     */
     renderPagination() {
       let renderPagination = null
       if (this.currentPaginationData) {
@@ -231,7 +233,9 @@ export default {
       }
       return renderPagination
     },
-    // 分页回调
+    /**
+     * 分页回调
+     */
     onPaginationChange(prop, current) {
       this.$emit('pagination', prop, current)
       if (this.paginationChange) {
@@ -253,17 +257,25 @@ export default {
         }
       }
     },
+    /**
+     * 选项回调
+     * @param {string[]} idList
+     * @param {object[]} currentList
+     */
     onChoiceChange(idList, currentList) {
       this.$emit('choice', idList, currentList)
       this.maindata.changeChoice(idList, currentList, 'auto')
     }
   },
-  // 主模板
+  /**
+   * 主模板
+   * @param {*} h createElement
+   * @returns {VNode}
+   */
   render(h) {
-    let renderList = this.renderList()
     let renderPagination = this.renderPagination()
     let mainRenderList = [
-      h('a-table', this.currentTableOption, renderList)
+      h('a-table', this.currentTableOption, [])
     ]
     if (renderPagination) {
       mainRenderList.push(renderPagination)
