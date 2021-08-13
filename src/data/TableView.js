@@ -1,7 +1,7 @@
 import _func from 'complex-func'
 import AutoText from './../mod/AutoText'
 import PaginationView from './../mod/PaginationView'
-import config from './../config'
+import config from '../../config'
 
 export default {
   name: 'TableView',

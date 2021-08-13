@@ -2,7 +2,7 @@ import _func from 'complex-func'
 import moment from 'moment'
 import PaginationView from './../mod/PaginationView'
 import UploadFile from './../mod/UploadFile'
-import config from './../config'
+import config from '../../config'
 
 /**
  * 事件处理
