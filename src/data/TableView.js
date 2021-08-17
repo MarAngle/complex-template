@@ -111,7 +111,7 @@ export default {
       if (this.$scopedSlots.expandedRowRender) {
         currentTableOption.props.expandedRowRender = this.$scopedSlots.expandedRowRender
       }
-      if (this.currentScroll) {
+      if (!currentTableOption.props.scroll && this.currentScroll) {
         currentTableOption.props.scroll = this.currentScroll
       }
       currentTableOption.ref = config.TableView.ref
@@ -134,6 +134,9 @@ export default {
       }
       if (currentScrollOption.recount === undefined) {
         currentScrollOption.recount = 0
+      }
+      if (currentScrollOption.extraWidth === undefined) {
+        currentScrollOption.extraWidth = 3
       }
       return currentScrollOption
     },
@@ -160,6 +163,7 @@ export default {
           if (this.$scopedSlots.expandedRowRender) {
             width += this.expandWidth
           }
+          width += this.currentScrollOption.extraWidth
         }
         let tableWidth
         if (this.currentScrollOption.type == 'number') {
