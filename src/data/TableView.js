@@ -6,7 +6,7 @@ import config from '../../config'
 export default {
   name: 'TableView',
   props: {
-    autoLayout: { // 是否自适应布局
+    autoLayout: { // 是否自适应布局=>通过设置最小宽度和page的最小宽度实现最好的显示
       type: Boolean,
       required: false,
       default: config.TableView.autoLayout
@@ -43,6 +43,11 @@ export default {
       default: config.TableView.bordered
     },
     tableOption: { // table的设置项
+      type: Object,
+      required: false,
+      default: null
+    },
+    inOption: { // indiv的设置项
       type: Object,
       required: false,
       default: null
@@ -84,10 +89,29 @@ export default {
     }
   },
   computed: {
+    currentInOption() {
+      let currentInOption = this.inOption
+      if (!currentInOption) {
+        currentInOption = {}
+      }
+      if (this.autoLayout && this.minWidth) {
+        if (!currentInOption.style) {
+          currentInOption.style = {}
+        }
+        if (currentInOption.style.minWidth === undefined) {
+          currentInOption.style.minWidth = this.minWidth + 'px'
+        }
+      }
+      currentInOption.class = config.TableView.inClassName
+      currentInOption.ref = config.TableView.inRef
+      return currentInOption
+    },
     currentTableOption() {
       let currentTableOption = this.tableOption
       if (!currentTableOption) {
-        currentTableOption = {}
+        currentTableOption = {
+          props: {}
+        }
       }
       if (!currentTableOption.props) {
         currentTableOption.props = {}
@@ -117,7 +141,6 @@ export default {
         currentTableOption.props.expandedRowRender = this.$scopedSlots.expandedRowRender
       }
       if (!currentTableOption.props.scroll && this.currentScroll) {
-        console.log(this.currentScroll)
         currentTableOption.props.scroll = this.currentScroll
       }
       currentTableOption.ref = config.TableView.ref
@@ -173,7 +196,7 @@ export default {
       return width
     },
     currentScroll() {
-      if (this.scrollOption) {
+      if (!this.autoLayout && this.scrollOption) {
         let tableWidth
         if (this.currentScrollOption.type == 'number') {
           tableWidth = this.currentScrollOption.width
@@ -384,10 +407,11 @@ export default {
     if (renderPagination) {
       mainRenderList.push(renderPagination)
     }
+    let inRender = h('div', this.currentInOption, mainRenderList)
     let render = h('div', {
       class: config.TableView.className,
       ref: config.TableView.mainRef
-    }, mainRenderList)
+    }, [ inRender ])
     return render
   }
 }

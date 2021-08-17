@@ -1,5 +1,6 @@
 ### 2.1.16-beta
 - TableView优化minWidth计算
+- autoLayout基本实现
 
 ### 2.1.15
 - TableView实现scroll的基本自定义

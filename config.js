@@ -1,8 +1,10 @@
 let config = {
   TableView: {
     mainRef: 'MainTableView',
-    className: 'complex-table-view',
+    inRef: 'InTableView',
     ref: 'TableView',
+    className: 'complex-table-view',
+    inClassName: 'complex-table-view-in',
     size: 'default',
     autoLayout: true,
     bordered: true,
