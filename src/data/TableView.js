@@ -194,7 +194,7 @@ export default {
       return width
     },
     currentScroll() {
-      if (this.currentScrollOption.type) {
+      if (this.currentScrollOption.type && this.currentScrollOption.layout != 'auto') {
         let tableWidth
         if (this.currentScrollOption.type == 'number') {
           tableWidth = this.currentScrollOption.width

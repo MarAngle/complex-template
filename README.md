@@ -15,15 +15,18 @@
 - 暂时认为scrollWidth必须存在并定义
 - 其他判断基本上基于minWidth实现
 
-#### autoLayout实现，默认
-- 自动布局，通过minWidth实现最小宽度的设置，统一page实现scroll
-- 自动布局的优劣，page可能会右侧看不到的问题
 
 #### 自动scroll实现，autoLayout = false且设置后实现
 - 未定义tableOption.props.scroll
 - 定义scrollOption，基于scrollOption格式化为参数，大类型分为'auto'和'number'，auto通过获取tabel宽度进行，number则指定tabel宽度，其中auto时可通过传递对象并scrollOption.recount的值的监控进行宽度的重新获取=>下一个tick中获取
 - columnList中width数字格式则进行计算，非数字格式且存在数字格式scrollWith则可参与计算，最终计算值和tableWidth进行比较，超过tabelWidth则将scroll.x设置为width
 - 默认不启用，启用需要额外设置
+
+#### scrollOption.layout == 'auto'实现
+- 基于自动scroll基础之上，对整体宽度已知情况下
+- 自动布局，通过minWidth实现最小宽度的设置，统一page实现scroll
+- 此时分页器将跟table整体进行滑动
+- 考虑实现分页器和table的拆分
 
 #### scroll解析
 - scroll.x 指定宽，true则在尽可能小的地方自适应
