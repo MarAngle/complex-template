@@ -42,6 +42,11 @@ export default {
       required: false,
       default: null
     },
+    scrollOption: { // tips全局option
+      type: [Number, String, Object],
+      required: false,
+      default: 0
+    },
     autoTextTipOption: { // tips全局option
       type: [String, Object],
       required: false,
@@ -56,10 +61,22 @@ export default {
       type: [Boolean, Function],
       required: false,
       default: true
+    },
+    choiceWidth: {
+      type: Number,
+      required: false,
+      default: config.TableView.choiceWidth
+    },
+    expandWidth: {
+      type: Number,
+      required: false,
+      default: config.TableView.expandWidth
     }
   },
   data() {
-    return {}
+    return {
+      currentWidth: 0
+    }
   },
   computed: {
     currentTableOption() {
@@ -94,10 +111,69 @@ export default {
       if (this.$scopedSlots.expandedRowRender) {
         currentTableOption.props.expandedRowRender = this.$scopedSlots.expandedRowRender
       }
-      if (!currentTableOption.ref) {
-        currentTableOption.ref = config.TableView.ref
+      if (this.currentScroll) {
+        currentTableOption.props.scroll = this.currentScroll
       }
+      currentTableOption.ref = config.TableView.ref
       return currentTableOption
+    },
+    currentScrollOption() {
+      let type = this._func.getType(this.scrollOption)
+      let currentScrollOption
+      if (type === 'object') {
+        currentScrollOption = this.scrollOption
+      } else if (type === 'number') {
+        currentScrollOption = {
+          type: 'number',
+          width: this.scrollOption
+        }
+      } else {
+        currentScrollOption = {
+          type: this.scrollOption
+        }
+      }
+      if (currentScrollOption.recount === undefined) {
+        currentScrollOption.recount = 0
+      }
+      return currentScrollOption
+    },
+    currentScroll() {
+      if (this.scrollOption) {
+        let width = 0
+        for (let i = 0; i < this.currentColumnList.length; i++) {
+          const pitem = this.currentColumnList[i];
+          if (!pitem.width || typeof pitem.width !== 'number') {
+            if (!pitem.scrollWidth || typeof pitem.scrollWidth !== 'number') {
+              width = 0
+              break
+            } else {
+              width += pitem.scrollWidth
+            }
+          } else {
+            width += pitem.width
+          }
+        }
+        if (width) {
+          if (this.rowSelection) {
+            width += this.choiceWidth
+          }
+          if (this.$scopedSlots.expandedRowRender) {
+            width += this.expandWidth
+          }
+        }
+        let tableWidth
+        if (this.currentScrollOption.type == 'number') {
+          tableWidth = this.currentScrollOption.width
+        } else {
+          tableWidth = this.currentWidth
+        }
+        if (width > tableWidth) {
+          return {
+            x: width
+          }
+        }
+      }
+      return null
     },
     currentListData () {
       if (this.listData) {
@@ -181,9 +257,24 @@ export default {
       }
     }
   },
+  watch: {
+    'currentScrollOption.recount': function() {
+      this.setCurrentWidth()
+    }
+  },
   mounted() {
+    this.setCurrentWidth()
   },
   methods: {
+    setCurrentWidth() {
+      this.$nextTick(() => {
+        if (this.$refs[config.TableView.mainRef]) {
+          this.currentWidth = this.$refs[config.TableView.mainRef].clientWidth
+        } else {
+          this.setCurrentWidth()
+        }
+      })
+    },
     /**
      * 获取Tips设置项
      * @param {object} pitemTip pitem定义的设置项
@@ -281,7 +372,8 @@ export default {
       mainRenderList.push(renderPagination)
     }
     let render = h('div', {
-      class: config.TableView.className
+      class: config.TableView.className,
+      ref: config.TableView.mainRef
     }, mainRenderList)
     return render
   }
