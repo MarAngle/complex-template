@@ -2,15 +2,11 @@ import _func from 'complex-func'
 import AutoText from './../mod/AutoText'
 import PaginationView from './../mod/PaginationView'
 import config from '../../config'
+import './FormView.css'
 
 export default {
   name: 'TableView',
   props: {
-    autoLayout: { // 是否自适应布局=>通过设置最小宽度和page的最小宽度实现最好的显示
-      type: Boolean,
-      required: false,
-      default: config.TableView.autoLayout
-    },
     maindata: { // ListData的实例
       type: Object,
       required: true
@@ -94,7 +90,7 @@ export default {
       if (!currentInOption) {
         currentInOption = {}
       }
-      if (this.autoLayout && this.minWidth) {
+      if (this.currentScrollOption.layout == 'auto' && this.minWidth) {
         if (!currentInOption.style) {
           currentInOption.style = {}
         }
@@ -147,6 +143,13 @@ export default {
       return currentTableOption
     },
     currentScrollOption() {
+      const defaultOption = {
+        type: 'auto',
+        layout: '',
+        width: 0,
+        recount: 0,
+        extraWidth: config.TableView.scrollExtraWidth
+      }
       let type = this._func.getType(this.scrollOption)
       let currentScrollOption
       if (type === 'object') {
@@ -156,17 +159,12 @@ export default {
           type: 'number',
           width: this.scrollOption
         }
-      } else {
+      } else if (type == 'string') {
         currentScrollOption = {
           type: this.scrollOption
         }
       }
-      if (currentScrollOption.recount === undefined) {
-        currentScrollOption.recount = 0
-      }
-      if (currentScrollOption.extraWidth === undefined) {
-        currentScrollOption.extraWidth = 3
-      }
+      currentScrollOption = this._func.mergeData(defaultOption, currentScrollOption)
       return currentScrollOption
     },
     minWidth() {
@@ -196,11 +194,11 @@ export default {
       return width
     },
     currentScroll() {
-      if (!this.autoLayout && this.scrollOption) {
+      if (this.currentScrollOption.type) {
         let tableWidth
         if (this.currentScrollOption.type == 'number') {
           tableWidth = this.currentScrollOption.width
-        } else {
+        } else if (this.currentScrollOption.type == 'auto') {
           tableWidth = this.tableWidth
         }
         if (this.minWidth > tableWidth) {
@@ -343,6 +341,8 @@ export default {
           }
         ]
         let option = {
+          class: config.TableView.PaginationView.className,
+          ref: config.TableView.PaginationView.ref,
           props: {
             data: this.currentPaginationData
           },

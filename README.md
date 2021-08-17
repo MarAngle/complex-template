@@ -17,6 +17,7 @@
 
 #### autoLayout实现，默认
 - 自动布局，通过minWidth实现最小宽度的设置，统一page实现scroll
+- 自动布局的优劣，page可能会右侧看不到的问题
 
 #### 自动scroll实现，autoLayout = false且设置后实现
 - 未定义tableOption.props.scroll

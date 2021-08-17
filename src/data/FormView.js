@@ -483,10 +483,10 @@ export default {
           layout: this.layout,
           labelAlign: this.labelAlign,
           validateOnRuleChange: this.checkOnRuleChange
-        },
-        ref: config.FormView.ref
+        }
       }
       let currentFormOption = _func.mergeData(defaultFormOption, this.formOption)
+      currentFormOption.ref = config.FormView.ref
       return currentFormOption
     },
     currentFootMenuOption() {

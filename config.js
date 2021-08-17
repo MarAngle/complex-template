@@ -6,10 +6,15 @@ let config = {
     className: 'complex-table-view',
     inClassName: 'complex-table-view-in',
     size: 'default',
-    autoLayout: true,
+    autoLayout: false,
     bordered: true,
     expandWidth: 50,
-    choiceWidth: 60
+    choiceWidth: 60,
+    scrollExtraWidth: 3,
+    PaginationView: {
+      className: 'complex-table-view-pagination',
+      ref: 'TablePaginationView'
+    }
   },
   FormView: {
     className: 'complex-form-view',
