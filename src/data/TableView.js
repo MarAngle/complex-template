@@ -6,6 +6,11 @@ import config from '../../config'
 export default {
   name: 'TableView',
   props: {
+    autoLayout: { // 是否自适应布局
+      type: Boolean,
+      required: false,
+      default: config.TableView.autoLayout
+    },
     maindata: { // ListData的实例
       type: Object,
       required: true
@@ -75,7 +80,7 @@ export default {
   },
   data() {
     return {
-      currentWidth: 0
+      tableWidth: 0
     }
   },
   computed: {
@@ -112,6 +117,7 @@ export default {
         currentTableOption.props.expandedRowRender = this.$scopedSlots.expandedRowRender
       }
       if (!currentTableOption.props.scroll && this.currentScroll) {
+        console.log(this.currentScroll)
         currentTableOption.props.scroll = this.currentScroll
       }
       currentTableOption.ref = config.TableView.ref
@@ -140,40 +146,43 @@ export default {
       }
       return currentScrollOption
     },
+    minWidth() {
+      let width = 0
+      for (let i = 0; i < this.currentColumnList.length; i++) {
+        const pitem = this.currentColumnList[i];
+        if (!pitem.width || typeof pitem.width !== 'number') {
+          if (!pitem.scrollWidth || typeof pitem.scrollWidth !== 'number') {
+            width = 0
+            break
+          } else {
+            width += pitem.scrollWidth
+          }
+        } else {
+          width += pitem.width
+        }
+      }
+      if (width) {
+        if (this.rowSelection) {
+          width += this.choiceWidth
+        }
+        if (this.$scopedSlots.expandedRowRender) {
+          width += this.expandWidth
+        }
+        width += this.currentScrollOption.extraWidth
+      }
+      return width
+    },
     currentScroll() {
       if (this.scrollOption) {
-        let width = 0
-        for (let i = 0; i < this.currentColumnList.length; i++) {
-          const pitem = this.currentColumnList[i];
-          if (!pitem.width || typeof pitem.width !== 'number') {
-            if (!pitem.scrollWidth || typeof pitem.scrollWidth !== 'number') {
-              width = 0
-              break
-            } else {
-              width += pitem.scrollWidth
-            }
-          } else {
-            width += pitem.width
-          }
-        }
-        if (width) {
-          if (this.rowSelection) {
-            width += this.choiceWidth
-          }
-          if (this.$scopedSlots.expandedRowRender) {
-            width += this.expandWidth
-          }
-          width += this.currentScrollOption.extraWidth
-        }
         let tableWidth
         if (this.currentScrollOption.type == 'number') {
           tableWidth = this.currentScrollOption.width
         } else {
-          tableWidth = this.currentWidth
+          tableWidth = this.tableWidth
         }
-        if (width > tableWidth) {
+        if (this.minWidth > tableWidth) {
           return {
-            x: width
+            x: this.minWidth
           }
         }
       }
@@ -273,7 +282,7 @@ export default {
     setCurrentWidth() {
       this.$nextTick(() => {
         if (this.$refs[config.TableView.mainRef]) {
-          this.currentWidth = this.$refs[config.TableView.mainRef].clientWidth
+          this.tableWidth = this.$refs[config.TableView.mainRef].clientWidth
         } else {
           this.setCurrentWidth()
         }

@@ -4,6 +4,7 @@ let config = {
     className: 'complex-table-view',
     ref: 'TableView',
     size: 'default',
+    autoLayout: true,
     bordered: true,
     expandWidth: 50,
     choiceWidth: 60
