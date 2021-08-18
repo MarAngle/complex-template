@@ -3,6 +3,7 @@ import AutoText from './../mod/AutoText'
 import PaginationView from './../mod/PaginationView'
 import config from '../../config'
 import './TableViewStyle.css'
+import utils from '../utils'
 
 export default {
   name: 'TableView',
@@ -98,7 +99,7 @@ export default {
           currentInOption.style.minWidth = this.minWidth + 'px'
         }
       }
-      currentInOption.class = config.TableView.inClassName
+      utils.addClass(currentInOption, config.TableView.inClassName)
       currentInOption.ref = config.TableView.inRef
       return currentInOption
     },

@@ -1,4 +1,4 @@
-### 2.1.16-beta
+### 2.1.16
 - TableView优化minWidth计算
 - autoLayout基本实现
 - 样式通过class进行定义，优化性能
