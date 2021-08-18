@@ -21,6 +21,10 @@ let config = {
     PaginationView: {
       className: 'complex-table-view-pagination',
       ref: 'TablePaginationView'
+    },
+    autoIndex: {
+      prop: '_index',
+      pagination: true
     }
   },
   FormView: {

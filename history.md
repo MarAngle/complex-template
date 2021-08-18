@@ -1,5 +1,7 @@
-### 2.1.18-beta
+### 2.1.18
 - 高度设置完成，添加校准值
+- AutoIndex从接收ListData参数到Pagination参数
+- TableView实现自动AutoIndex
 
 ### 2.1.17
 - TableView修复scroll默认auto的BUG

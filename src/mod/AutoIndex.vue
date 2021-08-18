@@ -19,7 +19,7 @@ export default {
     index: {
       required: true
     },
-    maindata: {
+    pagination: {
       required: false,
       default: null
     }
@@ -27,11 +27,10 @@ export default {
   computed: {
     currentIndex() {
       let currentIndex = this.index
-      if (this.maindata) {
-        let pagination = this.maindata.getPageData()
-        if (pagination) {
-          currentIndex = currentIndex + (pagination.page - 1) * pagination.size
-        }
+      if (this.pagination) {
+        let page = this.pagination.getPage()
+        let size = this.pagination.getSize()
+        currentIndex = currentIndex + (page - 1) * size
       }
       return currentIndex
     }

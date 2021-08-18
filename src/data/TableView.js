@@ -1,4 +1,5 @@
 import _func from 'complex-func'
+import AutoIndex from './../mod/AutoIndex'
 import AutoText from './../mod/AutoText'
 import PaginationView from './../mod/PaginationView'
 import config from '../../config'
@@ -77,6 +78,16 @@ export default {
       type: Number,
       required: false,
       default: config.TableView.expandWidth
+    },
+    autoIndexProp: {
+      type: String,
+      required: false,
+      default: config.TableView.autoIndex.prop
+    },
+    autoIndexPagination: {
+      type: Boolean,
+      required: false,
+      default: config.TableView.autoIndex.pagination
     }
   },
   data() {
@@ -268,8 +279,8 @@ export default {
             } else if (type == 'array') {
               data = data.join(',')
             }
-            let contentSlotProp = pitem.dataIndex
-            let contentSlot = this.$scopedSlots[contentSlotProp]
+            let contentProp = pitem.dataIndex
+            let contentSlot = this.$scopedSlots[contentProp]
             if (contentSlot) {
               return contentSlot({
                 text: data,
@@ -278,7 +289,19 @@ export default {
                 item: pitem,
                 list: this.columnList
               })
-            } else if (pitem.ellipsis && pitem.autoText) {
+            }
+            if (contentProp === this.autoIndexProp) {
+              let AutoIndexOption = {
+                props: {
+                  index: index
+                }
+              }
+              if (this.autoIndexPagination) {
+                AutoIndexOption.props.pagination = this.currentPaginationData
+              }
+              return this.$createElement(AutoIndex, AutoIndexOption)
+            }
+            if (pitem.ellipsis && pitem.autoText) {
               // 自动省略切自动换行?
               let AutoTextOption = {
                 props: {
@@ -288,9 +311,8 @@ export default {
                 }
               }
               return this.$createElement(AutoText, AutoTextOption)
-            } else {
-              return data
             }
+            return data
           }
           let titleSlotProp = pitem.dataIndex + '-title'
           let titleSlot = this.$scopedSlots[titleSlotProp]
@@ -343,7 +365,6 @@ export default {
         let tableHead = dom.getElementsByTagName('thead')[0]
         this.layout.tableHead.width = tableHead.clientWidth
         this.layout.tableHead.height = tableHead.clientHeight
-        console.log({ ...this.layout.tableHead })
       })
       if (this.currentPaginationData) {
         this.countTargetLayout('pagination', config.TableView.PaginationView.ref, true)
