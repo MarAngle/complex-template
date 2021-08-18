@@ -82,7 +82,10 @@ export default {
   },
   data() {
     return {
-      tableWidth: 0
+      layout: {
+        width: 0,
+        height: 0
+      }
     }
   },
   computed: {
@@ -91,7 +94,7 @@ export default {
       if (!currentInOption) {
         currentInOption = {}
       }
-      if (this.currentScrollOption.layout == 'auto' && this.minWidth) {
+      if (this.currentScrollOption.width.layout == 'auto' && this.minWidth) {
         if (!currentInOption.style) {
           currentInOption.style = {}
         }
@@ -140,16 +143,24 @@ export default {
       if (!currentTableOption.props.scroll && this.currentScroll) {
         currentTableOption.props.scroll = this.currentScroll
       }
+      console.log(this.currentScroll)
       currentTableOption.ref = config.TableView.ref
       return currentTableOption
     },
     currentScrollOption() {
       const defaultScrollOption = {
-        type: '',
-        layout: '',
-        width: 0,
         recount: 0,
-        extraWidth: config.TableView.scrollExtraWidth
+        width: {
+          type: '',
+          layout: '',
+          data: 0,
+          extra: config.TableView.scrollExtraWidth
+        },
+        height: {
+          type: '',
+          data: 0,
+          extra: config.TableView.scrollExtraHeight
+        }
       }
       if (this.scrollOption) {
         let type = this._func.getType(this.scrollOption)
@@ -158,12 +169,16 @@ export default {
           currentScrollOption = this.scrollOption
         } else if (type === 'number') {
           currentScrollOption = {
-            type: 'number',
-            width: this.scrollOption
+            width: {
+              type: 'number',
+              data: this.scrollOption
+            }
           }
         } else if (type == 'string') {
           currentScrollOption = {
-            type: this.scrollOption
+            width: {
+              type: this.scrollOption
+            }
           }
         }
         currentScrollOption = this._func.mergeData(defaultScrollOption, currentScrollOption)
@@ -194,25 +209,39 @@ export default {
         if (this.$scopedSlots.expandedRowRender) {
           width += this.expandWidth
         }
-        width += this.currentScrollOption.extraWidth
+        width += this.currentScrollOption.width.extra
       }
       return width
     },
     currentScroll() {
-      if (this.currentScrollOption.type && this.currentScrollOption.layout != 'auto') {
-        let tableWidth
-        if (this.currentScrollOption.type == 'number') {
-          tableWidth = this.currentScrollOption.width
-        } else if (this.currentScrollOption.type == 'auto') {
-          tableWidth = this.tableWidth
+      let currentScroll = null
+      if (this.currentScrollOption.width.type && this.currentScrollOption.width.layout != 'auto') {
+        let width
+        if (this.currentScrollOption.width.type == 'number') {
+          width = this.currentScrollOption.width.data
+        } else if (this.currentScrollOption.width.type == 'auto') {
+          width = this.layout.width
         }
-        if (this.minWidth > tableWidth) {
-          return {
-            x: this.minWidth
+        if (this.minWidth > width) {
+          if (!currentScroll) {
+            currentScroll = {}
           }
+          currentScroll.x = this.minWidth
         }
       }
-      return null
+      if (this.currentScrollOption.height.type) {
+        let height
+        if (this.currentScrollOption.height.type == 'number') {
+          height = this.currentScrollOption.height.data
+        }
+        if (height) {
+          if (!currentScroll) {
+            currentScroll = {}
+          }
+          currentScroll.y = height
+        }
+      }
+      return currentScroll
     },
     currentListData () {
       if (this.listData) {
@@ -298,19 +327,21 @@ export default {
   },
   watch: {
     'currentScrollOption.recount': function() {
-      this.setCurrentWidth()
+      this.setCurrentLayout()
     }
   },
   mounted() {
-    this.setCurrentWidth()
+    this.setCurrentLayout()
   },
   methods: {
-    setCurrentWidth() {
+    setCurrentLayout() {
       this.$nextTick(() => {
-        if (this.$refs[config.TableView.mainRef]) {
-          this.tableWidth = this.$refs[config.TableView.mainRef].clientWidth
+        const table = this.$refs[config.TableView.mainRef]
+        if (table) {
+          this.layout.width = table.clientWidth
+          this.layout.height = table.clientHeight
         } else {
-          this.setCurrentWidth()
+          this.setCurrentLayout()
         }
       })
     },

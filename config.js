@@ -11,6 +11,7 @@ let config = {
     expandWidth: 50,
     choiceWidth: 60,
     scrollExtraWidth: 3,
+    scrollExtraHeight: 0,
     PaginationView: {
       className: 'complex-table-view-pagination',
       ref: 'TablePaginationView'
