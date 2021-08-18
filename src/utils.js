@@ -9,9 +9,13 @@ let utils = {
       option.class = className
     } else {
       if (_func.getType(option.class) === 'array') {
-        option.class.push(className)
+        if (option.class.indexOf(className) == -1) {
+          option.class.push(className)
+        }
       } else {
-        option.class = [option.class, className]
+        if (option.class !== className) {
+          option.class = [option.class, className]
+        }
       }
     }
   }

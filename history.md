@@ -3,6 +3,7 @@
 - TableView修复scroll默认0为number的BUG
 - 拆分scroll x y定义，避免今后的y自适应时导致的设置覆盖问题
 - height计算未算入head
+- 样式合并
 
 ### 2.1.16
 - TableView优化minWidth计算

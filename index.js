@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import _func from 'complex-func'
+import './src/style/index.css'
 
 const contents = require.context('./src/data', false, /(\.vue)|(\.js)$/)
 const modContents = require.context('./src/mod', false, /(\.vue)|(\.js)$/)

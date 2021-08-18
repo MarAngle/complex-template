@@ -876,6 +876,8 @@ export default {
           paginationOption = _func.mergeData(paginationOption, item.edit.localOption.pagination)
           let paginationAreaOption = config.FormView.select.paginationAreaOption
           paginationAreaOption = _func.mergeData(paginationAreaOption, item.edit.localOption.paginationArea)
+          const className = this.countClassName('item', 'select', 'pagination')
+          utils.addClass(paginationAreaOption, className)
           let pagination = this.$createElement(PaginationView, paginationOption)
           itemOption.props.dropdownRender = (menuNode, props) => {
             return this.$createElement('div', [

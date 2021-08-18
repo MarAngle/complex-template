@@ -1,3 +1,8 @@
+.complex-table-view{
+  width: 100%;
+  overflow: auto;
+}
+
 .complex-form-view-inline-item{
   width: 100px;
 }
