@@ -86,6 +86,10 @@ export default {
           width: 0,
           height: 0
         },
+        tableHead: {
+          width: 0,
+          height: 0
+        },
         pagination: {
           width: 0,
           height: 0
@@ -148,7 +152,6 @@ export default {
       if (!currentTableOption.props.scroll && this.currentScroll) {
         currentTableOption.props.scroll = this.currentScroll
       }
-      console.log(this.currentScroll, this.layout)
       currentTableOption.ref = config.TableView.ref
       return currentTableOption
     },
@@ -159,12 +162,12 @@ export default {
           type: '',
           layout: '',
           data: 0,
-          extra: config.TableView.scrollExtraWidth
+          offset: config.TableView.scroll.width.offset
         },
         height: {
           type: '',
           data: 0,
-          extra: config.TableView.scrollExtraHeight
+          offset: config.TableView.scroll.height.offset
         }
       }
       if (this.scrollOption) {
@@ -208,7 +211,7 @@ export default {
       if (this.$scopedSlots.expandedRowRender) {
         width += this.expandWidth
       }
-      width += this.currentScrollOption.width.extra
+      width += this.currentScrollOption.width.offset
       return width
     },
     currentScroll() {
@@ -233,7 +236,7 @@ export default {
           height = this.currentScrollOption.height.data
         }
         if (height) {
-          height = height - this.layout.pagination.height
+          height = height - this.layout.pagination.height - this.layout.tableHead.height + this.currentScrollOption.height.offset
           if (height > 0) {
             if (!currentScroll) {
               currentScroll = {}
@@ -336,14 +339,19 @@ export default {
   },
   methods: {
     countCurrentLayout() {
-      this.countTargetLayout('main', config.TableView.mainRef)
+      this.countTargetLayout('main', config.TableView.mainRef, false, (dom) => {
+        let tableHead = dom.getElementsByTagName('thead')[0]
+        this.layout.tableHead.width = tableHead.clientWidth
+        this.layout.tableHead.height = tableHead.clientHeight
+        console.log({ ...this.layout.tableHead })
+      })
       if (this.currentPaginationData) {
         this.countTargetLayout('pagination', config.TableView.PaginationView.ref, true)
       } else {
         this.countTargetLayout('pagination')
       }
     },
-    countTargetLayout(prop, target, isVNode) {
+    countTargetLayout(prop, target, isVNode, cb) {
       if (target) {
         this.$nextTick(() => {
           let dom = this.$refs[target]
@@ -353,8 +361,11 @@ export default {
           if (dom) {
             this.layout[prop].width = dom.clientWidth
             this.layout[prop].height = dom.clientHeight
+            if (cb) {
+              cb(dom)
+            }
           } else {
-            this.countTargetLayout(prop, target, isVNode)
+            this.countTargetLayout(prop, target, isVNode, cb)
           }
         })
       } else {

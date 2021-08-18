@@ -10,8 +10,14 @@ let config = {
     bordered: true,
     expandWidth: 50,
     choiceWidth: 60,
-    scrollExtraWidth: 3,
-    scrollExtraHeight: 0,
+    scroll: {
+      width: {
+        offset: 3
+      },
+      height: {
+        offset: -1.6
+      }
+    },
     PaginationView: {
       className: 'complex-table-view-pagination',
       ref: 'TablePaginationView'

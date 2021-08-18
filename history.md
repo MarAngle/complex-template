@@ -1,3 +1,6 @@
+### 2.1.18-beta
+- 高度设置完成，添加校准值
+
 ### 2.1.17
 - TableView修复scroll默认auto的BUG
 - TableView修复scroll默认0为number的BUG
