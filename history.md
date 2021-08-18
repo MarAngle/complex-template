@@ -1,3 +1,7 @@
+### 2.1.17-beta
+- TableView修复scroll默认auto的BUG
+- TableView修复scroll默认0为number的BUG
+
 ### 2.1.16
 - TableView优化minWidth计算
 - autoLayout基本实现

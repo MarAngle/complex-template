@@ -144,29 +144,33 @@ export default {
       return currentTableOption
     },
     currentScrollOption() {
-      const defaultOption = {
-        type: 'auto',
+      const defaultScrollOption = {
+        type: '',
         layout: '',
         width: 0,
         recount: 0,
         extraWidth: config.TableView.scrollExtraWidth
       }
-      let type = this._func.getType(this.scrollOption)
-      let currentScrollOption
-      if (type === 'object') {
-        currentScrollOption = this.scrollOption
-      } else if (type === 'number') {
-        currentScrollOption = {
-          type: 'number',
-          width: this.scrollOption
+      if (this.scrollOption) {
+        let type = this._func.getType(this.scrollOption)
+        let currentScrollOption
+        if (type === 'object') {
+          currentScrollOption = this.scrollOption
+        } else if (type === 'number') {
+          currentScrollOption = {
+            type: 'number',
+            width: this.scrollOption
+          }
+        } else if (type == 'string') {
+          currentScrollOption = {
+            type: this.scrollOption
+          }
         }
-      } else if (type == 'string') {
-        currentScrollOption = {
-          type: this.scrollOption
-        }
+        currentScrollOption = this._func.mergeData(defaultScrollOption, currentScrollOption)
+        return currentScrollOption
+      } else {
+        return defaultScrollOption
       }
-      currentScrollOption = this._func.mergeData(defaultOption, currentScrollOption)
-      return currentScrollOption
     },
     minWidth() {
       let width = 0
