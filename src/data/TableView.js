@@ -99,7 +99,7 @@ export default {
       if (!currentInOption) {
         currentInOption = {}
       }
-      if (this.currentScrollOption.width.layout == 'auto' && this.minWidth) {
+      if (this.currentScrollOption.width.layout == 'auto') {
         if (!currentInOption.style) {
           currentInOption.style = {}
         }
@@ -197,25 +197,18 @@ export default {
       for (let i = 0; i < this.currentColumnList.length; i++) {
         const pitem = this.currentColumnList[i];
         if (!pitem.width || typeof pitem.width !== 'number') {
-          if (!pitem.scrollWidth || typeof pitem.scrollWidth !== 'number') {
-            width = 0
-            break
-          } else {
-            width += pitem.scrollWidth
-          }
+          width += pitem.scrollWidth
         } else {
           width += pitem.width
         }
       }
-      if (width) {
-        if (this.rowSelection) {
-          width += this.choiceWidth
-        }
-        if (this.$scopedSlots.expandedRowRender) {
-          width += this.expandWidth
-        }
-        width += this.currentScrollOption.width.extra
+      if (this.rowSelection) {
+        width += this.choiceWidth
       }
+      if (this.$scopedSlots.expandedRowRender) {
+        width += this.expandWidth
+      }
+      width += this.currentScrollOption.width.extra
       return width
     },
     currentScroll() {

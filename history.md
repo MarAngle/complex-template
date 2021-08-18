@@ -1,8 +1,8 @@
-### 2.1.17-beta
+### 2.1.17
 - TableView修复scroll默认auto的BUG
 - TableView修复scroll默认0为number的BUG
-- 拆分scroll x y定义，避免今后的y自适应时导致的设置覆盖问题
-- height计算未算入head
+- 拆分scroll中x/y定义，避免今后的y自适应时导致的设置覆盖问题
+- scroll.y(height)暂未算入head
 - 样式合并
 
 ### 2.1.16
