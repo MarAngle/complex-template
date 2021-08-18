@@ -83,8 +83,14 @@ export default {
   data() {
     return {
       layout: {
-        width: 0,
-        height: 0
+        main: {
+          width: 0,
+          height: 0
+        },
+        pagination: {
+          width: 0,
+          height: 0
+        }
       }
     }
   },
@@ -143,7 +149,7 @@ export default {
       if (!currentTableOption.props.scroll && this.currentScroll) {
         currentTableOption.props.scroll = this.currentScroll
       }
-      console.log(this.currentScroll)
+      console.log(this.currentScroll, this.layout)
       currentTableOption.ref = config.TableView.ref
       return currentTableOption
     },
@@ -220,7 +226,7 @@ export default {
         if (this.currentScrollOption.width.type == 'number') {
           width = this.currentScrollOption.width.data
         } else if (this.currentScrollOption.width.type == 'auto') {
-          width = this.layout.width
+          width = this.layout.main.width
         }
         if (this.minWidth > width) {
           if (!currentScroll) {
@@ -235,10 +241,13 @@ export default {
           height = this.currentScrollOption.height.data
         }
         if (height) {
-          if (!currentScroll) {
-            currentScroll = {}
+          height = height - this.layout.pagination.height
+          if (height > 0) {
+            if (!currentScroll) {
+              currentScroll = {}
+            }
+            currentScroll.y = height
           }
-          currentScroll.y = height
         }
       }
       return currentScroll
@@ -327,23 +336,39 @@ export default {
   },
   watch: {
     'currentScrollOption.recount': function() {
-      this.setCurrentLayout()
+      this.countCurrentLayout()
     }
   },
   mounted() {
-    this.setCurrentLayout()
+    this.countCurrentLayout()
   },
   methods: {
-    setCurrentLayout() {
-      this.$nextTick(() => {
-        const table = this.$refs[config.TableView.mainRef]
-        if (table) {
-          this.layout.width = table.clientWidth
-          this.layout.height = table.clientHeight
-        } else {
-          this.setCurrentLayout()
-        }
-      })
+    countCurrentLayout() {
+      this.countTargetLayout('main', config.TableView.mainRef)
+      if (this.currentPaginationData) {
+        this.countTargetLayout('pagination', config.TableView.PaginationView.ref, true)
+      } else {
+        this.countTargetLayout('pagination')
+      }
+    },
+    countTargetLayout(prop, target, isVNode) {
+      if (target) {
+        this.$nextTick(() => {
+          let dom = this.$refs[target]
+          if (dom && isVNode) {
+            dom = dom.$el
+          }
+          if (dom) {
+            this.layout[prop].width = dom.clientWidth
+            this.layout[prop].height = dom.clientHeight
+          } else {
+            this.countTargetLayout(prop, target, isVNode)
+          }
+        })
+      } else {
+        this.layout[prop].width = 0
+        this.layout[prop].height = 0
+      }
     },
     /**
      * 获取Tips设置项
