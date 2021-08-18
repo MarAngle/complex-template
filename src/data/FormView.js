@@ -3,6 +3,7 @@ import moment from 'moment'
 import PaginationView from './../mod/PaginationView'
 import UploadFile from './../mod/UploadFile'
 import config from '../../config'
+import utils from '../utils'
 
 /**
  * 事件处理
@@ -494,7 +495,6 @@ export default {
       const defaultFootOption = {
         type: 'auto',
         data: 'props',
-        style: 'auto',
         layout: {
           props: {
             span: 24
@@ -505,9 +505,6 @@ export default {
       let currentFootMenuOption = _func.mergeData(defaultFootOption, this.footMenuOption)
       if (currentFootMenuOption.type == 'auto') {
         currentFootMenuOption.type = this.layout == 'inline' ? 'single' : 'multiple'
-      }
-      if (!currentFootMenuOption.option.style && currentFootMenuOption.style == 'auto') {
-        currentFootMenuOption.option.style = config.FormView.footMenu.mainStyle[currentFootMenuOption.type]
       }
       return currentFootMenuOption
     },
@@ -534,12 +531,10 @@ export default {
               }
             }
           }
-          if (!menuItem.style && currentFootMenuOption.style == 'auto') {
-            menuItem.style = config.FormView.footMenu.style[currentFootMenuOption.type]
-          }
+          const className = this.countClassName('foot', this.currentFootMenuOption.type, 'menu', 'item')
+          utils.addClass(menuItem, className)
           if (!menuItem.on) {
-            menuItem.on = {
-            }
+            menuItem.on = {}
           }
           if (!menuItem.on.click) {
             menuItem.on.click = () => {
@@ -563,7 +558,10 @@ export default {
                 index: i
               })
             }
-            list.push(this.$createElement('a-form-model-item', _func.mergeData(currentFootMenuOption.option, parentOption), [ button ]))
+            let mainOption = _func.mergeData(this.currentFootMenuOption.option, parentOption)
+            const className = this.countClassName('foot', this.currentFootMenuOption.type, 'menu')
+            utils.addClass(mainOption, className)
+            list.push(this.$createElement('a-form-model-item', mainOption, [ button ]))
           } else {
             // 共享模式
             let button
@@ -584,6 +582,9 @@ export default {
           footMenu = list
         } else {
           // 共享模式
+          let mainOption = this.currentFootMenuOption.option
+          const className = this.countClassName('foot', this.currentFootMenuOption.type, 'menu')
+          utils.addClass(mainOption, className)
           footMenu = this.$createElement('a-form-model-item', currentFootMenuOption.option, list)
         }
         if (this.layout === 'inline') {
@@ -603,6 +604,12 @@ export default {
     })
   },
   methods: {
+    countClassNameByLayout(endStr) {
+      return this.countClassName(this.layout, endStr)
+    },
+    countClassName(...args) {
+      return utils.countClass(config.FormView.className, ...args)
+    },
     /**
      * 设置form的ref
      * @param {*} check 是否进行规则检查
@@ -811,7 +818,9 @@ export default {
       let renderTypeItem = null
       let typeFormatData = typeFormat.getData(item.edit.type)
       itemOption = typeFormatData.option(itemOption, item, payload)
-      this.autoSetWidthOption(itemOption, item.edit.width, config.FormView.itemWidth[this.layout])
+      const className = this.countClassNameByLayout('item')
+      utils.addClass(itemOption, className)
+      this.autoSetWidthOption(itemOption, item.edit.width)
       // 考虑一个默认的值，inline模式下和其他模式下的默认值，避免出现问题
       if (mainSlot && item.edit.slot.type == 'model') {
         renderTypeItem = mainSlot({

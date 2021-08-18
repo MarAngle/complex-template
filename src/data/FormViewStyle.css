@@ -1,0 +1,28 @@
+.complex-form-view-inline-item{
+  width: 100px;
+}
+.complex-form-view-horizontal-item{
+  width: 100%;
+}
+.complex-form-view-vertical-item{
+  width: 100%;
+}
+
+.complex-form-view-foot-multiple-menu{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+.complex-form-view-foot-multiple-menu-item{
+  flex: none;
+  margin-left: 8px;
+  margin-right: 8px;
+}
+.complex-form-view-item-select-pagination{
+  border-top: 1px #ccc solid;
+  display: flex;
+  justify-content: flex-end;
+  padding: 4px 12px;
+  align-items: center;
+}
