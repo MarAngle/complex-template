@@ -1,4 +1,4 @@
-### 2.1.19-beta
+### 2.1.19
 - TableView布局再优化，优化layout=auto/count布局，优化传参
 
 ### 2.1.18

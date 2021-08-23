@@ -5,6 +5,29 @@ import PaginationView from './../mod/PaginationView'
 import config from '../../config'
 import utils from '../utils'
 
+function parseScrollProp(option, prop) {
+  if (option[prop] !== undefined) {
+    let type = _func.getType(option[prop])
+    if (type !== 'object') {
+      if (type === 'boolean') {
+        option[prop] = {
+          type: 'fixed',
+          data: option[prop]
+        }
+      } else if (type === 'number') {
+        option[prop] = {
+          type: 'number',
+          data: option[prop]
+        }
+      } else if (type === 'string') {
+        option[prop] = {
+          type: option[prop]
+        }
+      }
+    }
+  }
+}
+
 export default {
   name: 'TableView',
   props: {
@@ -191,42 +214,8 @@ export default {
             layout: this.scrollOption
           }
         }
-        if (currentScrollOption.width !== undefined) {
-          let widthType = this._func.getType(currentScrollOption.width)
-          if (widthType !== 'object') {
-            if (widthType === 'boolean') {
-              currentScrollOption.width = {
-                type: 'fixed',
-                data: currentScrollOption.width
-              }
-            } else if (widthType === 'number') {
-              currentScrollOption.width = {
-                type: 'number',
-                data: currentScrollOption.width
-              }
-            } else if (widthType === 'string') {
-              currentScrollOption.width = {
-                type: currentScrollOption.width
-              }
-            }
-          }
-        }
-        if (currentScrollOption.height !== undefined) {
-          let heightType = this._func.getType(currentScrollOption.height)
-          if (heightType !== 'object') {
-            if (heightType === 'boolean') {
-              currentScrollOption.height = {
-                type: 'fixed',
-                data: currentScrollOption.height
-              }
-            } else if (heightType === 'number') {
-              currentScrollOption.height = {
-                type: 'number',
-                data: currentScrollOption.height
-              }
-            }
-          }
-        }
+        parseScrollProp(currentScrollOption, 'width')
+        parseScrollProp(currentScrollOption, 'height')
         currentScrollOption = this._func.mergeData(defaultScrollOption, currentScrollOption)
         return currentScrollOption
       } else {
