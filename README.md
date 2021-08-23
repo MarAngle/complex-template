@@ -25,7 +25,7 @@
 - height暂时未计算标题高度，考虑实现方案
 
 
-#### scrollOption.width.layout == 'auto'实现
+#### scrollOption.width.layout == 'count'实现
 - 基于自动scroll基础之上，对整体宽度已知情况下
 - 自动布局，通过minWidth实现最小宽度的设置，统一page实现scroll
 - 此时分页器将跟table整体进行滑动

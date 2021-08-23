@@ -114,7 +114,7 @@ export default {
       if (!currentInOption) {
         currentInOption = {}
       }
-      if (this.currentScrollOption.width.layout == 'auto') {
+      if (this.currentScrollOption.layout == 'count') {
         if (!currentInOption.style) {
           currentInOption.style = {}
         }
@@ -169,9 +169,9 @@ export default {
     currentScrollOption() {
       const defaultScrollOption = {
         recount: 0,
+        layout: '',
         width: {
           type: '',
-          layout: '',
           data: 0,
           offset: config.TableView.scroll.width.offset
         },
@@ -186,17 +186,44 @@ export default {
         let currentScrollOption
         if (type === 'object') {
           currentScrollOption = this.scrollOption
-        } else if (type === 'number') {
+        } else {
           currentScrollOption = {
-            width: {
-              type: 'number',
-              data: this.scrollOption
+            layout: this.scrollOption
+          }
+        }
+        if (currentScrollOption.width !== undefined) {
+          let widthType = this._func.getType(currentScrollOption.width)
+          if (widthType !== 'object') {
+            if (widthType === 'boolean') {
+              currentScrollOption.width = {
+                type: 'fixed',
+                data: currentScrollOption.width
+              }
+            } else if (widthType === 'number') {
+              currentScrollOption.width = {
+                type: 'number',
+                data: currentScrollOption.width
+              }
+            } else if (widthType === 'string') {
+              currentScrollOption.width = {
+                type: currentScrollOption.width
+              }
             }
           }
-        } else if (type == 'string') {
-          currentScrollOption = {
-            width: {
-              type: this.scrollOption
+        }
+        if (currentScrollOption.height !== undefined) {
+          let heightType = this._func.getType(currentScrollOption.height)
+          if (heightType !== 'object') {
+            if (heightType === 'boolean') {
+              currentScrollOption.height = {
+                type: 'fixed',
+                data: currentScrollOption.height
+              }
+            } else if (heightType === 'number') {
+              currentScrollOption.height = {
+                type: 'number',
+                data: currentScrollOption.height
+              }
             }
           }
         }
@@ -227,32 +254,49 @@ export default {
     },
     currentScroll() {
       let currentScroll = null
-      if (this.currentScrollOption.width.type && this.currentScrollOption.width.layout != 'auto') {
-        let width
-        if (this.currentScrollOption.width.type == 'number') {
-          width = this.currentScrollOption.width.data
-        } else if (this.currentScrollOption.width.type == 'auto') {
-          width = this.layout.main.width
+      if (this.currentScrollOption.layout == 'auto') {
+        currentScroll = {
+          x: true
         }
-        if (this.minWidth > width) {
-          if (!currentScroll) {
-            currentScroll = {}
+      } else if (this.currentScrollOption.layout != 'count' && this.currentScrollOption.width.type) {
+        if (this.currentScrollOption.width.type == 'fixed') {
+          currentScroll = {
+            x: this.currentScrollOption.width.data
           }
-          currentScroll.x = this.minWidth
-        }
-      }
-      if (this.currentScrollOption.height.type) {
-        let height
-        if (this.currentScrollOption.height.type == 'number') {
-          height = this.currentScrollOption.height.data
-        }
-        if (height) {
-          height = height - this.layout.pagination.height - this.layout.tableHead.height + this.currentScrollOption.height.offset
-          if (height > 0) {
+        } else {
+          let width
+          if (this.currentScrollOption.width.type == 'number') {
+            width = this.currentScrollOption.width.data
+          } else if (this.currentScrollOption.width.type == 'auto') {
+            width = this.layout.main.width
+          }
+          if (this.minWidth > width) {
             if (!currentScroll) {
               currentScroll = {}
             }
-            currentScroll.y = height
+            currentScroll.x = this.minWidth
+          }
+        }
+      }
+      if (this.currentScrollOption.height.type) {
+        if (this.currentScrollOption.width.type == 'fixed') {
+          if (!currentScroll) {
+            currentScroll = {}
+          }
+          currentScroll.y = this.currentScrollOption.height.data
+        } else {
+          let height
+          if (this.currentScrollOption.height.type == 'number') {
+            height = this.currentScrollOption.height.data
+          }
+          if (height) {
+            height = height - this.layout.pagination.height - this.layout.tableHead.height + this.currentScrollOption.height.offset
+            if (height > 0) {
+              if (!currentScroll) {
+                currentScroll = {}
+              }
+              currentScroll.y = height
+            }
           }
         }
       }

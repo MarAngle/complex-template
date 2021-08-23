@@ -1,3 +1,6 @@
+### 2.1.19-beta
+- TableView布局再优化，优化layout=auto/count布局，优化传参
+
 ### 2.1.18
 - 高度设置完成，添加校准值
 - AutoIndex从接收ListData参数到Pagination参数
