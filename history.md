@@ -1,3 +1,6 @@
+### 2.1.20
+- FormView优化日期范围选择器的初始化判断
+
 ### 2.1.19
 - TableView布局再优化，优化layout=auto/count布局，优化传参
 

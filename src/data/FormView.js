@@ -100,12 +100,14 @@ const funcList = {
  * @param {string[]} propList 值列表
  * @param {string[]} formatList 格式化列表
  */
-function formatMoment(data, propList, formatList) {
+function formatMoment(data, propList, formatList, isArray) {
   for (let n = 0; n < propList.length; n++) {
     let prop = propList[n]
     if (data[prop]) {
-      let type = _func.getType(data[prop])
-      if (type == 'array') {
+      if (isArray) {
+        if (!_func.isArray(data[prop])) {
+          data[prop] = []
+        }
         for (let i = 0; i < data[prop].length; i++) {
           data[prop][i] = formatMomentNext(data[prop][i], formatList[n])
         }
@@ -241,9 +243,9 @@ let typeFormat = {
         }
         typeFormat.buildFunc(this, itemOption, item, payload)
         itemOption = _func.mergeData(itemOption, item.edit.localOption.item)
-        formatMoment(itemOption.props, ['value', 'defaultValue'], [itemOption.props.formatedit, itemOption.props.formatedit])
+        formatMoment(itemOption.props, ['value', 'defaultValue'], [itemOption.props.formatedit, itemOption.props.formatedit], true)
         if (itemOption.props.showTime) {
-          formatMoment(itemOption.props.showTime, ['defaultValue', 'defaultOpenValue'], [itemOption.props.showTime.format, itemOption.props.showTime.format])
+          formatMoment(itemOption.props.showTime, ['defaultValue', 'defaultOpenValue'], [itemOption.props.showTime.format, itemOption.props.showTime.format], true)
         }
         return itemOption
       }
