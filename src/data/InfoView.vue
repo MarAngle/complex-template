@@ -2,7 +2,6 @@
 .complex-info-view{
   padding: 10px 10px;
   p{
-    // min-height: 40px;
     margin: 0;
     line-height: 32px;
     padding: 4px 0;
