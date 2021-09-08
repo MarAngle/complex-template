@@ -55,12 +55,16 @@ export default {
     size: { // default / middle / small
       type: String,
       required: false,
-      default: config.TableView.size
+      default: function() {
+        return config.TableView.size
+      }
     },
     bordered: { // 是否网格
       type: Boolean,
       required: false,
-      default: config.TableView.bordered
+      default: function() {
+        return config.TableView.bordered
+      }
     },
     tableOption: { // table的设置项
       type: Object,
@@ -95,22 +99,30 @@ export default {
     choiceWidth: {
       type: Number,
       required: false,
-      default: config.TableView.choiceWidth
+      default: function() {
+        return config.TableView.choiceWidth
+      }
     },
     expandWidth: {
       type: Number,
       required: false,
-      default: config.TableView.expandWidth
+      default: function() {
+        return config.TableView.expandWidth
+      }
     },
     autoIndexProp: {
       type: String,
       required: false,
-      default: config.TableView.autoIndex.prop
+      default: function() {
+        return config.TableView.autoIndex.prop
+      }
     },
     autoIndexPagination: {
       type: Boolean,
       required: false,
-      default: config.TableView.autoIndex.pagination
+      default: function() {
+        return config.TableView.autoIndex.pagination
+      }
     }
   },
   data() {

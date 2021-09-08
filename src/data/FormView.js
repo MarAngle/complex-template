@@ -423,7 +423,9 @@ export default {
     layout: { // 表单布局	'horizontal'|'vertical'|'inline'
       type: String,
       required: false,
-      default: config.FormView.layout
+      default: function() {
+        return config.FormView.layout
+      }
     },
     layoutOption: { // layout != inline时的a-row的参数设置项
       type: Object,
@@ -435,22 +437,30 @@ export default {
     labelAlign: { // label 标签的文本对齐方式
       type: String,
       required: false,
-      default: config.FormView.labelAlign
+      default: function() {
+        return config.FormView.labelAlign
+      }
     },
     checkOnRuleChange: { // 是否在 rules 属性改变后立即触发一次验证
       type: Boolean,
       required: false,
-      default: config.FormView.checkOnRuleChange
+      default: function() {
+        return config.FormView.checkOnRuleChange
+      }
     },
     checkOnInit: { // 是否在加载时进行检查
       type: Boolean,
       required: false,
-      default: config.FormView.checkOnInit
+      default: function() {
+        return config.FormView.checkOnInit
+      }
     },
     clearCheckOnInit: { // 是否在加载时不检查情况下清除检查结果
       type: Boolean,
       required: false,
-      default: config.FormView.clearCheckOnInit
+      default: function() {
+        return config.FormView.clearCheckOnInit
+      }
     },
     form: { // form数据{ data, num }
       type: Object,
