@@ -1,10 +1,17 @@
+import utils from './src/utils'
+
+const TableViewClass = 'complex-table-view'
+const TableViewPaginationClass = utils.countClass(TableViewClass, 'pagination')
+const TableViewPaginationSlotClass = utils.countClass(TableViewPaginationClass, 'slot')
+const FormViewClass = 'complex-form-view'
+
 let config = {
   TableView: {
     mainRef: 'MainTableView',
     inRef: 'InTableView',
     ref: 'TableView',
-    className: 'complex-table-view',
-    inClassName: 'complex-table-view-in',
+    className: TableViewClass,
+    inClassName: utils.countClass(TableViewClass, 'in'),
     size: 'default',
     autoLayout: false,
     bordered: true,
@@ -19,7 +26,7 @@ let config = {
       }
     },
     PaginationView: {
-      className: 'complex-table-view-pagination',
+      className: TableViewPaginationClass,
       ref: 'TablePaginationView'
     },
     auto: {
@@ -35,7 +42,7 @@ let config = {
     }
   },
   FormView: {
-    className: 'complex-form-view',
+    className: FormViewClass,
     ref: 'FormView',
     layout: 'horizontal',
     layoutOption: {
@@ -60,9 +67,21 @@ let config = {
   slot: {
     pagination: {
       total: function(h, payload, option) {
-        return h('span', { class: 'complex-table-view-pagination-slot-total' }, [
-          h('span', { class: ['complex-table-view-pagination-slot-total-item'] }, `共${payload.total}页`),
-          h('span', { class: ['complex-table-view-pagination-slot-total-item'] }, `${payload.totalNum}条`)
+        let mainClass = utils.countClass(TableViewPaginationSlotClass, 'total')
+        let itemClass = utils.countClass(mainClass, 'item')
+        return h('span', { class: mainClass }, [
+          h('span', {
+            class: [
+              itemClass,
+              utils.countClass(itemClass, 'page')
+            ]
+          }, `共${payload.total}页`),
+          h('span', {
+            class: [
+              itemClass,
+              utils.countClass(itemClass, 'num')
+            ]
+          }, `${payload.totalNum}条`)
         ])
       },
       choice: function(h, payload, option, listdata) {
@@ -71,23 +90,33 @@ let config = {
             option = {}
           }
           let size = listdata.getChoiceData('id').length
-          let style = {}
-          if (option.hidden) {
-            if (size == 0) {
-              style.display = 'none'
-            }
-          }
-          let itemClass = ['complex-table-view-pagination-slot-choice-item']
+          let mainClass = utils.countClass(TableViewPaginationSlotClass, 'choice')
+          let itemClass = utils.countClass(mainClass, 'item')
+          let emptyItemClass = utils.countClass(itemClass, 'empty')
+          let itemClassList = [ itemClass ]
           if (size == 0) {
-            itemClass.push('complex-table-view-pagination-slot-choice-item-empty')
+            itemClassList.push(emptyItemClass)
           }
           let itemList = [
-            h('span', { class: itemClass }, `已选择：`),
-            h('span', { class: itemClass }, `${size}`)
+            h('span', {
+              class: [
+                ...itemClassList,
+                utils.countClass(itemClass, 'text')
+              ]
+            }, `已选择：`),
+            h('span', {
+              class: [
+                ...itemClassList,
+                utils.countClass(itemClass, 'size')
+              ]
+            }, `${size}`)
           ]
           if (option.menu) {
             let menu = h('span', {
-              class: [...itemClass, 'complex-table-view-pagination-slot-choice-item-menu'],
+              class: [
+                ...itemClassList,
+                utils.countClass(itemClass, 'menu')
+              ],
               on: {
                 click: function() {
                   listdata.resetChoice(true)
@@ -97,8 +126,7 @@ let config = {
             itemList.push(menu)
           }
           return h('span', {
-            class: 'complex-table-view-pagination-slot-choice',
-            style: style
+            class: mainClass
           }, itemList)
         }
       }
