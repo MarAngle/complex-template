@@ -604,7 +604,15 @@ export default {
       let mainSlot = this.$scopedSlots[item.edit.slot.name]
       if (item.edit.slot.type != 'main') {
         // 非主要替换模式下构建主要参数
+        let itemClass = this.countClassName('item')
+        let typeClass = utils.countClass(itemClass, item.edit.type)
+        let classList = [itemClass, typeClass]
+        if (item.edit.option.multiple) {
+          let multipleClass = utils.countClass(typeClass, 'multiple')
+          classList.push(multipleClass)
+        }
         let mainOption = {
+          class: classList,
           props: {
             prop: item.prop,
             label: item.label,
@@ -642,15 +650,13 @@ export default {
         }
         // 获取tips插槽
         renderItem = this.$createElement('a-form-model-item', mainOption, [ this.renderTip(item, mainSlot, payload) ])
-      } else {
+      } else if (mainSlot) {
         // 主要模式下替换
-        if (mainSlot) {
-          renderItem = mainSlot({
-            ...payload
-          })
-        } else {
-          console.error(`${item.prop}/${item.name}需要设置插槽!`)
-        }
+        renderItem = mainSlot({
+          ...payload
+        })
+      } else {
+        console.error(`${item.prop}/${item.name}需要设置插槽!`)
       }
       if (this.layout === 'inline') {
         return renderItem
