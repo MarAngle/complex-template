@@ -1,77 +1,17 @@
 import _func from 'complex-func'
-import moment from 'moment'
-import PaginationView from './../mod/PaginationView'
-import UploadFile from './../mod/UploadFile'
 import config from '../../config'
 import utils from '../utils'
-
-/**
- * 事件处理
- */
-class EventData {
-  constructor () {
-    this.data = {}
-    this.on = {}
-  }
-  /**
-   * 创建事件对象
-   * @param {string} name 事件名称
-   * @param {*} target Vue实例
-   * @param {*} prop Vue emit prop
-   * @param {*} list data[name]初始值
-   */
-  build(name, target, prop, list = []) {
-    this.data[name] = list
-    this.on[name] = (...args) => {
-      target.$emit('event', prop, name, args)
-      this.trigger(name, ...args)
-      target.$emit('eventEnd', prop, name, args)
-    }
-  }
-  /**
-   * 添加事件
-   * @param {string} name 事件名称
-   * @param {*} target Vue实例
-   * @param {*} prop Vue emit prop
-   * @param {*} data 事件回调
-   * @param {*} method 加入事件回调列表的方法
-   */
-  add(name, target, prop, data, method = 'push') {
-    if (!this.data[name]) {
-      this.build(name, target, prop)
-    }
-    if (data) {
-      this.data[name][method](data)
-    }
-  }
-  /**
-   * 触发事件
-   * @param {string} name 事件名称
-   * @param  {...any} args 参数
-   */
-  trigger(name, ...args) {
-    if (this.data[name]) {
-      for (let n = 0; n < this.data[name].length; n++) {
-        this.data[name][n](...args)
-      }
-    }
-  }
-  /**
-   * 获取事件对象on{event}
-   * @returns {object}
-   */
-  getData() {
-    return this.on
-  }
-}
+import EventData from '../build/EventData'
+import PaginationView from './../mod/PaginationView'
+import UploadFile from './../mod/UploadFile'
 
 let showLogs = {
   init: false,
   model: false
 }
 
-// 基本函数列表
-const funcList = {
+// 双向绑定函数列表
+const modelFuncList = {
   valueInit: function (itemOption, formData, prop) {
     if (showLogs.init) { console.log(itemOption, formData, prop) }
     itemOption.props.value = formData[prop]
@@ -94,47 +34,13 @@ const funcList = {
   }
 }
 
-/**
- * moment兼容
- * @param {object} data 属性对象
- * @param {string[]} propList 值列表
- * @param {string[]} formatList 格式化列表
- */
-function formatMoment(data, propList, formatList, isArray) {
-  for (let n = 0; n < propList.length; n++) {
-    let prop = propList[n]
-    if (data[prop]) {
-      if (isArray) {
-        if (!_func.isArray(data[prop])) {
-          data[prop] = []
-        }
-        for (let i = 0; i < data[prop].length; i++) {
-          data[prop][i] = formatMomentNext(data[prop][i], formatList[n])
-        }
-      } else {
-        data[prop] = formatMomentNext(data[prop], formatList[n])
-      }
-    }
-  }
-}
-function formatMomentNext(value, format) {
-  if (value) {
-    if (moment.isMoment(value)) {
-      return value
-    } else {
-      return moment(value, format)
-    }
-  } else {
-    return value
-  }
-}
 // 类型格式化
 let typeFormat = {
   base: {
     func: {
-      init: funcList.valueInit,
+      init: modelFuncList.valueInit,
       data: {
-        change: funcList.change
+        change: modelFuncList.change
       }
     },
     option: function(itemOption, item, payload) {
@@ -145,7 +51,7 @@ let typeFormat = {
     ainput: {
       func: {
         data: {
-          input: funcList.input
+          input: modelFuncList.input
         }
       },
       option: function(itemOption, item, payload) {
@@ -179,7 +85,7 @@ let typeFormat = {
     },
     aswitch: {
       func: {
-        init: funcList.checkInit
+        init: modelFuncList.checkInit
       },
       option: function(itemOption, item, payload) {
         itemOption.props = {
@@ -222,9 +128,9 @@ let typeFormat = {
         }
         typeFormat.buildFunc(this, itemOption, item, payload)
         itemOption = _func.mergeData(itemOption, item.edit.localOption.item)
-        formatMoment(itemOption.props, ['value', 'defaultValue'], [itemOption.props.formatedit, itemOption.props.formatedit])
+        utils.formatMoment(itemOption.props, ['value', 'defaultValue'], [itemOption.props.formatedit, itemOption.props.formatedit])
         if (itemOption.props.showTime) {
-          formatMoment(itemOption.props.showTime, ['defaultValue', 'defaultOpenValue'], [itemOption.props.showTime.format, itemOption.props.showTime.format])
+          utils.formatMoment(itemOption.props.showTime, ['defaultValue', 'defaultOpenValue'], [itemOption.props.showTime.format, itemOption.props.showTime.format])
         }
         return itemOption
       }
@@ -243,9 +149,9 @@ let typeFormat = {
         }
         typeFormat.buildFunc(this, itemOption, item, payload)
         itemOption = _func.mergeData(itemOption, item.edit.localOption.item)
-        formatMoment(itemOption.props, ['value', 'defaultValue'], [itemOption.props.formatedit, itemOption.props.formatedit], true)
+        utils.formatMoment(itemOption.props, ['value', 'defaultValue'], [itemOption.props.formatedit, itemOption.props.formatedit], true)
         if (itemOption.props.showTime) {
-          formatMoment(itemOption.props.showTime, ['defaultValue', 'defaultOpenValue'], [itemOption.props.showTime.format, itemOption.props.showTime.format], true)
+          utils.formatMoment(itemOption.props.showTime, ['defaultValue', 'defaultOpenValue'], [itemOption.props.showTime.format, itemOption.props.showTime.format], true)
         }
         return itemOption
       }
@@ -483,9 +389,6 @@ export default {
       type: Array,
       required: false
     }
-  },
-  data() {
-    return {}
   },
   computed: {
     currentFormOption() {
