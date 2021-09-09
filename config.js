@@ -62,6 +62,12 @@ let config = {
           }
         }
       }
+    },
+    auto: {
+      zIndex: {
+        num: 100,
+        act: 'down'
+      }
     }
   },
   slot: {

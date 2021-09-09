@@ -388,9 +388,27 @@ export default {
     footMenu: { // 底部菜单
       type: Array,
       required: false
+    },
+    auto: {
+      type: Object,
+      required: false,
+      default: null
     }
   },
   computed: {
+    currentAuto() {
+      let currentAuto = this.auto || {}
+      if (!currentAuto.zIndex) {
+        currentAuto.zIndex = {}
+      }
+      if (!currentAuto.zIndex.num) {
+        currentAuto.zIndex.num = config.FormView.auto.zIndex.num
+      }
+      if (currentAuto.zIndex.act === undefined) {
+        currentAuto.zIndex.act = config.FormView.auto.zIndex.act
+      }
+      return currentAuto
+    },
     currentFormOption() {
       // formOption格式化
       let defaultFormOption = {
@@ -613,6 +631,7 @@ export default {
         }
         let mainOption = {
           class: classList,
+          style: {},
           props: {
             prop: item.prop,
             label: item.label,
@@ -647,6 +666,16 @@ export default {
         this.autoSetWidthOption(mainOption, item.mainwidth)
         if (item.layout.type == 'width') {
           this.autoSetWidthOption(mainOption, item.layout.width)
+        }
+        // 设置自动zindex
+        if (this.currentAuto.zIndex.act && mainOption.style.zIndex === undefined) {
+          let zIndex = this.currentAuto.zIndex.num + this.mainlist.length - 1
+          if (this.currentAuto.zIndex.act == 'up') {
+            zIndex = zIndex + index
+          } else {
+            zIndex = zIndex - index
+          }
+          mainOption.style.zIndex = zIndex
         }
         // 获取tips插槽
         renderItem = this.$createElement('a-form-model-item', mainOption, [ this.renderTip(item, mainSlot, payload) ])
