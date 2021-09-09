@@ -537,8 +537,8 @@ export default {
     })
   },
   methods: {
-    countClassNameByLayout(endStr) {
-      return this.countClassName(this.layout, endStr)
+    countClassNameByLayout(...args) {
+      return this.countClassName(this.layout, ...args)
     },
     countClassName(...args) {
       return utils.countClass(config.FormView.className, ...args)
@@ -768,7 +768,7 @@ export default {
       let renderTypeItem = null
       let typeFormatData = typeFormat.getData(item.edit.type)
       itemOption = typeFormatData.option(itemOption, item, payload)
-      const className = this.countClassNameByLayout('item')
+      const className = this.countClassNameByLayout('item', 'content')
       utils.addClass(itemOption, className)
       this.autoSetWidthOption(itemOption, item.edit.width)
       // 考虑一个默认的值，inline模式下和其他模式下的默认值，避免出现问题
@@ -826,7 +826,7 @@ export default {
           paginationOption = _func.mergeData(paginationOption, item.edit.localOption.pagination)
           let paginationAreaOption = config.FormView.select.paginationAreaOption
           paginationAreaOption = _func.mergeData(paginationAreaOption, item.edit.localOption.paginationArea)
-          const className = this.countClassName('item', 'select', 'pagination')
+          const className = this.countClassName('item', 'content', 'select', 'pagination')
           utils.addClass(paginationAreaOption, className)
           let pagination = this.$createElement(PaginationView, paginationOption)
           itemOption.props.dropdownRender = (menuNode, props) => {
