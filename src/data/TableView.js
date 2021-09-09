@@ -110,19 +110,10 @@ export default {
         return config.TableView.expandWidth
       }
     },
-    autoIndexProp: {
-      type: String,
+    auto: {
+      type: Object,
       required: false,
-      default: function() {
-        return config.TableView.autoIndex.prop
-      }
-    },
-    autoIndexPagination: {
-      type: Boolean,
-      required: false,
-      default: function() {
-        return config.TableView.autoIndex.pagination
-      }
+      default: null
     }
   },
   data() {
@@ -144,6 +135,31 @@ export default {
     }
   },
   computed: {
+    currentAuto() {
+      let currentAuto = this.auto || {}
+      if (!currentAuto.index) {
+        currentAuto.index = {}
+      }
+      if (!currentAuto.index.prop) {
+        currentAuto.index.prop = config.TableView.auto.index.prop
+      }
+      if (currentAuto.index.pagination === undefined) {
+        currentAuto.index.pagination = config.TableView.auto.index.pagination
+      }
+      if (!currentAuto.pagination) {
+        currentAuto.pagination = {}
+      }
+      if (currentAuto.pagination.default === undefined) {
+        currentAuto.pagination.default = config.TableView.auto.pagination.default
+      }
+      if (currentAuto.pagination.front === undefined) {
+        currentAuto.pagination.front = config.TableView.auto.pagination.front
+      }
+      if (currentAuto.pagination.end === undefined) {
+        currentAuto.pagination.end = config.TableView.auto.pagination.end
+      }
+      return currentAuto
+    },
     currentInOption() {
       let currentInOption = this.inOption
       if (!currentInOption) {
@@ -335,13 +351,13 @@ export default {
                 list: this.columnList
               })
             }
-            if (contentProp === this.autoIndexProp) {
+            if (contentProp === this.currentAuto.index.prop) {
               let AutoIndexOption = {
                 props: {
                   index: index
                 }
               }
-              if (this.autoIndexPagination) {
+              if (this.currentAuto.index.pagination) {
                 AutoIndexOption.props.pagination = this.currentPaginationData
               }
               return this.$createElement(AutoIndex, AutoIndexOption)
@@ -481,12 +497,30 @@ export default {
           },
           scopedSlots: {}
         }
+        let h = this.$createElement
         for (let n in paginationSlotList) {
           let dictData = paginationSlotList[n]
           let slotData = this.$scopedSlots[dictData.prop]
+          if (!slotData) {
+            let autoSlot = this.currentAuto.pagination[dictData.originProp]
+            if (autoSlot) {
+              let type = this._func.getType(autoSlot)
+              if (type !== 'object') {
+                autoSlot = {
+                  type: autoSlot
+                }
+              }
+              if (config.slot.pagination[autoSlot.type]) {
+                let listdata = this.maindata
+                slotData = function(payload) {
+                  return config.slot.pagination[autoSlot.type](h, payload, autoSlot.option, listdata)
+                }
+              }
+            }
+          }
           option.scopedSlots[dictData.originProp] = slotData
         }
-        renderPagination = this.$createElement(PaginationView, option)
+        renderPagination = h(PaginationView, option)
       }
       return renderPagination
     },
