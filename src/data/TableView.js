@@ -136,29 +136,7 @@ export default {
   },
   computed: {
     currentAuto() {
-      let currentAuto = this.auto || {}
-      if (!currentAuto.index) {
-        currentAuto.index = {}
-      }
-      if (!currentAuto.index.prop) {
-        currentAuto.index.prop = config.TableView.auto.index.prop
-      }
-      if (currentAuto.index.pagination === undefined) {
-        currentAuto.index.pagination = config.TableView.auto.index.pagination
-      }
-      if (!currentAuto.pagination) {
-        currentAuto.pagination = {}
-      }
-      if (currentAuto.pagination.default === undefined) {
-        currentAuto.pagination.default = config.TableView.auto.pagination.default
-      }
-      if (currentAuto.pagination.front === undefined) {
-        currentAuto.pagination.front = config.TableView.auto.pagination.front
-      }
-      if (currentAuto.pagination.end === undefined) {
-        currentAuto.pagination.end = config.TableView.auto.pagination.end
-      }
-      return currentAuto
+      return this._func.mergeData(this.auto, config.TableView.auto)
     },
     currentInOption() {
       let currentInOption = this.inOption

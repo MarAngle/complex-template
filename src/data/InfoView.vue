@@ -55,7 +55,8 @@ export default {
     },
     data: {
       type: Object,
-      required: false
+      required: false,
+      default: null
     },
     type: {
       type: String,

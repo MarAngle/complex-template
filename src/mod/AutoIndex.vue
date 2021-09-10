@@ -20,6 +20,7 @@ export default {
       required: true
     },
     pagination: {
+      type: Object,
       required: false,
       default: null
     }

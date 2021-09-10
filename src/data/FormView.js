@@ -383,7 +383,8 @@ export default {
     },
     footMenuOption: { // 底部菜单设置项
       type: Object,
-      required: false
+      required: false,
+      default: null
     },
     footMenu: { // 底部菜单
       type: Array,
@@ -397,17 +398,7 @@ export default {
   },
   computed: {
     currentAuto() {
-      let currentAuto = this.auto || {}
-      if (!currentAuto.zIndex) {
-        currentAuto.zIndex = {}
-      }
-      if (!currentAuto.zIndex.num) {
-        currentAuto.zIndex.num = config.FormView.auto.zIndex.num
-      }
-      if (currentAuto.zIndex.act === undefined) {
-        currentAuto.zIndex.act = config.FormView.auto.zIndex.act
-      }
-      return currentAuto
+      return this._func.mergeData(this.auto, config.FormView.auto)
     },
     currentFormOption() {
       // formOption格式化
