@@ -4,8 +4,8 @@
 
 ### 2.1.26-beta
 - AutoIndex BUG修复，从0开始改为从1开始
-- FormView合并props，优化逻辑
-- props逻辑整体优化
+- FormView/TableView合并props设置项到auto，优化默认值判断逻辑
+- 全局props类型判断和默认值优化
 
 ### 2.1.25
 - 扩展列表分页器默认插槽，实现选择和分页器数据的快速定义

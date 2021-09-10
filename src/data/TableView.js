@@ -82,11 +82,6 @@ export default {
       required: false,
       default: 0
     },
-    autoTextTipOption: { // tips全局option
-      type: [String, Object],
-      required: false,
-      default: ''
-    },
     paginationData: { // 单独制定分页器数据，不从maindata中取值
       type: PaginationData,
       required: false,
@@ -96,20 +91,6 @@ export default {
       type: [Boolean, Function],
       required: false,
       default: true
-    },
-    choiceWidth: {
-      type: Number,
-      required: false,
-      default: function() {
-        return config.TableView.choiceWidth
-      }
-    },
-    expandWidth: {
-      type: Number,
-      required: false,
-      default: function() {
-        return config.TableView.expandWidth
-      }
     },
     auto: {
       type: Object,
@@ -240,10 +221,10 @@ export default {
         }
       }
       if (this.rowSelection) {
-        width += this.choiceWidth
+        width += this.currentAuto.choiceWidth
       }
       if (this.$scopedSlots.expandedRowRender) {
-        width += this.expandWidth
+        width += this.currentAuto.expandWidth
       }
       width += this.currentScrollOption.width.offset
       return width
@@ -347,7 +328,7 @@ export default {
                 props: {
                   text: data,
                   auto: true,
-                  tip: this.formatAutoTextTipOption(pitem.tip, this.autoTextTipOption)
+                  tip: this.formatAutoTextTipOption(pitem.tip, this.currentAuto.tip)
                 }
               }
               return this.$createElement(AutoText, AutoTextOption)

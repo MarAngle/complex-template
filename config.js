@@ -13,10 +13,7 @@ let config = {
     className: TableViewClass,
     inClassName: utils.countClass(TableViewClass, 'in'),
     size: 'default',
-    autoLayout: false,
     bordered: true,
-    expandWidth: 50,
-    choiceWidth: 60,
     scroll: {
       width: {
         offset: 3
@@ -30,10 +27,13 @@ let config = {
       ref: 'TablePaginationView'
     },
     auto: {
+      expandWidth: 50,
+      choiceWidth: 60,
       index: {
         prop: '_index',
         pagination: true
       },
+      tips: null,
       pagination: {
         default: 'choice',
         front: 'total',
