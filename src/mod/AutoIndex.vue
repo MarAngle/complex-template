@@ -26,7 +26,7 @@ export default {
   },
   computed: {
     currentIndex() {
-      let currentIndex = this.index
+      let currentIndex = this.index + 1
       if (this.pagination) {
         let page = this.pagination.getPage()
         let size = this.pagination.getSize()
