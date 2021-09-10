@@ -67,6 +67,16 @@ let config = {
       zIndex: {
         num: 100,
         act: 'down'
+      },
+      foot: {
+        type: 'auto',
+        data: 'props',
+        layout: {
+          props: {
+            span: 24
+          }
+        },
+        option: {}
       }
     }
   },

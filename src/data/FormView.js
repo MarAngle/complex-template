@@ -381,11 +381,6 @@ export default {
       type: Array,
       required: true
     },
-    footMenuOption: { // 底部菜单设置项
-      type: Object,
-      required: false,
-      default: null
-    },
     footMenu: { // 底部菜单
       type: Array,
       required: false
@@ -398,7 +393,11 @@ export default {
   },
   computed: {
     currentAuto() {
-      return this._func.mergeData(this.auto, config.FormView.auto)
+      let currentAuto = this._func.mergeData(this.auto, config.FormView.auto)
+      if (currentAuto.foot.type == 'auto') {
+        currentAuto.foot.type = this.layout == 'inline' ? 'single' : 'multiple'
+      }
+      return currentAuto
     },
     currentFormOption() {
       // formOption格式化
@@ -410,31 +409,13 @@ export default {
           validateOnRuleChange: this.checkOnRuleChange
         }
       }
-      let currentFormOption = _func.mergeData(defaultFormOption, this.formOption)
+      let currentFormOption = _func.mergeData(this.formOption, defaultFormOption)
       currentFormOption.ref = config.FormView.ref
       return currentFormOption
     },
-    currentFootMenuOption() {
-      // 底部菜单选项格式化
-      const defaultFootOption = {
-        type: 'auto',
-        data: 'props',
-        layout: {
-          props: {
-            span: 24
-          }
-        },
-        option: {}
-      }
-      let currentFootMenuOption = _func.mergeData(defaultFootOption, this.footMenuOption)
-      if (currentFootMenuOption.type == 'auto') {
-        currentFootMenuOption.type = this.layout == 'inline' ? 'single' : 'multiple'
-      }
-      return currentFootMenuOption
-    },
     currentFootMenu() {
       // 底部菜单的VNode
-      let currentFootMenuOption = this.currentFootMenuOption
+      let currentFootMenuOption = this.currentAuto.foot
       let currentFootMenu
       let menuList = this.footMenu
       if (menuList && menuList.length > 0) {
@@ -455,8 +436,8 @@ export default {
               }
             }
           }
-          const className = this.countClassName('foot', this.currentFootMenuOption.type, 'menu', 'item')
-          utils.addClass(menuItem, className)
+          const itemClass = this.countClassName('foot', currentFootMenuOption.type, 'menu', 'item')
+          utils.addClass(menuItem, itemClass)
           if (!menuItem.on) {
             menuItem.on = {}
           }
@@ -482,9 +463,9 @@ export default {
                 index: i
               })
             }
-            let mainOption = _func.mergeData(this.currentFootMenuOption.option, parentOption)
-            const className = this.countClassName('foot', this.currentFootMenuOption.type, 'menu')
-            utils.addClass(mainOption, className)
+            let mainOption = _func.mergeData(currentFootMenuOption.option, parentOption)
+            const mainClass = this.countClassName('foot', currentFootMenuOption.type, 'menu')
+            utils.addClass(mainOption, mainClass)
             list.push(this.$createElement('a-form-model-item', mainOption, [ button ]))
           } else {
             // 共享模式
@@ -506,9 +487,9 @@ export default {
           footMenu = list
         } else {
           // 共享模式
-          let mainOption = this.currentFootMenuOption.option
-          const className = this.countClassName('foot', this.currentFootMenuOption.type, 'menu')
-          utils.addClass(mainOption, className)
+          let mainOption = currentFootMenuOption.option
+          const mainClass = this.countClassName('foot', currentFootMenuOption.type, 'menu')
+          utils.addClass(mainOption, mainClass)
           footMenu = this.$createElement('a-form-model-item', currentFootMenuOption.option, list)
         }
         if (this.layout === 'inline') {
