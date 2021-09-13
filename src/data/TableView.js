@@ -118,7 +118,8 @@ export default {
   },
   computed: {
     currentAuto() {
-      return this._func.mergeData(this.auto, config.TableView.auto)
+      let currentAuto = this._func.setDataByDefault(this.auto, config.TableView.auto)
+      return currentAuto
     },
     currentInOption() {
       let currentInOption = this.inOption

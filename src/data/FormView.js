@@ -393,7 +393,7 @@ export default {
   },
   computed: {
     currentAuto() {
-      let currentAuto = this._func.mergeData(this.auto, config.FormView.auto)
+      let currentAuto = this._func.setDataByDefault(this.auto, config.FormView.auto)
       if (currentAuto.foot.type == 'auto') {
         currentAuto.foot.type = this.layout == 'inline' ? 'single' : 'multiple'
       }
@@ -409,7 +409,7 @@ export default {
           validateOnRuleChange: this.checkOnRuleChange
         }
       }
-      let currentFormOption = _func.mergeData(this.formOption, defaultFormOption)
+      let currentFormOption = _func.mergeData(defaultFormOption, this.formOption)
       currentFormOption.ref = config.FormView.ref
       return currentFormOption
     },
