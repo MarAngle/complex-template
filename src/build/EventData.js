@@ -16,9 +16,9 @@
   build(name, target, prop, list = []) {
     this.data[name] = list
     this.on[name] = (...args) => {
-      target.$emit('event', prop, name, args)
+      target.$emit('event', prop, name, ...args)
       this.trigger(name, ...args)
-      target.$emit('eventEnd', prop, name, args)
+      target.$emit('eventEnd', prop, name, ...args)
     }
   }
   /**

@@ -7,6 +7,7 @@
 - autoSetWidthOption函数抽离到utils
 - func直接调用
 - 依赖升级
+- EventData参数由数组改为平铺
 
 ### 2.1.27
 - FormView拆分Item和Foot，优化相关class
