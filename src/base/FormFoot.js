@@ -42,11 +42,8 @@ export default {
   mounted() {
   },
   methods: {
-    countClassNameByLayout(...args) {
-      return this.countClassName(this.layout, ...args)
-    },
     countClassName(...args) {
-      return utils.countClass(config.FormView.className, ...args)
+      return utils.countClass(config.FormView.className, 'foot', ...args)
     }
   },
   /**
@@ -78,7 +75,7 @@ export default {
       if (menuItem.props.disabled === undefined && this.auto.disabled !== undefined) {
         menuItem.props.disabled = this.auto.disabled
       }
-      const itemClass = this.countClassName('foot', this.auto.type, 'menu', 'item')
+      const itemClass = this.countClassName(this.auto.type, 'menu', 'item')
       utils.addClass(menuItem, itemClass)
       if (!menuItem.on) {
         menuItem.on = {}
@@ -106,7 +103,7 @@ export default {
           })
         }
         let mainOption = _func.mergeData(this.auto.option, parentOption)
-        const mainClass = this.countClassName('foot', this.auto.type, 'menu')
+        const mainClass = this.countClassName(this.auto.type, 'menu')
         utils.addClass(mainOption, mainClass)
         list.push(h('a-form-model-item', mainOption, [ button ]))
       } else {
@@ -130,13 +127,13 @@ export default {
     } else {
       // 共享模式
       let mainOption = this.auto.option
-      const mainClass = this.countClassName('foot', this.auto.type, 'menu')
+      const mainClass = this.countClassName(this.auto.type, 'menu')
       utils.addClass(mainOption, mainClass)
       footMenu = h('a-form-model-item', this.auto.option, list)
     }
     if (this.layout === 'inline') {
       return h('div', {
-        class: this.countClassName('foot', this.auto.type, 'menu', 'main')
+        class: this.countClassName(this.auto.type, 'menu', 'main')
       }, [
         footMenu
       ])

@@ -216,8 +216,9 @@ export default {
         h('a-row', { ...this.layoutOption }, renderFormList)
       ])
     }
+    let mainClass = config.FormView.className
     let render = h('div', {
-      class: config.FormView.className
+      class: [mainClass, mainClass + this.layout]
     }, [ renderForm ])
     return render
   }

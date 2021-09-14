@@ -360,11 +360,8 @@ export default {
     }
   },
   methods: {
-    countClassNameByLayout(...args) {
-      return this.countClassName(this.layout, ...args)
-    },
     countClassName(...args) {
-      return utils.countClass(config.FormView.className, ...args)
+      return utils.countClass(config.FormView.className, 'item', ...args)
     },
     /**
      * typeItem宽度设置
@@ -428,7 +425,7 @@ export default {
       let renderItem = null
       let typeFormatData = typeFormat.getData(item.edit.type)
       itemOption = typeFormatData.option(itemOption, item, payload)
-      const className = this.countClassNameByLayout('item', 'content')
+      const className = this.countClassName('content')
       utils.addClass(itemOption, className)
       this.autoSetWidthOption(itemOption, item.edit.width)
       // 考虑一个默认的值，inline模式下和其他模式下的默认值，避免出现问题
@@ -486,7 +483,7 @@ export default {
           paginationOption = _func.mergeData(paginationOption, item.edit.localOption.pagination)
           let paginationAreaOption = config.FormView.select.paginationAreaOption
           paginationAreaOption = _func.mergeData(paginationAreaOption, item.edit.localOption.paginationArea)
-          const className = this.countClassName('item', 'content', 'select', 'pagination')
+          const className = this.countClassName('content', 'select', 'pagination')
           utils.addClass(paginationAreaOption, className)
           let pagination = this.$createElement(PaginationView, paginationOption)
           itemOption.props.dropdownRender = (menuNode, props) => {
@@ -536,7 +533,7 @@ export default {
     let mainSlot = this.target.$scopedSlots[this.data.edit.slot.name]
     if (this.data.edit.slot.type != 'main') {
       // 非主要替换模式下构建主要参数
-      let itemClass = this.countClassName('item')
+      let itemClass = this.countClassName()
       let typeClass = utils.countClass(itemClass, this.data.edit.type)
       let classList = [itemClass, typeClass]
       if (this.data.edit.option.multiple) {
