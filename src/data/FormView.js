@@ -1,6 +1,7 @@
 import _func from 'complex-func'
 import config from '../../config'
 import FormItem from '../base/FormItem'
+import FormFoot from '../base/FormFoot'
 
 export default {
   name: 'FormView',
@@ -95,6 +96,24 @@ export default {
       let currentFormOption = _func.mergeData(defaultFormOption, this.formOption)
       currentFormOption.ref = config.FormView.ref
       return currentFormOption
+    },
+    currentFootMenu() {
+      // 底部菜单的VNode
+      let currentFootMenu
+      let menuList = this.footMenu
+      if (menuList && menuList.length > 0) {
+        currentFootMenu = this.$createElement(FormFoot, {
+          props: {
+            list: menuList,
+            auto: this.currentAuto.foot,
+            form: this.form,
+            type: this.type,
+            layout: this.layout,
+            target: this
+          }
+        })
+      }
+      return currentFootMenu
     }
   },
   mounted() {
