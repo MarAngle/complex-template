@@ -69,6 +69,8 @@ let config = {
         act: 'down'
       },
       foot: {
+        loading: undefined,
+        disabled: undefined,
         type: 'auto',
         data: 'props',
         layout: {

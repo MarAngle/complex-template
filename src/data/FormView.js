@@ -415,7 +415,7 @@ export default {
     },
     currentFootMenu() {
       // 底部菜单的VNode
-      let currentFootMenuOption = this.currentAuto.foot
+      let currentAutoFoot = this.currentAuto.foot
       let currentFootMenu
       let menuList = this.footMenu
       if (menuList && menuList.length > 0) {
@@ -428,7 +428,7 @@ export default {
           if (menuItem.slot) {
             mainSlot = this.$scopedSlots[menuItem.slot]
           }
-          if (currentFootMenuOption.data == 'props') {
+          if (currentAutoFoot.data == 'props') {
             // 传值不存在时说明此时使用简单数据传值，所有传值默认传递到props中=>
             menuItem = {
               props: {
@@ -436,7 +436,13 @@ export default {
               }
             }
           }
-          const itemClass = this.countClassName('foot', currentFootMenuOption.type, 'menu', 'item')
+          if (menuItem.props.loading === undefined && currentAutoFoot.loading !== undefined) {
+            menuItem.props.loading = currentAutoFoot.loading
+          }
+          if (menuItem.props.disabled === undefined && currentAutoFoot.disabled !== undefined) {
+            menuItem.props.disabled = currentAutoFoot.disabled
+          }
+          const itemClass = this.countClassName('foot', currentAutoFoot.type, 'menu', 'item')
           utils.addClass(menuItem, itemClass)
           if (!menuItem.on) {
             menuItem.on = {}
@@ -452,7 +458,7 @@ export default {
               })
             }
           }
-          if (currentFootMenuOption.type == 'single') {
+          if (currentAutoFoot.type == 'single') {
             // 单独模式
             let button
             if (!mainSlot) {
@@ -463,8 +469,8 @@ export default {
                 index: i
               })
             }
-            let mainOption = _func.mergeData(currentFootMenuOption.option, parentOption)
-            const mainClass = this.countClassName('foot', currentFootMenuOption.type, 'menu')
+            let mainOption = _func.mergeData(currentAutoFoot.option, parentOption)
+            const mainClass = this.countClassName('foot', currentAutoFoot.type, 'menu')
             utils.addClass(mainOption, mainClass)
             list.push(this.$createElement('a-form-model-item', mainOption, [ button ]))
           } else {
@@ -482,20 +488,20 @@ export default {
           }
         }
         let footMenu
-        if (currentFootMenuOption.type == 'single') {
+        if (currentAutoFoot.type == 'single') {
           // 单独模式
           footMenu = list
         } else {
           // 共享模式
-          let mainOption = currentFootMenuOption.option
-          const mainClass = this.countClassName('foot', currentFootMenuOption.type, 'menu')
+          let mainOption = currentAutoFoot.option
+          const mainClass = this.countClassName('foot', currentAutoFoot.type, 'menu')
           utils.addClass(mainOption, mainClass)
-          footMenu = this.$createElement('a-form-model-item', currentFootMenuOption.option, list)
+          footMenu = this.$createElement('a-form-model-item', currentAutoFoot.option, list)
         }
         if (this.layout === 'inline') {
           currentFootMenu = footMenu
         } else {
-          currentFootMenu = this.$createElement('a-col', currentFootMenuOption.layout, [
+          currentFootMenu = this.$createElement('a-col', currentAutoFoot.layout, [
             footMenu
           ])
         }

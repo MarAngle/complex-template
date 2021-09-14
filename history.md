@@ -2,6 +2,9 @@
 - 实现tree-select
 - 实现多选的高度扩展设置项
 
+### 2.1.27-beta
+- FormView Foot设置项添加loading/disabled
+
 ### 2.1.26
 - AutoIndex BUG修复，从0开始改为从1开始
 - FormView/TableView合并props设置项到auto，优化默认值判断逻辑
