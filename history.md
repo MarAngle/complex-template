@@ -4,6 +4,7 @@
 
 ### 2.1.27-beta
 - FormView Foot设置项添加loading/disabled
+- 准备拆解FormView
 
 ### 2.1.26
 - AutoIndex BUG修复，从0开始改为从1开始
