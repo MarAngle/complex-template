@@ -53,6 +53,29 @@ let utils = {
     } else {
       return value
     }
+  },
+  /**
+   * typeItem宽度设置
+   * @param {object} option 主要的option
+   * @param {*} widthList 宽度数据列表
+   */
+  autoSetWidthOption(option, ...widthList) {
+    for (let i = 0; i < widthList.length; i++) {
+      const width = widthList[i]
+      if (width) {
+        if (!option.style) {
+          option.style = {}
+        }
+        if (!option.style.width) {
+          if (_func.getType(width) == 'number') {
+            option.style.width = width + 'px'
+          } else if (width) {
+            option.style.width = width
+          }
+        }
+        return true
+      }
+    }
   }
 }
 

@@ -364,29 +364,6 @@ export default {
       return utils.countClass(config.FormView.className, 'item', ...args)
     },
     /**
-     * typeItem宽度设置
-     * @param {object} option 主要的option
-     * @param {*} widthList 宽度数据列表
-     */
-    autoSetWidthOption(option, ...widthList) {
-      for (let i = 0; i < widthList.length; i++) {
-        const width = widthList[i]
-        if (width) {
-          if (!option.style) {
-            option.style = {}
-          }
-          if (!option.style.width) {
-            if (_func.getType(width) == 'number') {
-              option.style.width = width + 'px'
-            } else if (width) {
-              option.style.width = width
-            }
-          }
-          return true
-        }
-      }
-    },
-    /**
      * tips模板
      * @param {object} item 数据
      * @param {*} mainSlot 主要插槽
@@ -427,7 +404,7 @@ export default {
       itemOption = typeFormatData.option(itemOption, item, payload)
       const className = this.countClassName('content')
       utils.addClass(itemOption, className)
-      this.autoSetWidthOption(itemOption, item.edit.width)
+      utils.autoSetWidthOption(itemOption, item.edit.width)
       // 考虑一个默认的值，inline模式下和其他模式下的默认值，避免出现问题
       if (mainSlot && item.edit.slot.type == 'model') {
         renderItem = mainSlot({
@@ -574,9 +551,9 @@ export default {
       }
       mainOption = _func.mergeData(mainOption, this.data.edit.localOption.main)
       // 首先根据mainwidth设置宽度，在width模式下再进行layout的全局数据赋值，权重比由小到大
-      this.autoSetWidthOption(mainOption, this.data.mainwidth)
+      utils.autoSetWidthOption(mainOption, this.data.mainwidth)
       if (this.data.layout.type == 'width') {
-        this.autoSetWidthOption(mainOption, this.data.layout.width)
+        utils.autoSetWidthOption(mainOption, this.data.layout.width)
       }
       // 设置自动zindex
       if (this.auto.zIndex.act && mainOption.style.zIndex === undefined) {
