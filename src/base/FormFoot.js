@@ -82,7 +82,7 @@ export default {
       }
       if (!menuItem.on.click) {
         menuItem.on.click = () => {
-          this.$emit('menu', menuItem.props.act, {
+          this.target.$emit('menu', menuItem.props.act, {
             form: this.form,
             formData: this.form.data,
             list: this.mainlist,
