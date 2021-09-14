@@ -6,29 +6,6 @@ import PaginationView from './../mod/PaginationView'
 import config from '../../config'
 import utils from '../utils'
 
-function parseScrollProp(option, prop) {
-  if (option[prop] !== undefined) {
-    let type = _func.getType(option[prop])
-    if (type !== 'object') {
-      if (type === 'boolean') {
-        option[prop] = {
-          type: 'fixed',
-          data: option[prop]
-        }
-      } else if (type === 'number') {
-        option[prop] = {
-          type: 'number',
-          data: option[prop]
-        }
-      } else if (type === 'string') {
-        option[prop] = {
-          type: option[prop]
-        }
-      }
-    }
-  }
-}
-
 export default {
   name: 'TableView',
   props: {
@@ -118,14 +95,11 @@ export default {
   },
   computed: {
     currentAuto() {
-      let currentAuto = this._func.setDataByDefault(this.auto, config.TableView.auto)
+      let currentAuto = _func.setDataByDefault(this.auto, config.TableView.auto)
       return currentAuto
     },
     currentInOption() {
-      let currentInOption = this.inOption
-      if (!currentInOption) {
-        currentInOption = {}
-      }
+      let currentInOption = this.inOption || {}
       if (this.currentScrollOption.layout == 'count') {
         if (!currentInOption.style) {
           currentInOption.style = {}
@@ -139,11 +113,8 @@ export default {
       return currentInOption
     },
     currentTableOption() {
-      let currentTableOption = this.tableOption
-      if (!currentTableOption) {
-        currentTableOption = {
-          props: {}
-        }
+      let currentTableOption = this.tableOption || {
+        props: {}
       }
       if (!currentTableOption.props) {
         currentTableOption.props = {}
@@ -194,7 +165,7 @@ export default {
         }
       }
       if (this.scrollOption) {
-        let type = this._func.getType(this.scrollOption)
+        let type = _func.getType(this.scrollOption)
         let currentScrollOption
         if (type === 'object') {
           currentScrollOption = this.scrollOption
@@ -203,9 +174,9 @@ export default {
             layout: this.scrollOption
           }
         }
-        parseScrollProp(currentScrollOption, 'width')
-        parseScrollProp(currentScrollOption, 'height')
-        currentScrollOption = this._func.mergeData(defaultScrollOption, currentScrollOption)
+        utils.parseScrollProp(currentScrollOption, 'width')
+        utils.parseScrollProp(currentScrollOption, 'height')
+        currentScrollOption = _func.mergeData(defaultScrollOption, currentScrollOption)
         return currentScrollOption
       } else {
         return defaultScrollOption
@@ -296,9 +267,9 @@ export default {
           pitem.customRender = (text, record, index) => {
             let data = pitem.func.show(text, { item: pitem, targetitem: record, type: this.listType, index: index })
             let type = _func.getType(data)
-            if (type == 'object') {
+            if (type === 'object') {
               data = JSON.stringify(data)
-            } else if (type == 'array') {
+            } else if (type === 'array') {
               data = data.join(',')
             }
             let contentProp = pitem.dataIndex
@@ -465,7 +436,7 @@ export default {
           if (!slotData) {
             let autoSlot = this.currentAuto.pagination[dictData.originProp]
             if (autoSlot) {
-              let type = this._func.getType(autoSlot)
+              let type = _func.getType(autoSlot)
               if (type !== 'object') {
                 autoSlot = {
                   type: autoSlot

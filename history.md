@@ -5,6 +5,7 @@
 ### 2.1.28
 - 删除旧版本FormView
 - autoSetWidthOption函数抽离到utils
+- func直接调用
 - 依赖升级
 
 ### 2.1.27

@@ -32,7 +32,7 @@ export default {
   },
   computed: {
     currentAuto() {
-      let currentAuto = this._func.setDataByDefault(this.auto, config.FormView.auto)
+      let currentAuto = _func.setDataByDefault(this.auto, config.FormView.auto)
       if (currentAuto.foot.type == 'auto') {
         currentAuto.foot.type = this.layout == 'inline' ? 'single' : 'multiple'
       }

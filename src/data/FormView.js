@@ -77,7 +77,7 @@ export default {
   },
   computed: {
     currentAuto() {
-      let currentAuto = this._func.setDataByDefault(this.auto, config.FormView.auto)
+      let currentAuto = _func.setDataByDefault(this.auto, config.FormView.auto)
       if (currentAuto.foot.type == 'auto') {
         currentAuto.foot.type = this.layout == 'inline' ? 'single' : 'multiple'
       }
@@ -100,11 +100,10 @@ export default {
     currentFootMenu() {
       // 底部菜单的VNode
       let currentFootMenu
-      let menuList = this.footMenu
-      if (menuList && menuList.length > 0) {
+      if (this.footMenu && this.footMenu.length > 0) {
         currentFootMenu = this.$createElement(FormFoot, {
           props: {
-            list: menuList,
+            list: this.footMenu,
             auto: this.currentAuto.foot,
             form: this.form,
             type: this.type,

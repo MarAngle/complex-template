@@ -76,6 +76,28 @@ let utils = {
         return true
       }
     }
+  },
+  parseScrollProp: function (option, prop) {
+    if (option[prop] !== undefined) {
+      let type = _func.getType(option[prop])
+      if (type !== 'object') {
+        if (type === 'boolean') {
+          option[prop] = {
+            type: 'fixed',
+            data: option[prop]
+          }
+        } else if (type === 'number') {
+          option[prop] = {
+            type: 'number',
+            data: option[prop]
+          }
+        } else if (type === 'string') {
+          option[prop] = {
+            type: option[prop]
+          }
+        }
+      }
+    }
   }
 }
 
