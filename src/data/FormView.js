@@ -157,6 +157,9 @@ export default {
             }
             let mainOption = _func.mergeData(this.currentAuto.foot.option, parentOption)
             utils.addClass(mainOption, baseClass)
+            if (this.currentAuto.item.auto) {
+              utils.addClass(mainOption, utils.countClass(baseClass, 'auto'))
+            }
             utils.addClass(mainOption, footClass)
             utils.addClass(mainOption, footTypeClass)
             list.push(h('a-form-model-item', mainOption, [ button ]))
@@ -181,6 +184,9 @@ export default {
           // 共享模式
           let mainOption = this.currentAuto.foot.option
           utils.addClass(mainOption, baseClass)
+          if (this.currentAuto.item.auto) {
+            utils.addClass(mainOption, utils.countClass(baseClass, 'auto'))
+          }
           utils.addClass(mainOption, footClass)
           utils.addClass(mainOption, footTypeClass)
           currentFootMenu = h('a-form-model-item', mainOption, list)
@@ -296,7 +302,7 @@ export default {
     }
     let mainClass = config.FormView.className
     let render = h('div', {
-      class: [mainClass, mainClass + this.layout]
+      class: [mainClass, mainClass + '-' + this.layout]
     }, [ renderForm ])
     return render
   }

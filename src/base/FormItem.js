@@ -360,9 +360,6 @@ export default {
     }
   },
   methods: {
-    countClassName(...args) {
-      return utils.countClass(config.FormView.className, 'item', ...args)
-    },
     /**
      * tips模板
      * @param {object} item 数据
@@ -516,6 +513,9 @@ export default {
       if (this.data.edit.option.multiple) {
         let multipleClass = utils.countClass(typeClass, 'multiple')
         classList.push(multipleClass)
+      }
+      if (this.auto.item.auto) {
+        classList.push(utils.countClass(itemClass, 'auto'))
       }
       let mainOption = {
         class: classList,

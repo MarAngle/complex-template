@@ -68,6 +68,9 @@ let config = {
         num: 100,
         act: 'down'
       },
+      item: {
+        auto: true
+      },
       foot: {
         loading: undefined,
         disabled: undefined,
