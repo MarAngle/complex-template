@@ -62,7 +62,6 @@
 </template>
 
 <script>
-import { PaginationData } from 'complex-data'
 
 export default {
   name: 'PaginationView',
@@ -71,7 +70,7 @@ export default {
   },
   props: {
     data: {
-      type: PaginationData,
+      type: Object,
       required: true
     },
     option: {

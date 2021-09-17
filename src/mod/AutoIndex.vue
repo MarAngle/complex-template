@@ -8,7 +8,6 @@
 </template>
 
 <script>
-import { PaginationData } from 'complex-data'
 
 export default {
   name: 'AutoIndex',
@@ -21,7 +20,7 @@ export default {
       required: true
     },
     pagination: {
-      type: PaginationData,
+      type: Object,
       required: false,
       default: null
     }
@@ -36,10 +35,6 @@ export default {
       }
       return currentIndex
     }
-  },
-  mounted () {
-  },
-  methods: {
   }
 }
 </script>

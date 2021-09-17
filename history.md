@@ -2,6 +2,9 @@
 - 实现tree-select
 - 实现多选的高度扩展设置项
 
+### 2.1.30
+- 修复complex-data引用，类型判断不急于此进行判断，避免双引用可能导致的问题
+
 ### 2.1.29
 - 依赖升级
 - FormView foot在inline模式下不能合并，Vue2不支持，因此合并FormFoot到FormView

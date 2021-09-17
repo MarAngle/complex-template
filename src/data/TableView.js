@@ -1,5 +1,4 @@
 import _func from 'complex-func'
-import { ListData, PaginationData } from 'complex-data'
 import AutoIndex from './../mod/AutoIndex'
 import AutoText from './../mod/AutoText'
 import PaginationView from './../mod/PaginationView'
@@ -10,7 +9,7 @@ export default {
   name: 'TableView',
   props: {
     maindata: { // ListData的实例
-      type: ListData,
+      type: Object,
       required: true
     },
     columnList: { // 定制列配置
@@ -60,7 +59,7 @@ export default {
       default: 0
     },
     paginationData: { // 单独制定分页器数据，不从maindata中取值
-      type: PaginationData,
+      type: Object,
       required: false,
       default: null
     },
