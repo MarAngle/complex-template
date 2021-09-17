@@ -2,11 +2,12 @@
 - 实现tree-select
 - 实现多选的高度扩展设置项
 
-### 2.1.29-beta
+### 2.1.29
 - 依赖升级
 - FormView foot在inline模式下不能合并，Vue2不支持，因此合并FormFoot到FormView
 - FormView inline模式下form-view-item添加自动的margin-bottom
 - FormView class优化
+- 删除AutoSearchMenu
 
 ### 2.1.28
 - 删除旧版本FormView
