@@ -402,7 +402,7 @@ export default {
       let renderItem = null
       let typeFormatData = typeFormat.getData(item.edit.type)
       itemOption = typeFormatData.option(itemOption, item, payload)
-      const className = this.countClassName('content')
+      const className = utils.countClass(config.FormView.className, 'item', 'content')
       utils.addClass(itemOption, className)
       utils.autoSetWidthOption(itemOption, item.edit.width)
       // 考虑一个默认的值，inline模式下和其他模式下的默认值，避免出现问题
@@ -460,7 +460,7 @@ export default {
           paginationOption = _func.mergeData(paginationOption, item.edit.localOption.pagination)
           let paginationAreaOption = config.FormView.select.paginationAreaOption
           paginationAreaOption = _func.mergeData(paginationAreaOption, item.edit.localOption.paginationArea)
-          const className = this.countClassName('content', 'select', 'pagination')
+          const className = utils.countClass(config.FormView.className, 'item', 'content', 'select', 'pagination')
           utils.addClass(paginationAreaOption, className)
           let pagination = this.$createElement(PaginationView, paginationOption)
           itemOption.props.dropdownRender = (menuNode, props) => {
@@ -510,7 +510,7 @@ export default {
     let mainSlot = this.target.$scopedSlots[this.data.edit.slot.name]
     if (this.data.edit.slot.type != 'main') {
       // 非主要替换模式下构建主要参数
-      let itemClass = this.countClassName()
+      let itemClass = utils.countClass(config.FormView.className, 'item')
       let typeClass = utils.countClass(itemClass, this.data.edit.type)
       let classList = [itemClass, typeClass]
       if (this.data.edit.option.multiple) {

@@ -5,6 +5,7 @@
 ### 2.1.29-beta
 - 依赖升级
 - FormView foot在inline模式下不能合并，Vue2不支持，因此合并FormFoot到FormView
+- FormView inline模式下form-view-item添加自动的margin-bottom
 
 ### 2.1.28
 - 删除旧版本FormView

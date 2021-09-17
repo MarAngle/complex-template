@@ -102,6 +102,9 @@ export default {
       let currentFootMenu
       let h = this.$createElement
       if (this.footMenu && this.footMenu.length > 0) {
+        let baseClass = utils.countClass(config.FormView.className, 'item')
+        let footClass = utils.countClass(baseClass, 'foot')
+        let footTypeClass = utils.countClass(footClass, this.currentAuto.foot.type)
         let size = this.footMenu.length
         let list = []
         for (let i = 0; i < size; i++) {
@@ -125,7 +128,7 @@ export default {
           if (menuItem.props.disabled === undefined && this.currentAuto.foot.disabled !== undefined) {
             menuItem.props.disabled = this.currentAuto.foot.disabled
           }
-          const itemClass = utils.countClass(config.FormView.className, 'foot', this.currentAuto.foot.type, 'menu', 'item')
+          const itemClass = utils.countClass(footClass, 'item')
           utils.addClass(menuItem, itemClass)
           if (!menuItem.on) {
             menuItem.on = {}
@@ -153,8 +156,9 @@ export default {
               })
             }
             let mainOption = _func.mergeData(this.currentAuto.foot.option, parentOption)
-            const mainClass = utils.countClass(config.FormView.className, 'foot', this.currentAuto.foot.type, 'menu')
-            utils.addClass(mainOption, mainClass)
+            utils.addClass(mainOption, baseClass)
+            utils.addClass(mainOption, footClass)
+            utils.addClass(mainOption, footTypeClass)
             list.push(h('a-form-model-item', mainOption, [ button ]))
           } else {
             // 共享模式
@@ -176,9 +180,10 @@ export default {
         } else {
           // 共享模式
           let mainOption = this.currentAuto.foot.option
-          const mainClass = utils.countClass(config.FormView.className, 'foot', this.currentAuto.foot.type, 'menu')
-          utils.addClass(mainOption, mainClass)
-          currentFootMenu = h('a-form-model-item', this.currentAuto.foot.option, list)
+          utils.addClass(mainOption, baseClass)
+          utils.addClass(mainOption, footClass)
+          utils.addClass(mainOption, footTypeClass)
+          currentFootMenu = h('a-form-model-item', mainOption, list)
         }
         if (this.layout !== 'inline') {
           currentFootMenu = h('a-col', this.currentAuto.foot.layout, [
