@@ -1,6 +1,10 @@
 ### TODOLIST
 - 实现tree-select
 - 实现多选的高度扩展设置项
+- FormView底部div指定模式下不合并！！！
+
+### 2.1.29-beta
+- 依赖升级
 
 ### 2.1.28
 - 删除旧版本FormView
