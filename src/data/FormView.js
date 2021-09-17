@@ -1,7 +1,7 @@
 import _func from 'complex-func'
 import config from '../../config'
+import utils from '../utils'
 import FormItem from '../base/FormItem'
-import FormFoot from '../base/FormFoot'
 
 export default {
   name: 'FormView',
@@ -100,17 +100,91 @@ export default {
     currentFootMenu() {
       // 底部菜单的VNode
       let currentFootMenu
+      let h = this.$createElement
       if (this.footMenu && this.footMenu.length > 0) {
-        currentFootMenu = this.$createElement(FormFoot, {
-          props: {
-            list: this.footMenu,
-            auto: this.currentAuto.foot,
-            form: this.form,
-            type: this.type,
-            layout: this.layout,
-            target: this
+        let size = this.footMenu.length
+        let list = []
+        for (let i = 0; i < size; i++) {
+          let menuItem = this.footMenu[i]
+          const parentOption = menuItem.parentOption
+          let mainSlot
+          if (menuItem.slot) {
+            mainSlot = this.$scopedSlots[menuItem.slot]
           }
-        })
+          if (this.currentAuto.foot.data == 'props') {
+            // 传值不存在时说明此时使用简单数据传值，所有传值默认传递到props中=>
+            menuItem = {
+              props: {
+                ...menuItem
+              }
+            }
+          }
+          if (menuItem.props.loading === undefined && this.currentAuto.foot.loading !== undefined) {
+            menuItem.props.loading = this.currentAuto.foot.loading
+          }
+          if (menuItem.props.disabled === undefined && this.currentAuto.foot.disabled !== undefined) {
+            menuItem.props.disabled = this.currentAuto.foot.disabled
+          }
+          const itemClass = utils.countClass(config.FormView.className, 'foot', this.currentAuto.foot.type, 'menu', 'item')
+          utils.addClass(menuItem, itemClass)
+          if (!menuItem.on) {
+            menuItem.on = {}
+          }
+          if (!menuItem.on.click) {
+            menuItem.on.click = () => {
+              this.$emit('menu', menuItem.props.act, {
+                form: this.form,
+                formData: this.form.data,
+                list: this.mainlist,
+                type: this.type,
+                target: this
+              })
+            }
+          }
+          if (this.currentAuto.foot.type == 'single') {
+            // 单独模式
+            let button
+            if (!mainSlot) {
+              button = h('a-button', menuItem, [ menuItem.props.name ])
+            } else {
+              button = mainSlot({
+                data: menuItem,
+                index: i
+              })
+            }
+            let mainOption = _func.mergeData(this.currentAuto.foot.option, parentOption)
+            const mainClass = utils.countClass(config.FormView.className, 'foot', this.currentAuto.foot.type, 'menu')
+            utils.addClass(mainOption, mainClass)
+            list.push(h('a-form-model-item', mainOption, [ button ]))
+          } else {
+            // 共享模式
+            let button
+            if (!mainSlot) {
+              button = h('a-button', menuItem, [ menuItem.props.name ])
+            } else {
+              button = mainSlot({
+                data: menuItem,
+                index: i
+              })
+            }
+            list.push(button)
+          }
+        }
+        if (this.currentAuto.foot.type == 'single') {
+          // 单独模式
+          currentFootMenu = list
+        } else {
+          // 共享模式
+          let mainOption = this.currentAuto.foot.option
+          const mainClass = utils.countClass(config.FormView.className, 'foot', this.currentAuto.foot.type, 'menu')
+          utils.addClass(mainOption, mainClass)
+          currentFootMenu = h('a-form-model-item', this.currentAuto.foot.option, list)
+        }
+        if (this.layout !== 'inline') {
+          currentFootMenu = h('a-col', this.currentAuto.foot.layout, [
+            currentFootMenu
+          ])
+        }
       }
       return currentFootMenu
     }
