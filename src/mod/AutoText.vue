@@ -17,11 +17,11 @@
 
 </style>
 <template>
-  <p ref="main" class="complex-auto-text" :class="{ 'complex-auto-text-auto': auto, 'complex-auto-text-is-auto': isEllipsis }" v-bind="$attrs" v-on="$listeners" >
-    <a-tooltip v-bind="tipOption" >
+  <a-tooltip v-bind="tipOption" >
+    <p ref="main" class="complex-auto-text" :class="{ 'complex-auto-text-auto': auto, 'complex-auto-text-is-auto': isEllipsis }" v-bind="$attrs" v-on="$listeners" >
       <span ref="size" >{{ text }}</span>
-    </a-tooltip>
-  </p>
+    </p>
+  </a-tooltip>
 </template>
 
 <script>
