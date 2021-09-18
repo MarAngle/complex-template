@@ -2,7 +2,7 @@
 - 实现tree-select
 - 实现多选的高度扩展设置项
 
-### 2.1.32-beta
+### 2.1.32
 - FormView添加级联选择器cascader
 
 ### 2.1.31
