@@ -123,21 +123,38 @@ let typeFormat = {
           allowClear: item.edit.option.allowClear,
           autoFocus: item.edit.option.autoFocus,
           changeOnSelect: item.edit.option.changeOnSelect,
-          displayRender: item.edit.option.displayRender,
-          expandTrigger: item.edit.option.expandTrigger,
-          fieldNames: item.edit.option.fieldNames,
-          getPopupContainer: item.edit.option.getPopupContainer,
-          notFoundContent: item.edit.option.notFoundContent,
-          popupClassName: item.edit.option.popupClassName,
-          popupStyle: item.edit.option.popupStyle,
-          popupPlacement: item.edit.option.popupPlacement,
-          popupVisible: item.edit.option.popupVisible,
-          showSearch: item.edit.option.showSearch,
-          size: item.edit.option.size,
-          suffixIcon: item.edit.option.suffixIcon,
-          loadData: item.edit.option.loadData,
           disabled: item.edit.disabled.getData(payload.type),
           placeholder: item.edit.placeholder.getData(payload.type)
+        }
+        if (item.edit.option.displayRender) {
+          itemOption.props.displayRender = item.edit.option.displayRender
+        }
+        if (item.edit.option.expandTrigger) {
+          itemOption.props.expandTrigger = item.edit.option.expandTrigger
+        }
+        if (item.edit.option.fieldNames) {
+          itemOption.props.fieldNames = item.edit.option.fieldNames
+        }
+        if (item.edit.option.getPopupContainer) {
+          itemOption.props.getPopupContainer = item.edit.option.getPopupContainer
+        }
+        if (item.edit.option.notFoundContent) {
+          itemOption.props.notFoundContent = item.edit.option.notFoundContent
+        }
+        if (item.edit.option.popupPlacement) {
+          itemOption.props.popupPlacement = item.edit.option.popupPlacement
+        }
+        if (item.edit.option.showSearch) {
+          itemOption.props.showSearch = item.edit.option.showSearch
+        }
+        if (item.edit.option.size) {
+          itemOption.props.size = item.edit.option.size
+        }
+        if (item.edit.option.suffixIcon) {
+          itemOption.props.suffixIcon = item.edit.option.suffixIcon
+        }
+        if (item.edit.option.loadData) {
+          itemOption.props.loadData = item.edit.option.loadData
         }
         typeFormat.buildFunc(this, itemOption, item, payload)
         itemOption = _func.mergeData(itemOption, item.edit.localOption.item)
