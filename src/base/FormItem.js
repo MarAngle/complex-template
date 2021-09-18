@@ -115,6 +115,35 @@ let typeFormat = {
         return itemOption
       }
     },
+    acascader: {
+      func: {},
+      option: function(itemOption, item, payload) {
+        itemOption.props = {
+          options: item.edit.option.options,
+          allowClear: item.edit.option.allowClear,
+          autoFocus: item.edit.option.autoFocus,
+          changeOnSelect: item.edit.option.changeOnSelect,
+          displayRender: item.edit.option.displayRender,
+          expandTrigger: item.edit.option.expandTrigger,
+          fieldNames: item.edit.option.fieldNames,
+          getPopupContainer: item.edit.option.getPopupContainer,
+          notFoundContent: item.edit.option.notFoundContent,
+          popupClassName: item.edit.option.popupClassName,
+          popupStyle: item.edit.option.popupStyle,
+          popupPlacement: item.edit.option.popupPlacement,
+          popupVisible: item.edit.option.popupVisible,
+          showSearch: item.edit.option.showSearch,
+          size: item.edit.option.size,
+          suffixIcon: item.edit.option.suffixIcon,
+          loadData: item.edit.option.loadData,
+          disabled: item.edit.disabled.getData(payload.type),
+          placeholder: item.edit.placeholder.getData(payload.type)
+        }
+        typeFormat.buildFunc(this, itemOption, item, payload)
+        itemOption = _func.mergeData(itemOption, item.edit.localOption.item)
+        return itemOption
+      }
+    },
     adate: {
       func: {},
       option: function(itemOption, item, payload) {
@@ -467,6 +496,8 @@ export default {
             ])
           }
         }
+      } else if (item.edit.type == 'cascader') {
+        tag = 'a-cascader'
       } else if (item.edit.type == 'date') {
         tag = 'a-date-picker'
       } else if (item.edit.type == 'dateRange') {
