@@ -38,7 +38,7 @@ export default {
   computed: {
     tipOption () {
       let option
-      if (this.isEllipsis) {
+      if (this.isEllipsis || this.tip === false) {
         if (typeof this.tip == 'object') {
           option = this.tip
         } else {
@@ -46,7 +46,7 @@ export default {
             placement: this.tip || 'top'
           }
         }
-        if (!option.title) {
+        if (option.title === undefined) {
           option.title = this.text
         }
       } else {
