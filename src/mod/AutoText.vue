@@ -65,6 +65,10 @@ export default {
       required: false,
       default: true
     },
+    recount: {
+      required: false,
+      default: 0
+    },
     tip: {
       type: [String, Object],
       required: false
@@ -74,7 +78,7 @@ export default {
     text: function() {
       this.autoWidth()
     },
-    'page.recount.main': function() {
+    recount: function() {
       this.autoWidth()
     }
   },

@@ -4,6 +4,8 @@
 
 ### 2.1.33-beta
 - AutoText的tip设置项可实现取消tips显示
+- AutoText的recount设置项添加，避免无page对象的情况
+- AutoTextHeight的tip设置项可实现取消tips显示
 
 ### 2.1.32
 - FormView添加级联选择器cascader

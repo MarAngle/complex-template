@@ -299,6 +299,7 @@ export default {
                 props: {
                   text: data,
                   auto: true,
+                  recount: _func.page.recount.main,
                   tip: this.formatAutoTextTipOption(pitem.tip, this.currentAuto.tip)
                 }
               }
