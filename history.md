@@ -2,6 +2,9 @@
 - 实现tree-select
 - 实现多选的高度扩展设置项
 
+### 2.1.34
+- AutoText/AutoTextHeight的tip设置项类型和判断修复
+
 ### 2.1.33
 - AutoText的tip设置项可实现取消tips显示
 - AutoText的recount设置项添加，避免无page对象的情况

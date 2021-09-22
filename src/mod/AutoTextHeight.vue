@@ -43,7 +43,7 @@ export default {
   computed: {
     tipOption () {
       let option
-      if (this.isEllipsis || this.tip === false) {
+      if (this.isEllipsis && this.tip !== false) {
         if (typeof this.tip == 'object') {
           option = this.tip
         } else {
@@ -98,7 +98,7 @@ export default {
       default: 1
     },
     tip: {
-      type: [String, Object],
+      type: [String, Object, Boolean],
       required: false
     },
     auto: {
