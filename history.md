@@ -2,10 +2,11 @@
 - 实现tree-select
 - 实现多选的高度扩展设置项
 
-### 2.1.33-beta
+### 2.1.33
 - AutoText的tip设置项可实现取消tips显示
 - AutoText的recount设置项添加，避免无page对象的情况
 - AutoTextHeight的tip设置项可实现取消tips显示
+- complex-data依赖升级
 
 ### 2.1.32
 - FormView添加级联选择器cascader
