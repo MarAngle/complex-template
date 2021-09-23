@@ -1,6 +1,8 @@
 ### TODOLIST
-- 实现tree-select
 - 实现多选的高度扩展设置项
+
+### 2.2.0
+- complex-data依赖升级
 
 ### 2.1.34
 - AutoText/AutoTextHeight的tip设置项类型和判断修复
