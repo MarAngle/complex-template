@@ -466,6 +466,9 @@ export default {
           // auto
           this.maindata.reloadData({
             sync: true,
+            force: {
+              ing: true
+            },
             page: {
               prop: prop,
               data: current
