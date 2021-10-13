@@ -1,6 +1,9 @@
 ### TODOLIST
 - 实现多选的高度扩展设置项
 
+### 2.2.2-beta
+- 分页器对接新分页器数据，使用生命周期获取change事件
+
 ### 2.2.1
 - complex-data依赖升级
 - datePicker在line模式下的宽度不设置为100,设置为auto,需要根据类型在edit.width中进行设置

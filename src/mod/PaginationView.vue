@@ -66,7 +66,9 @@
 export default {
   name: 'PaginationView',
   data () {
-    return {}
+    return {
+      life: undefined
+    }
   },
   props: {
     data: {
@@ -123,19 +125,30 @@ export default {
       return currentMainOption
     }
   },
+  mounted() {
+    this.onLife()
+  },
+  beforeDestroy() {
+    this.offLife()
+  },
   methods: {
-    onChange(current) {
-      this.data.setPage(current)
-      this.$emit('change', 'page', current)
-    },
-    onSizeChange(current, size) {
-      this.data.setSize({
-        page: current,
-        size: size
+    onLife() {
+      this.life = this.data.onLife('change', {
+        data: (instantiater, prop, page) => {
+          this.$emit('change', prop, page)
+        }
       })
-      this.$emit('change', 'size', {
-        page: current,
-        size: size
+    },
+    offLife() {
+      this.data.offLife('change', this.life)
+    },
+    onChange(page) {
+      this.data.setPage(page)
+    },
+    onSizeChange(page, size) {
+      this.data.setSizeAndPage({
+        size: size,
+        page: page
       })
     }
   }
