@@ -1,6 +1,9 @@
 ### TODOLIST
 - 实现多选的高度扩展设置项
 
+### 2.2.6-beta
+- complex-data依赖升级
+
 ### 2.2.5
 - complex-data依赖升级
 
