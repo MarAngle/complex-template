@@ -31,7 +31,6 @@ export default {
   name: 'AutoText',
   data () {
     return {
-      page: _func.page,
       isEllipsis: false
     }
   },
