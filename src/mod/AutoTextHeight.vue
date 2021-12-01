@@ -157,18 +157,22 @@ export default {
     doCount() {
       this.$nextTick(() => {
         if (this.isCount) {
-          let maxHeight = this.maxHeight
           let currentHeight = this.$refs['text'].offsetHeight
-          if (currentHeight > maxHeight) {
-            // 高于当前数据时
-            let rate = Math.floor((currentHeight - maxHeight) / this.height)
-            if (rate < 1) {
-              rate = 1
-            }
-            this.reCountText(rate)
+          if (this.showText && !currentHeight) {
             this.doCount()
           } else {
-            this.stopCount()
+            let maxHeight = this.maxHeight
+            if (currentHeight > maxHeight) {
+              // 高于当前数据时
+              let rate = Math.floor((currentHeight - maxHeight) / this.height)
+              if (rate < 1) {
+                rate = 1
+              }
+              this.reCountText(rate)
+              this.doCount()
+            } else {
+              this.stopCount()
+            }
           }
         }
       })

@@ -1,8 +1,9 @@
 ### TODOLIST
 - 实现多选的高度扩展设置项
 - 脱离complex-func的page模块依赖或者将page模块整合到正式的complex-func中
-### 2.2.8-beta
+### 2.2.8
 - AutoText的complex-func的page模块依赖删除
+- AutoTextHeight添加因为v-show引起的加载为空的判断
 
 ### 2.2.7
 - complex-data依赖升级
