@@ -1,6 +1,10 @@
 ### TODOLIST
 - 实现多选的高度扩展设置项
 
+### 2.2.10
+- complex-data依赖升级
+- AutoTextHeight空判断优化
+
 ### 2.2.9
 - complex-data依赖升级
 - 将page模块整合到正式的complex-func中

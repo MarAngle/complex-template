@@ -154,12 +154,12 @@ export default {
       this.showText = this.showText.substring(0, this.showText.length - step - 3)
       this.showText += '...'
     },
-    doCount() {
+    doCount(isRecount) {
       this.$nextTick(() => {
         if (this.isCount) {
           let currentHeight = this.$refs['text'].offsetHeight
-          if (this.showText && !currentHeight) {
-            this.doCount()
+          if (this.showText && !currentHeight && !isRecount) {
+            this.doCount(true)
           } else {
             let maxHeight = this.maxHeight
             if (currentHeight > maxHeight) {
