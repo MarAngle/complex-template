@@ -264,7 +264,7 @@ export default {
         let pitem = this.columnList[i]
         if (!pitem.customRender) {
           pitem.customRender = (text, record, index) => {
-            let data = pitem.func.show(text, { item: pitem, targetitem: record, type: this.listType, index: index })
+            let data = pitem.$func.show(text, { item: pitem, targetitem: record, type: this.listType, index: index })
             let type = _func.getType(data)
             if (type === 'object') {
               data = JSON.stringify(data)
@@ -324,8 +324,8 @@ export default {
       return list
     },
     rowSelection() {
-      let choice = this.maindata.getModule('choice')
-      if (choice.getShow()) {
+      let choice = this.maindata.$module.choice
+      if (choice) {
         let option = choice.getOption()
         return {
           ...option,
@@ -340,7 +340,7 @@ export default {
       if (this.paginationData) {
         return this.paginationData
       } else {
-        return this.maindata.getModule('pagination')
+        return this.maindata.$module.pagination
       }
     }
   },

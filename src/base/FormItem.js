@@ -37,7 +37,7 @@ const modelFuncList = {
 // 类型格式化
 let typeFormat = {
   base: {
-    func: {
+    $func: {
       init: modelFuncList.valueInit,
       data: {
         change: modelFuncList.change
@@ -49,7 +49,7 @@ let typeFormat = {
   },
   data: {
     ainput: {
-      func: {
+      $func: {
         data: {
           input: modelFuncList.input
         }
@@ -68,7 +68,7 @@ let typeFormat = {
       }
     },
     ainputNumber: {
-      func: {},
+      $func: {},
       option: function(itemOption, item, payload) {
         itemOption.props = {
           min: item.edit.option.min,
@@ -84,7 +84,7 @@ let typeFormat = {
       }
     },
     aswitch: {
-      func: {
+      $func: {
         init: modelFuncList.checkInit
       },
       option: function(itemOption, item, payload) {
@@ -97,7 +97,7 @@ let typeFormat = {
       }
     },
     aselect: {
-      func: {},
+      $func: {},
       option: function(itemOption, item, payload) {
         itemOption.props = {
           mode: item.edit.option.mode,
@@ -116,7 +116,7 @@ let typeFormat = {
       }
     },
     acascader: {
-      func: {},
+      $func: {},
       option: function(itemOption, item, payload) {
         itemOption.props = {
           options: item.edit.option.options,
@@ -162,7 +162,7 @@ let typeFormat = {
       }
     },
     adate: {
-      func: {},
+      $func: {},
       option: function(itemOption, item, payload) {
         itemOption.props = {
           format: item.edit.option.format,
@@ -174,7 +174,7 @@ let typeFormat = {
         }
         typeFormat.buildFunc(this, itemOption, item, payload)
         itemOption = _func.mergeData(itemOption, item.edit.localOption.item)
-        utils.formatMoment(itemOption.props, ['value', 'defaultValue'], [itemOption.props.formatedit, itemOption.props.formatedit])
+        utils.formatMoment(itemOption.props, ['value', 'defaultValue'], [itemOption.props.formatEdit, itemOption.props.formatEdit])
         if (itemOption.props.showTime) {
           utils.formatMoment(itemOption.props.showTime, ['defaultValue', 'defaultOpenValue'], [itemOption.props.showTime.format, itemOption.props.showTime.format])
         }
@@ -182,7 +182,7 @@ let typeFormat = {
       }
     },
     adateRange: {
-      func: {},
+      $func: {},
       option: function(itemOption, item, payload) {
         itemOption.props = {
           format: item.edit.option.format,
@@ -195,7 +195,7 @@ let typeFormat = {
         }
         typeFormat.buildFunc(this, itemOption, item, payload)
         itemOption = _func.mergeData(itemOption, item.edit.localOption.item)
-        utils.formatMoment(itemOption.props, ['value', 'defaultValue'], [itemOption.props.formatedit, itemOption.props.formatedit], true)
+        utils.formatMoment(itemOption.props, ['value', 'defaultValue'], [itemOption.props.formatEdit, itemOption.props.formatEdit], true)
         if (itemOption.props.showTime) {
           utils.formatMoment(itemOption.props.showTime, ['defaultValue', 'defaultOpenValue'], [itemOption.props.showTime.format, itemOption.props.showTime.format], true)
         }
@@ -203,7 +203,7 @@ let typeFormat = {
       }
     },
     afile: {
-      func: {},
+      $func: {},
       option: function(itemOption, item, payload) {
         let layout = item.edit.option.layout
         if (layout == 'auto') {
@@ -232,7 +232,7 @@ let typeFormat = {
       }
     },
     abutton: {
-      func: {
+      $func: {
         init: false,
         data: {}
       },
@@ -250,7 +250,7 @@ let typeFormat = {
       }
     },
     aslot: {
-      func: {
+      $func: {
         init: false,
         data: {}
       },
@@ -276,16 +276,16 @@ typeFormat.init = function() {
     if (!item.option) {
       item.option = this.base.option
     }
-    if (!item.func) {
-      item.func = {}
+    if (!item.$func) {
+      item.$func = {}
     }
-    if (item.func.init === undefined) {
-      item.func.init = this.base.func.init
+    if (item.$func.init === undefined) {
+      item.$func.init = this.base.$func.init
     }
-    if (!item.func.data) {
-      item.func.data = {}
-      for (let i in this.base.func.data) {
-        item.func.data[i] = this.base.func.data[i]
+    if (!item.$func.data) {
+      item.$func.data = {}
+      for (let i in this.base.$func.data) {
+        item.$func.data[i] = this.base.$func.data[i]
       }
     }
   }
@@ -299,9 +299,9 @@ typeFormat.init = function() {
 typeFormat.getFunc = function(type) {
   let typeName = 'a' + type
   if (this.data[typeName]) {
-    return this.data[typeName].func
+    return this.data[typeName].$func
   } else {
-    return this.base.func
+    return this.base.$func
   }
 }
 /**
@@ -326,7 +326,7 @@ typeFormat.getData = function(type) {
  */
 typeFormat.buildFunc = function(typeData, itemOption, item, payload) {
   let formData = payload.formData
-  let funcData = typeData.func
+  let funcData = typeData.$func
   if (funcData.init) {
     funcData.init(itemOption, formData, item.prop)
   }
@@ -496,7 +496,7 @@ export default {
             },
             on: {
               change: function (...args) {
-                item.edit.func.page(...args)
+                item.edit.$func.page(...args)
               }
             }
           }
@@ -598,8 +598,8 @@ export default {
         })
       }
       mainOption = _func.mergeData(mainOption, this.data.edit.localOption.main)
-      // 首先根据mainwidth设置宽度，在width模式下再进行layout的全局数据赋值，权重比由小到大
-      utils.autoSetWidthOption(mainOption, this.data.mainwidth)
+      // 首先根据mainWidth设置宽度，在width模式下再进行layout的全局数据赋值，权重比由小到大
+      utils.autoSetWidthOption(mainOption, this.data.mainWidth)
       if (this.data.layout.type == 'width') {
         utils.autoSetWidthOption(mainOption, this.data.layout.width)
       }
