@@ -106,7 +106,7 @@ let config = {
         ])
       },
       choice: function(h, payload, option, listdata) {
-        if (listdata.getModule('choice').getShow()) {
+        if (listdata.$module.choice) {
           if (!option) {
             option = {}
           }
