@@ -48,7 +48,7 @@ let typeFormat = {
     }
   },
   data: {
-    ainput: {
+    $input: {
       $func: {
         data: {
           input: modelFuncList.input
@@ -67,7 +67,7 @@ let typeFormat = {
         return itemOption
       }
     },
-    ainputNumber: {
+    $inputNumber: {
       $func: {},
       option: function(itemOption, item, payload) {
         itemOption.props = {
@@ -83,7 +83,26 @@ let typeFormat = {
         return itemOption
       }
     },
-    aswitch: {
+    $textArea: {
+      $func: {
+        data: {
+          input: modelFuncList.input
+        }
+      },
+      option: function(itemOption, item, payload) {
+        itemOption.props = {
+          type: item.edit.option.type,
+          autosize: item.edit.option.autosize,
+          allowClear: item.edit.option.allowClear,
+          disabled: item.edit.disabled.getData(payload.type),
+          placeholder: item.edit.placeholder.getData(payload.type)
+        }
+        typeFormat.buildFunc(this, itemOption, item, payload)
+        itemOption = _func.mergeData(itemOption, item.edit.localOption.item)
+        return itemOption
+      }
+    },
+    $switch: {
       $func: {
         init: modelFuncList.checkInit
       },
@@ -96,7 +115,7 @@ let typeFormat = {
         return itemOption
       }
     },
-    aselect: {
+    $select: {
       $func: {},
       option: function(itemOption, item, payload) {
         itemOption.props = {
@@ -115,7 +134,7 @@ let typeFormat = {
         return itemOption
       }
     },
-    acascader: {
+    $cascader: {
       $func: {},
       option: function(itemOption, item, payload) {
         itemOption.props = {
@@ -161,7 +180,7 @@ let typeFormat = {
         return itemOption
       }
     },
-    adate: {
+    $date: {
       $func: {},
       option: function(itemOption, item, payload) {
         itemOption.props = {
@@ -181,7 +200,7 @@ let typeFormat = {
         return itemOption
       }
     },
-    adateRange: {
+    $dateRange: {
       $func: {},
       option: function(itemOption, item, payload) {
         itemOption.props = {
@@ -202,7 +221,7 @@ let typeFormat = {
         return itemOption
       }
     },
-    afile: {
+    $file: {
       $func: {},
       option: function(itemOption, item, payload) {
         let layout = item.edit.option.layout
@@ -231,7 +250,7 @@ let typeFormat = {
         return itemOption
       }
     },
-    abutton: {
+    $button: {
       $func: {
         init: false,
         data: {}
@@ -249,7 +268,7 @@ let typeFormat = {
         return itemOption
       }
     },
-    aslot: {
+    $slot: {
       $func: {
         init: false,
         data: {}
@@ -297,7 +316,7 @@ typeFormat.init = function() {
  * @returns {object}
  */
 typeFormat.getFunc = function(type) {
-  let typeName = 'a' + type
+  let typeName = '$' + type
   if (this.data[typeName]) {
     return this.data[typeName].$func
   } else {
@@ -310,7 +329,7 @@ typeFormat.getFunc = function(type) {
  * @returns {object}
  */
 typeFormat.getData = function(type) {
-  let typeName = 'a' + type
+  let typeName = '$' + type
   if (this.data[typeName]) {
     return this.data[typeName]
   } else {
