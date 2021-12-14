@@ -83,6 +83,25 @@ let typeFormat = {
         return itemOption
       }
     },
+    atextArea: {
+      func: {
+        data: {
+          input: modelFuncList.input
+        }
+      },
+      option: function(itemOption, item, payload) {
+        itemOption.props = {
+          type: item.edit.option.type,
+          autosize: item.edit.option.autosize,
+          allowClear: item.edit.option.allowClear,
+          disabled: item.edit.disabled.getData(payload.type),
+          placeholder: item.edit.placeholder.getData(payload.type)
+        }
+        typeFormat.buildFunc(this, itemOption, item, payload)
+        itemOption = _func.mergeData(itemOption, item.edit.localOption.item)
+        return itemOption
+      }
+    },
     aswitch: {
       func: {
         init: modelFuncList.checkInit
@@ -458,6 +477,8 @@ export default {
         tag = 'a-input'
       } else if (item.edit.type == 'inputNumber') {
         tag = 'a-input-number'
+      } else if (item.edit.type == 'textArea') {
+        tag = 'a-textarea'
       } else if (item.edit.type == 'switch') {
         tag = 'a-switch'
       } else if (item.edit.type == 'select') {
