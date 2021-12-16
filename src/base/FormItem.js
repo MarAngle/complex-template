@@ -92,7 +92,8 @@ let typeFormat = {
       option: function(itemOption, item, payload) {
         itemOption.props = {
           type: item.edit.option.type,
-          autosize: item.edit.option.autosize,
+          autoSize: item.edit.option.autoSize,
+          rows: item.edit.option.rows,
           allowClear: item.edit.option.allowClear,
           disabled: item.edit.disabled.getData(payload.type),
           placeholder: item.edit.placeholder.getData(payload.type)
