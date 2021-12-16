@@ -23,10 +23,10 @@
     <div class="complex-pagination-view-line">
       <slot
         :data="data"
-        :page="data.data.page.current"
-        :size="data.data.size.current"
-        :total="data.data.page.total"
-        :totalNum="data.data.num.total"
+        :page="data.page.current"
+        :size="data.size.current"
+        :total="data.page.total"
+        :totalNum="data.num.total"
       ></slot>
     </div>
     <div class="complex-pagination-view-line">
@@ -34,10 +34,10 @@
         <slot
           name="front"
           :data="data"
-          :page="data.data.page.current"
-          :size="data.data.size.current"
-          :total="data.data.page.total"
-          :totalNum="data.data.num.total"
+          :page="data.page.current"
+          :size="data.size.current"
+          :total="data.page.total"
+          :totalNum="data.num.total"
         ></slot>
       </div>
       <div class="complex-pagination-view-line-item">
@@ -51,10 +51,10 @@
         <slot
           name="end"
           :data="data"
-          :page="data.data.page.current"
-          :size="data.data.size.current"
-          :total="data.data.page.total"
-          :totalNum="data.data.num.total"
+          :page="data.page.current"
+          :size="data.size.current"
+          :total="data.page.total"
+          :totalNum="data.num.total"
         ></slot>
       </div>
     </div>
@@ -100,10 +100,10 @@ export default {
           }
         }
       }
-      currentOption.props.current = this.data.data.page.current
-      currentOption.props.pageSize = this.data.data.size.current
-      currentOption.props.pageSizeOptions = this.data.data.size.list
-      currentOption.props.total = this.data.data.num.total
+      currentOption.props.current = this.data.page.current
+      currentOption.props.pageSize = this.data.size.current
+      currentOption.props.pageSizeOptions = this.data.size.list
+      currentOption.props.total = this.data.num.total
       return currentOption
     },
     currentMainOption() {
