@@ -1,6 +1,6 @@
 <style scoped>
 .complex-auto-text{
-  display: inline-block;
+  display: block;
   width: 100%;
   margin: 0;
   word-wrap: break-word;
