@@ -1,6 +1,9 @@
 ### TODOLIST
 - 实现多选的高度扩展设置项
 
+### 2.2.18
+- AutoText样式由inline-block调整为block，避免table状态下的高度异常问题
+
 ### 2.2.17
 - complex-data依赖升级
 - 同步文本域修正优化
