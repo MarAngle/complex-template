@@ -1,6 +1,9 @@
 ### TODOLIST
 - 实现多选的高度扩展设置项
 
+### 2.2.19-beta
+- 添加AutoModal
+
 ### 2.2.18
 - AutoText样式由inline-block调整为block，避免table状态下的高度异常问题
 
