@@ -9,6 +9,7 @@
 </template>
 
 <script>
+import config from './../../config'
 
 export default {
   name: `AutoModal`,
@@ -23,14 +24,14 @@ export default {
     }
   },
   props: {
-    auto: {
+    optionProps: {
       type: Object,
       required: false,
       default: function() {
         return null
       }
     },
-    optionProps: {
+    auto: {
       type: Object,
       required: false,
       default: function() {
@@ -47,22 +48,29 @@ export default {
     top: {
       type: Number,
       required: false,
-      default: 100
+      default: config.AutoModal.top
     },
     bottom: {
       type: Number,
       required: false,
-      default: 100
+      default: config.AutoModal.bottom
     },
     header: {
       type: Number,
       required: false,
-      default: 55
+      default: config.AutoModal.header
     },
     menu: {
       type: Number,
       required: false,
-      default: 53
+      default: config.AutoModal.menu
+    },
+    padding: {
+      type: Object,
+      required: false,
+      default: function() {
+        return config.AutoModal.padding
+      }
     }
   },
   computed: {
@@ -107,22 +115,17 @@ export default {
     },
     height() {
       let mainHeight = this._func.page.data.body.height
-      return mainHeight - this.top - this.bottom - this.header - this.menu
+      return mainHeight - this.top - this.bottom - this.header - this.menu - this.padding.height
     },
     width() {
-      let width = 520
+      let width = config.AutoModal.defaultWidth
       if (this.currentOptionProps.width) {
         width = this.currentOptionProps.width
       }
-      return width
+      return width - this.padding.width
     }
   },
-  mounted() {
-    this.pageLoad()
-  },
   methods: {
-    pageLoad() {
-    },
     initOption(option) {
       this.resetOption()
       if (option) {
