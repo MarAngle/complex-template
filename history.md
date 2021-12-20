@@ -1,6 +1,9 @@
 ### TODOLIST
 - 实现多选的高度扩展设置项
 
+### 2.2.20-beta
+- AutoMenu对接page模块，添加插槽
+
 ### 2.2.19
 - 添加AutoModal
 

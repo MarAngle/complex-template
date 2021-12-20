@@ -21,7 +21,7 @@
 }
 </style>
 <template>
-  <div ref="mainContent" class="complex-auto-menu" :class="menu.show ? 'complex-auto-menu-is-show' : ''" :style="currentMainStyle">
+  <div ref="complexAutoMenu" class="complex-auto-menu" :class="menu.show ? 'complex-auto-menu-is-show' : ''" :style="currentMainStyle">
     <slot ref="content"></slot>
     <div v-show="menu.show" class="complex-auto-menu-main" :style="currentMenuStyle" @click="toggleOpen" >
       <div>
@@ -62,6 +62,11 @@ export default {
       type: Object,
       required: false,
       default: null
+    },
+    recount: {
+      type: Number,
+      required: false,
+      default: undefined
     }
   },
   data() {
@@ -128,10 +133,17 @@ export default {
       } else {
         return this.currentCloseOption
       }
+    },
+    currentRecount() {
+      if (this.recount !== undefined) {
+        return this.recount
+      } else {
+        return this._func.page.recount.data
+      }
     }
   },
   watch: {
-    'page.recount.main': function() {
+    'currentRecount': function() {
       this.checkHeight('resize')
     }
   },
@@ -145,7 +157,7 @@ export default {
     checkHeight(from) {
       this.menu.show = false
       this.$nextTick(() => {
-        let currentHeight = this.$refs.mainContent.clientHeight
+        let currentHeight = this.$refs.complexAutoMenu.clientHeight
         if (currentHeight > this.height) {
           this.menu.show = true
         }
