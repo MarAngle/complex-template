@@ -165,20 +165,22 @@ let config = {
     }
   },
   AutoMenu: {
-    menu: {
-      width: '100px',
-      location: 'right',
-      style: null
-    },
-    open: {
-      icon: 'up',
-      text: '关闭',
-      style: {}
-    },
-    close: {
-      icon: 'down',
-      text: '打开',
-      style: {}
+    auto: {
+      menu: {
+        width: '100px',
+        location: 'right',
+        style: null
+      },
+      open: {
+        icon: 'up',
+        text: '关闭',
+        style: {}
+      },
+      close: {
+        icon: 'down',
+        text: '打开',
+        style: {}
+      }
     }
   }
 }

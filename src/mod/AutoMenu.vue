@@ -22,7 +22,7 @@
   <div ref="complexAutoMenu" class="complex-auto-menu" :class="menu.show ? 'complex-auto-menu-is-show' : ''" :style="currentMainStyle">
     <slot ref="content"></slot>
     <div v-show="menu.show" class="complex-auto-menu-main" :style="currentMenuStyle" @click="toggleOpen" >
-      <slot name="menu">
+      <slot name="menu" :show="menu.show" :open="menu.open" >
         <div>
           <p>
             <a-icon class="complex-auto-menu-main-icon" :type="currentMenuOption.icon" />
@@ -95,7 +95,7 @@ export default {
         currentMenuStyle.lineHeight = this.height + 'px'
         if (this.currentAuto.menu.style) {
           for (let n in this.currentAuto.menu.style) {
-            currentMenuStyle[n] = this.this.currentAuto.menu.style[n]
+            currentMenuStyle[n] = this.currentAuto.menu.style[n]
           }
         }
       }
@@ -105,7 +105,7 @@ export default {
       if (this.menu.open) {
         return this.currentAuto.open
       } else {
-        return this.this.currentAuto.close
+        return this.currentAuto.close
       }
     },
     currentRecount() {
