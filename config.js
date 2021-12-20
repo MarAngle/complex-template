@@ -163,6 +163,25 @@ let config = {
       width: 48,
       height: 48
     }
+  },
+  AutoMenu: {
+    auto: {
+      menu: {
+        width: '100px',
+        location: 'right',
+        style: null
+      },
+      open: {
+        icon: 'up',
+        text: '关闭',
+        style: {}
+      },
+      close: {
+        icon: 'down',
+        text: '打开',
+        style: {}
+      }
+    }
   }
 }
 

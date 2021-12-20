@@ -2,14 +2,12 @@
 .complex-auto-menu{
   &.complex-auto-menu-is-show{
     position: relative;
-    padding-right: 100px;
     overflow: hidden;
   }
   .complex-auto-menu-main{
     cursor: pointer;
     position: absolute;
     top: 0;
-    right: 0;
     text-align: center;
     P{
       margin: 0;
@@ -21,21 +19,23 @@
 }
 </style>
 <template>
-  <div ref="mainContent" class="complex-auto-menu" :class="menu.show ? 'complex-auto-menu-is-show' : ''" :style="currentMainStyle">
+  <div ref="complexAutoMenu" class="complex-auto-menu" :class="menu.show ? 'complex-auto-menu-is-show' : ''" :style="currentMainStyle">
     <slot ref="content"></slot>
     <div v-show="menu.show" class="complex-auto-menu-main" :style="currentMenuStyle" @click="toggleOpen" >
-      <div>
-        <p>
-          <a-icon class="complex-auto-menu-main-icon" :type="currentMenuOption.icon" />
-          <span>{{ currentMenuOption.text }}</span>
-        </p>
-      </div>
+      <slot name="menu" :show="menu.show" :open="menu.open" >
+        <div>
+          <p>
+            <a-icon class="complex-auto-menu-main-icon" :type="currentMenuOption.icon" />
+            <span>{{ currentMenuOption.text }}</span>
+          </p>
+        </div>
+      </slot>
     </div>
   </div>
 </template>
 
 <script>
-import _func from 'complex-func'
+import config from '../../config'
 
 export default {
   name: 'AutoMenu',
@@ -44,29 +44,25 @@ export default {
       type: Number,
       required: true
     },
+    auto: {
+      type: Object,
+      required: false,
+      default: function() {
+        return null
+      }
+    },
+    recount: {
+      type: Number,
+      required: false,
+      default: undefined
+    },
     defaultOpen: {
       type: Boolean,
       required: false
-    },
-    menuStyle: {
-      type: Object,
-      required: false,
-      default: null
-    },
-    closeOption: {
-      type: Object,
-      required: false,
-      default: null
-    },
-    openOption: {
-      type: Object,
-      required: false,
-      default: null
     }
   },
   data() {
     return {
-      page: _func.page,
       menu: {
         show: false,
         open: this.defaultOpen
@@ -74,64 +70,54 @@ export default {
     }
   },
   computed: {
+    currentAuto() {
+      let currentAuto = this._func.setDataByDefault(this.auto, config.AutoMenu.auto)
+      return currentAuto
+    },
     currentMainStyle: function() {
       let currentMainStyle = {}
       if (this.menu.show && !this.menu.open) {
         currentMainStyle.height = this.height + 'px'
       }
+      if (this.menu.show) {
+        let prop = 'padding-' + this.currentAuto.menu.location
+        currentMainStyle[prop] = this.currentAuto.menu.width
+      }
       return currentMainStyle
     },
     currentMenuStyle: function() {
       let currentMenuStyle = {
-        width: '70px'
+        width: this.currentAuto.menu.width,
+        [this.currentAuto.menu.location]: 0
       }
       if (this.menu.show) {
         currentMenuStyle.height = this.height + 'px'
         currentMenuStyle.lineHeight = this.height + 'px'
-        if (this.menuStyle) {
-          for (let n in this.menuStyle) {
-            currentMenuStyle[n] = this.menuStyle[n]
+        if (this.currentAuto.menu.style) {
+          for (let n in this.currentAuto.menu.style) {
+            currentMenuStyle[n] = this.currentAuto.menu.style[n]
           }
         }
       }
       return currentMenuStyle
     },
-    currentCloseOption: function() {
-      let currentCloseOption = {
-        icon: 'down',
-        text: '打开',
-        style: {}
-      }
-      if (this.closeOption) {
-        for (let n in this.closeOption) {
-          currentCloseOption[n] = this.closeOption[n]
-        }
-      }
-      return currentCloseOption
-    },
-    currentOpenOption: function() {
-      let currentOpenOption = {
-        icon: 'up',
-        text: '关闭',
-        style: {}
-      }
-      if (this.openOption) {
-        for (let n in this.openOption) {
-          currentOpenOption[n] = this.openOption[n]
-        }
-      }
-      return currentOpenOption
-    },
     currentMenuOption() {
       if (this.menu.open) {
-        return this.currentOpenOption
+        return this.currentAuto.open
       } else {
-        return this.currentCloseOption
+        return this.currentAuto.close
+      }
+    },
+    currentRecount() {
+      if (this.recount !== undefined) {
+        return this.recount
+      } else {
+        return this._func.page.recount.data
       }
     }
   },
   watch: {
-    'page.recount.main': function() {
+    'currentRecount': function() {
       this.checkHeight('resize')
     }
   },
@@ -145,7 +131,7 @@ export default {
     checkHeight(from) {
       this.menu.show = false
       this.$nextTick(() => {
-        let currentHeight = this.$refs.mainContent.clientHeight
+        let currentHeight = this.$refs.complexAutoMenu.clientHeight
         if (currentHeight > this.height) {
           this.menu.show = true
         }
