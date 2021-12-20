@@ -152,6 +152,17 @@ let config = {
         }
       }
     }
+  },
+  AutoModal: {
+    defaultWidth: 520,
+    top: 100,
+    bottom: 100,
+    header: 55,
+    menu: 53,
+    padding: {
+      width: 48,
+      height: 48
+    }
   }
 }
 
