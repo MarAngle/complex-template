@@ -4,7 +4,7 @@
     @cancel="onCancel"
     @ok="onOk"
   >
-    <slot :show="visible" :height="height" :width="width" />
+    <slot :show="visible" :height="height" :width="width" :modal="currentModal" />
   </a-modal>
 </template>
 
@@ -123,6 +123,9 @@ export default {
         width = this.currentOptionProps.width
       }
       return width - this.padding.width
+    },
+    currentModal() {
+      return this
     }
   },
   methods: {

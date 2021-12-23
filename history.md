@@ -1,6 +1,9 @@
 ### TODOLIST
 - 实现多选的高度扩展设置项
 
+### 2.2.22-beta
+- AutoModal将this通过插槽传递，实现插槽内对弹窗的设置
+
 ### 2.2.21
 - complex-data依赖升级
 
