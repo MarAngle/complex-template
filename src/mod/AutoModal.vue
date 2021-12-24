@@ -1,6 +1,7 @@
 <template>
   <a-modal
     v-bind="currentOptionProps"
+    :visible="visible"
     @cancel="onCancel"
     @ok="onOk"
   >
@@ -30,6 +31,11 @@ export default {
       default: function() {
         return null
       }
+    },
+    menuType: {
+      type: [String, Boolean],
+      required: false,
+      default: ''
     },
     auto: {
       type: Object,
@@ -91,8 +97,17 @@ export default {
       if (this.title !== undefined) {
         optionProps.title = this.title
       }
+      if (this.menuType) {
+        optionProps.cancelButtonProps = {
+          style: {
+            display: 'none'
+          }
+        }
+        optionProps.okType = this.menuType
+      } else if (this.menuType === false) {
+        optionProps.footer = null
+      }
       optionProps.dialogStyle.top = this.top + 'px'
-      optionProps.visible = this.visible
       return optionProps
     },
     currentAuto() {
@@ -115,7 +130,11 @@ export default {
     },
     height() {
       let mainHeight = this._func.page.data.body.height
-      return mainHeight - this.top - this.bottom - this.header - this.menu - this.padding.height
+      let height = mainHeight - this.top - this.bottom - this.header - this.padding.height
+      if (this.currentOptionProps.footer !== null) {
+        height = height - this.menu
+      }
+      return height
     },
     width() {
       let width = config.AutoModal.defaultWidth
