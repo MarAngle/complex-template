@@ -1,6 +1,10 @@
 ### TODOLIST
 - 实现多选的高度扩展设置项
 
+### 2.2.24
+- complex-data依赖升级
+- git地址切换
+
 ### 2.2.23
 - 添加ShowValue组件
 

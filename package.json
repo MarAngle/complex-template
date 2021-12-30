@@ -1,15 +1,15 @@
 {
   "name": "complex-component-antd",
-  "version": "2.2.23",
+  "version": "2.2.24",
   "description": "a complex component by antd",
   "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/MarAngle/complex-component-antd.git"
+    "url": "https://gitee.com/codingarea/complex-component-antd.git"
   },
   "dependencies": {
     "ant-design-vue": "^1.5",
-    "complex-data": "^2.2.22"
+    "complex-data": "^2.2.23"
   },
   "devDependencies": {},
   "scripts": {
