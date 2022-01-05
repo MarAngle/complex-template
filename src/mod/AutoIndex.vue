@@ -11,10 +11,6 @@
 
 export default {
   name: 'AutoIndex',
-  data () {
-    return {
-    }
-  },
   props: {
     index: {
       required: true

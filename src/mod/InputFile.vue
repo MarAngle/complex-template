@@ -19,10 +19,6 @@ import _func from 'complex-func'
 
 export default {
   name: 'InputFile',
-  data () {
-    return {
-    }
-  },
   props: {
     accept: {
       type: String,
@@ -64,8 +60,6 @@ export default {
       required: false,
       default: 0
     }
-  },
-  mounted() {
   },
   methods: {
     checkFileAccept(file, accept) {

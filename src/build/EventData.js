@@ -13,7 +13,7 @@
    * @param {*} prop Vue emit prop
    * @param {*} list data[name]初始值
    */
-  build(name, target, prop, list = []) {
+  $build(name, target, prop, list = []) {
     this.data[name] = list
     this.on[name] = (...args) => {
       target.$emit('event', prop, name, ...args)
@@ -31,7 +31,7 @@
    */
   add(name, target, prop, data, method = 'push') {
     if (!this.data[name]) {
-      this.build(name, target, prop)
+      this.$build(name, target, prop)
     }
     if (data) {
       this.data[name][method](data)

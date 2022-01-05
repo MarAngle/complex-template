@@ -6,9 +6,6 @@ import _func from 'complex-func'
 
 export default {
   name: 'ShowValue',
-  data() {
-    return {}
-  },
   props: {
     value: {
       required: false

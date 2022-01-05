@@ -84,16 +84,11 @@ export default {
       }
     }
   },
-  mounted() {
-    this.pageLoad()
-  },
   methods: {
     buildMainList () {
       this.mainlist = this.maindata.getDictionaryPageList(this.type, {
         targetitem: this.currentData
       })
-    },
-    pageLoad() {
     }
   }
 }

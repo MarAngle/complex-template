@@ -77,9 +77,6 @@ export default {
       indeterminate: false
     }
   },
-  mounted() {
-    this.pageLoad()
-  },
   computed: {
     checked: function() {
       return this.isChoice(this.data, 'check')
@@ -266,8 +263,7 @@ export default {
     },
     isChoice(item, prop) {
       return this[prop].indexOf(item[this.id]) > -1
-    },
-    pageLoad() {}
+    }
   }
 }
 </script>

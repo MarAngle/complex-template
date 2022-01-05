@@ -30,13 +30,6 @@ export default {
   components: {
     TreeSelectMenu
   },
-  data() {
-    return {
-    }
-  },
-  mounted() {
-    this.pageLoad()
-  },
   computed: {
     option: function() {
       let data = {
@@ -135,10 +128,6 @@ export default {
       type: String,
       required: false,
       default: 'px'
-    }
-  },
-  methods: {
-    pageLoad() {
     }
   }
 }
