@@ -268,6 +268,18 @@ let typeFormat = {
         return itemOption
       }
     },
+    acustomize: {
+      func: {},
+      option: function(itemOption, item, payload) {
+        itemOption.props = {
+          ...item.edit.option,
+          disabled: item.edit.disabled.getData(payload.type)
+        }
+        typeFormat.buildFunc(this, itemOption, item, payload)
+        itemOption = _func.mergeData(itemOption, item.edit.localOption.item)
+        return itemOption
+      }
+    },
     aslot: {
       func: {
         init: false,
@@ -545,6 +557,8 @@ export default {
       } else if (item.edit.type == 'button') {
         tag = 'a-button'
         children = [ item.edit.option.name.getData(payload.type) ]
+      } else if (item.edit.type == 'customize') {
+        tag = item.edit.customize
       } else if (item.edit.type == 'slot') {
         console.error(`${item.prop}未定义slot`)
       }

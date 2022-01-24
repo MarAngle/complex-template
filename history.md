@@ -1,6 +1,10 @@
 ### TODOLIST
 - 实现多选的高度扩展设置项
 
+### 2.2.28
+- complex-data依赖升级
+- 自定义item
+
 ### 2.2.27
 - complex-data依赖升级
 - AutoModal添加footer插槽
