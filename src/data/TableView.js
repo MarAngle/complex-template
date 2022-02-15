@@ -289,7 +289,16 @@ export default {
                 }
               }
               if (this.currentAuto.index.pagination) {
-                AutoIndexOption.props.pagination = this.currentPaginationData
+                let buildAutoIndexPagination = true
+                let currentPrototype = Object.getPrototypeOf(record)
+                if (currentPrototype && currentPrototype !== Object.prototype) {
+                  if (currentPrototype.$depth !== 0) {
+                    buildAutoIndexPagination = false
+                  }
+                }
+                if (buildAutoIndexPagination) {
+                  AutoIndexOption.props.pagination = this.currentPaginationData
+                }
               }
               return this.$createElement(AutoIndex, AutoIndexOption)
             }
