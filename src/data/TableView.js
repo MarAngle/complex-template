@@ -184,12 +184,8 @@ export default {
     minWidth() {
       let width = 0
       for (let i = 0; i < this.currentColumnList.length; i++) {
-        const pitem = this.currentColumnList[i];
-        if (!pitem.width || typeof pitem.width !== 'number') {
-          width += pitem.scrollWidth
-        } else {
-          width += pitem.width
-        }
+        const pitem = this.currentColumnList[i]
+        width += pitem.scrollWidth
       }
       if (this.rowSelection) {
         width += this.currentAuto.choiceWidth

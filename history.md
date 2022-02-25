@@ -1,6 +1,10 @@
 ### TODOLIST
 - 实现多选的高度扩展设置项
 
+### 2.3.5
+- complex-data依赖升级
+- TableView宽度计算优化
+
 ### 2.3.3/2.3.4
 - complex-data依赖升级
 - 适配数据的原型深度，优化树列表的index值

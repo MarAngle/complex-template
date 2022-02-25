@@ -1,6 +1,6 @@
 {
   "name": "complex-component-antd",
-  "version": "2.3.4",
+  "version": "2.3.5",
   "description": "a complex component by antd",
   "main": "index.js",
   "repository": {
@@ -8,8 +8,8 @@
     "url": "https://gitee.com/codingarea/complex-component-antd.git"
   },
   "dependencies": {
-    "ant-design-vue": "^1.5",
-    "complex-data": "^2.3.5"
+    "ant-design-vue": "^1.7",
+    "complex-data": "^2.3.6"
   },
   "devDependencies": {},
   "scripts": {
