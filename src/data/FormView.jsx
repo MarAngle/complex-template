@@ -1,7 +1,7 @@
 import _func from 'complex-func'
 import config from '../../config'
 import utils from '../utils'
-import FormItem from '../base/FormItem'
+import FormItem from '../base/FormItem.jsx'
 
 export default {
   name: 'FormView',
