@@ -1,6 +1,9 @@
 ### TODOLIST
 - 实现多选的高度扩展设置项
 
+### 2.3.6-beta
+- TableView逻辑优化
+
 ### 2.3.5
 - complex-data依赖升级
 - TableView宽度计算优化

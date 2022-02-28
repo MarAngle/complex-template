@@ -94,8 +94,7 @@ export default {
   },
   computed: {
     currentAuto() {
-      let currentAuto = _func.setDataByDefault(this.auto, config.TableView.auto)
-      return currentAuto
+      return _func.setDataByDefault(this.auto, config.TableView.auto)
     },
     currentInOption() {
       let currentInOption = this.inOption || {}
@@ -260,25 +259,10 @@ export default {
         let pitem = this.columnList[i]
         if (!pitem.customRender) {
           pitem.customRender = (text, record, index) => {
-            let data = pitem.func.show(text, { item: pitem, targetitem: record, type: this.listType, index: index })
-            let type = _func.getType(data)
-            if (type === 'object') {
-              data = JSON.stringify(data)
-            } else if (type === 'array') {
-              data = data.join(',')
-            }
             let contentProp = pitem.dataIndex
             let contentSlot = this.$scopedSlots[contentProp]
-            if (contentSlot) {
-              return contentSlot({
-                text: data,
-                record: record,
-                index: index,
-                item: pitem,
-                list: this.columnList
-              })
-            }
-            if (contentProp === this.currentAuto.index.prop) {
+            if (contentProp === this.currentAuto.index.prop && !contentSlot) {
+              // 自动index
               let AutoIndexOption = {
                 props: {
                   index: index
@@ -298,23 +282,39 @@ export default {
               }
               return this.$createElement(AutoIndex, AutoIndexOption)
             }
+            let data = pitem.func.show(text, { item: pitem, targetitem: record, type: this.listType, index: index })
+            let dataType = _func.getType(data)
+            if (dataType === 'object') {
+              data = JSON.stringify(data)
+            } else if (dataType === 'array') {
+              data = data.join(',')
+            }
+            if (contentSlot) {
+              // 插槽
+              return contentSlot({
+                text: data,
+                record: record,
+                index: index,
+                item: pitem,
+                list: this.columnList
+              })
+            }
             if (pitem.ellipsis && pitem.autoText) {
-              // 自动省略切自动换行?
-              let AutoTextOption = {
+              // 自动省略切自动换行
+              return this.$createElement(AutoText, {
                 props: {
                   text: data,
                   auto: true,
                   recount: _func.page.recount.main,
                   tip: this.formatAutoTextTipOption(pitem.tip, this.currentAuto.tip)
                 }
-              }
-              return this.$createElement(AutoText, AutoTextOption)
+              })
             }
             return data
           }
           let titleSlotProp = pitem.dataIndex + '-title'
           let titleSlot = this.$scopedSlots[titleSlotProp]
-          if (titleSlot) {
+          if (titleSlot && !pitem.title) {
             pitem.title = titleSlot({
               item: pitem,
               list: this.columnList
