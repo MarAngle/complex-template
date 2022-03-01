@@ -3,6 +3,7 @@
 
 ### 2.3.6-beta
 - TableView逻辑优化
+- jsx文件优化
 
 ### 2.3.5
 - complex-data依赖升级

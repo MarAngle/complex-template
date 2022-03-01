@@ -377,14 +377,14 @@ typeFormat.buildFunc = function(typeData, itemOption, item, payload) {
   }
   // 添加可能存在的需要触发emit事件的函数
   if (item.edit.eventTriggerList) {
-    for (let i in item.edit.eventTriggerList) {
+    for (let i = 0; i < item.edit.eventTriggerList.length; i++) {
       let funcName = item.edit.eventTriggerList[i]
       onEvent.add(funcName, payload.target, item.prop, false)
     }
   }
   // 加载需要的独立触发的规则检查
   if (item.edit.autoTrigger) {
-    for (let i in item.edit.autoTrigger) {
+    for (let i = 0; i < item.edit.autoTrigger.length; i++) {
       let funcName = item.edit.autoTrigger[i]
       onEvent.add(funcName, payload.target, item.prop, function () {
         payload.target.triggerRuleCheck(payload.prop)
