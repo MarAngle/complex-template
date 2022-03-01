@@ -69,6 +69,16 @@
       }
     }
   }
+  &.complex-upload-file-disabled{
+    cursor: not-allowed;
+    .complex-upload-file-data-area{
+      &:hover{
+        .complex-upload-file-icon{
+          visibility: hidden;
+        }
+      }
+    }
+  }
 }
 </style>
 <template>
@@ -150,7 +160,11 @@ export default {
   },
   computed: {
     currentLayoutClassName() {
-      return 'complex-upload-file-' + this.layout
+      let className = 'complex-upload-file-' + this.layout
+      if (this.disabled) {
+        className = className + ' complex-upload-file-disabled'
+      }
+      return className
     },
     hasData() {
       let hasData = false
@@ -235,17 +249,21 @@ export default {
     },
     // open文件选框
     onOpen() {
-      this.$refs['inputfile'].$el.click()
+      if (!this.disabled) {
+        this.$refs['inputfile'].$el.click()
+      }
     },
     // 删除
     onDelete(index, item) {
-      if (!this.multiple) {
-        this.clearData()
-        this.emitData()
-      } else {
-        this.file.data.splice(index, 1)
-        this.file.list.splice(index, 1)
-        this.emitData()
+      if (!this.disabled) {
+        if (!this.multiple) {
+          this.clearData()
+          this.emitData()
+        } else {
+          this.file.data.splice(index, 1)
+          this.file.list.splice(index, 1)
+          this.emitData()
+        }
       }
     },
     // loading
