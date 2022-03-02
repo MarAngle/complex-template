@@ -238,8 +238,6 @@ export default {
       default: ''
     }
   },
-  mounted() {
-  },
   methods: {
     // 传递数据
     emitData() {
