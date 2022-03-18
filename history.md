@@ -1,6 +1,9 @@
 ### TODOLIST
 - 实现多选的高度扩展设置项
 
+### 2.3.7
+- complex-data依赖升级
+
 ### 2.3.6
 - TableView逻辑优化
 - jsx文件优化
