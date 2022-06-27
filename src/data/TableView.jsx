@@ -260,7 +260,7 @@ export default {
         if (!pitem.customRender) {
           pitem.customRender = (text, record, index) => {
             let contentProp = pitem.dataIndex
-            let contentSlot = this.$scopedSlots[contentProp]
+            let contentSlot = this.$scopedSlots[contentProp] || pitem.localRender
             if (contentProp === this.currentAuto.index.prop && !contentSlot) {
               // 自动index
               let AutoIndexOption = {

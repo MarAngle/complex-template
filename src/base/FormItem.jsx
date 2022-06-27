@@ -587,7 +587,7 @@ export default {
       target: this.target
     }
     // 获取主要插槽，存在插槽会根据type在指定位置替换
-    let mainSlot = this.target.$scopedSlots[this.data.edit.slot.name]
+    let mainSlot = this.target.$scopedSlots[this.data.edit.slot.name] || this.data.edit.slot.render
     if (this.data.edit.slot.type != 'main') {
       // 非主要替换模式下构建主要参数
       let itemClass = utils.countClass(config.FormView.className, 'item')
