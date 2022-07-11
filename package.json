@@ -1,6 +1,6 @@
 {
   "name": "complex-component-antd",
-  "version": "2.3.10",
+  "version": "2.3.11",
   "description": "a complex component by antd",
   "main": "index.js",
   "repository": {
@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "ant-design-vue": "^1.7",
-    "complex-data": "~2.3.14"
+    "complex-data": "~2.3.15"
   },
   "devDependencies": {},
   "scripts": {
