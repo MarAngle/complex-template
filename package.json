@@ -5,7 +5,7 @@
   "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "https://gitee.com/codingarea/complex-component-antd.git"
+    "url": "https://github.com/MarAngle/complex-component-antd.git"
   },
   "dependencies": {
     "ant-design-vue": "^1.7",
