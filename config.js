@@ -165,6 +165,7 @@ let config = {
     }
   },
   AutoMenu: {
+    defaultOpen: false,
     auto: {
       menu: {
         width: '100px',

@@ -58,7 +58,10 @@ export default {
     },
     defaultOpen: {
       type: Boolean,
-      required: false
+      required: false,
+      default: function() {
+        return config.AutoMenu.defaultOpen
+      }
     }
   },
   data() {
