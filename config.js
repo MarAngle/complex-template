@@ -88,7 +88,7 @@ let config = {
   slot: {
     pagination: {
       local: function(h, payload, option, listdata) {
-        return option.format(h, listdata)
+        return option.format(h, payload, listdata)
       },
       total: function(h, payload, option) {
         let mainClass = utils.countClass(TableViewPaginationSlotClass, 'total')
