@@ -1,0 +1,24 @@
+{
+  "name": "complex-component-next",
+  "version": "3.0.0-beta.0",
+  "description": "a complex component",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/MarAngle/complex-component-next.git"
+  },
+  "dependencies": {
+    "ant-design-vue": "^3.2.11",
+    "complex-data": "3.0.0-beta.7"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "complex",
+    "component"
+  ],
+  "author": "MarAngle",
+  "license": "ISC"
+}
