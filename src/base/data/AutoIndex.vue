@@ -12,7 +12,7 @@ import { defineComponent } from "vue"
 import { PaginationData } from 'complex-data'
 
 export default defineComponent({
-  name: 'AutoIndex',
+  name: 'ComplexAutoIndex',
   props: {
     index: {
       type: Number,

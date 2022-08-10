@@ -8,7 +8,7 @@ export const init = function(app: App) {
   initBase(app)
   $func.loadContents(antdContents, function(item) {
     const data = item.default || item
-    app.component(`Complex${data.name}`, data)
+    app.component(data.name, data)
   })
   return app
 }
