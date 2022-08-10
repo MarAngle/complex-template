@@ -30,23 +30,23 @@ export default defineComponent({
     defaultStyle: {
       type: Object,
       required: false,
-      default: function() {
+      default: () => {
         return {}
       }
     },
     highStyle: {
       type: Object,
       required: false,
-      default: function() {
+      default: () => {
         return {
           color: '#FF4D4F'
         }
       }
     },
     limitNum: {
-      type: [Number, Boolean],
+      type: Number,
       required: false,
-      default: false
+      default: undefined
     },
     limitCase: {
       type: Boolean,
@@ -54,14 +54,14 @@ export default defineComponent({
       default: false
     }
   },
-  // watch: {
-  //   'data': {
-  //     immediate: true,
-  //     handler: function(val) {
-  //       this.initList(val)
-  //     }
-  //   }
-  // },
+  watch: {
+    'data': {
+      immediate: true,
+      handler: function(val) {
+        this.initList(val)
+      }
+    }
+  },
   methods: {
     initList(data?: any) {
       this.list = []
