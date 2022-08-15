@@ -300,15 +300,19 @@ export default {
               })
             }
             if (pitem.ellipsis && pitem.autoText) {
-              // 自动省略切自动换行
-              return this.$createElement(AutoText, {
+              // 自动省略且自动换行
+              let autoTextOption = {
                 props: {
                   text: data,
                   auto: true,
                   recount: _func.page.recount.main,
                   tip: this.formatAutoTextTipOption(pitem.tip, this.currentAuto.tip)
                 }
-              })
+              }
+              if (typeof pitem.autoText == 'function') {
+                pitem.autoText(autoTextOption)
+              }
+              return this.$createElement(AutoText, autoTextOption)
             }
             return data
           }
