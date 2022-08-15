@@ -310,7 +310,7 @@ export default {
                 }
               }
               if (typeof pitem.autoText == 'function') {
-                pitem.autoText(autoTextOption)
+                pitem.autoText(autoTextOption, record, index)
               }
               return this.$createElement(AutoText, autoTextOption)
             }
