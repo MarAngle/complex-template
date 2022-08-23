@@ -78,6 +78,7 @@ export default defineComponent({
       const list = []
       for (let i = 0; i < this.columnList.length; i++) {
         const pitem = { ...this.columnList[i] as objectAny }
+        console.log(pitem)
         const contentProp = pitem.dataIndex
         const contentSlot = this.$slots[contentProp] || pitem.$render
         if (!pitem.customRender) {
