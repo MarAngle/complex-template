@@ -71,7 +71,7 @@ export default defineComponent({
       if (this.paginationData) {
         return this.paginationData
       } else {
-        return this.listData.$getModule('pagination')
+        return this.listData.$module.pagination
       }
     },
     currentColumnList() {
@@ -84,7 +84,10 @@ export default defineComponent({
           pitem.customRender = ({ text, record, index }: renderDataType) => {
             if (contentProp === this.currentAuto.index.prop && !contentSlot) {
               // 自动index
-              const autoIndexProps = {
+              const autoIndexProps : {
+                index: number,
+                pagination: undefined | PaginationData
+              } = {
                 index: index,
                 pagination: undefined
               }
