@@ -112,7 +112,6 @@ export default defineComponent({
             } else if (dataType === 'array') {
               data = data.join(',')
             }
-            console.log(data)
             if (contentSlot) {
               // 插槽
               return contentSlot({
@@ -126,16 +125,13 @@ export default defineComponent({
             if (pitem.ellipsis && pitem.$auto) {
               // 自动省略切自动换行
               return h(AutoText, {
-                props: {
-                  text: data,
-                  auto: true,
-                  recount: $func.page.recount.main,
-                  tip: this.formatAutoTextTipOption(pitem.tip, this.currentAuto.tip)
-                }
+                text: data,
+                auto: true,
+                recount: $func.page.recount.main,
+                tip: this.formatAutoTextTipOption(pitem.tip, this.currentAuto.tip)
               })
             }
             return data
-
           }
         }
         list.push(pitem)
