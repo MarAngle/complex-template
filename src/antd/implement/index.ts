@@ -1,9 +1,9 @@
 import $func from 'complex-func'
-import { DictionaryItem } from 'complex-data'
-import dictionaryFormatOption from 'complex-data/dictionaryFormatOption'
+import { DictionaryItem, dictionaryFormatOption } from 'complex-data'
 import config from './config'
 import AntdEdit, { AntdEditInitOption } from './mod/AntdEdit'
 
+console.warn('warning: data请求为测试')
 
 const defaultOption = {
   list: {
@@ -28,8 +28,8 @@ const defaultOption = {
         if (data.ellipsis === undefined) {
           data.ellipsis = config.format.list.ellipsis
         }
-        if (data.autoText === undefined) {
-          data.autoText = config.format.list.autoText
+        if (data.$auto === undefined) {
+          data.$auto = config.format.list.$auto
         }
         if (data.customCell) {
           const type = $func.getType(data.customCell)

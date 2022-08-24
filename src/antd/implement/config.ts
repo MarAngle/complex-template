@@ -180,7 +180,7 @@ const config = {
     list: {
       width: 100,
       ellipsis: true,
-      autoText: true
+      $auto: true
     }
   }
 }

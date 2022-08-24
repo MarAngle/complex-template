@@ -1,8 +1,8 @@
 {
   "name": "complex-component-next",
-  "version": "3.0.0-beta.5",
+  "version": "3.0.0-beta.6-ing",
   "description": "a complex component",
-  "main": "index.js",
+  "main": "index.ts",
   "repository": {
     "type": "git",
     "url": "https://github.com/MarAngle/complex-component-next.git"

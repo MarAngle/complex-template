@@ -11,7 +11,7 @@ import $func from 'complex-func'
 import { objectAny } from "complex-func/src/ts"
 import config from "./../config"
 import AutoIndexVue from "../../base/data/AutoIndex.vue"
-import AutoTextVue from "./AutoText.vue"
+import AutoText from "./AutoText.vue"
 
 type renderDataType = { text: any, record: objectAny, index: number, column: objectAny }
 
@@ -78,7 +78,6 @@ export default defineComponent({
       const list = []
       for (let i = 0; i < this.columnList.length; i++) {
         const pitem = { ...this.columnList[i] as objectAny }
-        console.log(pitem)
         const contentProp = pitem.dataIndex
         const contentSlot = this.$slots[contentProp] || pitem.$render
         if (!pitem.customRender) {
@@ -113,6 +112,7 @@ export default defineComponent({
             } else if (dataType === 'array') {
               data = data.join(',')
             }
+            console.log(data)
             if (contentSlot) {
               // 插槽
               return contentSlot({
@@ -125,7 +125,7 @@ export default defineComponent({
             }
             if (pitem.ellipsis && pitem.$auto) {
               // 自动省略切自动换行
-              return h(AutoTextVue, {
+              return h(AutoText, {
                 props: {
                   text: data,
                   auto: true,
