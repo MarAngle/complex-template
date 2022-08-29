@@ -1,6 +1,9 @@
 ### TODOLIST
 - 实现多选的高度扩展设置项
 
+### 2.3.23
+- auto-index添加格式化函数
+
 ### 2.3.22
 - complex-data依赖升级
 

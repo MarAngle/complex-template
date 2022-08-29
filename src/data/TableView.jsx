@@ -265,7 +265,8 @@ export default {
               // 自动index
               let AutoIndexOption = {
                 props: {
-                  index: index
+                  index: index,
+                  format: pitem.$format
                 }
               }
               if (this.currentAuto.index.pagination) {
