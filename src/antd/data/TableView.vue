@@ -8,9 +8,9 @@
 import { defineComponent, h } from "vue"
 import { ListData, PaginationData } from "complex-data"
 import $func from 'complex-func'
-import { objectAny } from "complex-func/src/ts"
+import { anyFunction, objectAny } from "complex-func/src/ts"
 import config from "./../config"
-import AutoIndexVue from "../../base/data/AutoIndex.vue"
+import AutoIndex from "../../base/data/AutoIndex.vue"
 import AutoText from "./AutoText.vue"
 
 type renderDataType = { text: any, record: objectAny, index: number, column: objectAny }
@@ -86,9 +86,11 @@ export default defineComponent({
               // 自动index
               const autoIndexProps : {
                 index: number,
+                format: undefined | anyFunction
                 pagination: undefined | PaginationData
               } = {
                 index: index,
+                format: pitem.$format,
                 pagination: undefined
               }
               if (this.currentAuto.index.pagination) {
@@ -103,7 +105,7 @@ export default defineComponent({
                   autoIndexProps.pagination = this.currentPaginationData
                 }
               }
-              return h(AutoIndexVue, autoIndexProps)
+              return h(AutoIndex, autoIndexProps)
             }
             let data = pitem.$func.show(text, { item: pitem, targetitem: record, type: this.listType, index: index })
             const dataType = $func.getType(data)
