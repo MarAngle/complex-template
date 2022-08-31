@@ -5,7 +5,7 @@
   <div class="complex-edit-form">
     <ComplexFormView
       :form="form"
-      :mainlist="mainlist"
+      :list="pageList"
       :type="edit"
       @event="onEvent"
       @eventEnd="onEventEnd"
@@ -24,13 +24,13 @@ type dataType = null | objectAny
 type cbType = (postData: objectAny, targetData: dataType) => any
 
 export default defineComponent({
-  name: `EditForm`,
+  name: `ComplexEditForm`,
   data () {
     const data: {
       type: string,
       edit: string,
       data: dataType,
-      list: DictionaryItem[],
+      mainList: DictionaryItem[],
       pageList: null | PageList,
       form: {
         ref: any,
@@ -40,14 +40,13 @@ export default defineComponent({
       type: '',
       edit: '',
       data: null,
-      list: [],
+      mainList: [],
       pageList: null,
       form: {
         ref: null,
         data: {}
       }
     }
-
     return data
   },
   props: {
@@ -64,7 +63,7 @@ export default defineComponent({
         edit: this.edit,
         originData: this.data,
         form: this.form.data,
-        list: this.list
+        list: this.mainList
       }
     }
   },
@@ -85,8 +84,8 @@ export default defineComponent({
       })
     },
     initPageList() {
-      this.list = this.dictionary.$getList(this.type)
-      const pageList = this.dictionary.$buildPageList(this.type, this.list, {
+      this.mainList = this.dictionary.$getList(this.type)
+      const pageList = this.dictionary.$buildPageList(this.type, this.mainList, {
         mod: this.edit
       })
       this.pageList = pageList
@@ -94,16 +93,17 @@ export default defineComponent({
     initData() {
       this.initPageList()
       if (this.edit == 'change') {
-        this.form.data = this.dictionary.$buildFormData(this.list, this.type, this.data)
+        this.form.data = this.dictionary.$buildFormData(this.mainList, this.type, this.data)
       } else if (this.edit == 'build') {
-        this.form.data = this.dictionary.$buildFormData(this.list, this.type)
+        this.form.data = this.dictionary.$buildFormData(this.mainList, this.type)
       }
+      console.log(this.PageList)
       this.pageList!.setData(this.form.data)
     },
     handle(cb: cbType) {
       this.form.ref.validate((valid: any) => {
         if (valid) {
-          const postdata = this.dictionary.$buildEditData(this.form.data, this.list, this.type)
+          const postdata = this.dictionary.$buildEditData(this.form.data, this.mainList, this.type)
           cb(postdata, this.data)
         }
       })

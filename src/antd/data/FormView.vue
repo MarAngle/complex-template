@@ -8,8 +8,6 @@
     <a-form
       :model="form.data"
       :layout="layout"
-      @finish="onFinish"
-      @finishFailed="onFinishFailed"
     >
       <a-form-item :wrapper-col="{ offset: 8, span: 16 }">
         <a-button type="primary" html-type="submit">Submit</a-button>
@@ -31,6 +29,10 @@ export default defineComponent({
   props: {
     form: {
       type: Object,
+      required: true
+    },
+    list: {
+      type: Array,
       required: true
     },
     layout: { // 表单布局	'horizontal'|'vertical'|'inline'
