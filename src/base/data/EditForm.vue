@@ -4,6 +4,7 @@
 <template>
   <div class="complex-edit-form">
     <ComplexFormView
+      v-if="pageList"
       :form="form"
       :list="pageList"
       :type="edit"
@@ -97,7 +98,6 @@ export default defineComponent({
       } else if (this.edit == 'build') {
         this.form.data = this.dictionary.$buildFormData(this.mainList, this.type)
       }
-      console.log(this.PageList)
       this.pageList!.setData(this.form.data)
     },
     handle(cb: cbType) {

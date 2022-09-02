@@ -6,9 +6,6 @@
     @ok="onOk"
   >
     <slot :show="visible" :height="height" :width="width" :modal="currentModal" />
-    <template v-slot:footer>
-      <slot name="footer" />
-    </template>
   </a-modal>
 </template>
 

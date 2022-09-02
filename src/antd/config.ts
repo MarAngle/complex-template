@@ -17,6 +17,48 @@ const config = {
       }
     }
   },
+  FormView: {
+    layout: 'horizontal',
+    layoutOption: {
+      props: {
+        gutter: 24
+      }
+    },
+    labelAlign: 'right',
+    checkOnRuleChange: true,
+    checkOnInit: false,
+    clearCheckOnInit: true,
+    select: {
+      paginationAreaOption: {
+        on: {
+          mousedown: function (e: Event) {
+            e.preventDefault()
+          }
+        }
+      }
+    },
+    auto: {
+      zIndex: {
+        num: 100,
+        act: 'down'
+      },
+      item: {
+        auto: true
+      },
+      foot: {
+        loading: undefined,
+        disabled: undefined,
+        type: 'auto',
+        data: 'props',
+        layout: {
+          props: {
+            span: 24
+          }
+        },
+        option: {}
+      }
+    }
+  },
   AutoModal: {
     defaultWidth: 520,
     top: 100,
