@@ -18,6 +18,22 @@ export default defineComponent({
     return {}
   },
   props: {
+    data: {
+      type: Object,
+      required: true
+    },
+    index: {
+      type: Number,
+      required: true
+    },
+    type: {
+      type: String,
+      required: true
+    },
+    target: {
+      type: Object,
+      required: true
+    }
   },
   mounted() {
     //

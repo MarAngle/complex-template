@@ -1,16 +1,39 @@
 <style scoped>
-.complex-form-view{
-
-}
+.complex-form-view-inline{}
+.complex-form-view-horizontal{}
+.complex-form-view-vertical{}
 </style>
 <template>
-  <div class="complex-form-view" >
+  <div class="complex-form-view" :class="'complex-form-view' + layout" >
     <a-form
       ref="form"
       :model="form.data"
       :layout="layout"
     >
-      <FormItem />
+      <template v-if="layout == 'inline'" >
+        <FormItem
+          v-for="(val, index) in list"
+          :key="val.prop"
+          :data="data"
+          :index="index"
+          :type="type"
+          :target="this"
+        />
+      </template>
+      <a-row v-else v-bind="layoutOption" >
+        <a-col
+          v-for="(val, index) in list"
+          :key="val.prop"
+          v-bind="getItemGrid(val)"
+        >
+          <FormItem
+            :data="data"
+            :index="index"
+            :type="type"
+            :target="this"
+          />
+        </a-col>
+      </a-row>
     </a-form>
   </div>
 </template>
@@ -20,6 +43,8 @@ import { PageList } from "complex-data";
 import { objectAny } from "complex-data/ts";
 import { defineComponent, PropType } from "vue";
 import FormItem from "./../mod/FormItem.vue";
+import config from '../config'
+import $func from "complex-func";
 
 export default defineComponent({
   name: 'ComplexFormView',
@@ -48,6 +73,13 @@ export default defineComponent({
       required: false,
       default: 'right'
     },
+    layoutOption: { // layout != inline时的a-row的参数设置项
+      type: Object,
+      required: false,
+      default: () => {
+        return config.FormView.layoutOption
+      }
+    },
   },
   mounted() {
     this.setFormRef()
@@ -62,6 +94,18 @@ export default defineComponent({
       // eslint-disable-next-line vue/no-mutating-props
       this.form.ref = this.$refs.form
     },
+    getItemGrid(data: any) {
+      const gridType = $func.getType(data.layout.grid)
+      let gridOption
+      if (gridType != 'object') {
+        gridOption = {
+          span: data.layout.grid
+        }
+      } else {
+        gridOption = { ...data.layout.grid }
+      }
+      return gridOption
+    }
   }
 })
 </script>
