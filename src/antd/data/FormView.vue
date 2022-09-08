@@ -12,23 +12,25 @@
     >
       <template v-if="layout == 'inline'" >
         <FormItem
-          v-for="(val, index) in list"
+          v-for="(val, index) in list.data"
           :key="val.prop"
-          :data="data"
+          :data="val"
           :index="index"
+          :layout="layout"
           :type="type"
           :target="this"
         />
       </template>
       <a-row v-else v-bind="layoutOption" >
         <a-col
-          v-for="(val, index) in list"
+          v-for="(val, index) in list.data"
           :key="val.prop"
           v-bind="getItemGrid(val)"
         >
           <FormItem
-            :data="data"
+            :data="val"
             :index="index"
+            :layout="layout"
             :type="type"
             :target="this"
           />
@@ -95,6 +97,7 @@ export default defineComponent({
       this.form.ref = this.$refs.form
     },
     getItemGrid(data: any) {
+      console.log(data)
       const gridType = $func.getType(data.layout.grid)
       let gridOption
       if (gridType != 'object') {

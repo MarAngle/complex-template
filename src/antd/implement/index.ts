@@ -2,8 +2,21 @@ import $func from 'complex-func'
 import { DictionaryItem, dictionaryFormatOption } from 'complex-data'
 import config from './config'
 import AntdEdit, { AntdEditInitOption } from './mod/AntdEdit'
+import { LayoutDataFormatData } from 'complex-data/src/mod/LayoutData'
+import { SimpleDataFunc } from 'complex-data/src/data/SimpleData'
 
 console.warn('warning: data请求为测试')
+
+export type editType = {
+  prop: string,
+  label: string | undefined,
+  originProp: string | undefined,
+  type: string | undefined,
+  $func: SimpleDataFunc,
+  layout: LayoutDataFormatData,
+  edit: AntdEdit
+}
+
 
 const defaultOption = {
   list: {
@@ -88,7 +101,7 @@ const defaultOption = {
       data.parent = ditem
       return new AntdEdit(data)
     },
-    unformat: function (ditem: DictionaryItem, modName: string) {
+    unformat: function (ditem: DictionaryItem, modName: string): editType {
       const pitem = {
         prop: ditem.$prop,
         label: ditem.$getInterface('label', modName),
@@ -96,7 +109,7 @@ const defaultOption = {
         type: ditem.$getInterface('type', modName),
         $func: ditem.$func,
         layout: ditem.$getLayout(modName),
-        edit: ditem.$mod[modName]
+        edit: ditem.$mod[modName] as AntdEdit
       }
       return pitem
     }
