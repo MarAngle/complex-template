@@ -4,6 +4,50 @@ import { objectAny } from "complex-data/ts";
 import { h, defineComponent, PropType } from "vue";
 import { editType } from "../implement";
 
+export type payloadType = {
+  prop: string;
+  type: string;
+  item: editType;
+  index: number;
+  form: objectAny;
+  list: PageList;
+  target: Record<string, any>;
+}
+
+const typeFormat = {
+  data: {
+    base: {
+      option: function(itemProps: objectAny) {
+        return itemProps
+      }
+    },
+    $input: {
+      option: function(itemProps: objectAny, item: editType, payload: payloadType) {
+        itemProps = {
+          type: item.edit.$option.type,
+          allowClear: !item.edit.$option.hideClear,
+          maxLength: item.edit.$option.maxLength,
+          disabled: item.edit.disabled.getData(payload.type),
+          placeholder: item.edit.placeholder!.getData(payload.type)
+        }
+        itemProps = $func.mergeData(itemProps, item.edit.$localProps.item)
+        return itemProps
+      }
+    }
+  },
+  getData(type: string) {
+    const typeName = '$' + type
+    if ((this.data as any)[typeName]) {
+      return (this.data as any)[typeName]
+    } else {
+      return this.data.base
+    }
+  }
+}
+
+
+
+
 const className = 'complex-form-item'
 
 export default defineComponent({
@@ -144,7 +188,9 @@ export default defineComponent({
     },
     renderItem(slot: any) {
       let tag
-      let itemProps = {}
+      const itemProps = {}
+      const typeFormatData = typeFormat.getData(this.data.edit.type)
+      typeFormatData.option(itemProps, this.data, this.payload)
       let children
       let item = null
       // 考虑一个默认的值，inline模式下和其他模式下的默认值，避免出现问题
@@ -170,16 +216,14 @@ export default defineComponent({
           label: this.data.edit.$option.optionLabel || 'label',
           disabled: this.data.edit.$option.optionDisabled || 'disabled'
         }
-        children = this.data.edit.$option.list.map((itemData, indexData) => {
-          let optionOption = {
-            props: {
-              key: itemData[dict.key],
-              value: itemData[dict.value],
-              disabled: itemData[dict.disabled] || false
-            }
+        children = this.data.edit.$option.list.map((itemData: objectAny) => {
+          let optionProps = {
+            key: itemData[dict.key],
+            value: itemData[dict.value],
+            disabled: itemData[dict.disabled] || false
           }
-          optionOption = $func.mergeData(optionOption, this.data.edit.$localProps.option)
-          return h('a-select-option', optionOption, [ itemData[dict.label] ])
+          optionProps = $func.mergeData(optionProps, this.data.edit.$localProps.option)
+          return h('a-select-option', optionProps, [ itemData[dict.label] ])
         })
         // if (this.data.edit.$module.pagination) {
         //   // 分页器相关设置
@@ -221,7 +265,7 @@ export default defineComponent({
       } else if (this.data.edit.type == 'dateRange') {
         tag = 'a-range-picker'
       } else if (this.data.edit.type == 'file') {
-        tag = UploadFile
+        // tag = UploadFile
       } else if (this.data.edit.type == 'button') {
         tag = 'a-button'
         children = [ this.data.edit.$option.name.getData(this.type) ]
