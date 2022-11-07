@@ -7,7 +7,7 @@ import { SimpleDataFunc } from 'complex-data/src/data/SimpleData'
 
 console.warn('warning: data请求为测试')
 
-export type editType = {
+export interface editType {
   prop: string,
   label: string | undefined,
   originProp: string | undefined,

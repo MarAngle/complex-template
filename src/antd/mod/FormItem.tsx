@@ -1,7 +1,7 @@
 import $func from 'complex-func';
 import { PageList } from "complex-data";
 import { objectAny } from "complex-data/ts";
-import { h, defineComponent, PropType } from "vue";
+import { h, defineComponent } from "vue";
 import { editType } from "../implement";
 
 export type payloadType = {
@@ -45,16 +45,13 @@ const typeFormat = {
   }
 }
 
-
-
-
 const className = 'complex-form-item'
 
 export default defineComponent({
   name: 'FormItem',
   props: {
     data: {
-      type: Object as PropType<editType>,
+      type: Object,
       required: true
     },
     index: {
@@ -62,11 +59,11 @@ export default defineComponent({
       required: true
     },
     form: {
-      type: Object as PropType<objectAny>,
+      type: Object,
       required: true
     },
     list: {
-      type: Object as PropType<PageList>,
+      type: PageList,
       required: true
     },
     layout: {
@@ -187,7 +184,7 @@ export default defineComponent({
       }
     },
     renderItem(slot: any) {
-      let tag
+      let tag: undefined | string
       const itemProps = {}
       const typeFormatData = typeFormat.getData(this.data.edit.type)
       typeFormatData.option(itemProps, this.data, this.payload)
@@ -270,7 +267,7 @@ export default defineComponent({
         tag = 'a-button'
         children = [ this.data.edit.$option.name.getData(this.type) ]
       } else if (this.data.edit.type == 'customize') {
-        tag = this.data.edit.$customize
+        tag = this.data.edit.$customize as string
       } else if (this.data.edit.type == 'slot') {
         console.error(`${this.data.prop}未定义slot`)
       }

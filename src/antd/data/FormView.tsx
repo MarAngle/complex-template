@@ -1,7 +1,6 @@
 import $func from "complex-func";
 import { PageList } from "complex-data";
-import { objectAny } from "complex-data/ts";
-import { h, defineComponent, PropType } from "vue";
+import { h, defineComponent } from "vue";
 import FormItem from "./../mod/FormItem";
 import config from '../config';
 import { editType } from "../implement";
@@ -12,11 +11,11 @@ export default defineComponent({
   name: 'ComplexFormView',
   props: {
     form: {
-      type: Object as PropType<objectAny>,
+      type: Object,
       required: true
     },
     list: {
-      type: Object as PropType<PageList>,
+      type: PageList,
       required: true
     },
     type: {
