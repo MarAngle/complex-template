@@ -293,10 +293,10 @@ export default {
     let renderFormList = this.renderFormList()
     let renderForm
     if (this.layout == 'inline') {
-      renderForm = h('a-form-model', this.currentFormOption, renderFormList)
+      renderForm = h('a-form-model', { ...this.currentFormOption }, renderFormList)
     } else {
       // 非inline模式下加载栅格布局
-      renderForm = h('a-form-model', this.currentFormOption, [
+      renderForm = h('a-form-model', { ...this.currentFormOption }, [
         h('a-row', { ...this.layoutOption }, renderFormList)
       ])
     }

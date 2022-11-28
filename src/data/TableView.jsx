@@ -97,7 +97,7 @@ export default {
       return _func.setDataByDefault(this.auto, config.TableView.auto)
     },
     currentInOption() {
-      let currentInOption = this.inOption || {}
+      let currentInOption = { ...this.inOption } || {}
       if (this.currentScrollOption.layout == 'count') {
         if (!currentInOption.style) {
           currentInOption.style = {}
@@ -111,7 +111,7 @@ export default {
       return currentInOption
     },
     currentTableOption() {
-      let currentTableOption = this.tableOption || {
+      let currentTableOption = { ...this.tableOption } || {
         props: {}
       }
       if (!currentTableOption.props) {
@@ -511,12 +511,12 @@ export default {
   render(h) {
     let renderPagination = this.renderPagination()
     let mainRenderList = [
-      h('a-table', this.currentTableOption, [])
+      h('a-table', { ...this.currentTableOption }, [])
     ]
     if (renderPagination) {
       mainRenderList.push(renderPagination)
     }
-    let inRender = h('div', this.currentInOption, mainRenderList)
+    let inRender = h('div', { ...this.currentInOption }, mainRenderList)
     let render = h('div', {
       class: config.TableView.className,
       ref: config.TableView.mainRef
