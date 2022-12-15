@@ -1,7 +1,6 @@
 import $func from 'complex-func';
 import { PageList } from "complex-data";
-import { objectAny } from "complex-data/ts";
-import { h, defineComponent } from "vue";
+import { h, defineComponent, PropType } from "vue";
 import { editType } from "../implement";
 
 export type payloadType = {
@@ -9,7 +8,7 @@ export type payloadType = {
   type: string;
   item: editType;
   index: number;
-  form: objectAny;
+  form: Record<string, any>;
   list: PageList;
   target: Record<string, any>;
 }
@@ -17,12 +16,12 @@ export type payloadType = {
 const typeFormat = {
   data: {
     base: {
-      option: function(itemProps: objectAny) {
+      option: function(itemProps: Record<string, any>) {
         return itemProps
       }
     },
     $input: {
-      option: function(itemProps: objectAny, item: editType, payload: payloadType) {
+      option: function(itemProps: Record<string, any>, item: editType, payload: payloadType) {
         itemProps = {
           type: item.edit.$option.type,
           allowClear: !item.edit.$option.hideClear,
@@ -51,7 +50,7 @@ export default defineComponent({
   name: 'FormItem',
   props: {
     data: {
-      type: Object,
+      type: Object as PropType<editType>,
       required: true
     },
     index: {
@@ -63,7 +62,7 @@ export default defineComponent({
       required: true
     },
     list: {
-      type: PageList,
+      type: Object as PropType<PageList>,
       required: true
     },
     layout: {
@@ -81,7 +80,7 @@ export default defineComponent({
   },
   computed: {
     currentProps() {
-      let currentProps: any = {
+      let currentProps: Record<PropertyKey, any> = {
         prop: this.data.prop,
         label: this.data.label,
         colon: this.data.edit.colon,
@@ -213,7 +212,7 @@ export default defineComponent({
           label: this.data.edit.$option.optionLabel || 'label',
           disabled: this.data.edit.$option.optionDisabled || 'disabled'
         }
-        children = this.data.edit.$option.list.map((itemData: objectAny) => {
+        children = this.data.edit.$option.list.map((itemData: Record<string, any>) => {
           let optionProps = {
             key: itemData[dict.key],
             value: itemData[dict.value],
@@ -282,6 +281,6 @@ export default defineComponent({
    * @returns {VNode}
    */
   render() {
-    return h('a-form-item', this.currentProps as any)
+    return h('a-form-item', this.currentProps)
   }
 })
