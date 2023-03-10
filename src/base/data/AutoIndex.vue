@@ -32,7 +32,7 @@ export default defineComponent({
     currentIndex() {
       let currentIndex = this.index + 1
       if (this.pagination) {
-        const page = this.pagination.getPage()
+        const page = this.pagination.getCurrent()
         const size = this.pagination.getSize()
         currentIndex = currentIndex + (page - 1) * size
       }

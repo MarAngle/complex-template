@@ -19,7 +19,7 @@
 import { defineComponent } from "vue"
 import { DictionaryData, DictionaryList, PageList } from "complex-data"
 
-type dataType = null | Record<PropertyKey, any>
+type dataType = undefined | Record<PropertyKey, any>
 
 type cbType = (postData: Record<PropertyKey, any>, targetData: dataType) => any
 
@@ -39,7 +39,7 @@ export default defineComponent({
     } = {
       type: '',
       edit: '',
-      data: null,
+      data: undefined,
       mainList: [],
       pageList: null,
       form: {
@@ -74,7 +74,7 @@ export default defineComponent({
     onEventEnd(prop: string, name: string, ...args: any[]) {
       this.$emit('eventEnd', this.eventPayload, prop, name, ...args)
     },
-    show(type: string, edit: string, data: dataType = null) {
+    show(type: string, edit: string, data: dataType = undefined) {
       this.type = type
       this.edit = edit
       this.data = data

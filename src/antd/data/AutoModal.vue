@@ -11,7 +11,7 @@
 
 <script lang="ts">
 import { defineComponent } from "vue"
-import { page } from 'complex-func'
+import { layout } from 'complex-func'
 import config from "../config"
 
 export default defineComponent({
@@ -139,7 +139,7 @@ export default defineComponent({
       return currentAuto
     },
     height() {
-      const mainHeight = page.data.body.height
+      const mainHeight = layout.data.body.height
       let height = mainHeight - this.top - this.bottom - this.header - this.padding.height
       if (this.currentOptionProps.footer !== null) {
         height = height - this.menu

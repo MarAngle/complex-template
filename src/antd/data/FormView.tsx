@@ -1,6 +1,6 @@
 import { defineComponent, h, PropType } from "vue"
 import { PageList } from "complex-data"
-import FormItem from '../mod/FormItem'
+import { Form } from 'ant-design-vue'
 import config from '../config'
 import { editType } from "../implement"
 import { mergeData } from "complex-utils"
@@ -69,11 +69,11 @@ export default defineComponent({
   },
   methods: {
     renderForm() {
-      return h('a-form', this.currentFormOption, this.renderRow())
+      // return h(Form, this.currentFormOption, this.renderRow())
     },
-    renderRow() {
+    // renderRow() {
       
-    }
+    // }
   },
   /**
    * 主要模板

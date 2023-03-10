@@ -3,17 +3,17 @@ import { DictionaryData } from 'complex-data'
 import config from './config'
 import AntdEdit, { AntdEditInitOption } from './mod/AntdEdit'
 import { LayoutDataFormatData } from 'complex-data/src/lib/LayoutData'
-import { PageData } from 'complex-data/src/lib/DictionaryData'
-import DictionaryFormat from "complex-data/DictionaryFormat"
+// import { PageData } from 'complex-data/src/lib/DictionaryData'
+import DictionaryConfig from "complex-data/DictionaryConfig"
 
 console.warn('warning: data请求为测试')
 
-export interface editType extends PageData {
+export interface editType {
   prop: string,
   label: string | undefined,
   originProp: string | undefined,
   type: string | undefined,
-  $func: Record<PropertyKey, ((...args: any[]) => any)>,
+  // $func: Record<PropertyKey, ((...args: any[]) => any)>,
   layout: LayoutDataFormatData,
   edit: AntdEdit
 }
@@ -68,7 +68,9 @@ const defaultOption = {
     unformat: function (ditem: DictionaryData, modName: string) {
       const pitem = {
         ...ditem.$mod[modName],
-        $func: ditem.$func
+        $func: {
+          show: ditem.show
+        }
       } as any
       if (!pitem.title) {
         pitem.title = ditem.$getInterface('label', modName)
@@ -107,7 +109,7 @@ const defaultOption = {
         label: ditem.$getInterface('label', modName),
         originProp: ditem.$getInterface('originProp', modName),
         type: ditem.$getInterface('type', modName),
-        $func: ditem.$func,
+        // $func: ditem.$func,
         layout: ditem.$getLayout(modName),
         edit: ditem.$mod[modName] as AntdEdit
       }
@@ -119,8 +121,8 @@ const defaultOption = {
 export const init = function() {
   let n: 'list' | 'info' | 'edit'
   for (n in defaultOption) {
-    DictionaryFormat.setDictionary(n, defaultOption[n])
+    DictionaryConfig.setDictionary(n, defaultOption[n])
   }
-  DictionaryFormat.setDictionary('build', 'edit', true)
-  DictionaryFormat.setDictionary('change', 'edit', true)
+  DictionaryConfig.setDictionary('build', 'edit', true)
+  DictionaryConfig.setDictionary('change', 'edit', true)
 }
