@@ -3,7 +3,7 @@
 </template>
 <script lang="ts">
 import { defineComponent } from "vue"
-import $func from 'complex-func'
+import { isExist } from "complex-utils"
 
 export default defineComponent({
   name: 'ComplexShowValue',
@@ -14,7 +14,7 @@ export default defineComponent({
     isExist: {
       type: Function,
       required: false,
-      default: $func.isExist
+      default: isExist
     },
     unExistText: {
       required: false,

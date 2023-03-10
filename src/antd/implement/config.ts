@@ -1,6 +1,4 @@
 import { InterfaceData } from "complex-data"
-import { baseObject, Record<PropertyKey, any> } from "complex-data/ts"
-
 
 export interface dictType {
   option?: Record<PropertyKey, any>,
@@ -8,7 +6,7 @@ export interface dictType {
   rule?: {
     trigger: string[],
     autoTrigger: string[],
-    message: (label: InterfaceData<string>) => baseObject<string>
+    message: (label: InterfaceData<string>) => Record<PropertyKey, string>
   }
 }
 
@@ -25,7 +23,7 @@ const config = {
           trigger: ['blur'],
           autoTrigger: ['input', 'change'],
           message: function (label: InterfaceData<string>) {
-            const data: baseObject<string> = {}
+            const data: Record<PropertyKey, string> = {}
             label.map((labeldata, prop) => {
               data[prop] = `请输入${labeldata[prop]}`
             })
@@ -39,7 +37,7 @@ const config = {
           trigger: ['blur'],
           autoTrigger: ['input', 'change'],
           message: function (label: InterfaceData<string>) {
-            const data: baseObject<string> = {}
+            const data: Record<PropertyKey, string> = {}
             label.map((labeldata, prop) => {
               data[prop] = `请输入${labeldata[prop]}`
             })
@@ -58,7 +56,7 @@ const config = {
           trigger: ['blur'],
           autoTrigger: ['input', 'change'],
           message: function (label: InterfaceData<string>) {
-            const data: baseObject<string> = {}
+            const data: Record<PropertyKey, string> = {}
             label.map((labeldata, prop) => {
               data[prop] = `请输入${labeldata[prop]}`
             })
@@ -80,7 +78,7 @@ const config = {
           trigger: ['blur'],
           autoTrigger: ['change', 'select'],
           message: function (label: InterfaceData<string>) {
-            const data: baseObject<string> = {}
+            const data: Record<PropertyKey, string> = {}
             label.map((labeldata, prop) => {
               data[prop] = `请选择${labeldata[prop]}`
             })
@@ -94,7 +92,7 @@ const config = {
           trigger: ['blur'],
           autoTrigger: ['change', 'select'],
           message: function (label: InterfaceData<string>) {
-            const data: baseObject<string> = {}
+            const data: Record<PropertyKey, string> = {}
             label.map((labeldata, prop) => {
               data[prop] = `请选择${labeldata[prop]}`
             })
@@ -108,7 +106,7 @@ const config = {
           trigger: 'change',
           autoTrigger: ['ok'],
           message: function (label: InterfaceData<string>) {
-            const data: baseObject<string> = {}
+            const data: Record<PropertyKey, string> = {}
             label.map((labeldata, prop) => {
               data[prop] = `请选择${labeldata[prop]}`
             })
@@ -122,7 +120,7 @@ const config = {
           trigger: 'change',
           autoTrigger: ['ok'],
           message: function (label: InterfaceData<string>) {
-            const data: baseObject<string> = {}
+            const data: Record<PropertyKey, string> = {}
             label.map((labeldata, prop) => {
               data[prop] = `请选择${labeldata[prop]}`
             })
@@ -136,7 +134,7 @@ const config = {
           trigger: ['input', 'change'],
           autoTrigger: [],
           message: function (label: InterfaceData<string>) {
-            const data: baseObject<string> = {}
+            const data: Record<PropertyKey, string> = {}
             label.map((labeldata, prop) => {
               data[prop] = `上传${labeldata[prop]}`
             })
@@ -153,7 +151,7 @@ const config = {
           trigger: ['blur'],
           autoTrigger: ['change'],
           message: function (label: InterfaceData<string>) {
-            const data: baseObject<string> = {}
+            const data: Record<PropertyKey, string> = {}
             label.map((labeldata, prop) => {
               data[prop] = `请选择${labeldata[prop]}`
             })

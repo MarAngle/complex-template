@@ -23,7 +23,7 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from "vue"
-import $func from "complex-func"
+import { mergeData } from "complex-utils"
 import { PageList } from "complex-data"
 import FormItem from '../mod/FormItem'
 import config from '../config'
@@ -86,7 +86,7 @@ export default defineComponent({
         layout: this.layout,
         labelAlign: this.labelAlign
       }
-      const currentFormOption = $func.mergeData(defaultFormOption, this.formOption)
+      const currentFormOption = mergeData(defaultFormOption, this.formOption)
       currentFormOption.ref = 'form'
       return currentFormOption
     }

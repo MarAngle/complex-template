@@ -1,5 +1,5 @@
 import { defineComponent, h, PropType, Slot } from "vue"
-import $func from "complex-func"
+import { mergeData } from "complex-utils"
 import { PageList } from "complex-data"
 import { editType } from "../implement"
 
@@ -103,7 +103,7 @@ export default defineComponent({
             value: itemData[dict.value],
             disabled: itemData[dict.disabled] || false
           }
-          optionProps = $func.mergeData(optionProps, this.data.edit.$localOption.option)
+          optionProps = mergeData(optionProps, this.data.edit.$localOption.option)
           return h('a-select-option', optionProps, [ itemData[dict.label] ])
         })
       } else if (this.data.edit.type == 'cascader') {
@@ -144,7 +144,7 @@ export default defineComponent({
         colon: this.data.edit.colon,
         rules: this.data.edit.$rules.getData(this.payload.type)
       }
-      mainOption = $func.mergeData(mainOption, this.data.edit.$localOption.main)
+      mainOption = mergeData(mainOption, this.data.edit.$localOption.main)
       // 获取tips插槽
       render = h('a-form-model-item', mainOption, [ this.renderTip(slot) ])
     } else if (slot) {

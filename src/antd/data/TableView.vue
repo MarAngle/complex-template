@@ -6,7 +6,9 @@
 
 <script lang="ts">
 import { defineComponent, h } from "vue"
-import { ListData, PaginationData } from "complex-data"
+import { getType, setDataByDefault } from "complex-utils"
+import { layout } from "complex-func"
+import { ComplexList, PaginationData } from "complex-data"
 import config from "./../config"
 import AutoIndex from "../../base/data/AutoIndex.vue"
 import AutoText from "./AutoText.vue"
@@ -20,7 +22,7 @@ export default defineComponent({
   },
   props: {
     listData: {
-      type: ListData,
+      type: ComplexList,
       required: true
     },
     columnList: { // 定制列配置
@@ -59,11 +61,11 @@ export default defineComponent({
       if (this.data) {
         return this.data
       } else {
-        return this.listData.$data.list
+        return this.listData.$list
       }
     },
     currentAuto() {
-      return $func.setDataByDefault(this.auto, config.TableView.auto)
+      return setDataByDefault(this.auto, config.TableView.auto)
     },
     currentPaginationData() {
       if (this.paginationData) {
@@ -84,7 +86,7 @@ export default defineComponent({
               // 自动index
               const autoIndexProps : {
                 index: number,
-                format: undefined | anyFunction
+                format: undefined | ((...args: any[]) => any)
                 pagination: undefined | PaginationData
               } = {
                 index: index,
@@ -127,7 +129,7 @@ export default defineComponent({
               return h(AutoText, {
                 text: data,
                 auto: true,
-                recount: $func.page.recount.main,
+                recount: layout.recount.main,
                 tip: this.formatAutoTextTipOption(pitem.tip, this.currentAuto.tip)
               })
             }

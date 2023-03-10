@@ -6,7 +6,7 @@
 
 <script lang="ts">
 import { defineComponent } from "vue"
-import $func from 'complex-func'
+import { findTargetInStr } from "complex-utils"
 
 export default defineComponent({
   name: 'ComplexHighText',
@@ -67,7 +67,7 @@ export default defineComponent({
       this.list = []
       if (data) {
         const origindata: string = data.toString()
-        const findList = $func.findTargetInStr(data, this.target, {
+        const findList = findTargetInStr(data, this.target, {
           limitNum: this.limitNum,
           case: this.limitCase
         })
