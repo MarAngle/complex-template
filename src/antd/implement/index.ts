@@ -2,17 +2,18 @@ import $func from 'complex-func'
 import { DictionaryItem, dictionaryFormatOption } from 'complex-data'
 import config from './config'
 import AntdEdit, { AntdEditInitOption } from './mod/AntdEdit'
-import { LayoutDataFormatData } from 'complex-data/src/mod/LayoutData'
-import { SimpleDataFunc } from 'complex-data/src/data/SimpleData'
+import { LayoutDataFormatData } from 'complex-data/src/lib/LayoutData'
+import { PageData } from 'complex-data/src/lib/DictionaryItem'
+import { anyFunction } from 'complex-data/ts'
 
 console.warn('warning: data请求为测试')
 
-export interface editType {
+export interface editType extends PageData {
   prop: string,
   label: string | undefined,
   originProp: string | undefined,
   type: string | undefined,
-  $func: SimpleDataFunc,
+  $func: Record<PropertyKey, anyFunction>,
   layout: LayoutDataFormatData,
   edit: AntdEdit
 }

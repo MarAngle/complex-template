@@ -1,4 +1,4 @@
-import $func from 'complex-func'
+import { loadContents } from 'complex-utils'
 import { App } from 'vue'
 import Antd from 'ant-design-vue'
 import 'ant-design-vue/dist/antd.less'
@@ -11,7 +11,7 @@ export const init = function(app: App) {
   app.use(Antd)
   initBase(app)
   initImplement()
-  $func.loadContents(antdContents, function(item) {
+  loadContents(antdContents, function(item) {
     const data = item.default || item
     app.component(data.name, data)
   })

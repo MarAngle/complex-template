@@ -11,8 +11,7 @@
 
 <script lang="ts">
 import { defineComponent } from "vue"
-import { objectAny } from "complex-func/src/ts"
-import $func from 'complex-func'
+import { page } from 'complex-func'
 import config from "../config"
 
 export default defineComponent({
@@ -22,8 +21,8 @@ export default defineComponent({
       title?: string,
       visible: boolean,
       option: {
-        props: null | objectAny,
-        auto: null | objectAny
+        props: null | Record<PropertyKey, any>,
+        auto: null | Record<PropertyKey, any>
       }
     } = {
       visible: false,
@@ -140,7 +139,7 @@ export default defineComponent({
       return currentAuto
     },
     height() {
-      const mainHeight = $func.page.data.body.height
+      const mainHeight = page.data.body.height
       let height = mainHeight - this.top - this.bottom - this.header - this.padding.height
       if (this.currentOptionProps.footer !== null) {
         height = height - this.menu
@@ -159,7 +158,7 @@ export default defineComponent({
     }
   },
   methods: {
-    initOption(option?: objectAny) {
+    initOption(option?: Record<PropertyKey, any>) {
       this.resetOption()
       if (option) {
         if (option.props) {
@@ -174,7 +173,7 @@ export default defineComponent({
       this.option.props = null
       this.option.auto = null
     },
-    show(title?: string, option?: objectAny) {
+    show(title?: string, option?: Record<PropertyKey, any>) {
       this.visible = true
       this.title = title
       this.initOption(option)

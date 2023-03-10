@@ -7,13 +7,11 @@
 <script lang="ts">
 import { defineComponent, h } from "vue"
 import { ListData, PaginationData } from "complex-data"
-import $func from 'complex-func'
-import { anyFunction, objectAny } from "complex-func/src/ts"
 import config from "./../config"
 import AutoIndex from "../../base/data/AutoIndex.vue"
 import AutoText from "./AutoText.vue"
 
-type renderDataType = { text: any, record: objectAny, index: number, column: objectAny }
+type renderDataType = { text: any, record: Record<PropertyKey, any>, index: number, column: Record<PropertyKey, any> }
 
 export default defineComponent({
   name: 'ComplexTableView',
@@ -77,7 +75,7 @@ export default defineComponent({
     currentColumnList() {
       const list = []
       for (let i = 0; i < this.columnList.length; i++) {
-        const pitem = { ...this.columnList[i] as objectAny }
+        const pitem = { ...this.columnList[i] as Record<PropertyKey, any> }
         const contentProp = pitem.dataIndex
         const contentSlot = this.$slots[contentProp] || pitem.$render
         if (!pitem.customRender) {
@@ -108,7 +106,7 @@ export default defineComponent({
               return h(AutoIndex, autoIndexProps)
             }
             let data = pitem.$func.show(text, { item: pitem, targetitem: record, type: this.listType, index: index })
-            const dataType = $func.getType(data)
+            const dataType = getType(data)
             if (dataType === 'object') {
               data = JSON.stringify(data)
             } else if (dataType === 'array') {
@@ -167,7 +165,7 @@ export default defineComponent({
      * @param {object} mainTip 总设置项
      * @returns {object}
      */
-    formatAutoTextTipOption(pitemTip?: objectAny, mainTip?: objectAny) {
+    formatAutoTextTipOption(pitemTip?: Record<PropertyKey, any>, mainTip?: Record<PropertyKey, any>) {
       const tipOption = pitemTip || mainTip
       return tipOption
     },

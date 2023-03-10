@@ -1,33 +1,9 @@
-<style scoped>
-
-
-</style>
-<template>
-  <a-form v-if="layout == 'inline'" v-bind="currentFormOption" >
-    <form-item
-      v-for="(val, index) in list.data"
-      :key="val.prop"
-      v-bind="formatItem(val, index)"
-    />
-  </a-form>
-  <a-form v-else v-bind="currentFormOption" >
-    <a-row v-bind="layoutOption"  >
-      <a-col v-for="(val, index) in list.data" :key="val.prop" v-bind="formatGrid(val)" >
-        <form-item
-          v-bind="formatItem(val, index)"
-        />
-      </a-col>
-    </a-row>
-  </a-form>
-</template>
-
-<script lang="ts">
-import { defineComponent, PropType } from "vue"
-import $func from "complex-func"
+import { defineComponent, h, PropType } from "vue"
 import { PageList } from "complex-data"
 import FormItem from '../mod/FormItem'
 import config from '../config'
 import { editType } from "../implement"
+import { mergeData } from "complex-utils"
 
 type FormType = {
   ref: any,
@@ -36,9 +12,6 @@ type FormType = {
 
 export default defineComponent({
   name: 'ComplexFormView',
-  components: {
-    FormItem: FormItem
-  },
   data () {
     return {}
   },
@@ -86,7 +59,7 @@ export default defineComponent({
         layout: this.layout,
         labelAlign: this.labelAlign
       }
-      const currentFormOption = $func.mergeData(defaultFormOption, this.formOption)
+      const currentFormOption = mergeData(defaultFormOption, this.formOption)
       currentFormOption.ref = 'form'
       return currentFormOption
     }
@@ -95,19 +68,19 @@ export default defineComponent({
     //
   },
   methods: {
-    formatGrid(data: editType) {
-      return data.layout
+    renderForm() {
+      return h('a-form', this.currentFormOption, this.renderRow())
     },
-    formatItem(data: editType, index: number) {
-      return {
-        data: data,
-        index: index,
-        list: this.list,
-        form: this.form,
-        type: this.type,
-        target: this
-      }
+    renderRow() {
+      
     }
+  },
+  /**
+   * 主要模板
+   * @param {*} h createElement
+   * @returns {VNode}
+   */
+  render() {
+    return this.renderForm()
   }
 })
-</script>

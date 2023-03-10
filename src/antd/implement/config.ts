@@ -1,9 +1,9 @@
 import { InterfaceData } from "complex-data"
-import { baseObject, objectAny } from "complex-data/ts"
+import { baseObject, Record<PropertyKey, any> } from "complex-data/ts"
 
 
 export interface dictType {
-  option?: objectAny,
+  option?: Record<PropertyKey, any>,
   eventList?: string[],
   rule?: {
     trigger: string[],

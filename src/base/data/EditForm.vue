@@ -17,12 +17,11 @@
 
 <script lang="ts">
 import { defineComponent } from "vue"
-import { DictionaryItem, DictionaryList, PageList } from "complex-data"
-import { objectAny } from "complex-func/src/ts"
+import { DictionaryData, DictionaryList, PageList } from "complex-data"
 
-type dataType = null | objectAny
+type dataType = null | Record<PropertyKey, any>
 
-type cbType = (postData: objectAny, targetData: dataType) => any
+type cbType = (postData: Record<PropertyKey, any>, targetData: dataType) => any
 
 export default defineComponent({
   name: `ComplexEditForm`,
@@ -31,11 +30,11 @@ export default defineComponent({
       type: string,
       edit: string,
       data: dataType,
-      mainList: DictionaryItem[],
+      mainList: DictionaryData[],
       pageList: null | PageList,
       form: {
         ref: any,
-        data: objectAny
+        data: Record<PropertyKey, any>
       }
     } = {
       type: '',
