@@ -5,10 +5,11 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, h } from "vue"
+import { defineComponent, h, PropType } from "vue"
 import { getType, setDataByDefault } from "complex-utils"
 import { layout } from "complex-func"
 import { ComplexList, PaginationData } from "complex-data"
+import ComplexDataConfig from "complex-data/config"
 import config from "./../config"
 import AutoIndex from "../../base/data/AutoIndex.vue"
 import AutoText from "./AutoText.vue"
@@ -22,19 +23,19 @@ export default defineComponent({
   },
   props: {
     listData: {
-      type: ComplexList,
+      type: Object as PropType<ComplexList>,
       required: true
     },
     columnList: { // 定制列配置
       type: Array,
       required: true
     },
-    data: { // 单独指定列表数据，不从listData.$data.list中取值
+    data: { // 单独指定列表数据，不从listData.$list中取值
       type: Array,
       required: false
     },
     paginationData: { // 单独制定分页器数据，不从listData中取值
-      type: PaginationData,
+      type: Object as PropType<PaginationData>,
       required: false,
       default: null
     },
@@ -82,24 +83,21 @@ export default defineComponent({
         const contentSlot = this.$slots[contentProp] || pitem.$render
         if (!pitem.customRender) {
           pitem.customRender = ({ text, record, index }: renderDataType) => {
+            console.log(text, record, index)
             if (contentProp === this.currentAuto.index.prop && !contentSlot) {
               // 自动index
               const autoIndexProps : {
                 index: number,
-                format: undefined | ((...args: any[]) => any)
                 pagination: undefined | PaginationData
               } = {
                 index: index,
-                format: pitem.$format,
                 pagination: undefined
               }
               if (this.currentAuto.index.pagination) {
                 let buildAutoIndexPagination = true
-                const currentPrototype = Object.getPrototypeOf(record)
-                if (currentPrototype && currentPrototype !== Object.prototype) {
-                  if (currentPrototype.$depth !== 0) {
-                    buildAutoIndexPagination = false
-                  }
+                const depth = record[ComplexDataConfig.DictionaryList.format.depth]
+                if (depth !== undefined && depth !== 0) {
+                  buildAutoIndexPagination = false
                 }
                 if (buildAutoIndexPagination) {
                   autoIndexProps.pagination = this.currentPaginationData
@@ -107,17 +105,19 @@ export default defineComponent({
               }
               return h(AutoIndex, autoIndexProps)
             }
-            let data = pitem.$func.show(text, { item: pitem, targetitem: record, type: this.listType, index: index })
-            const dataType = getType(data)
+            if (pitem.$show) {
+              text = pitem.$show(text, { item: pitem, targetitem: record, type: this.listType, index: index })
+            }
+            const dataType = getType(text)
             if (dataType === 'object') {
-              data = JSON.stringify(data)
+              text = JSON.stringify(text)
             } else if (dataType === 'array') {
-              data = data.join(',')
+              text = text.join(',')
             }
             if (contentSlot) {
               // 插槽
               return contentSlot({
-                text: data,
+                text: text,
                 record: record,
                 index: index,
                 item: pitem,
@@ -127,17 +127,18 @@ export default defineComponent({
             if (pitem.ellipsis && pitem.$auto) {
               // 自动省略切自动换行
               return h(AutoText, {
-                text: data,
+                text: text,
                 auto: true,
                 recount: layout.recount.main,
                 tip: this.formatAutoTextTipOption(pitem.tip, this.currentAuto.tip)
               })
             }
-            return data
+            return text
           }
         }
         list.push(pitem)
       }
+      console.log(this.currentData, list)
       return list
     },
     currentOptionProps() {

@@ -8,6 +8,7 @@ export interface AntdEditInitOption extends DefaultEditInitOption {
 }
 
 class AntdEdit extends DefaultEdit {
+  static $name = 'AntdEdit'
   hideLabel: boolean
   colon: boolean
   constructor(initOption: AntdEditInitOption) {
@@ -25,7 +26,5 @@ class AntdEdit extends DefaultEdit {
   //   }
   // }
 }
-
-AntdEdit.$name = 'AntdEdit'
 
 export default AntdEdit

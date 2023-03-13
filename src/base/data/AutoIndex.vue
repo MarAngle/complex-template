@@ -18,10 +18,6 @@ export default defineComponent({
       type: Number,
       required: true
     },
-    format: {
-      type: Function,
-      required: false
-    },
     pagination: {
       type: PaginationData,
       required: false,

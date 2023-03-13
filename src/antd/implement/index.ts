@@ -1,12 +1,9 @@
-import { getType } from "complex-utils"
 import { DictionaryData } from 'complex-data'
 import config from './config'
 import AntdEdit, { AntdEditInitOption } from './mod/AntdEdit'
 import { LayoutDataFormatData } from 'complex-data/src/lib/LayoutData'
 // import { PageData } from 'complex-data/src/lib/DictionaryData'
 import DictionaryConfig from "complex-data/DictionaryConfig"
-
-console.warn('warning: data请求为测试')
 
 export interface editType {
   prop: string,
@@ -22,58 +19,23 @@ const defaultOption = {
   list: {
     format: function (ditem: DictionaryData, modName: string, data: any) {
       if (data) {
-        if (!data.dataIndex) {
-          data.dataIndex = ditem.$prop
-        }
-        if (!data.align) {
-          data.align = 'center'
-        }
-        if (data.width === undefined) {
-          data.width = config.format.list.width
-        }
-        if (!data.scrollWidth) {
-          if (data.width && typeof data.width == 'number') {
-            data.scrollWidth = data.width
-          } else {
-            data.scrollWidth = config.format.list.width
-          }
-        }
-        if (data.ellipsis === undefined) {
-          data.ellipsis = config.format.list.ellipsis
-        }
-        if (data.$auto === undefined) {
-          data.$auto = config.format.list.$auto
-        }
-        if (data.customCell) {
-          const type = getType(data.customCell)
-          if (type == 'object') {
-            const customCellOption = data.customCell
-            data.customCell = () => {
-              return customCellOption
-            }
-          }
-        }
-        if (data.customHeaderCell) {
-          const type = getType(data.customHeaderCell)
-          if (type == 'object') {
-            const customHeaderCellOption = data.customHeaderCell
-            data.customHeaderCell = () => {
-              return customHeaderCellOption
-            }
-          }
-        }
         return data
       }
     },
     unformat: function (ditem: DictionaryData, modName: string) {
+      const modData = ditem.$getMod(modName)!
       const pitem = {
-        ...ditem.$mod[modName],
-        $func: {
-          show: ditem.show
-        }
-      } as any
-      if (!pitem.title) {
-        pitem.title = ditem.$getInterface('label', modName)
+        dataIndex: modData.prop || ditem.$prop,
+        title: modData.title || ditem.$getInterface('label', modName),
+        align: modData.align || 'center',
+        width: modData.width === undefined ? config.format.list.width : modData.width,
+        ellipsis: modData.ellipsis === undefined ? config.format.list.ellipsis : modData.ellipsis,
+        customCell: modData.$cell,
+        customHeaderCell: modData.$headerCell,
+        $auto: modData.$auto === undefined ? config.format.list.$auto : modData.$auto,
+        $show: ditem.show,
+        $render: modData.$render,
+        ...(modData.$local || {})
       }
       return pitem
     }
