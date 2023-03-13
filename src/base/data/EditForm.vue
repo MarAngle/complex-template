@@ -85,7 +85,7 @@ export default defineComponent({
     },
     initPageList() {
       this.mainList = this.dictionary.$getList(this.type)
-      const pageList = this.dictionary.$buildPageList(this.type, this.mainList, {
+      const pageList = this.dictionary.$buildObserveList(this.type, this.mainList, {
         mod: this.edit
       })
       this.pageList = pageList

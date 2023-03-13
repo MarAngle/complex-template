@@ -37,6 +37,7 @@ const defaultOption = {
         $render: modData.$render,
         ...(modData.$local || {})
       }
+      console.log(pitem)
       return pitem
     }
   },
@@ -81,7 +82,7 @@ const defaultOption = {
 }
 
 export const init = function() {
-  let n: 'list' | 'info' | 'edit'
+  let n: keyof (typeof defaultOption)
   for (n in defaultOption) {
     DictionaryConfig.setDictionary(n, defaultOption[n])
   }

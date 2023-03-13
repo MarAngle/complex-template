@@ -6,6 +6,7 @@
 
 <script lang="ts">
 import { defineComponent, h, PropType } from "vue"
+import { Table } from 'ant-design-vue'
 import { getType, setDataByDefault } from "complex-utils"
 import { layout } from "complex-func"
 import { ComplexList, PaginationData } from "complex-data"
@@ -18,6 +19,9 @@ type renderDataType = { text: any, record: Record<PropertyKey, any>, index: numb
 
 export default defineComponent({
   name: 'ComplexTableView',
+  components: {
+    ATable: Table
+  },
   data () {
     return {}
   },
@@ -83,7 +87,6 @@ export default defineComponent({
         const contentSlot = this.$slots[contentProp] || pitem.$render
         if (!pitem.customRender) {
           pitem.customRender = ({ text, record, index }: renderDataType) => {
-            console.log(text, record, index)
             if (contentProp === this.currentAuto.index.prop && !contentSlot) {
               // 自动index
               const autoIndexProps : {
@@ -138,7 +141,6 @@ export default defineComponent({
         }
         list.push(pitem)
       }
-      console.log(this.currentData, list)
       return list
     },
     currentOptionProps() {
@@ -157,9 +159,6 @@ export default defineComponent({
       }
       return currentOptionProps
     }
-  },
-  mounted() {
-    console.log(this.$refs)
   },
   methods: {
     /**
