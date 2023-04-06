@@ -14,8 +14,9 @@ import ComplexDataConfig from "complex-data/config"
 import config from "./../config"
 import AutoIndex from "../../base/data/AutoIndex.vue"
 import AutoText from "./AutoText.vue"
+import { listType } from "../implement"
 
-type renderDataType = { text: any, record: Record<PropertyKey, any>, index: number, column: Record<PropertyKey, any> }
+type renderDataType = { text: any, record: Record<PropertyKey, any>, index: number }
 
 export default defineComponent({
   name: 'ComplexTableView',
@@ -31,7 +32,7 @@ export default defineComponent({
       required: true
     },
     columnList: { // 定制列配置
-      type: Array,
+      type: Object as PropType<listType[]>,
       required: true
     },
     data: { // 单独指定列表数据，不从listData.$list中取值
@@ -82,9 +83,9 @@ export default defineComponent({
     currentColumnList() {
       const list = []
       for (let i = 0; i < this.columnList.length; i++) {
-        const pitem = { ...this.columnList[i] as Record<PropertyKey, any> }
+        const pitem = { ...this.columnList[i] }
         const contentProp = pitem.dataIndex
-        const contentSlot = this.$slots[contentProp] || pitem.$render
+        const contentSlot = this.$slots[contentProp as string] || pitem.$render
         if (!pitem.customRender) {
           pitem.customRender = ({ text, record, index }: renderDataType) => {
             if (contentProp === this.currentAuto.index.prop && !contentSlot) {
@@ -133,7 +134,7 @@ export default defineComponent({
                 text: text,
                 auto: true,
                 recount: layout.recount.main,
-                tip: this.formatAutoTextTipOption(pitem.tip, this.currentAuto.tip)
+                tip: this.formatAutoTextTipOption(pitem.$tip, this.currentAuto.tip)
               })
             }
             return text

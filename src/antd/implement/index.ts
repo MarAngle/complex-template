@@ -1,30 +1,34 @@
 import { DictionaryData } from 'complex-data'
+import { TableColumnProps } from 'ant-design-vue'
 import config from './config'
 import AntdEdit, { AntdEditInitOption } from './mod/AntdEdit'
 import { LayoutDataFormatData } from 'complex-data/src/lib/LayoutData'
-// import { PageData } from 'complex-data/src/lib/DictionaryData'
 import DictionaryConfig from "complex-data/DictionaryConfig"
 
 export interface editType {
-  prop: string,
+  $prop: string,
   label: string | undefined,
   originProp: string | undefined,
   type: string | undefined,
-  // $func: Record<PropertyKey, ((...args: any[]) => any)>,
   layout: LayoutDataFormatData,
   edit: AntdEdit
 }
 
+
+export interface listType extends TableColumnProps<Record<PropertyKey, any>> {
+  $prop: string,
+  $auto?: boolean
+  $render?: (...args: any[]) => any,
+  $show?: (...args: any[]) => any,
+  $tip?: any
+}
+
 const defaultOption = {
   list: {
-    format: function (ditem: DictionaryData, modName: string, data: any) {
-      if (data) {
-        return data
-      }
-    },
     unformat: function (ditem: DictionaryData, modName: string) {
       const modData = ditem.$getMod(modName)!
-      const pitem = {
+      const pitem: listType = {
+        $prop: ditem.$prop,
         dataIndex: modData.prop || ditem.$prop,
         title: modData.title || ditem.$getInterface('label', modName),
         align: modData.align || 'center',
@@ -37,7 +41,6 @@ const defaultOption = {
         $render: modData.$render,
         ...(modData.$local || {})
       }
-      console.log(pitem)
       return pitem
     }
   },
@@ -68,7 +71,7 @@ const defaultOption = {
     },
     unformat: function (ditem: DictionaryData, modName: string): editType {
       const pitem = {
-        prop: ditem.$prop,
+        $prop: ditem.$prop,
         label: ditem.$getInterface('label', modName),
         originProp: ditem.$getInterface('originProp', modName),
         type: ditem.$getInterface('type', modName),
