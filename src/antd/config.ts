@@ -9,7 +9,6 @@ const config = {
         prop: '$index',
         pagination: true
       },
-      tips: null,
       pagination: {
         default: 'choice',
         front: 'total',

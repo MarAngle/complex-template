@@ -39,7 +39,11 @@ export default defineComponent({
       let option
       if (this.isEllipsis && this.tip !== false) {
         if (typeof this.tip == 'object') {
-          option = this.tip
+          option = {
+            title: this.tip.getData ? this.tip.getData(this.text) : this.tip.data,
+            placement: this.tip.location,
+            ...this.tip.localOption
+          }
         } else {
           option = {
             placement: this.tip || 'top'
@@ -69,7 +73,7 @@ export default defineComponent({
       default: 0
     },
     tip: {
-      type: [String, Object, Boolean],
+      type: [String, Boolean, Object],
       required: false
     }
   },
