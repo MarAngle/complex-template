@@ -10,7 +10,7 @@ type FormType = {
 }
 
 export default defineComponent({
-  name: 'ComplexFormView',
+  name: 'ComplexFormViewJsx',
   data () {
     return {}
   },

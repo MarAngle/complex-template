@@ -27,10 +27,19 @@ import { mergeData } from "complex-utils"
 import { DefaultEdit, ObserveList } from "complex-data"
 import FormItem from '../mod/FormItem'
 import config from '../config'
+import { ComplexFormData } from "../../base/data/EditForm.vue"
 
-type FormType = {
-  ref: any,
-  data: Record<string, any>
+ComplexFormData.clearValidate = function(target: ComplexFormData) {
+  target.ref.clearValidate()
+}
+ComplexFormData.validate = function(target: ComplexFormData, success: () => any, fail?: () => any) {
+  target.ref.validate((valid: any) => {
+    if (valid) {
+      success()
+    } else if(fail) {
+      fail()
+    }
+  })
 }
 
 export default defineComponent({
@@ -43,7 +52,7 @@ export default defineComponent({
   },
   props: {
     form: {
-      type: Object as PropType<FormType>,
+      type: Object as PropType<ComplexFormData>,
       required: true
     },
     list: {
@@ -92,10 +101,12 @@ export default defineComponent({
   },
   mounted () {
     //
+    this.form.setRef(this.$refs['form'])
   },
   methods: {
     formatGrid(data: DefaultEdit) {
-      return data.layout
+      const ditem = data.$getParent()!
+      return ditem.$getLayout(this.type)
     },
     formatItem(data: DefaultEdit, index: number) {
       return {

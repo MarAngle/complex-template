@@ -1,11 +1,7 @@
 import { defineComponent, h, PropType, Slot } from "vue"
 import { mergeData } from "complex-utils"
 import { ObserveList, DefaultEdit } from "complex-data"
-
-type FormType = {
-  ref: any,
-  data: Record<string, any>
-}
+import { ComplexFormData } from "../../base/data/EditForm.vue"
 
 export default defineComponent({
   name: 'FormItem',
@@ -23,7 +19,7 @@ export default defineComponent({
       required: true
     },
     form: { // form数据{ data, num }
-      type: Object as PropType<FormType>,
+      type: Object as PropType<ComplexFormData>,
       required: true
     },
     type: { // formType
@@ -53,17 +49,15 @@ export default defineComponent({
       let typeItem = null
       // auto/data模式下替换内部数据，此时保存外部的tips
       if (slot && (this.data.$slot.type == 'auto' || this.data.$slot.type == 'data')) {
-        typeItem = slot({
-          ...this.payload
-        })
+        typeItem = slot(this.payload)
       } else {
         typeItem = this.renderItem(slot)
       }
-      if (this.data.$tips.data) {
+      if (this.data.tip.data) {
         return h('a-tooltip', {
-          title: this.data.$tips.data,
-          placement: this.data.$tips.location,
-          ...this.data.$tips.localOption }, [ typeItem ])
+          title: this.data.tip.getData ? this.data.tip.getData(this.payload) : this.data.tip.data,
+          placement: this.data.tip.location,
+          ...this.data.tip.localOption }, [ typeItem ])
       } else {
         return typeItem
       }

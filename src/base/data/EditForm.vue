@@ -17,11 +17,46 @@
 
 <script lang="ts">
 import { defineComponent } from "vue"
-import { DictionaryData, DictionaryList, PageList } from "complex-data"
+import { DictionaryData, DictionaryList, ObserveList } from "complex-data"
 
 type dataType = undefined | Record<PropertyKey, any>
 
-type cbType = (postData: Record<PropertyKey, any>, targetData: dataType) => any
+export type validateCbType = (postData: Record<PropertyKey, any>, targetData: dataType) => any
+
+export class ComplexFormData {
+  ref: any
+  data: Record<PropertyKey, any>
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  static clearValidate(target: ComplexFormData,...args: any[]) {
+    console.warn('未定义ComplexFormData的clearValidate函数！')
+  }
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  static validate(target: ComplexFormData, cb: () => any, ...args: any[]) {
+    console.warn('未定义ComplexFormData的validate函数！')
+  }
+  constructor() {
+    this.ref = null
+    this.data = {}
+  }
+  setRef(ref: any) {
+    this.ref = ref
+  }
+  setData(data: Record<PropertyKey, any>) {
+    this.data = data
+  }
+  getRef() {
+    return this.ref
+  }
+  getData() {
+    return this.data
+  }
+  clearValidate(...args: any[]) {
+    ComplexFormData.clearValidate(this, ...args)
+  }
+  validate(success: () => any, fail?: () => any, ...args: any[]) {
+    ComplexFormData.validate(this, success, fail, ...args)
+  }
+}
 
 export default defineComponent({
   name: `ComplexEditForm`,
@@ -31,21 +66,15 @@ export default defineComponent({
       edit: string,
       data: dataType,
       mainList: DictionaryData[],
-      pageList: null | PageList,
-      form: {
-        ref: any,
-        data: Record<PropertyKey, any>
-      }
+      pageList: null | ObserveList,
+      form: ComplexFormData
     } = {
       type: '',
       edit: '',
       data: undefined,
       mainList: [],
       pageList: null,
-      form: {
-        ref: null,
-        data: {}
-      }
+      form: new ComplexFormData()
     }
     return data
   },
@@ -62,7 +91,7 @@ export default defineComponent({
         type: this.type,
         edit: this.edit,
         originData: this.data,
-        form: this.form.data,
+        form: this.form.getData(),
         list: this.mainList
       }
     }
@@ -80,7 +109,7 @@ export default defineComponent({
       this.data = data
       this.initData()
       this.$nextTick(() => {
-        this.form.ref.clearValidate()
+        this.form.clearValidate()
       })
     },
     initPageList() {
@@ -93,18 +122,16 @@ export default defineComponent({
     initData() {
       this.initPageList()
       if (this.edit == 'change') {
-        this.form.data = this.dictionary.$buildFormData(this.mainList, this.type, this.data)
+        this.form.setData(this.dictionary.$buildFormData(this.mainList, this.type, this.data))
       } else if (this.edit == 'build') {
-        this.form.data = this.dictionary.$buildFormData(this.mainList, this.type)
+        this.form.setData(this.dictionary.$buildFormData(this.mainList, this.type))
       }
-      this.pageList!.setData(this.form.data)
+      this.pageList!.setData(this.form.getData())
     },
-    handle(cb: cbType) {
-      this.form.ref.validate((valid: any) => {
-        if (valid) {
-          const postdata = this.dictionary.$buildEditData(this.form.data, this.mainList, this.type)
-          cb(postdata, this.data)
-        }
+    handle(cb: validateCbType) {
+      this.form.validate(() => {
+        const postdata = this.dictionary.$buildEditData(this.form.getData(), this.mainList, this.type)
+        cb(postdata, this.data)
       })
     },
   }
