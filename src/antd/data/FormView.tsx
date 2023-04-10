@@ -1,8 +1,7 @@
 import { defineComponent, h, PropType } from "vue"
-import { PageList } from "complex-data"
+import { ObserveList } from "complex-data"
 import { Form } from 'ant-design-vue'
 import config from '../config'
-import { editType } from "../implement"
 import { mergeData } from "complex-utils"
 
 type FormType = {
@@ -21,7 +20,7 @@ export default defineComponent({
       required: true
     },
     list: {
-      type: Object as PropType<PageList>,
+      type: Object as PropType<ObserveList>,
       required: true
     },
     type: {

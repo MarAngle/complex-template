@@ -24,10 +24,9 @@
 <script lang="ts">
 import { defineComponent, PropType } from "vue"
 import { mergeData } from "complex-utils"
-import { PageList } from "complex-data"
+import { DefaultEdit, ObserveList } from "complex-data"
 import FormItem from '../mod/FormItem'
 import config from '../config'
-import { editType } from "../implement"
 
 type FormType = {
   ref: any,
@@ -48,7 +47,7 @@ export default defineComponent({
       required: true
     },
     list: {
-      type: Object as PropType<PageList>,
+      type: Object as PropType<ObserveList>,
       required: true
     },
     type: {
@@ -95,10 +94,10 @@ export default defineComponent({
     //
   },
   methods: {
-    formatGrid(data: editType) {
+    formatGrid(data: DefaultEdit) {
       return data.layout
     },
-    formatItem(data: editType, index: number) {
+    formatItem(data: DefaultEdit, index: number) {
       return {
         data: data,
         index: index,
