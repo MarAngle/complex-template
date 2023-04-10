@@ -121,12 +121,14 @@ export default defineComponent({
     },
     initData() {
       this.initPageList()
+      const $buildFormDataArgs: Parameters<DictionaryList['$buildFormData']> = [this.mainList, this.type]
       if (this.edit == 'change') {
-        this.form.setData(this.dictionary.$buildFormData(this.mainList, this.type, this.data))
-      } else if (this.edit == 'build') {
-        this.form.setData(this.dictionary.$buildFormData(this.mainList, this.type))
+        $buildFormDataArgs.push(this.data)
       }
-      this.pageList!.setData(this.form.getData())
+      this.dictionary.$buildFormData(...$buildFormDataArgs).then((res: any) => {
+        this.form.setData(res.data)
+        this.pageList!.setData(this.form.getData())
+      })
     },
     handle(cb: validateCbType) {
       this.form.validate(() => {

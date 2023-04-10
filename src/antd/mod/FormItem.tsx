@@ -129,7 +129,7 @@ export default defineComponent({
   render() {
     let render = null
     // 获取主要插槽，存在插槽会根据type在指定位置替换
-    const slot = this.target.$scopedSlots[this.data.$slot.name] || this.data.$slot.render
+    const slot = this.target.$slots[this.data.$slot.name] || this.data.$slot.render
     if (this.data.$slot.type != 'main') {
       const label = this.data.$getParent()!.$getInterface('label', this.type)
       let mainOption = {

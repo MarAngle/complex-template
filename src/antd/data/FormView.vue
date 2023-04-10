@@ -29,19 +29,6 @@ import FormItem from '../mod/FormItem'
 import config from '../config'
 import { ComplexFormData } from "../../base/data/EditForm.vue"
 
-ComplexFormData.clearValidate = function(target: ComplexFormData) {
-  target.ref.clearValidate()
-}
-ComplexFormData.validate = function(target: ComplexFormData, success: () => any, fail?: () => any) {
-  target.ref.validate((valid: any) => {
-    if (valid) {
-      success()
-    } else if(fail) {
-      fail()
-    }
-  })
-}
-
 export default defineComponent({
   name: 'ComplexFormView',
   components: {
@@ -105,8 +92,11 @@ export default defineComponent({
   },
   methods: {
     formatGrid(data: DefaultEdit) {
-      const ditem = data.$getParent()!
-      return ditem.$getLayout(this.type)
+      // const ditem = data.$getParent()!
+      // return ditem.$getLayout(this.type).grid
+      return {
+        span: 12
+      }
     },
     formatItem(data: DefaultEdit, index: number) {
       return {
