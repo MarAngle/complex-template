@@ -57,21 +57,22 @@ export default defineComponent({
         return h('a-tooltip', {
           title: this.data.tip.getData ? this.data.tip.getData(this.payload) : this.data.tip.data,
           placement: this.data.tip.location,
-          ...this.data.tip.localOption }, [ typeItem ])
+          ...this.data.tip.localOption
+        }, [ typeItem ])
       } else {
         return typeItem
       }
     },
     renderItem(slot: undefined | Slot) {
       let tag: undefined | string
-      const itemOtion = {}
+      const itemOption = {}
       let children
       let item = null
       // 考虑一个默认的值，inline模式下和其他模式下的默认值，避免出现问题
       if (slot && this.data.$slot.type == 'model') {
         item = slot({
           ...this.payload,
-          option: itemOtion
+          option: itemOption
         })
       } else if (this.data.type == 'input') {
         tag = 'a-input'
@@ -96,7 +97,7 @@ export default defineComponent({
             value: itemData[dict.value],
             disabled: itemData[dict.disabled] || false
           }
-          optionProps = mergeData(optionProps, this.data.$localOption.option)
+          optionProps = mergeData(optionProps, this.data.$option.$optionLocal)
           return h('a-select-option', optionProps, [ itemData[dict.label] ])
         })
       } else if (this.data.type == 'cascader') {
@@ -116,7 +117,7 @@ export default defineComponent({
         console.error(`${this.data.prop}未定义slot`)
       }
       if (tag) {
-        item = h(tag, itemOtion, children)
+        item = h(tag, itemOption, children)
       }
       return item
     }
@@ -132,15 +133,15 @@ export default defineComponent({
     const slot = this.target.$slots[this.data.$slot.name] || this.data.$slot.render
     if (this.data.$slot.type != 'main') {
       const label = this.data.$getParent()!.$getInterface('label', this.type)
-      let mainOption = {
+      let mainAttributes = {
         prop: this.data.prop,
         label: label,
         colon: this.data.colon,
         rules: this.data.$rules.getData(this.payload.type)
       }
-      mainOption = mergeData(mainOption, this.data.$localOption.main)
+      mainAttributes = mergeData(mainAttributes, this.data.$local.parent)
       // 获取tips插槽
-      render = h('a-form-model-item', mainOption, [ this.renderTip(slot) ])
+      render = h('a-form-model-item', mainAttributes, [ this.renderTip(slot) ])
     } else if (slot) {
       // 主要模式下替换
       render = slot({

@@ -12,7 +12,7 @@
   </a-form>
   <a-form v-else v-bind="currentFormOption" >
     <a-row v-bind="layoutOption"  >
-      <a-col v-for="(val, index) in list.data" :key="val.prop" v-bind="formatGrid(val)" >
+      <a-col v-for="(val, index) in list.data" :key="val.prop" v-bind="getGrid(val)" >
         <form-item
           v-bind="formatItem(val, index)"
         />
@@ -91,12 +91,9 @@ export default defineComponent({
     this.form.setRef(this.$refs['form'])
   },
   methods: {
-    formatGrid(data: DefaultEdit) {
-      // const ditem = data.$getParent()!
-      // return ditem.$getLayout(this.type).grid
-      return {
-        span: 12
-      }
+    getGrid(data: DefaultEdit) {
+      const ditem = data.$getParent()!
+      return ditem.$getLayout(this.type).grid
     },
     formatItem(data: DefaultEdit, index: number) {
       return {
