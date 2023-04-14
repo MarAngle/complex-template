@@ -9,7 +9,7 @@
 <script lang="ts">
 import { defineComponent, PropType } from "vue"
 import { mergeData } from "complex-utils"
-import { ObserveList, DefaultEdit } from "complex-data"
+import { ObserveList, DefaultEdit } from "complex-data-next"
 import { ComplexFormData } from "../../base/data/EditForm.vue"
 
 export default defineComponent({

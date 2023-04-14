@@ -11,7 +11,7 @@
 
 <script lang="ts">
 import { defineComponent } from "vue"
-import { layout } from 'complex-func'
+import { layout } from 'complex-plugin'
 import config from "../config"
 
 export default defineComponent({

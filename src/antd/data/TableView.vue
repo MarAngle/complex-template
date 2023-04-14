@@ -8,9 +8,9 @@
 import { defineComponent, h, PropType } from "vue"
 import { Table, TableColumnType } from 'ant-design-vue'
 import { getType, setDataByDefault } from "complex-utils"
-import { layout } from "complex-func"
-import { ComplexList, DefaultList, PaginationData } from "complex-data"
-import ComplexDataConfig from "complex-data/config"
+import { layout } from "complex-plugin"
+import { ComplexList, DefaultList, PaginationData } from "complex-data-next"
+import ComplexDataConfig from "complex-data-next/config"
 import config from "./../config"
 import AutoIndex from "../../base/data/AutoIndex.vue"
 import AutoText from "./AutoText.vue"

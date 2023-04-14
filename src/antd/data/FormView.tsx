@@ -1,6 +1,5 @@
-import { defineComponent, h, PropType } from "vue"
-import { ObserveList } from "complex-data"
-import { Form } from 'ant-design-vue'
+import { defineComponent, PropType } from "vue"
+import { ObserveList } from "complex-data-next"
 import config from '../config'
 import { mergeData } from "complex-utils"
 

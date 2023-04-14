@@ -24,7 +24,7 @@
 <script lang="ts">
 import { defineComponent, PropType } from "vue"
 import { mergeData } from "complex-utils"
-import { DefaultEdit, ObserveList } from "complex-data"
+import { DefaultEdit, ObserveList } from "complex-data-next"
 import FormItem from '../mod/FormItem'
 import config from '../config'
 import { ComplexFormData } from "../../base/data/EditForm.vue"

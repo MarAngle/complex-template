@@ -1,7 +1,20 @@
 import { defineComponent, h, PropType, Slot } from "vue"
-import { mergeData } from "complex-utils"
-import { ObserveList, DefaultEdit } from "complex-data"
+import { ObserveList, DefaultEdit, AttributesData } from "complex-data-next"
 import { ComplexFormData } from "../../base/data/EditForm.vue"
+// import FormView from "./../data/FormView"
+import { getAttributes } from "../utils/format"
+import { DefaultEditOptionType } from "complex-data-next/src/mod/DefaultEdit"
+import { mergeAttributes, parseAttributes } from "../utils"
+
+export interface FormItemPayloadType {
+  prop: string
+  type: string
+  data: DefaultEdit
+  index: number
+  form: ComplexFormData
+  list: ObserveList
+  target: any
+}
 
 export default defineComponent({
   name: 'FormItem',
@@ -65,14 +78,16 @@ export default defineComponent({
     },
     renderItem(slot: undefined | Slot) {
       let tag: undefined | string
-      const itemOption = {}
+      const itemAttributes = getAttributes(this.data.type, this.data, this.payload)
+      itemAttributes.class.push('complex-form-item-type')
+      itemAttributes.class.push('complex-form-item-' + this.data.type)
       let children
       let item = null
       // 考虑一个默认的值，inline模式下和其他模式下的默认值，避免出现问题
       if (slot && this.data.$slot.type == 'model') {
         item = slot({
           ...this.payload,
-          option: itemOption
+          option: itemAttributes
         })
       } else if (this.data.type == 'input') {
         tag = 'a-input'
@@ -86,19 +101,21 @@ export default defineComponent({
         tag = 'a-select'
         // 设置字典
         const dict = {
-          key: this.data.$option.optionValue || 'value',
-          value: this.data.$option.optionValue || 'value',
-          label: this.data.$option.optionLabel || 'label',
-          disabled: this.data.$option.optionDisabled || 'disabled'
+          key: (this.data.$option as DefaultEditOptionType<'select'>).optionValue || 'value',
+          value: (this.data.$option as DefaultEditOptionType<'select'>).optionValue || 'value',
+          label: (this.data.$option as DefaultEditOptionType<'select'>).optionLabel || 'label',
+          disabled: (this.data.$option as DefaultEditOptionType<'select'>).optionDisabled || 'disabled'
         }
-        children = this.data.$option.list.map((itemData: Record<string, any>) => {
-          let optionProps = {
-            key: itemData[dict.key],
-            value: itemData[dict.value],
-            disabled: itemData[dict.disabled] || false
-          }
-          optionProps = mergeData(optionProps, this.data.$option.$optionLocal)
-          return h('a-select-option', optionProps, [ itemData[dict.label] ])
+        children = (this.data.$option as DefaultEditOptionType<'select'>).list.map((itemData: Record<string, any>) => {
+          const optionAttributes = new AttributesData({
+            props: {
+              key: itemData[dict.key],
+              value: itemData[dict.value],
+              disabled: itemData[dict.disabled] || false
+            }
+          })
+          mergeAttributes(optionAttributes, this.data.$local.child)
+          return h('a-select-option', parseAttributes(optionAttributes), [ itemData[dict.label] ])
         })
       } else if (this.data.type == 'cascader') {
         tag = 'a-cascader'
@@ -110,14 +127,15 @@ export default defineComponent({
         // tag = UploadFile
       } else if (this.data.type == 'button') {
         tag = 'a-button'
-        children = [ this.data.$option.name.getData(this.type) ]
+        const text = (this.data.$option as DefaultEditOptionType<'button'>).name || this.data.$getParent()!.$getInterface('label', this.type)
+        children = [ text ]
       } else if (this.data.type == 'customize') {
-        tag = this.data.$customize as string
+        tag = this.data.$customize as any
       } else if (this.data.type == 'slot') {
         console.error(`${this.data.prop}未定义slot`)
       }
       if (tag) {
-        item = h(tag, itemOption, children)
+        item = h(tag, parseAttributes(itemAttributes), children)
       }
       return item
     }
@@ -133,15 +151,18 @@ export default defineComponent({
     const slot = this.target.$slots[this.data.$slot.name] || this.data.$slot.render
     if (this.data.$slot.type != 'main') {
       const label = this.data.$getParent()!.$getInterface('label', this.type)
-      let mainAttributes = {
-        prop: this.data.prop,
-        label: label,
-        colon: this.data.colon,
-        rules: this.data.$rules.getData(this.payload.type)
-      }
-      mainAttributes = mergeData(mainAttributes, this.data.$local.parent)
+      const mainAttributes = new AttributesData({
+        props: {
+          prop: this.data.prop,
+          label: label,
+          colon: this.data.colon,
+          rules: this.data.$rules.getData(this.payload.type)
+        },
+        class: ['complex-form-item']
+      })
+      mergeAttributes(mainAttributes, this.data.$local.parent)
       // 获取tips插槽
-      render = h('a-form-model-item', mainAttributes, [ this.renderTip(slot) ])
+      render = h('a-form-model-item', parseAttributes(mainAttributes), [ this.renderTip(slot) ])
     } else if (slot) {
       // 主要模式下替换
       render = slot({

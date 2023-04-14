@@ -17,7 +17,7 @@
 
 <script lang="ts">
 import { defineComponent } from "vue"
-import { DictionaryData, DictionaryList, ObserveList } from "complex-data"
+import { DictionaryData, DictionaryList, ObserveList } from "complex-data-next"
 
 type dataType = undefined | Record<PropertyKey, any>
 
