@@ -23,11 +23,16 @@ export const mergeAttributes = function(targetData: AttributesData, originData: 
 }
 
 export const parseAttributes = function(attributesData: AttributesData) {
-  return {
-    id: attributesData.id,
-    class: attributesData.class,
+  const data = {
     ...attributesData.style,
     ...attributesData.props
   }
+  if (attributesData.id.length > 0) {
+    data.id = attributesData.id
+  }
+  if (attributesData.class.length > 0) {
+    data.class = attributesData.class
+  }
+  return data
 }
 

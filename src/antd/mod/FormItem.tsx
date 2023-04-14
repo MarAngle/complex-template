@@ -5,6 +5,17 @@ import { ComplexFormData } from "../../base/data/EditForm.vue"
 import { getAttributes } from "../utils/format"
 import { DefaultEditOptionType } from "complex-data-next/src/mod/DefaultEdit"
 import { mergeAttributes, parseAttributes } from "../utils"
+import { FormItem, Input } from "ant-design-vue"
+import { InputNumber } from "ant-design-vue"
+import { Textarea } from "ant-design-vue"
+import { Switch } from "ant-design-vue"
+import { Select } from "ant-design-vue"
+import { Cascader } from "ant-design-vue"
+import { DatePicker } from "ant-design-vue"
+import { RangePicker } from "ant-design-vue"
+import { Button } from "ant-design-vue"
+import { SelectOption } from "ant-design-vue"
+import { Tooltip } from "ant-design-vue"
 
 export interface FormItemPayloadType {
   prop: string
@@ -67,7 +78,7 @@ export default defineComponent({
         typeItem = this.renderItem(slot)
       }
       if (this.data.tip.data) {
-        return h('a-tooltip', {
+        return h(Tooltip, {
           title: this.data.tip.getData ? this.data.tip.getData(this.payload) : this.data.tip.data,
           placement: this.data.tip.location,
           ...this.data.tip.localOption
@@ -77,7 +88,7 @@ export default defineComponent({
       }
     },
     renderItem(slot: undefined | Slot) {
-      let tag: undefined | string
+      let tag: any
       const itemAttributes = getAttributes(this.data.type, this.data, this.payload)
       itemAttributes.class.push('complex-form-item-type')
       itemAttributes.class.push('complex-form-item-' + this.data.type)
@@ -90,15 +101,15 @@ export default defineComponent({
           option: itemAttributes
         })
       } else if (this.data.type == 'input') {
-        tag = 'a-input'
+        tag = Input
       } else if (this.data.type == 'inputNumber') {
-        tag = 'a-input-number'
+        tag = InputNumber
       } else if (this.data.type == 'textArea') {
-        tag = 'a-textarea'
+        tag = Textarea
       } else if (this.data.type == 'switch') {
-        tag = 'a-switch'
+        tag = Switch
       } else if (this.data.type == 'select') {
-        tag = 'a-select'
+        tag = Select
         // 设置字典
         const dict = {
           key: (this.data.$option as DefaultEditOptionType<'select'>).optionValue || 'value',
@@ -115,18 +126,18 @@ export default defineComponent({
             }
           })
           mergeAttributes(optionAttributes, this.data.$local.child)
-          return h('a-select-option', parseAttributes(optionAttributes), [ itemData[dict.label] ])
+          return h(SelectOption, parseAttributes(optionAttributes), [ itemData[dict.label] ])
         })
       } else if (this.data.type == 'cascader') {
-        tag = 'a-cascader'
+        tag = Cascader
       } else if (this.data.type == 'date') {
-        tag = 'a-date-picker'
+        tag = DatePicker
       } else if (this.data.type == 'dateRange') {
-        tag = 'a-range-picker'
+        tag = RangePicker
       } else if (this.data.type == 'file') {
         // tag = UploadFile
       } else if (this.data.type == 'button') {
-        tag = 'a-button'
+        tag = Button
         const text = (this.data.$option as DefaultEditOptionType<'button'>).name || this.data.$getParent()!.$getInterface('label', this.type)
         children = [ text ]
       } else if (this.data.type == 'customize') {
@@ -150,19 +161,26 @@ export default defineComponent({
     // 获取主要插槽，存在插槽会根据type在指定位置替换
     const slot = this.target.$slots[this.data.$slot.name] || this.data.$slot.render
     if (this.data.$slot.type != 'main') {
-      const label = this.data.$getParent()!.$getInterface('label', this.type)
+      const ditem = this.data.$getParent()!
+      const label = ditem.$getInterface('label', this.type)
       const mainAttributes = new AttributesData({
         props: {
-          prop: this.data.prop,
+          name: this.data.prop,
           label: label,
           colon: this.data.colon,
+          required: this.data.required.getData(this.payload.type),
           rules: this.data.$rules.getData(this.payload.type)
         },
         class: ['complex-form-item']
       })
+      if (this.payload.target.layout == 'horizontal') {
+        const layout = ditem.$layout.getData(this.payload.type)
+        mainAttributes.props.labelCol = layout.label
+        mainAttributes.props.wrapperCol = layout.content
+      }
       mergeAttributes(mainAttributes, this.data.$local.parent)
-      // 获取tips插槽
-      render = h('a-form-model-item', parseAttributes(mainAttributes), [ this.renderTip(slot) ])
+      // render = h(FormItem, parseAttributes(mainAttributes), [ this.renderTip(slot) ])
+      render = h(FormItem, parseAttributes(mainAttributes), { default: () => this.renderTip(slot) })
     } else if (slot) {
       // 主要模式下替换
       render = slot({

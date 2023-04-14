@@ -3,14 +3,14 @@
 
 </style>
 <template>
-  <a-form v-if="layout == 'inline'" v-bind="currentFormOption" >
+  <a-form v-if="layout == 'inline'" v-bind="currentFormProps" class="complex-form complex-form-inline" >
     <form-item
       v-for="(val, index) in list.data"
       :key="val.prop"
       v-bind="formatItem(val, index)"
     />
   </a-form>
-  <a-form v-else v-bind="currentFormOption" >
+  <a-form v-else v-bind="currentFormProps" class="complex-form complex-form-horizontal" >
     <a-row v-bind="layoutOption"  >
       <a-col v-for="(val, index) in list.data" :key="val.prop" v-bind="getGrid(val)" >
         <form-item
@@ -67,23 +67,23 @@ export default defineComponent({
         return config.FormView.layoutOption
       }
     },
-    formOption: { // form-model-view设置项
+    formProps: { // form-model-view设置项
       type: Object,
       required: false,
       default: null
     },
   },
   computed: {
-    currentFormOption() {
-      // formOption格式化
-      const defaultFormOption = {
+    currentFormProps() {
+      // formProps格式化
+      const formProps = {
         model: this.form.data,
         layout: this.layout,
         labelAlign: this.labelAlign
       }
-      const currentFormOption = mergeData(defaultFormOption, this.formOption)
-      currentFormOption.ref = 'form'
-      return currentFormOption
+      const currentFormProps = mergeData(formProps, this.formProps)
+      currentFormProps.ref = 'form'
+      return currentFormProps
     }
   },
   mounted () {

@@ -2,6 +2,7 @@ import { loadContents } from 'complex-utils'
 import { App } from 'vue'
 import Antd from 'ant-design-vue'
 import 'ant-design-vue/dist/antd.less'
+import './src/antd/style/index.less'
 import { init as initBase } from './index'
 import { ComplexFormData } from "./src/base/data/EditForm.vue"
 // import { init as initImplement } from './src/antd/implement'
