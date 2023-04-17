@@ -27,6 +27,9 @@ export const parseAttributes = function(attributesData: AttributesData) {
     ...attributesData.style,
     ...attributesData.props
   }
+  for (const funcName in attributesData.on) {
+    data['on' + funcName.slice(0, 1).toUpperCase() + funcName.slice(1)] = attributesData.on[funcName]
+  }
   if (attributesData.id.length > 0) {
     data.id = attributesData.id
   }

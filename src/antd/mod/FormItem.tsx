@@ -5,17 +5,8 @@ import { ComplexFormData } from "../../base/data/EditForm.vue"
 import { getAttributes } from "../utils/format"
 import { DefaultEditOptionType } from "complex-data-next/src/mod/DefaultEdit"
 import { mergeAttributes, parseAttributes } from "../utils"
-import { FormItem, Input } from "ant-design-vue"
-import { InputNumber } from "ant-design-vue"
-import { Textarea } from "ant-design-vue"
-import { Switch } from "ant-design-vue"
-import { Select } from "ant-design-vue"
-import { Cascader } from "ant-design-vue"
-import { DatePicker } from "ant-design-vue"
-import { RangePicker } from "ant-design-vue"
-import { Button } from "ant-design-vue"
-import { SelectOption } from "ant-design-vue"
-import { Tooltip } from "ant-design-vue"
+import { FormItem, Tooltip, Input, InputNumber, Textarea, Switch, Select, SelectOption, Cascader, DatePicker, RangePicker, Button } from "ant-design-vue"
+
 
 export interface FormItemPayloadType {
   prop: string
@@ -70,7 +61,7 @@ export default defineComponent({
   },
   methods: {
     renderTip(slot: undefined | Slot) {
-      let typeItem = null
+      let typeItem: any = null
       // auto/data模式下替换内部数据，此时保存外部的tips
       if (slot && (this.data.$slot.type == 'auto' || this.data.$slot.type == 'data')) {
         typeItem = slot(this.payload)
@@ -82,7 +73,9 @@ export default defineComponent({
           title: this.data.tip.getData ? this.data.tip.getData(this.payload) : this.data.tip.data,
           placement: this.data.tip.location,
           ...this.data.tip.localOption
-        }, [ typeItem ])
+        }, {
+          default: () => typeItem
+        })
       } else {
         return typeItem
       }
@@ -92,7 +85,7 @@ export default defineComponent({
       const itemAttributes = getAttributes(this.data.type, this.data, this.payload)
       itemAttributes.class.push('complex-form-item-type')
       itemAttributes.class.push('complex-form-item-' + this.data.type)
-      let children
+      let children: any
       let item = null
       // 考虑一个默认的值，inline模式下和其他模式下的默认值，避免出现问题
       if (slot && this.data.$slot.type == 'model') {
@@ -126,7 +119,10 @@ export default defineComponent({
             }
           })
           mergeAttributes(optionAttributes, this.data.$local.child)
-          return h(SelectOption, parseAttributes(optionAttributes), [ itemData[dict.label] ])
+          // return h(SelectOption, parseAttributes(optionAttributes), [ itemData[dict.label] ])
+          return h(SelectOption, parseAttributes(optionAttributes), {
+            default: () => itemData[dict.label]
+          })
         })
       } else if (this.data.type == 'cascader') {
         tag = Cascader
@@ -139,14 +135,20 @@ export default defineComponent({
       } else if (this.data.type == 'button') {
         tag = Button
         const text = (this.data.$option as DefaultEditOptionType<'button'>).name || this.data.$getParent()!.$getInterface('label', this.type)
-        children = [ text ]
+        children = text
       } else if (this.data.type == 'customize') {
         tag = this.data.$customize as any
       } else if (this.data.type == 'slot') {
         console.error(`${this.data.prop}未定义slot`)
       }
       if (tag) {
-        item = h(tag, parseAttributes(itemAttributes), children)
+        if (!children) {
+          item = h(tag, parseAttributes(itemAttributes))
+        } else {
+          item = h(tag, parseAttributes(itemAttributes), {
+            default: () => children
+          })
+        }
       }
       return item
     }
@@ -179,7 +181,6 @@ export default defineComponent({
         mainAttributes.props.wrapperCol = layout.content
       }
       mergeAttributes(mainAttributes, this.data.$local.parent)
-      // render = h(FormItem, parseAttributes(mainAttributes), [ this.renderTip(slot) ])
       render = h(FormItem, parseAttributes(mainAttributes), { default: () => this.renderTip(slot) })
     } else if (slot) {
       // 主要模式下替换

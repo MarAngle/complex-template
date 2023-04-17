@@ -17,18 +17,22 @@
 
 </style>
 <template>
-  <a-tooltip v-bind="tipOption" >
+  <Tooltip v-bind="tipOption" >
     <p ref="main" class="complex-auto-text" :class="{ 'complex-auto-text-auto': auto, 'complex-auto-text-is-auto': isEllipsis }" >
       <span ref="size" >{{ text }}</span>
     </p>
-  </a-tooltip>
+  </Tooltip>
 </template>
 
 <script lang="ts">
+import { Tooltip } from "ant-design-vue"
 import { defineComponent } from "vue"
 
 export default defineComponent({
   name: 'ComplexAutoText',
+  components: {
+    Tooltip
+  },
   data () {
     return {
       isEllipsis: false

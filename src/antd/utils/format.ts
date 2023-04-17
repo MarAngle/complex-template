@@ -6,7 +6,7 @@ import { mergeAttributes } from "./index"
 
 const showLogs = {
   init: false,
-  model: false
+  model: true
 }
 
 const modelFuncDict = {
@@ -44,7 +44,7 @@ interface dictItemType {
 }
 
 const bindEvent = function(dictItem: dictItemType, itemAttributes: AttributesData, edit: DefaultEdit<DefaultEditTypeDict>, payload: FormItemPayloadType) {
-  const formData = payload.form
+  const formData = payload.form.data
   const onData = dictItem.on
   if (dictItem.init) {
     dictItem.init(itemAttributes, formData, edit.prop)
@@ -148,7 +148,7 @@ const dict = {
     }
   },
   $switch: {
-    init: modelFuncDict.valueInit,
+    init: modelFuncDict.checkInit,
     on: {
       change: modelFuncDict.change
     },

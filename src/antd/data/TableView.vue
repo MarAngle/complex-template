@@ -1,6 +1,6 @@
 <template>
   <div class="complex-table-view">
-    <a-table ref="table-view" v-bind="currentOptionProps" ></a-table>
+    <Table ref="table-view" v-bind="currentOptionProps" ></Table>
   </div>
 </template>
 
@@ -26,7 +26,7 @@ export interface ColumnItemType extends TableColumnType {
 export default defineComponent({
   name: 'ComplexTableView',
   components: {
-    ATable: Table
+    Table
   },
   data () {
     return {}

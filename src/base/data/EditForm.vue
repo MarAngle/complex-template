@@ -21,7 +21,7 @@ import { DictionaryData, DictionaryList, ObserveList } from "complex-data-next"
 
 type dataType = undefined | Record<PropertyKey, any>
 
-export type validateCbType = (postData: Record<PropertyKey, any>, targetData: dataType) => any
+export type validateCbType = (postData: Record<PropertyKey, any>, targetData: dataType, type: string) => any
 
 export class ComplexFormData {
   ref: any
@@ -133,7 +133,7 @@ export default defineComponent({
     handle(cb: validateCbType) {
       this.form.validate(() => {
         const postdata = this.dictionary.$buildEditData(this.form.getData(), this.mainList, this.type)
-        cb(postdata, this.data)
+        cb(postdata, this.data, this.type)
       })
     },
   }

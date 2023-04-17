@@ -1,21 +1,25 @@
 <template>
-  <a-modal
+  <Modal
     v-bind="currentOptionProps"
     :visible="visible"
     @cancel="onCancel"
     @ok="onOk"
   >
     <slot :show="visible" :height="height" :width="width" :modal="currentModal" />
-  </a-modal>
+  </Modal>
 </template>
 
 <script lang="ts">
+import { Modal } from "ant-design-vue"
 import { defineComponent } from "vue"
 import { layout } from 'complex-plugin'
 import config from "../config"
 
 export default defineComponent({
   name: `ComplexAutoModal`,
+  components: {
+    Modal
+  },
   data () {
     const data: {
       title?: string,

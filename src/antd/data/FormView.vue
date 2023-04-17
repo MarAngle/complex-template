@@ -3,14 +3,14 @@
 
 </style>
 <template>
-  <a-form v-if="layout == 'inline'" v-bind="currentFormProps" class="complex-form complex-form-inline" >
+  <Form v-if="layout == 'inline'" v-bind="currentFormProps" class="complex-form complex-form-inline" >
     <form-item
       v-for="(val, index) in list.data"
       :key="val.prop"
       v-bind="formatItem(val, index)"
     />
-  </a-form>
-  <a-form v-else v-bind="currentFormProps" class="complex-form complex-form-horizontal" >
+  </Form>
+  <Form v-else v-bind="currentFormProps" class="complex-form complex-form-horizontal" >
     <a-row v-bind="layoutOption"  >
       <a-col v-for="(val, index) in list.data" :key="val.prop" v-bind="getGrid(val)" >
         <form-item
@@ -18,10 +18,11 @@
         />
       </a-col>
     </a-row>
-  </a-form>
+  </Form>
 </template>
 
 <script lang="ts">
+import { Form } from "ant-design-vue"
 import { defineComponent, PropType } from "vue"
 import { mergeData } from "complex-utils"
 import { DefaultEdit, ObserveList } from "complex-data-next"
@@ -32,7 +33,8 @@ import { ComplexFormData } from "../../base/data/EditForm.vue"
 export default defineComponent({
   name: 'ComplexFormView',
   components: {
-    FormItem: FormItem
+    Form,
+    FormItem
   },
   data () {
     return {}
