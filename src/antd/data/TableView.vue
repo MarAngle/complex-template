@@ -76,7 +76,7 @@ export default defineComponent({
       }
     },
     currentAuto() {
-      return setDataByDefault(this.auto, config.TableView.auto)
+      return setDataByDefault(this.auto, config.TableView.auto) as Record<PropertyKey, any>
     },
     currentPaginationData() {
       if (this.paginationData) {

@@ -3,7 +3,7 @@
 </style>
 <template>
   <div class="complex-edit-form">
-    <ComplexFormView
+    <FormView
       v-if="pageList"
       :form="form"
       :list="pageList"
@@ -11,13 +11,14 @@
       @event="onEvent"
       @eventEnd="onEventEnd"
     >
-    </ComplexFormView>
+    </FormView>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue"
 import { DictionaryData, DictionaryList, ObserveList } from "complex-data-next"
+import FormView from "./FormView.vue"
 
 type dataType = undefined | Record<PropertyKey, any>
 
@@ -26,13 +27,17 @@ export type validateCbType = (postData: Record<PropertyKey, any>, targetData: da
 export class ComplexFormData {
   ref: any
   data: Record<PropertyKey, any>
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  static clearValidate(target: ComplexFormData,...args: any[]) {
-    console.warn('未定义ComplexFormData的clearValidate函数！')
+  static clearValidate(target: ComplexFormData, ...args: any[]) {
+    target.ref.clearValidate(...args)
   }
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  static validate(target: ComplexFormData, cb: () => any, ...args: any[]) {
-    console.warn('未定义ComplexFormData的validate函数！')
+  static validate (target: ComplexFormData, success: () => any, fail?: () => any, ...args: any[]) {
+    target.ref.validate((valid: any) => {
+      if (valid) {
+        success()
+      } else if(fail) {
+        fail()
+      }
+    })
   }
   constructor() {
     this.ref = null
@@ -60,6 +65,9 @@ export class ComplexFormData {
 
 export default defineComponent({
   name: `ComplexEditForm`,
+  components: {
+    FormView
+  },
   data () {
     const data: {
       type: string,
