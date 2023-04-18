@@ -28,7 +28,7 @@ import { mergeData } from "complex-utils"
 import { DefaultEdit, ObserveList } from "complex-data-next"
 import FormItem from '../mod/FormItem'
 import config from '../config'
-import { ComplexFormData } from "../../base/data/EditForm.vue"
+import { ComplexFormData } from "./EditForm.vue"
 
 export default defineComponent({
   name: 'ComplexFormView',

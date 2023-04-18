@@ -1,6 +1,6 @@
 import { defineComponent, h, PropType, Slot } from "vue"
 import { ObserveList, DefaultEdit, AttributesData } from "complex-data-next"
-import { ComplexFormData } from "../../base/data/EditForm.vue"
+import { ComplexFormData } from "../data/EditForm.vue"
 // import FormView from "./../data/FormView"
 import { getAttributes } from "../utils/format"
 import { DefaultEditOptionType } from "complex-data-next/src/mod/DefaultEdit"
