@@ -1,6 +1,5 @@
 <style scoped>
 
-
 </style>
 <template>
   <Form v-if="layout == 'inline'" v-bind="currentFormProps" class="complex-form complex-form-inline" >
@@ -52,7 +51,7 @@ export default defineComponent({
       type: String,
       required: true
     },
-    layout: { // 表单布局	'horizontal'|'vertical'|'inline'
+    layout: { // 表单布局'horizontal'|'vertical'|'inline'
       type: String,
       required: false,
       default: 'horizontal'
@@ -90,7 +89,7 @@ export default defineComponent({
   },
   mounted () {
     //
-    this.form.setRef(this.$refs['form'])
+    this.form.setRef(this.$refs.form)
   },
   methods: {
     getGrid(data: DefaultEdit) {

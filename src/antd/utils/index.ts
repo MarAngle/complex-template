@@ -38,4 +38,3 @@ export const parseAttributes = function(attributesData: AttributesData) {
   }
   return data
 }
-

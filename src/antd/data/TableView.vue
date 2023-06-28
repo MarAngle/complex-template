@@ -157,7 +157,7 @@ export default defineComponent({
               return h(AutoText, {
                 text: text,
                 auto: true,
-                recount: layout.recount.main,
+                recount: layout.data.main.change,
                 tip: pitem.$tip
               })
             }

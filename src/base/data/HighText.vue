@@ -55,7 +55,7 @@ export default defineComponent({
     }
   },
   watch: {
-    'data': {
+    data: {
       immediate: true,
       handler: function(val) {
         this.initList(val)
@@ -63,11 +63,11 @@ export default defineComponent({
     }
   },
   methods: {
-    initList(data?: any) {
+    initList(data?: string | number) {
       this.list = []
       if (data) {
         const origindata: string = data.toString()
-        const findList = findTargetInStr(data, this.target, {
+        const findList = findTargetInStr(origindata, this.target, {
           limitNum: this.limitNum,
           case: this.limitCase
         })

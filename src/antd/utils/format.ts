@@ -83,8 +83,6 @@ const bindEvent = function(dictItem: dictItemType, itemAttributes: AttributesDat
   itemAttributes.on = eventData.getData()
 }
 
-
-
 const dict = {
   $input: {
     init: modelFuncDict.valueInit,
