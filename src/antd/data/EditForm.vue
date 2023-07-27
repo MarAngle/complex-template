@@ -30,6 +30,7 @@ export class ComplexFormData {
   static clearValidate(target: ComplexFormData, ...args: any[]) {
     target.ref.clearValidate(...args)
   }
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   static validate (target: ComplexFormData, success: () => any, fail?: () => any, ...args: any[]) {
     target.ref.validate((valid: any) => {
       if (valid) {

@@ -1,3 +1,5 @@
+import { PaginationData } from "complex-data-next"
+
 const config = {
   TableView: {
     size: 'default',
@@ -14,6 +16,11 @@ const config = {
         front: 'total',
         end: false
       }
+    }
+  },
+  Pagination: {
+    formatInfo(data: PaginationData) {
+      return `共${data.total}页/${data.num}条`
     }
   },
   FormView: {
