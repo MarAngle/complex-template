@@ -8,6 +8,7 @@ import AutoText from "./AutoText.vue"
 import config from "../config"
 import { layout } from "complex-plugin"
 import Pagination from "../mod/Pagination"
+import { idType } from "complex-data-next/src/lib/ChoiceData"
 
 export type autoType = {
   expandWidth?: number
@@ -87,6 +88,11 @@ export default defineComponent({
       } else {
         return this.listData.$list
       }
+    },
+    currentIdList() {
+      return this.currentData.map(item => {
+        return item[this.listData.$getDictionaryPropData('prop', 'id')]
+      })
     },
     currentAuto() {
       return setDataByDefault(this.auto, config.TableView.auto) as Required<autoType>
@@ -209,8 +215,22 @@ export default defineComponent({
         currentOptionProps.rowSelection = {
           columnWidth: 50,
           selectedRowKeys: this.listData.$module.choice.data.id,
-          onChange: (selectedRowKeys: (string | number)[], selectedRows: Record<string, unknown>[]) => {
-            this.listData.$module.choice!.changeData(selectedRowKeys, selectedRows, 'auto', this.listData.$getDictionaryPropData('prop', 'id'))
+          onChange: (selectedRowKeys: idType[], selectedRows: Record<string, unknown>[]) => {
+            const currentIdList = this.currentIdList
+            const choice = this.listData.$module.choice!
+            for (let i = 0; i < choice.data.id.length; i++) {
+              const rowKey = choice.data.id[i]
+              if (currentIdList.indexOf(rowKey) > -1) {
+                // 当前页数据
+                if (selectedRowKeys.indexOf(rowKey) === -1) {
+                  // 已经被取消选择的数据,从数据中删除
+                  choice.data.id.splice(i, 1)
+                  choice.data.list.splice(i, 1)
+                  i--
+                }
+              }
+            }
+            choice.pushData(selectedRowKeys, selectedRows)
           }
         }
       }
