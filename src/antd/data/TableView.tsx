@@ -1,21 +1,29 @@
-<template>
-  <div class="complex-table-view">
-    <Table ref="table-view" v-bind="currentOptionProps" ></Table>
-  </div>
-</template>
-
-<script lang="ts">
 import { defineComponent, h, PropType } from "vue"
-import { Table, TableColumnType } from 'ant-design-vue'
-import { getType, setDataByDefault } from "complex-utils"
-import { layout } from "complex-plugin"
+import { Table, TableColumnType, TableProps } from 'ant-design-vue'
 import { ComplexList, DefaultList, PaginationData } from "complex-data-next"
 import ComplexDataConfig from "complex-data-next/config"
-import config from "./../config"
+import { getType, setDataByDefault } from "complex-utils"
 import AutoIndex from "../../base/data/AutoIndex.vue"
 import AutoText from "./AutoText.vue"
+import config from "../config"
+import { layout } from "complex-plugin"
+import Pagination from "../mod/Pagination"
 
-type renderDataType = { text: any, record: Record<PropertyKey, any>, index: number }
+type autoType = {
+  expandWidth?: number
+  choiceWidth?: number
+  index?: {
+    prop: string
+    pagination: boolean
+  },
+  pagination?: {
+    default: string
+    front: string
+    end: boolean
+  }
+}
+
+type renderDataType = { text: unknown, record: Record<PropertyKey, unknown>, index: number }
 
 export interface ColumnItemType extends TableColumnType {
   $auto: boolean
@@ -24,18 +32,7 @@ export interface ColumnItemType extends TableColumnType {
 }
 
 export default defineComponent({
-  name: 'ComplexTableView',
-  components: {
-    Table
-  },
-  data () {
-    return {
-      layoutData: {
-        lifeId: 0,
-        count: 0
-      }
-    }
-  },
+  name: 'TableView',
   props: {
     listData: {
       type: Object as PropType<ComplexList>,
@@ -46,7 +43,7 @@ export default defineComponent({
       required: true
     },
     data: { // 单独指定列表数据，不从listData.$list中取值
-      type: Array,
+      type: Array as PropType<Record<PropertyKey, unknown>[]>,
       required: false
     },
     paginationData: { // 单独制定分页器数据，不从listData中取值
@@ -55,7 +52,7 @@ export default defineComponent({
       default: null
     },
     optionProps: { // 单独制定分页器数据，不从listData中取值
-      type: Object,
+      type: Object as PropType<TableProps>,
       required: false,
       default: () => {
         return {}
@@ -67,9 +64,19 @@ export default defineComponent({
       default: 'list'
     },
     auto: {
-      type: Object,
+      type: Object as PropType<autoType>,
       required: false,
-      default: null
+      default: () => {
+        return {}
+      }
+    }
+  },
+  data () {
+    return {
+      layoutData: {
+        lifeId: 0,
+        count: 0
+      }
     }
   },
   computed: {
@@ -81,7 +88,7 @@ export default defineComponent({
       }
     },
     currentAuto() {
-      return setDataByDefault(this.auto, config.TableView.auto) as Record<PropertyKey, any>
+      return setDataByDefault(this.auto, config.TableView.auto) as Required<autoType>
     },
     currentPaginationData() {
       if (this.paginationData) {
@@ -145,7 +152,7 @@ export default defineComponent({
             if (dataType === 'object') {
               text = JSON.stringify(text)
             } else if (dataType === 'array') {
-              text = text.join(',')
+              text = (text as unknown[]).join(',')
             }
             if (contentSlot) {
               // 插槽
@@ -160,7 +167,7 @@ export default defineComponent({
             if (pitem.ellipsis && pitem.$auto) {
               // 自动省略切自动换行
               return h(AutoText, {
-                text: text,
+                text: text as string,
                 auto: true,
                 recount: this.layoutData.count,
                 tip: pitem.$tip
@@ -198,7 +205,7 @@ export default defineComponent({
         currentOptionProps.pagination = false
       }
       return currentOptionProps
-    }
+    },
   },
   mounted() {
     this.layoutData.lifeId = layout.onLife('$all', {
@@ -212,16 +219,35 @@ export default defineComponent({
     this.layoutData.lifeId = 0
   },
   methods: {
-    /**
-     * 获取Tips设置项
-     * @param {object} pitemTip pitem定义的设置项
-     * @param {object} mainTip 总设置项
-     * @returns {object}
-     */
-    formatAutoTextTipOption(pitemTip?: Record<PropertyKey, any>, mainTip?: Record<PropertyKey, any>) {
-      const tipOption = pitemTip || mainTip
-      return tipOption
+    renderTable() {
+      const table = h(Table, {
+        ...this.currentOptionProps
+      })
+      return table
     },
+    renderPagination() {
+      if (this.currentPaginationData) {
+        const data = h(Pagination, {
+          data: this.currentPaginationData,
+          style: {
+            padding: '10px 0'
+          }
+        })
+        return data
+      } else {
+        return null
+      }
+    }
+  },
+  /**
+   * 主要模板
+   * @param {*} h createElement
+   * @returns {VNode}
+   */
+  render() {
+    const render = h('div', { class: 'complex-table' }, {
+      default: () => [this.renderTable(), this.renderPagination()]
+    })
+    return render
   }
 })
-</script>

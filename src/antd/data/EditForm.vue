@@ -32,10 +32,10 @@ export class ComplexFormData {
   }
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   static validate (target: ComplexFormData, success: () => any, fail?: () => any, ...args: any[]) {
-    target.ref.validate((valid: any) => {
-      if (valid) {
-        success()
-      } else if(fail) {
+    target.ref.validate().then(() => {
+      success()
+    }).catch(() => {
+      if (fail) {
         fail()
       }
     })
