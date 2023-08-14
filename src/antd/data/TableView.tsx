@@ -17,6 +17,7 @@ export type autoType = {
     pagination: boolean
   },
   pagination?: {
+    auto?: boolean
     default: string
     front: string
     end: boolean
@@ -204,6 +205,15 @@ export default defineComponent({
       if (currentOptionProps.pagination === undefined) {
         currentOptionProps.pagination = false
       }
+      if (this.listData.$module.choice) {
+        currentOptionProps.rowSelection = {
+          columnWidth: 50,
+          selectedRowKeys: this.listData.$module.choice.data.id,
+          onChange: (selectedRowKeys: (string | number)[], selectedRows: Record<string, unknown>[]) => {
+            this.listData.$module.choice!.changeData(selectedRowKeys, selectedRows, 'auto', this.listData.$getDictionaryPropData('prop', 'id'))
+          }
+        }
+      }
       return currentOptionProps
     },
   },
@@ -231,6 +241,36 @@ export default defineComponent({
           data: this.currentPaginationData,
           style: {
             padding: '10px 0'
+          },
+          onCurrent: (current: number) => {
+            if (this.currentAuto.pagination.auto) {
+              this.listData.$reloadData({
+                force: {
+                  ing: true
+                },
+                sync: true,
+                choice: {
+                  from: 'page',
+                  act: 'page'
+                }
+              })
+            }
+            this.$emit('pagination', 'current', current)
+          },
+          onSize: (size: number, current: number) => {
+            if (this.currentAuto.pagination.auto) {
+              this.listData.$reloadData({
+                force: {
+                  ing: true
+                },
+                sync: true,
+                choice: {
+                  from: 'page',
+                  act: 'size'
+                }
+              })
+            }
+            this.$emit('pagination', 'size', size, current)
           }
         })
         return data

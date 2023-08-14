@@ -12,6 +12,7 @@ const config = {
         pagination: true
       },
       pagination: {
+        auto: true,
         default: 'choice',
         front: 'total',
         end: false
