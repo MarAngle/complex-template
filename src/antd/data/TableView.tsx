@@ -9,7 +9,7 @@ import config from "../config"
 import { layout } from "complex-plugin"
 import Pagination from "../mod/Pagination"
 
-type autoType = {
+export type autoType = {
   expandWidth?: number
   choiceWidth?: number
   index?: {
@@ -23,7 +23,7 @@ type autoType = {
   }
 }
 
-type renderDataType = { text: unknown, record: Record<PropertyKey, unknown>, index: number }
+export type renderDataType = { text: unknown, record: Record<PropertyKey, unknown>, index: number }
 
 export interface ColumnItemType extends TableColumnType {
   $auto: boolean
