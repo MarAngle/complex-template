@@ -42,7 +42,7 @@ export default defineComponent({
     tipOption () {
       let option
       if (this.isEllipsis && this.tip !== false) {
-        if (typeof this.tip == 'object') {
+        if (typeof this.tip === 'object') {
           option = {
             title: this.tip.getData ? this.tip.getData(this.text) : this.tip.data,
             placement: this.tip.location,
@@ -95,8 +95,8 @@ export default defineComponent({
   methods: {
     autoWidth() {
       this.$nextTick(() => {
-        const mainWidth = (this.$refs as any)['main'].offsetWidth
-        const currentWith = (this.$refs as any)['size'].offsetWidth
+        const mainWidth = (this.$refs as any).main.offsetWidth
+        const currentWith = (this.$refs as any).size.offsetWidth
         if (mainWidth < currentWith) {
           this.isEllipsis = true
         } else {

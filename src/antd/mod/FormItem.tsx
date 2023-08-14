@@ -1,12 +1,10 @@
 import { defineComponent, h, PropType, Slot } from "vue"
 import { ObserveList, DefaultEdit, AttributesData } from "complex-data-next"
 import { ComplexFormData } from "../data/EditForm.vue"
-// import FormView from "./../data/FormView"
 import { getAttributes } from "../utils/format"
 import { DefaultEditOptionType } from "complex-data-next/src/mod/DefaultEdit"
 import { mergeAttributes, parseAttributes } from "../utils"
 import { FormItem, Tooltip, Input, InputNumber, Textarea, Switch, Select, SelectOption, Cascader, DatePicker, RangePicker, Button } from "ant-design-vue"
-
 
 export interface FormItemPayloadType {
   prop: string
@@ -63,7 +61,7 @@ export default defineComponent({
     renderTip(slot: undefined | Slot) {
       let typeItem: any = null
       // auto/data模式下替换内部数据，此时保存外部的tips
-      if (slot && (this.data.$slot.type == 'auto' || this.data.$slot.type == 'data')) {
+      if (slot && (this.data.$slot.type === 'auto' || this.data.$slot.type === 'data')) {
         typeItem = slot(this.payload)
       } else {
         typeItem = this.renderItem(slot)
@@ -88,20 +86,20 @@ export default defineComponent({
       let children: any
       let item = null
       // 考虑一个默认的值，inline模式下和其他模式下的默认值，避免出现问题
-      if (slot && this.data.$slot.type == 'model') {
+      if (slot && this.data.$slot.type === 'model') {
         item = slot({
           ...this.payload,
           option: itemAttributes
         })
-      } else if (this.data.type == 'input') {
+      } else if (this.data.type === 'input') {
         tag = Input
-      } else if (this.data.type == 'inputNumber') {
+      } else if (this.data.type === 'inputNumber') {
         tag = InputNumber
-      } else if (this.data.type == 'textArea') {
+      } else if (this.data.type === 'textArea') {
         tag = Textarea
-      } else if (this.data.type == 'switch') {
+      } else if (this.data.type === 'switch') {
         tag = Switch
-      } else if (this.data.type == 'select') {
+      } else if (this.data.type === 'select') {
         tag = Select
         // 设置字典
         const dict = {
@@ -119,26 +117,25 @@ export default defineComponent({
             }
           })
           mergeAttributes(optionAttributes, this.data.$local.child)
-          // return h(SelectOption, parseAttributes(optionAttributes), [ itemData[dict.label] ])
           return h(SelectOption, parseAttributes(optionAttributes), {
             default: () => itemData[dict.label]
           })
         })
-      } else if (this.data.type == 'cascader') {
+      } else if (this.data.type === 'cascader') {
         tag = Cascader
-      } else if (this.data.type == 'date') {
+      } else if (this.data.type === 'date') {
         tag = DatePicker
-      } else if (this.data.type == 'dateRange') {
+      } else if (this.data.type === 'dateRange') {
         tag = RangePicker
-      } else if (this.data.type == 'file') {
+      } else if (this.data.type === 'file') {
         // tag = UploadFile
-      } else if (this.data.type == 'button') {
+      } else if (this.data.type === 'button') {
         tag = Button
         const text = (this.data.$option as DefaultEditOptionType<'button'>).name || this.data.$getParent()!.$getInterface('label', this.type)
         children = text
-      } else if (this.data.type == 'customize') {
+      } else if (this.data.type === 'customize') {
         tag = this.data.$customize as any
-      } else if (this.data.type == 'slot') {
+      } else if (this.data.type === 'slot') {
         console.error(`${this.data.prop}未定义slot`)
       }
       if (tag) {
@@ -162,7 +159,7 @@ export default defineComponent({
     let render = null
     // 获取主要插槽，存在插槽会根据type在指定位置替换
     const slot = this.target.$slots[this.data.$slot.name] || this.data.$slot.render
-    if (this.data.$slot.type != 'main') {
+    if (this.data.$slot.type !== 'main') {
       const ditem = this.data.$getParent()!
       const label = ditem.$getInterface('label', this.type)
       const mainAttributes = new AttributesData({
@@ -175,7 +172,7 @@ export default defineComponent({
         },
         class: ['complex-form-item']
       })
-      if (this.payload.target.layout == 'horizontal') {
+      if (this.payload.target.layout === 'horizontal') {
         const layout = ditem.$layout.getData(this.payload.type)
         mainAttributes.props.labelCol = layout.label
         mainAttributes.props.wrapperCol = layout.content
