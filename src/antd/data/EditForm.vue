@@ -19,50 +19,12 @@
 import { defineComponent } from "vue"
 import { DictionaryData, DictionaryList, ObserveList } from "complex-data-next"
 import FormView from "./FormView.vue"
+import AntdForm from "../class/AntdForm"
 
 type dataType = undefined | Record<PropertyKey, any>
 
 export type validateCbType = (postData: Record<PropertyKey, any>, targetData: dataType, type: string) => any
 
-export class ComplexFormData {
-  ref: any
-  data: Record<PropertyKey, any>
-  static clearValidate(target: ComplexFormData, ...args: any[]) {
-    target.ref.clearValidate(...args)
-  }
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  static validate (target: ComplexFormData, success: () => any, fail?: () => any, ...args: any[]) {
-    target.ref.validate().then(() => {
-      success()
-    }).catch(() => {
-      if (fail) {
-        fail()
-      }
-    })
-  }
-  constructor() {
-    this.ref = null
-    this.data = {}
-  }
-  setRef(ref: any) {
-    this.ref = ref
-  }
-  setData(data: Record<PropertyKey, any>) {
-    this.data = data
-  }
-  getRef() {
-    return this.ref
-  }
-  getData() {
-    return this.data
-  }
-  clearValidate(...args: any[]) {
-    ComplexFormData.clearValidate(this, ...args)
-  }
-  validate(success: () => any, fail?: () => any, ...args: any[]) {
-    ComplexFormData.validate(this, success, fail, ...args)
-  }
-}
 
 export default defineComponent({
   name: `ComplexEditForm`,
@@ -76,14 +38,14 @@ export default defineComponent({
       data: dataType,
       mainList: DictionaryData[],
       pageList: null | ObserveList,
-      form: ComplexFormData
+      form: AntdForm
     } = {
       type: '',
       edit: '',
       data: undefined,
       mainList: [],
       pageList: null,
-      form: new ComplexFormData()
+      form: new AntdForm()
     }
     return data
   },
@@ -140,7 +102,7 @@ export default defineComponent({
       })
     },
     handle(cb: validateCbType) {
-      this.form.validate(() => {
+      this.form.validate().then(() => {
         const postdata = this.dictionary.$buildEditData(this.form.getData(), this.mainList, this.type)
         cb(postdata, this.data, this.type)
       })

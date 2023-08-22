@@ -231,7 +231,8 @@ export default defineComponent({
               }
             }
             choice.pushData(selectedRowKeys, selectedRows)
-          }
+          },
+          ...this.listData.$module.choice.option
         }
       }
       return currentOptionProps

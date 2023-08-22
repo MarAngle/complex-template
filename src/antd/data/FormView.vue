@@ -27,7 +27,7 @@ import { mergeData } from "complex-utils"
 import { DefaultEdit, ObserveList } from "complex-data-next"
 import FormItem from '../mod/FormItem'
 import config from '../config'
-import { ComplexFormData } from "./EditForm.vue"
+import AntdForm from "../class/AntdForm"
 
 export default defineComponent({
   name: 'ComplexFormView',
@@ -40,7 +40,7 @@ export default defineComponent({
   },
   props: {
     form: {
-      type: Object as PropType<ComplexFormData>,
+      type: Object as PropType<AntdForm>,
       required: true
     },
     list: {

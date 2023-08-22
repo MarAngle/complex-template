@@ -1,17 +1,17 @@
 import { defineComponent, h, PropType, Slot } from "vue"
 import { ObserveList, DefaultEdit, AttributesData } from "complex-data-next"
-import { ComplexFormData } from "../data/EditForm.vue"
 import { getAttributes } from "../utils/format"
 import { DefaultEditOptionType } from "complex-data-next/src/mod/DefaultEdit"
 import { mergeAttributes, parseAttributes } from "../utils"
 import { FormItem, Tooltip, Input, InputNumber, Textarea, Switch, Select, SelectOption, Cascader, DatePicker, RangePicker, Button } from "ant-design-vue"
+import AntdForm from "../class/AntdForm"
 
 export interface FormItemPayloadType {
   prop: string
   type: string
   data: DefaultEdit
   index: number
-  form: ComplexFormData
+  form: AntdForm
   list: ObserveList
   target: any
 }
@@ -32,7 +32,7 @@ export default defineComponent({
       required: true
     },
     form: { // form数据{ data, num }
-      type: Object as PropType<ComplexFormData>,
+      type: Object as PropType<AntdForm>,
       required: true
     },
     type: { // formType
