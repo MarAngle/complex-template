@@ -5,7 +5,7 @@ class AntdForm extends BaseForm{
     this.ref.clearValidate(...args)
   }
   validate(...args: any[]) {
-    return this.ref.validate as Promise<unknown>
+    return this.ref.validate() as Promise<unknown>
   }
 }
 
