@@ -12,7 +12,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue"
+import { PropType, defineComponent } from "vue"
 import { DictionaryData, DictionaryList, ObserveList } from "complex-data-next"
 import FormView from "./FormView.vue"
 import AntdForm from "../class/AntdForm"
@@ -46,17 +46,22 @@ export default defineComponent({
   },
   props: {
     dictionary: {
-      type: DictionaryList,
+      type: Object as PropType<DictionaryList>,
       required: true
     },
     format: {
       type: Function,
       required: false
+    },
+    observe: {
+      type: Boolean,
+      required: false,
+      default: true
     }
   },
   computed: {
     formProps() {
-      const data = {
+      const data: any = {
         form: this.form,
         list: this.pageList!,
         type: this.edit,
@@ -110,7 +115,9 @@ export default defineComponent({
       }
       this.dictionary.$buildFormData(...$buildFormDataArgs).then((res: any) => {
         this.form.setData(res.data)
-        this.pageList!.setData(this.form.getData())
+        if (this.observe) {
+          this.pageList!.setData(this.form.getData(), this.type)
+        }
       })
     },
     handle(cb: validateCbType) {
