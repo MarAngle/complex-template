@@ -3,7 +3,12 @@
 </style>
 <template>
   <Form v-if="layout == 'inline'" v-bind="currentFormProps" class="complex-form complex-form-inline" >
-    <form-item
+    <auto-form-item
+      v-for="(val, index) in list.data"
+      :key="val.prop"
+      v-bind="formatItem(val, index)"
+    />
+    <auto-form-item
       v-for="(val, index) in list.data"
       :key="val.prop"
       v-bind="formatItem(val, index)"
@@ -12,7 +17,7 @@
   <Form v-else v-bind="currentFormProps" class="complex-form complex-form-horizontal" >
     <a-row v-bind="layoutOption"  >
       <a-col v-for="(val, index) in list.data" :key="val.prop" v-bind="getGrid(val)" >
-        <form-item
+        <auto-form-item
           v-bind="formatItem(val, index)"
         />
       </a-col>
@@ -25,15 +30,24 @@ import { Form } from "ant-design-vue"
 import { defineComponent, PropType } from "vue"
 import { mergeData } from "complex-utils"
 import { DefaultEdit, ObserveList } from "complex-data-next"
-import FormItem from '../mod/FormItem'
+import AutoFormItem from '../mod/AutoFormItem'
 import config from '../config'
 import AntdForm from "../class/AntdForm"
+
+export type menuType = {
+  type?: string
+  act: string
+  icon: any
+  name: string
+  loading?: boolean
+  disabled?: boolean
+}
 
 export default defineComponent({
   name: 'ComplexFormView',
   components: {
     Form,
-    FormItem
+    AutoFormItem
   },
   data () {
     return {}
@@ -45,6 +59,10 @@ export default defineComponent({
     },
     list: {
       type: Object as PropType<ObserveList>,
+      required: true
+    },
+    menu: {
+      type: Object as PropType<menuType[]>,
       required: true
     },
     type: {
@@ -109,3 +127,4 @@ export default defineComponent({
   }
 })
 </script>
+../mod/AutoFormItem

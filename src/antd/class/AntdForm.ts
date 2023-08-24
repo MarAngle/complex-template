@@ -2,10 +2,16 @@ import { BaseForm } from 'complex-data-next'
 
 class AntdForm extends BaseForm{
   clearValidate(...args: any[]) {
-    this.ref.clearValidate(...args)
+    if (this.ref) {
+      this.ref.clearValidate(...args)
+    }
   }
   validate(...args: any[]) {
-    return this.ref.validate() as Promise<unknown>
+    if (this.ref) {
+      return this.ref.validate() as Promise<unknown>
+    } else {
+      return Promise.reject({ status: 'fail', code: 'no ref' })
+    }
   }
 }
 

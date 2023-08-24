@@ -5,11 +5,7 @@
   <div class="complex-edit-form">
     <FormView
       v-if="pageList"
-      :form="form"
-      :list="pageList"
-      :type="edit"
-      @event="onEvent"
-      @eventEnd="onEventEnd"
+      v-bind="formProps"
     >
     </FormView>
   </div>
@@ -24,7 +20,6 @@ import AntdForm from "../class/AntdForm"
 type dataType = undefined | Record<PropertyKey, any>
 
 export type validateCbType = (postData: Record<PropertyKey, any>, targetData: dataType, type: string) => any
-
 
 export default defineComponent({
   name: `ComplexEditForm`,
@@ -53,9 +48,26 @@ export default defineComponent({
     dictionary: {
       type: DictionaryList,
       required: true
+    },
+    format: {
+      type: Function,
+      required: false
     }
   },
   computed: {
+    formProps() {
+      const data = {
+        form: this.form,
+        list: this.pageList!,
+        type: this.edit,
+        onEvent: this.onEvent,
+        onEventEnd: this.onEventEnd
+      }
+      if (this.format) {
+        this.format(data)
+      }
+      return data
+    },
     eventPayload() {
       return {
         target: this,

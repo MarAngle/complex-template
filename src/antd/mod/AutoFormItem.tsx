@@ -17,7 +17,7 @@ export interface FormItemPayloadType {
 }
 
 export default defineComponent({
-  name: 'FormItem',
+  name: 'AutoFormItem',
   props: {
     data: {
       type: Object as PropType<DefaultEdit>,
