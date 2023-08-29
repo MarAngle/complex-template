@@ -1,6 +1,6 @@
 {
   "name": "complex-component-next",
-  "version": "3.2.9",
+  "version": "3.2.10",
   "description": "a complex component",
   "main": "index.ts",
   "repository": {

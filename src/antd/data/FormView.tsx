@@ -1,33 +1,5 @@
-<style scoped>
-
-</style>
-<template>
-  <Form v-if="layout == 'inline'" v-bind="currentFormProps" class="complex-form complex-form-inline" >
-    <auto-form-item
-      v-for="(val, index) in list.data"
-      :key="val.prop"
-      v-bind="formatItem(val, index)"
-    />
-    <auto-form-item
-      v-for="(val, index) in list.data"
-      :key="val.prop"
-      v-bind="formatItem(val, index)"
-    />
-  </Form>
-  <Form v-else v-bind="currentFormProps" class="complex-form complex-form-horizontal" >
-    <a-row v-bind="layoutOption"  >
-      <a-col v-for="(val, index) in list.data" :key="val.prop" v-bind="getGrid(val)" >
-        <auto-form-item
-          v-bind="formatItem(val, index)"
-        />
-      </a-col>
-    </a-row>
-  </Form>
-</template>
-
-<script lang="ts">
-import { Form } from "ant-design-vue"
-import { defineComponent, PropType } from "vue"
+import { Col, Form, Row } from "ant-design-vue"
+import { defineComponent, h, PropType } from "vue"
 import { mergeData } from "complex-utils"
 import { DefaultEdit, ObserveList } from "complex-data-next"
 import AutoFormItem from '../mod/AutoFormItem'
@@ -44,14 +16,7 @@ export type menuType = {
 }
 
 export default defineComponent({
-  name: 'ComplexFormView',
-  components: {
-    Form,
-    AutoFormItem
-  },
-  data () {
-    return {}
-  },
+  name: 'FormView',
   props: {
     form: {
       type: Object as PropType<AntdForm>,
@@ -123,7 +88,36 @@ export default defineComponent({
         type: this.type,
         target: this
       }
+    },
+    renderItem() {
+      if (this.layout === 'inline') {
+        return this.list.data.map((item, index) => {
+          h(AutoFormItem, this.formatItem(item, index))
+        })
+      } else {
+        return this.list.data.map((item, index) => {
+          h(Row, this.layoutOption, {
+            default: () => h(Col, this.getGrid(item), {
+              default: () => h(AutoFormItem, this.formatItem(item, index))
+            })
+          })
+        })
+      }
     }
+  },
+  /**
+   * 主要模板
+   * @param {*} h createElement
+   * @returns {VNode}
+   */
+  render() {
+    const layoutClass = `complex-form-${this.layout}`
+    const render = h(Form, {
+      class: `complex-form ${layoutClass}`,
+      ...this.formProps
+    }, {
+      default: () => this.renderItem()
+    })
+    return render
   }
 })
-</script>
