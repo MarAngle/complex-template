@@ -1,19 +1,11 @@
-import { Col, Form, Row } from "ant-design-vue"
+import { Col, Form, Row, FormItem, Button } from "ant-design-vue"
 import { defineComponent, h, PropType } from "vue"
 import { mergeData } from "complex-utils"
-import { DefaultEdit, ObserveList } from "complex-data-next"
+import { DefaultEdit, ObserveList, MenuData, AttributesData } from "complex-data-next"
 import AutoFormItem from '../mod/AutoFormItem'
 import config from '../config'
 import AntdForm from "../class/AntdForm"
-
-export type menuType = {
-  type?: string
-  act: string
-  icon: any
-  name: string
-  loading?: boolean
-  disabled?: boolean
-}
+import { mergeAttributes, parseAttributes } from "../utils"
 
 export default defineComponent({
   name: 'FormView',
@@ -27,7 +19,7 @@ export default defineComponent({
       required: true
     },
     menu: {
-      type: Object as PropType<menuType[]>,
+      type: Object as PropType<MenuData[]>,
       required: false
     },
     type: {
@@ -68,6 +60,13 @@ export default defineComponent({
       const currentFormProps = mergeData(formProps, this.formProps)
       currentFormProps.ref = 'form'
       return currentFormProps
+    },
+    payload() {
+      return {
+        type: this.type,
+        form: this.form,
+        list: this.list
+      }
     }
   },
   mounted () {
@@ -89,7 +88,60 @@ export default defineComponent({
         target: this
       }
     },
-    renderItem() {
+    renderMenu() {
+      if (this.menu) {
+        return this.menu.map((item, index) => {
+          const mainAttributes = new AttributesData({
+            props: {
+              name: item.prop,
+              label: item.name,
+              required: false
+            },
+            class: ['complex-form-item', 'complex-form-item-menu']
+          })
+          mergeAttributes(mainAttributes, item.$local.parent)
+          h(FormItem, parseAttributes(mainAttributes), {
+            default: () => {
+              let hidden = item.hidden
+              if (hidden && typeof hidden === 'function') {
+                hidden = hidden(item, index, this.payload)
+              }
+              if (!hidden) {
+                let loading = item.loading
+                if (loading && typeof loading === 'function') {
+                  loading = loading(item, index, this.payload)
+                }
+                let disabled = item.disabled
+                if (disabled && typeof disabled === 'function') {
+                  disabled = disabled(item, index, this.payload)
+                }
+                const itemAttributes = new AttributesData({
+                  props: {
+                    type: item.type,
+                    loading: loading,
+                    disabled: disabled,
+                    required: false
+                  },
+                  on: {
+                    click: () => {
+                      this.$emit('menu', item.name, item, index, this.payload)
+                    }
+                  },
+                  class: ['complex-form-item-type', 'complex-form-item-type-button', 'complex-form-item-type-menu']
+                })
+                mergeAttributes(itemAttributes, item.$local.target)
+                return h(Button, parseAttributes(itemAttributes), item.name)
+              } else {
+                return null
+              }
+            }
+          })
+        })
+      } else {
+        return null
+      }
+    },
+    renderList() {
       if (this.layout === 'inline') {
         return this.list.data.map((item, index) => {
           h(AutoFormItem, this.formatItem(item, index))
@@ -116,7 +168,15 @@ export default defineComponent({
       class: `complex-form ${layoutClass}`,
       ...this.formProps
     }, {
-      default: () => this.renderItem()
+      default: () => {
+        const list = this.renderList()
+        const menu = this.renderMenu()
+        if (menu) {
+          return list.concat(menu)
+        } else {
+          return list
+        }
+      }
     })
     return render
   }

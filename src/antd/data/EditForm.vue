@@ -14,7 +14,7 @@
 <script lang="ts">
 import { PropType, defineComponent } from "vue"
 import { DictionaryData, DictionaryList, ObserveList } from "complex-data-next"
-import FormView from "./FormView.vue"
+import FormView from "./FormView"
 import AntdForm from "../class/AntdForm"
 
 type dataType = undefined | Record<PropertyKey, any>
