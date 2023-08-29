@@ -1,6 +1,6 @@
 {
   "name": "complex-component-next",
-  "version": "3.2.8",
+  "version": "3.2.9",
   "description": "a complex component",
   "main": "index.ts",
   "repository": {
@@ -8,9 +8,9 @@
     "url": "https://github.com/MarAngle/complex-component-next.git"
   },
   "dependencies": {
-    "ant-design-vue": "^3.2.15",
-    "complex-data-next": "3.2.15 - 3.2.99",
-    "complex-plugin": "3.1.13 - 3.1.99"
+    "ant-design-vue": "^3.2.20",
+    "complex-data-next": "3.2.16 - 3.2.99",
+    "complex-plugin": "3.1.14 - 3.1.99"
   },
   "devDependencies": {
     "typescript": "~5.0.4"

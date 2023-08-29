@@ -63,7 +63,7 @@ export default defineComponent({
     },
     menu: {
       type: Object as PropType<menuType[]>,
-      required: true
+      required: false
     },
     type: {
       type: String,

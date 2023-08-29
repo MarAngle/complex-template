@@ -61,7 +61,7 @@ export default defineComponent({
   },
   computed: {
     formProps() {
-      const data: any = {
+      const data = {
         form: this.form,
         list: this.pageList!,
         type: this.edit,
