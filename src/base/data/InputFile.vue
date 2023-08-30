@@ -32,12 +32,12 @@ export default defineComponent({
       default: false
     },
     max: {
-      type: [Number],
+      type: Number,
       required: false,
       default: 0
     },
     min: {
-      type: [Number],
+      type: Number,
       required: false,
       default: 0
     },
