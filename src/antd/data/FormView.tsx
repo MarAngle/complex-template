@@ -118,7 +118,8 @@ export default defineComponent({
         const mainAttributes = new AttributesData({
           props: {
             name: item.prop,
-            label: item.name,
+            label: item.label,
+            colon: item.colon,
             required: false
           },
           class: ['complex-form-item', 'complex-form-item-menu']
@@ -143,7 +144,7 @@ export default defineComponent({
               },
               on: {
                 click: () => {
-                  this.$emit('menu', item.name, item, index, this.payload)
+                  this.$emit('menu', item.prop, item, index, this.payload)
                 }
               },
               class: ['complex-form-item-type', 'complex-form-item-type-button', 'complex-form-item-type-menu']

@@ -13,7 +13,7 @@
 
 <script lang="ts">
 import { PropType, defineComponent } from "vue"
-import { DictionaryData, DictionaryList, ObserveList } from "complex-data-next"
+import { DictionaryData, DictionaryList, MenuData, ObserveList } from "complex-data-next"
 import FormView from "./FormView"
 import AntdForm from "../class/AntdForm"
 
@@ -49,6 +49,10 @@ export default defineComponent({
       type: Object as PropType<DictionaryList>,
       required: true
     },
+    menu: {
+      type: Object as PropType<MenuData[]>,
+      required: false
+    },
     format: {
       type: Function,
       required: false
@@ -65,8 +69,10 @@ export default defineComponent({
         form: this.form,
         list: this.pageList!,
         type: this.edit,
+        menu: this.menu,
         onEvent: this.onEvent,
-        onEventEnd: this.onEventEnd
+        onEventEnd: this.onEventEnd,
+        onMenu: this.onMenu
       }
       if (this.format) {
         this.format(data)
@@ -85,6 +91,9 @@ export default defineComponent({
     }
   },
   methods: {
+    onMenu(prop: string, item: MenuData, index: number, payload: any) {
+      this.$emit('menu', prop, item, index, payload)
+    },
     onEvent(prop: string, name: string, ...args: any[]) {
       this.$emit('event', this.eventPayload, prop, name, ...args)
     },
