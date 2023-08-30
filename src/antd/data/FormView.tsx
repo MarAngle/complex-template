@@ -1,5 +1,5 @@
 import { Col, Form, Row, FormItem, Button } from "ant-design-vue"
-import { defineComponent, h, PropType } from "vue"
+import { defineComponent, h, PropType, VNode } from "vue"
 import { mergeData } from "complex-utils"
 import { DefaultEdit, ObserveList, MenuData, AttributesData } from "complex-data-next"
 import AutoFormItem from '../mod/AutoFormItem'
@@ -74,9 +74,12 @@ export default defineComponent({
     this.form.setRef(this.$refs.form)
   },
   methods: {
-    getGrid(data: DefaultEdit) {
+    getItemGrid(data: DefaultEdit) {
       const ditem = data.$getParent()!
       return ditem.$getLayout(this.type).grid
+    },
+    getMenuGrid(data: MenuData) {
+      return data.layout.getData(this.type).grid
     },
     formatItem(data: DefaultEdit, index: number) {
       return {
@@ -89,69 +92,81 @@ export default defineComponent({
       }
     },
     renderMenu() {
+      const menu: VNode[] = []
       if (this.menu) {
-        return this.menu.map((item, index) => {
-          const mainAttributes = new AttributesData({
-            props: {
-              name: item.prop,
-              label: item.name,
-              required: false
-            },
-            class: ['complex-form-item', 'complex-form-item-menu']
-          })
-          mergeAttributes(mainAttributes, item.$local.parent)
-          h(FormItem, parseAttributes(mainAttributes), {
-            default: () => {
-              let hidden = item.hidden
-              if (hidden && typeof hidden === 'function') {
-                hidden = hidden(item, index, this.payload)
-              }
-              if (!hidden) {
-                let loading = item.loading
-                if (loading && typeof loading === 'function') {
-                  loading = loading(item, index, this.payload)
-                }
-                let disabled = item.disabled
-                if (disabled && typeof disabled === 'function') {
-                  disabled = disabled(item, index, this.payload)
-                }
-                const itemAttributes = new AttributesData({
-                  props: {
-                    type: item.type,
-                    loading: loading,
-                    disabled: disabled,
-                    required: false
-                  },
-                  on: {
-                    click: () => {
-                      this.$emit('menu', item.name, item, index, this.payload)
-                    }
-                  },
-                  class: ['complex-form-item-type', 'complex-form-item-type-button', 'complex-form-item-type-menu']
-                })
-                mergeAttributes(itemAttributes, item.$local.target)
-                return h(Button, parseAttributes(itemAttributes), item.name)
-              } else {
-                return null
-              }
+        this.menu.forEach((item, index) => {
+          const menuItem = this.renderMenuItem(item, index)
+          if (menuItem) {
+            if (this.layout === 'inline') {
+              menu.push(menuItem)
+            } else {
+              menu.push(h(Col, this.getMenuGrid(item), {
+                default: () => menuItem
+              }))
             }
-          })
+          }
         })
-      } else {
-        return null
       }
+      return menu
+    },
+    renderMenuItem(item: MenuData, index: number) {
+      let hidden = item.hidden
+      if (hidden && typeof hidden === 'function') {
+        hidden = hidden(item, index, this.payload)
+      }
+      if (!hidden) {
+        const mainAttributes = new AttributesData({
+          props: {
+            name: item.prop,
+            label: item.name,
+            required: false
+          },
+          class: ['complex-form-item', 'complex-form-item-menu']
+        })
+        mergeAttributes(mainAttributes, item.$local.parent)
+        const menuItem = h(FormItem, parseAttributes(mainAttributes), {
+          default: () => {
+            let loading = item.loading
+            if (loading && typeof loading === 'function') {
+              loading = loading(item, index, this.payload)
+            }
+            let disabled = item.disabled
+            if (disabled && typeof disabled === 'function') {
+              disabled = disabled(item, index, this.payload)
+            }
+            const itemAttributes = new AttributesData({
+              props: {
+                type: item.type,
+                loading: loading,
+                disabled: disabled,
+                required: false
+              },
+              on: {
+                click: () => {
+                  this.$emit('menu', item.name, item, index, this.payload)
+                }
+              },
+              class: ['complex-form-item-type', 'complex-form-item-type-button', 'complex-form-item-type-menu']
+            })
+            mergeAttributes(itemAttributes, item.$local.target)
+            return h(Button, parseAttributes(itemAttributes), item.name)
+          }
+        })
+        return menuItem
+      }
+    },
+    renderItem(item: DefaultEdit, index: number) {
+      return h(AutoFormItem, this.formatItem(item, index))
     },
     renderList() {
       if (this.layout === 'inline') {
         return this.list.data.map((item, index) => {
-          h(AutoFormItem, this.formatItem(item, index))
+          return this.renderItem(item, index)
         })
       } else {
         return this.list.data.map((item, index) => {
-          h(Row, this.layoutOption, {
-            default: () => h(Col, this.getGrid(item), {
-              default: () => h(AutoFormItem, this.formatItem(item, index))
-            })
+          return h(Col, this.getItemGrid(item), {
+            default: () => this.renderItem(item, index)
           })
         })
       }
@@ -166,15 +181,17 @@ export default defineComponent({
     const layoutClass = `complex-form-${this.layout}`
     const render = h(Form, {
       class: `complex-form ${layoutClass}`,
-      ...this.formProps
+      ...this.currentFormProps
     }, {
       default: () => {
         const list = this.renderList()
         const menu = this.renderMenu()
-        if (menu) {
+        if (this.layout === 'inline') {
           return list.concat(menu)
         } else {
-          return list
+          return h(Row, this.layoutOption, {
+            default: () => list.concat(menu)
+          })
         }
       }
     })
