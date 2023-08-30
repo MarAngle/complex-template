@@ -1,5 +1,5 @@
 import { SearchData } from 'complex-data-next'
-import { ComplexAutoIndex, ComplexHighText, ComplexShowValue } from "./index";
+import { ComplexAutoIndex, ComplexHighText, ComplexInputFile, ComplexShowValue } from "./index";
 import './src/antd/style/index.less';
 import AutoModal from "./src/antd/data/AutoModal.vue";
 import AutoText from "./src/antd/data/AutoText.vue";
@@ -13,6 +13,7 @@ SearchData.setForm(AntdForm)
 export {
   ComplexAutoIndex,
   ComplexHighText,
+  ComplexInputFile,
   ComplexShowValue
 }
 
