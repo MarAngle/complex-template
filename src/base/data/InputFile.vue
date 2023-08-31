@@ -113,13 +113,13 @@ export default defineComponent({
       return next
     },
     onChange(e: Event) {
-      const fileList = (e.target as unknown as { file: File[] }).file
+      const fileList = (e.target as unknown as { files: File[] }).files
       if (fileList.length > 0) {
         if (!this.multiple) {
           const file = fileList[0]
           const next = this.check(file)
           if (next) {
-            this.$emit('change', file)
+            this.$emit('file', file)
           }
         } else {
           const currentFileList = []
@@ -137,14 +137,14 @@ export default defineComponent({
           if (currentFileList.length > 0 && currentFileList.length !== currentNum) {
             // 存在不合格数据
             if (this.append) {
-              this.$emit('change', currentFileList)
+              this.$emit('file', currentFileList)
             }
           } else {
-            this.$emit('change', currentFileList)
+            this.$emit('file', currentFileList)
           }
         }
       }
-      (e.target as any).value = ''
+      (e.target as unknown as { value: string }).value = ''
     }
   }
 })

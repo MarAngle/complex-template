@@ -1,5 +1,6 @@
 <style lang="less" scoped>
 .complex-import-file{
+  display: inline-block;
   .complex-input-file{
     display: none;
   }
@@ -18,14 +19,19 @@
       :disabled="disabled"
       :placeholder="placeholder"
       :size="size"
-      @change="onChange"
+      @file="onChange"
     />
-    <Button type="primary" :loading="loading || isImport" :disabled="disabled || isImport" @click="onImport">{{ name }}</Button>
+    <Button type="primary" :loading="loading || isImport" :disabled="disabled || isImport" @click="onImport">
+      <template #icon>
+        <slot name="icon" />
+      </template>
+      {{ name }}
+    </Button>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue"
+import { PropType, defineComponent } from "vue"
 import InputFile from "../../base/data/InputFile.vue"
 import { Button } from "ant-design-vue";
 
@@ -42,7 +48,7 @@ export default defineComponent({
       default: '上传'
     },
     upload: {
-      type: Function,
+      type: Object as PropType<(file: File) => Promise<unknown>>,
       required: true
     },
     loading: {
@@ -99,7 +105,6 @@ export default defineComponent({
   methods: {
     onImport() {
       if (!this.disabled) {
-        console.log(this.$refs['file']);
         (this.$refs['file'] as any).$el.click()
       }
     },
