@@ -128,7 +128,7 @@ const dict = {
   $textArea: {
     init: modelFuncDict.valueInit,
     on: {
-      change: modelFuncDict.change
+      input: modelFuncDict.input
     },
     format(edit: DefaultEdit<'textArea'>, payload: FormItemPayloadType) {
       const itemAttributes = new AttributesData({
