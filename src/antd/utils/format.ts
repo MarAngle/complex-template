@@ -210,10 +210,17 @@ const dict = {
       change: modelFuncDict.change
     },
     format(edit: DefaultEdit<'date'>, payload: FormItemPayloadType) {
+      const showTime = edit.$option.time ? false : {
+        format: (edit.$option.time as any).show,
+        defaultValue: (edit.$option.time as any).defaultValue
+      }
       const itemAttributes = new AttributesData({
         props: {
           disabled: edit.disabled.getData(payload.type),
-          placeholder: edit.placeholder!.getData(payload.type)
+          placeholder: edit.placeholder!.getData(payload.type),
+          format: edit.$option.show,
+          allowClear: !edit.$option.hideClear,
+          showTime: showTime
         }
       })
       bindEvent(this as dictItemType, itemAttributes, edit, payload)
