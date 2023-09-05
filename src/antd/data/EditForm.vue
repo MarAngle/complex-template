@@ -61,7 +61,15 @@ export default defineComponent({
       type: Boolean,
       required: false,
       default: true
-    }
+    },
+    layout: { // 表单布局'horizontal'|'vertical'|'inline'
+      type: String,
+      required: false
+    },
+    layoutOption: { // layout != inline时的a-row的参数设置项
+      type: Object,
+      required: false
+    },
   },
   computed: {
     formProps() {
@@ -70,6 +78,8 @@ export default defineComponent({
         list: this.pageList!,
         type: this.edit,
         menu: this.menu,
+        layout: this.layout,
+        layoutOption: this.layoutOption,
         onEvent: this.onEvent,
         onEventEnd: this.onEventEnd,
         onMenu: this.onMenu

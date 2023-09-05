@@ -220,7 +220,9 @@ const dict = {
           placeholder: edit.placeholder!.getData(payload.type),
           format: edit.$option.show,
           allowClear: !edit.$option.hideClear,
-          showTime: showTime
+          showTime: showTime,
+          disabledDate: edit.$option.disabledDate,
+          disabledTime: edit.$option.disabledTime
         }
       })
       bindEvent(this as dictItemType, itemAttributes, edit, payload)
@@ -234,10 +236,20 @@ const dict = {
       change: modelFuncDict.change
     },
     format(edit: DefaultEdit<'dateRange'>, payload: FormItemPayloadType) {
+      const showTime = edit.$option.time ? false : {
+        format: (edit.$option.time as any).show,
+        defaultValue: (edit.$option.time as any).defaultValue
+      }
       const itemAttributes = new AttributesData({
         props: {
           disabled: edit.disabled.getData(payload.type),
-          placeholder: edit.placeholder!.getData(payload.type)
+          placeholder: edit.placeholder!.getData(payload.type),
+          format: edit.$option.show,
+          allowClear: !edit.$option.hideClear,
+          separator: edit.$option.separator,
+          showTime: showTime,
+          disabledDate: edit.$option.disabledDate,
+          disabledTime: edit.$option.disabledTime
         }
       })
       bindEvent(this as dictItemType, itemAttributes, edit, payload)
