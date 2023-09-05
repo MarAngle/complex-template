@@ -32,15 +32,13 @@ export default defineComponent({
       edit: string,
       data: dataType,
       mainList: DictionaryData[],
-      pageList: null | ObserveList,
-      form: AntdForm
+      pageList: null | ObserveList
     } = {
       type: '',
       edit: '',
       data: undefined,
       mainList: [],
-      pageList: null,
-      form: new AntdForm()
+      pageList: null
     }
     return data
   },
@@ -52,6 +50,13 @@ export default defineComponent({
     menu: {
       type: Object as PropType<MenuData[]>,
       required: false
+    },
+    form: {
+      type: Object as PropType<AntdForm>,
+      required: false,
+      default: () => {
+        return new AntdForm()
+      }
     },
     format: {
       type: Function,
