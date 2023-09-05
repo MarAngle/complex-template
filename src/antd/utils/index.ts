@@ -23,9 +23,9 @@ export const mergeAttributes = function(targetData: AttributesData, originData: 
 }
 
 export const parseAttributes = function(attributesData: AttributesData) {
-  const data = {
-    ...attributesData.style,
-    ...attributesData.props
+  const data: Record<PropertyKey, any> = {
+    ...attributesData.props,
+    style: attributesData.style
   }
   for (const funcName in attributesData.on) {
     data['on' + funcName.slice(0, 1).toUpperCase() + funcName.slice(1)] = attributesData.on[funcName]

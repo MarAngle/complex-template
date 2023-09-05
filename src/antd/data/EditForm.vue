@@ -32,13 +32,15 @@ export default defineComponent({
       edit: string,
       data: dataType,
       mainList: DictionaryData[],
-      pageList: null | ObserveList
+      pageList: null | ObserveList,
+      localForm: AntdForm
     } = {
       type: '',
       edit: '',
       data: undefined,
       mainList: [],
-      pageList: null
+      pageList: null,
+      localForm: new AntdForm()
     }
     return data
   },
@@ -53,10 +55,7 @@ export default defineComponent({
     },
     form: {
       type: Object as PropType<AntdForm>,
-      required: false,
-      default: () => {
-        return new AntdForm()
-      }
+      required: false
     },
     format: {
       type: Function,
@@ -77,9 +76,12 @@ export default defineComponent({
     },
   },
   computed: {
+    currentForm() {
+      return this.form || this.localForm
+    },
     formProps() {
       const data = {
-        form: this.form,
+        form: this.currentForm,
         list: this.pageList!,
         type: this.edit,
         menu: this.menu,
@@ -100,7 +102,7 @@ export default defineComponent({
         type: this.type,
         edit: this.edit,
         originData: this.data,
-        form: this.form.getData(),
+        form: this.currentForm.getData(),
         list: this.mainList
       }
     }
@@ -121,7 +123,7 @@ export default defineComponent({
       this.data = data
       this.initData()
       this.$nextTick(() => {
-        this.form.clearValidate()
+        this.currentForm.clearValidate()
       })
     },
     initPageList() {
@@ -138,15 +140,15 @@ export default defineComponent({
         $buildFormDataArgs.push(this.data)
       }
       this.dictionary.$buildFormData(...$buildFormDataArgs).then((res: any) => {
-        this.form.setData(res.data)
+        this.currentForm.setData(res.data)
         if (this.observe) {
-          this.pageList!.setData(this.form.getData(), this.type)
+          this.pageList!.setData(this.currentForm.getData(), this.type)
         }
       })
     },
     handle(cb: validateCbType) {
-      this.form.validate().then(() => {
-        const postdata = this.dictionary.$buildEditData(this.form.getData(), this.mainList, this.type)
+      this.currentForm.validate().then(() => {
+        const postdata = this.dictionary.$buildEditData(this.currentForm.getData(), this.mainList, this.type)
         cb(postdata, this.data, this.type)
       })
     },

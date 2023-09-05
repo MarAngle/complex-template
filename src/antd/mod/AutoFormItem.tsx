@@ -85,6 +85,11 @@ export default defineComponent({
       itemAttributes.class.push('complex-form-item-' + this.data.type)
       let children: any
       let item = null
+      if (this.payload.target.layout === 'inline') {
+        if (this.data.$width) {
+          itemAttributes.style.width = this.data.$width
+        }
+      }
       // 考虑一个默认的值，inline模式下和其他模式下的默认值，避免出现问题
       if (slot && this.data.$slot.type === 'model') {
         item = slot({
@@ -176,6 +181,10 @@ export default defineComponent({
         const layout = ditem.$layout.getData(this.payload.type)
         mainAttributes.props.labelCol = layout.label
         mainAttributes.props.wrapperCol = layout.content
+      } else if (this.payload.target.layout === 'inline') {
+        if (this.data.$mainWidth) {
+          mainAttributes.style.width = this.data.$mainWidth
+        }
       }
       mergeAttributes(mainAttributes, this.data.$local.parent)
       render = h(FormItem, parseAttributes(mainAttributes), { default: () => this.renderTip(slot) })
