@@ -95,9 +95,11 @@ export default defineComponent({
   methods: {
     autoWidth() {
       this.$nextTick(() => {
-        const mainWidth = (this.$refs as any).main.offsetWidth
-        const currentWith = (this.$refs as any).size.offsetWidth
-        if (mainWidth < currentWith) {
+        const mainDom = (this.$refs as any).main as HTMLElement
+        const sizeDom = (this.$refs as any).size as HTMLElement
+        const mainWidth = mainDom.getBoundingClientRect().width
+        const sizeWidth = sizeDom.getBoundingClientRect().width
+        if (mainWidth < sizeWidth) {
           this.isEllipsis = true
         } else {
           this.isEllipsis = false
