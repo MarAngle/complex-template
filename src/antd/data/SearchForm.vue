@@ -33,6 +33,10 @@ export default defineComponent({
       required: false,
       default: 'search'
     },
+    defaultData: {
+      type: Object,
+      required: false
+    },
     layout: { // 表单布局'horizontal'|'vertical'|'inline'
       type: String,
       required: false,
@@ -75,6 +79,11 @@ export default defineComponent({
       }
     }
   },
+  mounted() {
+    if (this.defaultData) {
+      this.setDefaultData(this.defaultData)
+    }
+  },
   methods: {
     onMenu(prop: string, item: MenuData, index: number, payload: any) {
       this.$emit('menu', prop, item, index, payload)
@@ -85,16 +94,21 @@ export default defineComponent({
     onEventEnd(prop: string, name: string, ...args: any[]) {
       this.$emit('eventEnd', this.eventPayload, prop, name, ...args)
     },
-    show(defaultData?: Record<PropertyKey, any>) {
-      if (defaultData) {
-        for (const prop in defaultData) {
-          this.target.form.data[prop] = defaultData[prop]
-        }
-        this.search.$syncFormData(this.type).finally(() => {
+    setDefaultData(defaultData: Record<PropertyKey, any>, clearValidate = true) {
+      for (const prop in defaultData) {
+        this.target.form.data[prop] = defaultData[prop]
+      }
+      this.search.$syncFormData(this.type).finally(() => {
+        if (clearValidate) {
           this.$nextTick(() => {
             this.target.form.clearValidate()
           })
-        })
+        }
+      })
+    },
+    show(defaultData?: Record<PropertyKey, any>) {
+      if (defaultData) {
+        this.setDefaultData(defaultData)
       } else {
         this.$nextTick(() => {
           this.target.form.clearValidate()
