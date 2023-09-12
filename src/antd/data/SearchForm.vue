@@ -35,7 +35,8 @@ export default defineComponent({
     },
     layout: { // 表单布局'horizontal'|'vertical'|'inline'
       type: String,
-      required: false
+      required: false,
+      default: 'inline'
     },
     layoutOption: { // layout != inline时的a-row的参数设置项
       type: Object,
