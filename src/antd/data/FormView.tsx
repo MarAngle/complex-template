@@ -150,7 +150,9 @@ export default defineComponent({
               class: ['complex-form-item-type', 'complex-form-item-type-button', 'complex-form-item-type-menu']
             })
             mergeAttributes(itemAttributes, item.$local.target)
-            return h(Button, parseAttributes(itemAttributes), item.name)
+            return h(Button, parseAttributes(itemAttributes), {
+              default: () => item.name
+            })
           }
         })
         return menuItem

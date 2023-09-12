@@ -6,6 +6,7 @@ import AutoText from "./src/antd/data/AutoText.vue";
 import ImportFile from "./src/antd/data/ImportFile.vue";
 import FormView from "./src/antd/data/FormView";
 import EditForm from "./src/antd/data/EditForm.vue";
+import SearchForm from "./src/antd/data/SearchForm.vue";
 import TableView from "./src/antd/data/TableView";
 import AntdForm from "./src/antd/class/AntdForm";
 
@@ -23,4 +24,5 @@ export const ComplexAutoText = AutoText
 export const ComplexImportFile = ImportFile
 export const ComplexFormView = FormView
 export const ComplexEditForm = EditForm
+export const ComplexSearchForm = SearchForm
 export const ComplexTableView = TableView
