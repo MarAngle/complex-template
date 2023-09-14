@@ -3,10 +3,17 @@ import { FormItemPayloadType } from "../mod/AutoFormItem"
 import { DefaultEditTypeDict } from "complex-data-next/src/mod/DefaultEdit"
 import EventData from "./EventData"
 import { mergeAttributes } from "./index"
+import { getEnv } from "complex-utils"
 
 const showLogs = {
   init: false,
   model: true
+}
+
+if (getEnv('real') === 'production') {
+  // 生产环境隐藏log
+  showLogs.init = false
+  showLogs.model = false
 }
 
 const modelFuncDict = {

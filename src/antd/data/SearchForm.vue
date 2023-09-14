@@ -95,10 +95,7 @@ export default defineComponent({
       this.$emit('eventEnd', this.eventPayload, prop, name, ...args)
     },
     setDefaultData(defaultData: Record<PropertyKey, any>, clearValidate = true) {
-      for (const prop in defaultData) {
-        this.target.form.data[prop] = defaultData[prop]
-      }
-      this.search.$syncFormData(this.type).finally(() => {
+      this.search.setForm(defaultData, { modName: this.type, sync: true }).finally(() => {
         if (clearValidate) {
           this.$nextTick(() => {
             this.target.form.clearValidate()
