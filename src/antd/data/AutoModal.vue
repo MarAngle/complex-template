@@ -11,9 +11,15 @@
 
 <script lang="ts">
 import { Modal } from "ant-design-vue"
-import { defineComponent } from "vue"
+import { defineComponent, PropType } from "vue"
 import { layout } from 'complex-plugin'
 import config from "../config"
+
+type menuType = {
+  target?: 'ok' | 'cancel'
+  type?: string
+  name?: string
+}
 
 export default defineComponent({
   name: `ComplexAutoModal`,
@@ -47,9 +53,9 @@ export default defineComponent({
       }
     },
     menuType: {
-      type: [String, Boolean],
+      type: Object as PropType<menuType | false>,
       required: false,
-      default: ''
+      default: undefined
     },
     auto: {
       type: Object,
@@ -112,12 +118,23 @@ export default defineComponent({
         optionProps.title = this.title
       }
       if (this.menuType) {
-        optionProps.cancelButtonProps = {
-          style: {
-            display: 'none'
+        if (this.menuType.target === 'cancel') {
+          optionProps.okButtonProps = {
+            style: {
+              display: 'none'
+            }
           }
+        optionProps.cancelType = this.menuType.type
+        optionProps.cancelText = this.menuType.name
+        } else {
+          optionProps.cancelButtonProps = {
+            style: {
+              display: 'none'
+            }
+          }
+          optionProps.okType = this.menuType.type
+          optionProps.okText = this.menuType.name
         }
-        optionProps.okType = this.menuType
       } else if (this.menuType === false) {
         optionProps.footer = null
       }
