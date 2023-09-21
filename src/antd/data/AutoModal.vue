@@ -53,7 +53,7 @@ export default defineComponent({
       }
     },
     menuType: {
-      type: Object as PropType<menuType | false>,
+      type: Object as PropType<menuType | null>,
       required: false,
       default: undefined
     },
@@ -135,7 +135,7 @@ export default defineComponent({
           optionProps.okType = this.menuType.type
           optionProps.okText = this.menuType.name
         }
-      } else if (this.menuType === false) {
+      } else if (this.menuType === null) {
         optionProps.footer = null
       }
       optionProps.dialogStyle.top = this.top + 'px'
