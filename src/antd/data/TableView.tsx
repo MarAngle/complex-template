@@ -256,6 +256,39 @@ export default defineComponent({
       })
       return table
     },
+    renderFooter() {
+      const render = h('div', { class: 'complex-table-footer' }, {
+        default: () => [this.renderFooterLeft(), this.renderFooterRight()]
+      })
+      return render
+    },
+    renderFooterLeft() {
+      const render = h('div', { class: 'complex-table-footer-left' }, {
+        default: () => [this.renderChoice()]
+      })
+      return render
+    },
+    renderChoice() {
+      if (this.listData.$module.choice) {
+        const choiceSize = this.listData.$module.choice.getId().length
+        const render = h('div', { class: 'complex-table-choice' }, {
+          default: () => [
+            h('span', { }, {
+              default: () => `已选择${choiceSize}条数据`
+            })
+          ]
+        })
+        return render
+      } else {
+        return null
+      }
+    },
+    renderFooterRight() {
+      const render = h('div', { class: 'complex-table-footer-right' }, {
+        default: () => [this.renderPagination()]
+      })
+      return render
+    },
     renderPagination() {
       if (this.currentPaginationData) {
         const data = h(Pagination, {
@@ -307,7 +340,7 @@ export default defineComponent({
    */
   render() {
     const render = h('div', { class: 'complex-table' }, {
-      default: () => [this.renderTable(), this.renderPagination()]
+      default: () => [this.renderTable(), this.renderFooter()]
     })
     return render
   }

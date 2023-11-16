@@ -20,32 +20,26 @@ export default defineComponent({
     formatInfo: {
       type: Function,
       required: false,
-      default: () => {
-        return config.Pagination.formatInfo
-      }
+      default: config.Pagination.formatInfo
     }
   },
   methods: {
     renderSlot() {
       const slot = this.$slots.default
-      const paginationInfo = h('span', {
+      if (slot) {
+        return slot({
+          pagination: this.data
+        })
+      } else {
+        return null
+      }
+    },
+    renderInfo() {
+      return h('span', {
         class: 'complex-pagination-info'
       }, {
         default: () => this.formatInfo(this.data)
       })
-      if (slot) {
-        slot({
-          pagination: this.data
-        })
-        return [
-          slot({
-            pagination: this.data
-          }),
-          paginationInfo
-        ]
-      } else {
-        return [paginationInfo]
-      }
     },
     renderPagination() {
       const paginationAttributes = new AttributesData({
@@ -83,7 +77,7 @@ export default defineComponent({
    */
   render() {
     const render = h('div', { class: 'complex-pagination' }, {
-      default: () => [this.renderSlot(), this.renderPagination()]
+      default: () => [this.renderSlot(), this.renderInfo(), this.renderPagination()]
     })
     return render
   }
