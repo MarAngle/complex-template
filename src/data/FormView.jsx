@@ -113,6 +113,8 @@ export default {
           let mainSlot
           if (menuItem.slot) {
             mainSlot = this.$scopedSlots[menuItem.slot]
+          } else if (menuItem.render) {
+            mainSlot = menuItem.render
           }
           if (this.currentAuto.foot.data == 'props') {
             // 传值不存在时说明此时使用简单数据传值，所有传值默认传递到props中=>
