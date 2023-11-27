@@ -74,6 +74,14 @@ export default defineComponent({
       type: Object,
       required: false
     },
+    disabled: {
+      type: Boolean,
+      required: false
+    },
+    loading: {
+      type: Boolean,
+      required: false
+    },
   },
   computed: {
     currentForm() {
@@ -86,6 +94,7 @@ export default defineComponent({
         type: this.edit,
         menu: this.menu,
         layout: this.layout,
+        disabled: this.disabled,
         layoutOption: this.layoutOption,
         onEvent: this.onEvent,
         onEventEnd: this.onEventEnd,

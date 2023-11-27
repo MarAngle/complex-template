@@ -14,6 +14,8 @@ export interface FormItemPayloadType {
   form: AntdForm
   list: ObserveList
   target: any
+  disabled?: boolean
+  loading?: boolean
 }
 
 export default defineComponent({
@@ -42,6 +44,14 @@ export default defineComponent({
     target: { // FormView实例
       type: Object,
       required: true
+    },
+    disabled: {
+      type: Boolean,
+      required: false
+    },
+    loading: {
+      type: Boolean,
+      required: false
     }
   },
   computed: {
@@ -53,7 +63,9 @@ export default defineComponent({
         index: this.index,
         form: this.form,
         list: this.list,
-        target: this.target
+        target: this.target,
+        disabled: this.disabled,
+        loading: this.loading
       }
     }
   },

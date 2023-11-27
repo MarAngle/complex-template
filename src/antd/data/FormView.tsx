@@ -48,6 +48,14 @@ export default defineComponent({
       required: false,
       default: null
     },
+    disabled: {
+      type: Boolean,
+      required: false
+    },
+    loading: {
+      type: Boolean,
+      required: false
+    }
   },
   computed: {
     currentFormProps() {
@@ -88,6 +96,8 @@ export default defineComponent({
         list: this.list,
         form: this.form,
         type: this.type,
+        disabled: this.disabled,
+        loading: this.loading,
         target: this
       }
     },
@@ -138,8 +148,8 @@ export default defineComponent({
             const itemAttributes = new AttributesData({
               props: {
                 type: item.type,
-                loading: loading,
-                disabled: disabled,
+                loading: this.loading === true ? true : loading,
+                disabled: this.disabled === true ? true : disabled,
                 required: false
               },
               on: {

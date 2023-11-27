@@ -102,7 +102,7 @@ export default defineComponent({
   computed: {
     currentOptionProps() {
       const optionProps: any = {
-        dialogStyle: {}
+        style: {}
       }
       if (this.optionProps) {
         for (const prop in this.optionProps) {
@@ -138,7 +138,7 @@ export default defineComponent({
       } else if (this.menuType === null) {
         optionProps.footer = null
       }
-      optionProps.dialogStyle.top = this.top + 'px'
+      optionProps.style.top = this.top + 'px'
       return optionProps
     },
     currentAuto() {

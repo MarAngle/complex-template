@@ -102,7 +102,7 @@ const dict = {
           type: edit.$option.type,
           allowClear: !edit.$option.hideClear,
           maxLength: edit.$option.maxLength,
-          disabled: edit.disabled.getData(payload.type),
+          disabled: payload.disabled || edit.disabled.getData(payload.type),
           placeholder: edit.placeholder!.getData(payload.type)
         }
       })
@@ -123,7 +123,7 @@ const dict = {
           max: edit.$option.max,
           precision: edit.$option.precision,
           step: edit.$option.step,
-          disabled: edit.disabled.getData(payload.type),
+          disabled: payload.disabled || edit.disabled.getData(payload.type),
           placeholder: edit.placeholder!.getData(payload.type)
         }
       })
@@ -143,7 +143,7 @@ const dict = {
           maxLength: edit.$option.maxLength,
           autoSize: edit.$option.autoSize,
           allowClear: !edit.$option.hideClear,
-          disabled: edit.disabled.getData(payload.type),
+          disabled: payload.disabled || edit.disabled.getData(payload.type),
           placeholder: edit.placeholder!.getData(payload.type)
         }
       })
@@ -160,7 +160,7 @@ const dict = {
     format(edit: DefaultEdit<'switch'>, payload: FormItemPayloadType) {
       const itemAttributes = new AttributesData({
         props: {
-          disabled: edit.disabled.getData(payload.type)
+          disabled: payload.disabled || edit.disabled.getData(payload.type)
         }
       })
       bindEvent(this as dictItemType, itemAttributes, edit, payload)
@@ -182,7 +182,7 @@ const dict = {
           allowClear: !edit.$option.hideClear,
           dropdownMatchSelectWidth: edit.$option.autoWidth,
           notFoundContent: edit.$option.noDataContent,
-          disabled: edit.disabled.getData(payload.type),
+          disabled: payload.disabled || edit.disabled.getData(payload.type),
           placeholder: edit.placeholder!.getData(payload.type)
         }
       })
@@ -202,7 +202,7 @@ const dict = {
           options: edit.$option.list,
           showArrow: !edit.$option.hideArrow,
           allowClear: !edit.$option.hideClear,
-          disabled: edit.disabled.getData(payload.type),
+          disabled: payload.disabled || edit.disabled.getData(payload.type),
           placeholder: edit.placeholder!.getData(payload.type)
         }
       })
@@ -223,7 +223,7 @@ const dict = {
       } : false
       const itemAttributes = new AttributesData({
         props: {
-          disabled: edit.disabled.getData(payload.type),
+          disabled: payload.disabled || edit.disabled.getData(payload.type),
           placeholder: edit.placeholder!.getData(payload.type),
           format: edit.$option.show,
           allowClear: !edit.$option.hideClear,
@@ -249,7 +249,7 @@ const dict = {
       } : false
       const itemAttributes = new AttributesData({
         props: {
-          disabled: edit.disabled.getData(payload.type),
+          disabled: payload.disabled || edit.disabled.getData(payload.type),
           placeholder: edit.placeholder!.getData(payload.type),
           format: edit.$option.show,
           allowClear: !edit.$option.hideClear,
@@ -289,7 +289,7 @@ const dict = {
           upload: edit.$option.upload,
           fileUpload: edit.$option.fileUpload,
           layout: layout,
-          disabled: edit.disabled.getData(payload.type),
+          disabled: payload.disabled || edit.disabled.getData(payload.type),
           placeholder: edit.placeholder!.getData(payload.type)
         }
       })
@@ -304,10 +304,10 @@ const dict = {
     format(edit: DefaultEdit<'button'>, payload: FormItemPayloadType) {
       const itemAttributes = new AttributesData({
         props: {
-          loading: edit.$option.loading,
+          loading: payload.loading || edit.$option.loading,
           type: edit.$option.type,
           icon: edit.$option.icon,
-          disabled: edit.disabled.getData(payload.type),
+          disabled: payload.disabled || edit.disabled.getData(payload.type),
           placeholder: edit.placeholder!.getData(payload.type)
         }
       })
@@ -322,7 +322,7 @@ const dict = {
     format(edit: DefaultEdit<'text'>, payload: FormItemPayloadType) {
       const itemAttributes = new AttributesData({
         props: {
-          disabled: edit.disabled.getData(payload.type)
+          disabled: payload.disabled || edit.disabled.getData(payload.type)
         },
         style: {
           ...edit.$option.style
@@ -340,7 +340,7 @@ const dict = {
       const itemAttributes = new AttributesData({
         props: {
           ...edit.$option,
-          disabled: edit.disabled.getData(payload.type)
+          disabled: payload.disabled || edit.disabled.getData(payload.type)
         }
       })
       bindEvent(this as dictItemType, itemAttributes, edit, payload)
@@ -355,7 +355,7 @@ const dict = {
       const itemAttributes = new AttributesData({
         props: {
           ...edit.$option,
-          disabled: edit.disabled.getData(payload.type)
+          disabled: payload.disabled || edit.disabled.getData(payload.type)
         }
       })
       bindEvent(this as dictItemType, itemAttributes, edit, payload)
