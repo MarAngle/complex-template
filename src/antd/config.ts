@@ -1,4 +1,4 @@
-import { PaginationData } from "complex-data-next"
+import { PaginationData } from "complex-data"
 
 const config = {
   TableView: {

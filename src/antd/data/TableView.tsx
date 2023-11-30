@@ -1,14 +1,14 @@
 import { defineComponent, h, PropType } from "vue"
 import { Table, TableColumnType, TableProps } from 'ant-design-vue'
-import { ComplexList, DefaultList, PaginationData } from "complex-data-next"
-import ComplexDataConfig from "complex-data-next/config"
+import { ComplexList, DefaultList, PaginationData } from "complex-data"
+import ComplexDataConfig from "complex-data/config"
 import { getType, setDataByDefault } from "complex-utils"
 import AutoIndex from "../../base/data/AutoIndex.vue"
 import AutoText from "./AutoText.vue"
 import config from "../config"
 import { layout } from "complex-plugin"
 import Pagination from "../mod/Pagination"
-import { idType } from "complex-data-next/src/lib/ChoiceData"
+import { idType } from "complex-data/src/lib/ChoiceData"
 
 export type autoType = {
   expandWidth?: number

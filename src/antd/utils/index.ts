@@ -1,4 +1,4 @@
-import { AttributesData } from "complex-data-next";
+import { AttributesData } from "complex-data";
 
 export const mergeAttributes = function(targetData: AttributesData, originData: AttributesData) {
   for (const key in originData.props) {

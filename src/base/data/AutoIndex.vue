@@ -9,7 +9,7 @@
 
 <script lang="ts">
 import { defineComponent } from "vue"
-import { PaginationData } from 'complex-data-next'
+import { PaginationData } from 'complex-data'
 
 export default defineComponent({
   name: 'ComplexAutoIndex',

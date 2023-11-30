@@ -1,4 +1,4 @@
-import { SearchData } from 'complex-data-next'
+import { SearchData } from 'complex-data'
 import { ComplexAutoIndex, ComplexHighText, ComplexInputFile, ComplexShowValue } from "./index";
 import './src/antd/style/index.less';
 import AutoModal from "./src/antd/data/AutoModal.vue";

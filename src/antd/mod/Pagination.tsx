@@ -1,5 +1,5 @@
 import { Pagination } from "ant-design-vue"
-import { AttributesData, PaginationData } from "complex-data-next"
+import { AttributesData, PaginationData } from "complex-data"
 import { defineComponent, h, PropType } from "vue"
 import { parseAttributes } from "../utils"
 import config from "../config"

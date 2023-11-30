@@ -13,7 +13,7 @@
 
 <script lang="ts">
 import { PropType, defineComponent } from "vue"
-import { DictionaryData, DictionaryList, MenuData, ObserveList } from "complex-data-next"
+import { DictionaryData, DictionaryList, MenuData, ObserveList } from "complex-data"
 import FormView from "./FormView"
 import AntdForm from "../class/AntdForm"
 

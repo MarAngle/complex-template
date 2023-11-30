@@ -1,7 +1,7 @@
 import { Col, Form, Row, FormItem, Button } from "ant-design-vue"
 import { defineComponent, h, PropType, VNode } from "vue"
 import { mergeData } from "complex-utils"
-import { DefaultEdit, ObserveList, MenuData, AttributesData } from "complex-data-next"
+import { DefaultEdit, ObserveList, MenuData, AttributesData } from "complex-data"
 import AutoFormItem from '../mod/AutoFormItem'
 import config from '../config'
 import AntdForm from "../class/AntdForm"

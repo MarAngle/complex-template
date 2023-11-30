@@ -12,7 +12,7 @@
 
 <script lang="ts">
 import { PropType, defineComponent } from "vue"
-import { MenuData, SearchData } from "complex-data-next"
+import { MenuData, SearchData } from "complex-data"
 import FormView from "./FormView"
 
 export default defineComponent({

@@ -1,6 +1,6 @@
-import { AttributesData, DefaultEdit } from "complex-data-next"
+import { AttributesData, DefaultEdit } from "complex-data"
 import { FormItemPayloadType } from "../mod/AutoFormItem"
-import { DefaultEditTypeDict } from "complex-data-next/src/mod/DefaultEdit"
+import { DefaultEditTypeDict } from "complex-data/src/mod/DefaultEdit"
 import EventData from "./EventData"
 import { mergeAttributes } from "./index"
 import { getEnv } from "complex-utils"

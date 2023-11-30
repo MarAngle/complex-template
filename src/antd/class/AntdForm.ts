@@ -1,4 +1,4 @@
-import { BaseForm } from 'complex-data-next'
+import { BaseForm } from 'complex-data'
 
 class AntdForm extends BaseForm{
   clearValidate(...args: any[]) {
