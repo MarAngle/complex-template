@@ -15,8 +15,8 @@
 </template>
 
 <script lang="ts">
-import { notice } from 'complex-plugin'
 import { defineComponent } from 'vue'
+import { notice } from 'complex-plugin'
 
 export default defineComponent({
   name: 'InputFile',
@@ -113,7 +113,8 @@ export default defineComponent({
       return next
     },
     onChange(e: Event) {
-      const fileList = (e.target as HTMLInputElement).files!
+      const input = (e.target as HTMLInputElement)
+      const fileList = input.files!
       if (fileList.length > 0) {
         if (!this.multiple) {
           const file = fileList[0]
@@ -144,7 +145,7 @@ export default defineComponent({
           }
         }
       }
-      (e.target as HTMLInputElement).value = ''
+      input.value = ''
     }
   }
 })

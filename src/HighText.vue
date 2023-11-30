@@ -7,6 +7,7 @@
 <script lang="ts">
 import { defineComponent } from "vue"
 import { findTargetInStr } from "complex-utils"
+import config from "../config"
 
 export default defineComponent({
   name: 'ComplexHighText',
@@ -38,9 +39,7 @@ export default defineComponent({
       type: Object,
       required: false,
       default: () => {
-        return {
-          color: '#FF4D4F'
-        }
+        return config.highText.style
       }
     },
     limitNum: {
