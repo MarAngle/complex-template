@@ -4,10 +4,6 @@
   justify-content: space-between;
   align-items: center;
 }
-.complex-table-choice{
-  padding: 10px 0px;
-  line-height: 32px;
-}
 .complex-pagination{
   display: flex;
   flex-direction: row;

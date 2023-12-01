@@ -1,5 +1,5 @@
 import componentConfig from "complex-component/config"
-import { PaginationData } from "complex-data"
+import { ChoiceData, PaginationData } from "complex-data"
 
 const config = {
   component: componentConfig,
@@ -19,6 +19,13 @@ const config = {
         front: 'total',
         end: false
       }
+    }
+  },
+  choice: {
+    auto: true,
+    menu: false,
+    formatInfo(payload: { choice: ChoiceData, size: number, auto: boolean, menu: boolean }) {
+      return `已选择${payload.size}条数据`
     }
   },
   pagination: {

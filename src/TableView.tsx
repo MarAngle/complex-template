@@ -7,6 +7,7 @@ import DefaultList from "complex-data/src/dictionary/DefaultList"
 import ComplexDataConfig from "complex-data/config"
 import { AutoIndex } from "complex-component"
 import Pagination from "./components/Pagination"
+import ChoiceInfo from "./components/ChoiceInfo.vue"
 import AutoText from "./AutoText.vue"
 import config from "../config"
 
@@ -206,13 +207,13 @@ export default defineComponent({
       if (currentOptionProps.pagination === undefined) {
         currentOptionProps.pagination = false
       }
-      if (this.listData.$module.choice) {
+      const choice = this.listData.$module.choice
+      if (choice) {
         currentOptionProps.rowSelection = {
           columnWidth: 50,
-          selectedRowKeys: this.listData.$module.choice.data.id as (string | number)[],
+          selectedRowKeys: choice.data.id as (string | number)[],
           onChange: (selectedRowKeys: (string | number)[], selectedRows: Record<string, unknown>[]) => {
             const currentIdList = this.currentIdList
-            const choice = this.listData.$module.choice!
             for (let i = 0; i < choice.data.id.length; i++) {
               const rowKey = choice.data.id[i] as (string | number)
               if (currentIdList.indexOf(rowKey) > -1) {
@@ -227,7 +228,7 @@ export default defineComponent({
             }
             choice.pushData(selectedRowKeys, selectedRows)
           },
-          ...this.listData.$module.choice.$local?.target?.props
+          ...config.component.parseAttrs(config.component.parseData(choice.$local, 'target'))
         }
       }
       return currentOptionProps
@@ -259,21 +260,26 @@ export default defineComponent({
     },
     renderFooterLeft() {
       const render = h('div', { class: 'complex-table-footer-left' }, {
-        default: () => [this.renderChoice()]
+        default: () => [this.renderChoiceInfo()]
       })
       return render
     },
-    renderChoice() {
-      if (this.listData.$module.choice) {
-        const choiceSize = this.listData.$module.choice.getId().length
-        const render = h('div', { class: 'complex-table-choice' }, {
-          default: () => [
-            h('span', { }, {
-              default: () => `已选择${choiceSize}条数据`
-            })
-          ]
-        })
-        return render
+    renderChoiceInfo() {
+      const choice = this.listData.$module.choice
+      if (choice) {
+        const infoRender = config.component.parseData(choice.$renders, 'info')
+        if (!infoRender) {
+          return h(ChoiceInfo, {
+            class: 'complex-table-choice-info',
+            choice: choice,
+            ...config.component.parseAttrs(config.component.parseData(choice.$local, 'info'))
+          })
+        } else {
+          return infoRender({
+            choice: choice,
+            ...config.component.parseAttrs(config.component.parseData(choice.$local, 'info'))
+          })
+        }
       } else {
         return null
       }
