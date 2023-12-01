@@ -1,13 +1,13 @@
 import { defineComponent, h, PropType } from "vue"
 import { Pagination } from "ant-design-vue"
-import { AttributeValue, PaginationData } from "complex-data"
+import { AttrsValue, PaginationData } from "complex-data"
 import config from "../../config"
 
 export default defineComponent({
   // eslint-disable-next-line vue/multi-word-component-names
   name: 'Pagination',
   props: {
-    data: {
+    pagination: {
       type: Object as PropType<PaginationData>,
       required: true
     },
@@ -17,59 +17,67 @@ export default defineComponent({
       default: true
     },
     formatInfo: {
-      type: Function as PropType<(data: PaginationData) => string>,
+      type: Function as PropType<(payload: { pagination: PaginationData, auto: boolean }) => string>,
       required: false,
       default: config.pagination.formatInfo
     }
   },
+  computed: {
+    payload() {
+      return {
+        pagination: this.pagination,
+        auto: this.auto
+      }
+    }
+  },
   methods: {
     renderSlot() {
-      const slot = this.$slots.default
+      const slot = this.$slots.default || config.component.parseData(this.pagination.$renders, 'slot')
       if (slot) {
-        return slot({
-          pagination: this.data
-        })
+        return slot(this.payload)
       } else {
         return null
       }
     },
     renderInfo() {
+      const infoRender = config.component.parseData(this.pagination.$renders, 'info')
       return h('span', {
         class: 'complex-pagination-info'
       }, {
-        default: () => this.formatInfo(this.data)
+        default: () => !infoRender ? this.formatInfo(this.payload) : infoRender(this.payload)
       })
     },
     renderPagination() {
-      const paginationAttributes = new AttributeValue({
-        props: {
-          current: this.data.page.data,
-          total: this.data.count,
-          pageSize: this.data.size.data,
-          pageSizeOptions: this.data.size.list,
-          showSizeChanger: this.data.size.show,
-          showQuickJumper: this.data.jumper
-        },
-        on: {
-          change: (page: number, size: number) => {
-            if (this.auto) {
-              this.data.setPage(page)
-            }
-            this.$emit('page', page, size)
+      const targetRender = config.component.parseData(this.pagination.$renders, 'target')
+      if (!targetRender) {
+        const paginationAttrs = new AttrsValue({
+          props: {
+            current: this.pagination.page.data,
+            total: this.pagination.count,
+            pageSize: this.pagination.size.data,
+            pageSizeOptions: this.pagination.size.list,
+            showSizeChanger: this.pagination.size.show,
+            showQuickJumper: this.pagination.jumper
           },
-          showSizeChange: (page: number, size: number) => {
-            if (this.auto) {
-              this.data.setPageAndSize({ page, size })
+          on: {
+            change: (page: number, size: number) => {
+              if (this.auto) {
+                this.pagination.setPage(page)
+              }
+              this.$emit('page', page, size)
+            },
+            showSizeChange: (page: number, size: number) => {
+              if (this.auto) {
+                this.pagination.setPageAndSize({ page, size })
+              }
+              this.$emit('size', size, page)
             }
-            this.$emit('size', size, page)
           }
-        }
-      })
-      if (this.data.$local) {
-        paginationAttributes.merge(this.data.$local)
+        })
+        return h(Pagination, config.component.parseAttrs(paginationAttrs.merge(this.pagination.$attrs)))
+      } else {
+        return targetRender(this.payload)
       }
-      const render = h(Pagination, config.component.parseAttributes(paginationAttributes))
-      return render
     }
   },
   /**

@@ -1,0 +1,19 @@
+.complex-table .complex-table-footer {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+.complex-table-choice{
+  padding: 10px 0px;
+  line-height: 32px;
+}
+.complex-pagination{
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+}
+.complex-pagination .complex-pagination-info{
+  margin-right: 10px;
+}
