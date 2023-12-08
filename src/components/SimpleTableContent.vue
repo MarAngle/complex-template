@@ -117,7 +117,13 @@ export default defineComponent({
       return style
     },
     parseRender(column: DefaultList, record: Record<PropertyKey, unknown>, index: number) {
-      const text = config.table.renderTableValue(record[column.$prop], { targetData: record, type: this.type, index: index, payload: { column: column } })
+      const payload = {
+        targetData: record,
+        type: this.type,
+        index: index,
+        payload: { column: column }
+      }
+      const text = config.table.renderTableValue(record[column.$prop], payload)
       const targetRender = config.component.parseData(column.$renders, 'target')
       const pureRender = config.component.parseData(column.$renders, 'pure')
       const attrs = config.component.parseData(column.$local, 'target')
@@ -125,20 +131,14 @@ export default defineComponent({
         return () => {
           return pureRender({
             text: text,
-            record: record,
-            index: index,
-            target: column,
-            list: this.columns
+            payload
           })
         }
       } else if (targetRender) {
         return () => {
           return targetRender({
             text: text,
-            record: record,
-            index: index,
-            target: column,
-            list: this.columns
+            payload
           })
         }
       } else if (this.index && column.$prop === this.index.prop) {

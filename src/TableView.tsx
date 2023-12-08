@@ -116,15 +116,18 @@ export default defineComponent({
               // 自动index
               return config.table.renderIndex(record, index, this.currentAuto.index.pagination ? this.currentPaginationData : undefined)
             }
-            text = config.table.renderTableValue(text, { targetData: record, type: this.listType, index: index, payload: { column: column } })
+            const payload = {
+              targetData: record,
+              type: this.listType,
+              index: index,
+              payload: { column: column }
+            }
+            text = config.table.renderTableValue(text, payload)
             if (targetRender) {
               // 插槽
               return targetRender({
                 text: text,
-                record: record,
-                index: index,
-                target: pitem,
-                list: this.columnList
+                payload
               })
             }
             if (pitem.ellipsis && column.auto) {
@@ -135,12 +138,15 @@ export default defineComponent({
           }
         } else {
           pitem.customRender = ({ text, record, index }: renderDataType) => {
+            const payload = {
+              targetData: record,
+              type: this.listType,
+              index: index,
+              payload: { column: column }
+            }
             return pureRender({
               text: text,
-              record: record,
-              index: index,
-              target: pitem,
-              list: this.columnList
+              payload
             })
           }
         }
