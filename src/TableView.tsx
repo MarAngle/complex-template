@@ -4,8 +4,6 @@ import { getType, setDataByDefault } from "complex-utils"
 import { layout } from "complex-plugin"
 import { ComplexList, PaginationData } from "complex-data"
 import DefaultList from "complex-data/src/dictionary/DefaultList"
-import ComplexDataConfig from "complex-data/config"
-import { AutoIndex } from "complex-component"
 import Pagination from "./components/Pagination"
 import ChoiceInfo from "./components/ChoiceInfo.vue"
 import AutoText from "./AutoText.vue"
@@ -128,21 +126,7 @@ export default defineComponent({
           pitem.customRender = ({ text, record, index }: renderDataType) => {
             if (currentProp === this.currentAuto.index.prop && !targetRender) {
               // 自动index
-              const autoIndexProps = {
-                index: index,
-                pagination: undefined as undefined | PaginationData
-              }
-              if (this.currentAuto.index.pagination) {
-                let buildAutoIndexPagination = true
-                const depth = record[ComplexDataConfig.dictionary.depth]
-                if (depth !== undefined && depth !== 0) {
-                  buildAutoIndexPagination = false
-                }
-                if (buildAutoIndexPagination) {
-                  autoIndexProps.pagination = this.currentPaginationData
-                }
-              }
-              return h(AutoIndex, autoIndexProps)
+              return config.table.renderIndex(record, index, this.currentAuto.index.pagination ? this.currentPaginationData : undefined)
             }
             if (pitem.$show) {
               text = pitem.$show(text, {

@@ -59,12 +59,11 @@
 
 <script lang="ts">
 import { defineComponent, PropType, h } from 'vue'
+import { PaginationData } from 'complex-data'
 import DefaultList from 'complex-data/src/dictionary/DefaultList'
-import ComplexDataConfig from "complex-data/config"
 import AutoRender from './AutoRender'
 import config from '../../config'
-import { PaginationData } from 'complex-data'
-import { AutoIndex } from 'complex-component'
+import AutoText from '../AutoText.vue'
 
 export default defineComponent({
   name: 'SimpleTable',
@@ -136,22 +135,17 @@ export default defineComponent({
         }
       } else if (this.index && column.$prop === this.index.prop) {
         return () => {
-          // 自动index
-          const autoIndexProps = {
-            index: index,
-            pagination: undefined as undefined | PaginationData
-          }
-          if (this.index!.pagination) {
-            let buildAutoIndexPagination = true
-            const depth = record[ComplexDataConfig.dictionary.depth]
-            if (depth !== undefined && depth !== 0) {
-              buildAutoIndexPagination = false
-            }
-            if (buildAutoIndexPagination) {
-              autoIndexProps.pagination = this.index!.pagination
-            }
-          }
-          return h(AutoIndex, autoIndexProps)
+          return config.table.renderIndex(record, index, this.index!.pagination)
+        }
+      } else if (column.ellipsis && column.auto) {
+        return () => {
+          return h(AutoText, {
+            text: value as string,
+            auto: true,
+            recount: this.layoutData.count,
+            tip: column.tip,
+            ...config.component.parseAttrs(attrs)
+          })
         }
       } else {
         return () => {

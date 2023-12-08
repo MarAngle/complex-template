@@ -1,5 +1,8 @@
+import { h } from "vue"
 import componentConfig from "complex-component/config"
+import dataConfig from "complex-data/config"
 import { ChoiceData, PaginationData } from "complex-data"
+import { AutoIndex } from "complex-component"
 
 const config = {
   component: componentConfig,
@@ -19,6 +22,19 @@ const config = {
         front: 'total',
         end: false
       }
+    },
+    renderIndex(record: Record<PropertyKey, unknown>, index: number, pagination?: PaginationData) {
+      let buildPagination = !!pagination
+      if (pagination) {
+        const depth = record[dataConfig.dictionary.depth]
+        if (depth !== undefined && depth !== 0) {
+          buildPagination = false
+        }
+      }
+      return h(AutoIndex, {
+        index: index,
+        pagination: buildPagination ? pagination : undefined
+      })
     }
   },
   choice: {

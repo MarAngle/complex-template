@@ -1,13 +1,10 @@
 import { defineComponent, h, PropType } from "vue"
-import { getType, setDataByDefault } from "complex-utils"
+import { setDataByDefault } from "complex-utils"
 import { layout } from "complex-plugin"
 import { ComplexList, PaginationData } from "complex-data"
 import DefaultList from "complex-data/src/dictionary/DefaultList"
-import ComplexDataConfig from "complex-data/config"
-import { AutoIndex } from "complex-component"
 import SimpleTableContent from "./components/SimpleTableContent.vue"
 import Pagination from "./components/Pagination"
-import AutoText from "./AutoText.vue"
 import config from "../config"
 
 export type autoType = {
@@ -115,7 +112,7 @@ export default defineComponent({
         id: this.listData.$getDictionaryProp('id'),
         index: {
           prop: this.currentAuto.index.prop,
-          pagination: this.currentPaginationData
+          pagination: this.currentAuto.index.pagination ? this.currentPaginationData : undefined
         }
       })
       return table
