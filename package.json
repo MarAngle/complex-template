@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "ant-design-vue": "^4.0.7",
-    "complex-component": "4.0.8 - 4.0.99"
+    "complex-component": "4.0.9 - 4.0.99"
   },
   "devDependencies": {
     "typescript": "^5.2.2"
