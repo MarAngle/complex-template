@@ -1,13 +1,11 @@
 import { defineComponent, h, PropType } from "vue"
 import { Table, TableColumnType, TableProps } from 'ant-design-vue'
-import { getType, setDataByDefault } from "complex-utils"
-import { layout } from "complex-plugin"
+import { setDataByDefault } from "complex-utils"
 import { ComplexList, PaginationData } from "complex-data"
 import DefaultList from "complex-data/src/dictionary/DefaultList"
 import Pagination from "./components/Pagination"
 import ChoiceInfo from "./components/ChoiceInfo.vue"
-import AutoText from "./AutoText.vue"
-import config from "../config"
+import config, { LayoutLifeData } from "../config"
 
 export type autoType = {
   expandWidth?: number
@@ -26,11 +24,7 @@ export type autoType = {
 
 export type renderDataType = { text: unknown, record: Record<PropertyKey, unknown>, index: number }
 
-export interface ColumnItemType extends TableColumnType {
-  $auto: boolean
-  $tip: DefaultList['tip']
-  $show: DefaultList['show']
-}
+export type ColumnItemType = TableColumnType
 
 export default defineComponent({
   name: 'TableView',
@@ -74,10 +68,7 @@ export default defineComponent({
   },
   data () {
     return {
-      layoutData: {
-        lifeId: 0 as PropertyKey,
-        count: 0
-      }
+      layoutLifeData: new LayoutLifeData()
     }
   },
   computed: {
@@ -106,21 +97,18 @@ export default defineComponent({
     currentColumnList() {
       const list = []
       for (let i = 0; i < this.columnList.length; i++) {
-        const listMod = this.columnList[i]
-        const currentProp = listMod.$prop
-        const targetRender = this.$slots[currentProp] || config.component.parseData(listMod.$renders, 'target')
-        const pureRender = config.component.parseData(listMod.$renders, 'pure')
-        const $attrs = config.component.parseData(listMod.$local, 'target')
+        const column = this.columnList[i]
+        const currentProp = column.$prop
+        const targetRender = this.$slots[currentProp] || config.component.parseData(column.$renders, 'target')
+        const pureRender = config.component.parseData(column.$renders, 'pure')
+        const attrs = config.component.parseData(column.$local, 'target')
         const pitem: ColumnItemType = {
           dataIndex: currentProp,
-          title: listMod.$name.getValue(this.listType),
-          align: listMod.align,
-          width: listMod.width,
-          ellipsis: listMod.ellipsis,
-          $auto: listMod.auto,
-          $tip: listMod.tip,
-          $show: listMod.show,
-          ...config.component.parseAttrs($attrs)
+          title: column.$name.getValue(this.listType),
+          align: column.align,
+          width: column.width,
+          ellipsis: column.ellipsis,
+          ...config.component.parseAttrs(attrs)
         }
         if (!pureRender) {
           pitem.customRender = ({ text, record, index }: renderDataType) => {
@@ -128,19 +116,7 @@ export default defineComponent({
               // 自动index
               return config.table.renderIndex(record, index, this.currentAuto.index.pagination ? this.currentPaginationData : undefined)
             }
-            if (pitem.$show) {
-              text = pitem.$show(text, {
-                targetData: record,
-                type: this.listType,
-                index: index,
-                payload: {
-                  mod: listMod
-                }
-              })
-            }
-            if (getType(text) === 'object') {
-              text = JSON.stringify(text)
-            }
+            text = config.table.renderTableValue(text, { targetData: record, type: this.listType, index: index, payload: { column: column } })
             if (targetRender) {
               // 插槽
               return targetRender({
@@ -151,14 +127,9 @@ export default defineComponent({
                 list: this.columnList
               })
             }
-            if (pitem.ellipsis && pitem.$auto) {
+            if (pitem.ellipsis && column.auto) {
               // 自动省略切自动换行
-              return h(AutoText, {
-                text: text as string,
-                auto: true,
-                recount: this.layoutData.count,
-                tip: pitem.$tip
-              })
+              return config.table.renderAutoText(text as string, column, this.layoutLifeData, attrs)
             }
             return text
           }
@@ -219,15 +190,10 @@ export default defineComponent({
     },
   },
   mounted() {
-    this.layoutData.lifeId = layout.$onLife('recount', {
-      data: () => {
-        this.layoutData.count++
-      }
-    }) as PropertyKey
+    this.layoutLifeData.bind()
   },
   beforeMount() {
-    layout.$offLife('recount', this.layoutData.lifeId)
-    this.layoutData.lifeId = 0
+    this.layoutLifeData.unbind()
   },
   methods: {
     renderTable() {

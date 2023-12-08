@@ -1,6 +1,5 @@
 import { defineComponent, h, PropType } from "vue"
 import { setDataByDefault } from "complex-utils"
-import { layout } from "complex-plugin"
 import { ComplexList, PaginationData } from "complex-data"
 import DefaultList from "complex-data/src/dictionary/DefaultList"
 import SimpleTableContent from "./components/SimpleTableContent.vue"
@@ -57,14 +56,6 @@ export default defineComponent({
       }
     }
   },
-  data () {
-    return {
-      layoutData: {
-        lifeId: 0 as PropertyKey,
-        count: 0
-      }
-    }
-  },
   computed: {
     currentData () {
       if (this.data) {
@@ -91,17 +82,6 @@ export default defineComponent({
     currentColumnList() {
       return this.columnList
     }
-  },
-  mounted() {
-    this.layoutData.lifeId = layout.$onLife('recount', {
-      data: () => {
-        this.layoutData.count++
-      }
-    }) as PropertyKey
-  },
-  beforeMount() {
-    layout.$offLife('recount', this.layoutData.lifeId)
-    this.layoutData.lifeId = 0
   },
   methods: {
     renderTable() {

@@ -61,14 +61,19 @@
 import { defineComponent, PropType, h } from 'vue'
 import { PaginationData } from 'complex-data'
 import DefaultList from 'complex-data/src/dictionary/DefaultList'
+import { getType } from "complex-utils"
 import AutoRender from './AutoRender'
-import config from '../../config'
-import AutoText from '../AutoText.vue'
+import config, { LayoutLifeData } from '../../config'
 
 export default defineComponent({
   name: 'SimpleTable',
   components: {
     AutoRender
+  },
+  data () {
+    return {
+      layoutLifeData: new LayoutLifeData()
+    }
   },
   props: {
     columns: {
@@ -93,6 +98,12 @@ export default defineComponent({
       required: false
     }
   },
+  mounted() {
+    this.layoutLifeData.bind()
+  },
+  beforeMount() {
+    this.layoutLifeData.unbind()
+  },
   methods: {
     rowWidth(column: DefaultList) {
       const style: Record<string, string | number> = {}
@@ -106,17 +117,14 @@ export default defineComponent({
       return style
     },
     parseRender(column: DefaultList, record: Record<PropertyKey, unknown>, index: number) {
-      let value = record[column.$prop]
-      if (column.show) {
-        value = column.show(value, { targetData: record, type: this.type, index: index, payload: { mod: column } })
-      }
+      const text = config.table.renderTableValue(record[column.$prop], { targetData: record, type: this.type, index: index, payload: { column: column } })
       const targetRender = config.component.parseData(column.$renders, 'target')
       const pureRender = config.component.parseData(column.$renders, 'pure')
       const attrs = config.component.parseData(column.$local, 'target')
       if (pureRender) {
         return () => {
           return pureRender({
-            text: value,
+            text: text,
             record: record,
             index: index,
             target: column,
@@ -126,7 +134,7 @@ export default defineComponent({
       } else if (targetRender) {
         return () => {
           return targetRender({
-            text: value,
+            text: text,
             record: record,
             index: index,
             target: column,
@@ -138,19 +146,14 @@ export default defineComponent({
           return config.table.renderIndex(record, index, this.index!.pagination)
         }
       } else if (column.ellipsis && column.auto) {
+        // 自动省略切自动换行
         return () => {
-          return h(AutoText, {
-            text: value as string,
-            auto: true,
-            recount: this.layoutData.count,
-            tip: column.tip,
-            ...config.component.parseAttrs(attrs)
-          })
+          return config.table.renderAutoText(text as string, column, this.layoutLifeData, attrs)
         }
       } else {
         return () => {
           return h('p', config.component.parseAttrs(attrs), {
-            default: () => value
+            default: () => text
           })
         }
       }
