@@ -1,15 +1,16 @@
-import { defineComponent, h, PropType, Slot } from "vue"
-import { AttrsValue } from "complex-data"
-import ObserveList from "complex-data/src/dictionary/ObserveList"
-import DefaultEdit from "complex-data/src/dictionary/DefaultEdit"
+import { defineComponent, h, PropType } from "vue"
 import { FormItem, Tooltip, Input, InputNumber, Textarea, Switch, Select, SelectOption, Cascader, DatePicker, RangePicker, Button } from "ant-design-vue"
-import AntdFormValue from "./class/AntdFormValue"
+import { AttrsValue } from "complex-data"
+import { DictionaryEditMod } from "complex-data/src/dictionary/DictionaryValue"
+import ObserveList from "complex-data/src/dictionary/ObserveList"
+import AntdFormValue from "./../class/AntdFormValue"
 import config from "../../config"
+import { parseEditAttrs } from "../../format"
 
 export interface FormItemPayloadType {
   prop: string
   type: string
-  data: DefaultEdit
+  data: DictionaryEditMod
   index: number
   form: AntdFormValue
   list: ObserveList
@@ -22,7 +23,7 @@ export default defineComponent({
   name: 'AutoFormItem',
   props: {
     data: {
-      type: Object as PropType<DefaultEdit>,
+      type: Object as PropType<DictionaryEditMod>,
       required: true
     },
     index: {
@@ -87,21 +88,24 @@ export default defineComponent({
     },
     renderItem() {
       let tag: any
-      const itemAttributes = getAttributes(this.data.type, this.data, this.payload)
-      itemAttributes.pushClass('complex-form-item-type')
-      itemAttributes.pushClass('complex-form-item-' + this.data.type)
+      const itemAttrs = parseEditAttrs(this.data, this.payload)
+      itemAttrs.pushClass('complex-form-item-type')
+      itemAttrs.pushClass('complex-form-item-type-' + this.data.type)
+      itemAttrs.merge(config.component.parseData(this.data.$local, 'target'))
       let children: any
       let item = null
-      if (this.payload.target.layout === 'inline') {
-        if (this.data.$width) {
-          itemAttributes.style.width = this.data.$width
+      if (this.target.layout === 'inline') {
+        const width = config.parseWidth(this.data.$layout, 'target', this.type)
+        if (width) {
+          itemAttrs.style.width = width
         }
       }
+      const targetRender = config.component.parseData(this.data.$renders, 'target')
       // 考虑一个默认的值，inline模式下和其他模式下的默认值，避免出现问题
-      if (slot && this.data.$slot.type === 'model') {
-        item = slot({
+      if (targetRender) {
+        item = targetRender({
           ...this.payload,
-          option: itemAttributes
+          option: config.component.parseAttrs(itemAttrs)
         })
       } else if (this.data.type === 'input') {
         tag = Input
@@ -115,21 +119,21 @@ export default defineComponent({
         tag = Select
         // 设置字典
         const dict = {
-          key: (this.data.$option as DefaultEditOptionType<'select'>).optionValue || 'value',
-          value: (this.data.$option as DefaultEditOptionType<'select'>).optionValue || 'value',
-          label: (this.data.$option as DefaultEditOptionType<'select'>).optionLabel || 'label',
-          disabled: (this.data.$option as DefaultEditOptionType<'select'>).optionDisabled || 'disabled'
+          key: this.data.$option.optionValue || 'value',
+          value: this.data.$option.optionValue || 'value',
+          label: this.data.$option.optionLabel || 'label',
+          disabled: this.data.$option.optionDisabled || 'disabled'
         }
-        children = (this.data.$option as DefaultEditOptionType<'select'>).list.map((itemData: Record<string, any>) => {
-          const optionAttributes = new AttrsValue({
+        children = this.data.$option.list.map((itemData: Record<string, unknown>) => {
+          const optionAttrs = new AttrsValue({
             props: {
               key: itemData[dict.key],
               value: itemData[dict.value],
               disabled: itemData[dict.disabled] || false
             }
           })
-          mergeAttributes(optionAttributes, this.data.$local.child)
-          return h(SelectOption, parseAttributes(optionAttributes), {
+          optionAttrs.merge(config.component.parseData(this.data.$local, 'child'))
+          return h(SelectOption, config.component.parseAttrs(optionAttrs), {
             default: () => itemData[dict.label]
           })
         })
@@ -143,18 +147,35 @@ export default defineComponent({
         // tag = UploadFile
       } else if (this.data.type === 'button') {
         tag = Button
-        const text = (this.data.$option as DefaultEditOptionType<'button'>).name || this.data.$getParent()!.$getInterface('label', this.type)
+        const text = this.data.$option.name || this.data.$name.getValue(this.type)
         children = text
-      } else if (this.data.type === 'customize') {
-        tag = this.data.$customize as any
-      } else if (this.data.type === 'slot') {
-        console.error(`${this.data.prop}未定义slot`)
+      } else if (this.data.type === 'buttonGroup') {
+        tag = 'div'
+        children = this.data.$list.forEach(buttonOption => {
+          if (buttonOption.render) {
+            return buttonOption.render({
+              ...this.payload,
+              option: buttonOption
+            })
+          } else {
+            return h(Button, {
+              disabled: this.disabled || this.data.disabled.getValue(this.type) || buttonOption.disabled,
+              type: buttonOption.type,
+              icon: buttonOption.icon,
+              loading: buttonOption.loading,
+              uploader: buttonOption.uploader,
+              onClick: buttonOption.click
+            })
+          }
+        })
+      } else if (this.data.type === 'custom') {
+        tag = this.data.$custom
       }
       if (tag) {
         if (!children) {
-          item = h(tag, parseAttributes(itemAttributes))
+          item = h(tag, config.component.parseAttrs(itemAttrs))
         } else {
-          item = h(tag, parseAttributes(itemAttributes), {
+          item = h(tag, config.component.parseAttrs(itemAttrs), {
             default: () => children
           })
         }
@@ -170,21 +191,21 @@ export default defineComponent({
   render() {
     const parentRender = config.component.parseData(this.data.$renders, 'parent')
     if (!parentRender) {
-      const label = this.data.$name.getValue(this.payload.type)
+      const label = this.data.$name.getValue(this.type)
       const parentAttributes = new AttrsValue({
         class: ['complex-form-item'],
         props: {
           name: this.data.$prop,
           label: label,
           colon: this.data.colon,
-          required: this.data.required.getValue(this.payload.type),
-          rules: this.data.$rules.getValue(this.payload.type)
+          required: this.data.required.getValue(this.type),
+          rules: this.data.$rules.getValue(this.type)
         }
       })
-      if (this.payload.target.layout === 'horizontal') {
+      if (this.target.layout === 'horizontal') {
         parentAttributes.props.labelCol = config.parseGrid(this.data.$layout, 'label', this.type)
         parentAttributes.props.wrapperCol = config.parseGrid(this.data.$layout, 'content', this.type)
-      } else if (this.payload.target.layout === 'inline') {
+      } else if (this.target.layout === 'inline') {
         const mainWidth = config.parseWidth(this.data.$layout, 'main', this.type)
         if (mainWidth) {
           parentAttributes.style.width = mainWidth

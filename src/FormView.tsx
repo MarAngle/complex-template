@@ -3,9 +3,9 @@ import { Col, Form, Row } from "ant-design-vue"
 import { FormLabelAlign } from "ant-design-vue/es/form/interface"
 import { FormLayout } from "ant-design-vue/es/form/Form"
 import { mergeData } from "complex-utils"
+import { DictionaryEditMod } from "complex-data/src/dictionary/DictionaryValue"
 import ObserveList from "complex-data/src/dictionary/ObserveList"
 import DefaultMod from "complex-data/src/dictionary/DefaultMod"
-import DefaultEdit from "complex-data/src/dictionary/DefaultEdit"
 import DefaultEditButtonGroup, { DefaultEditButtonGroupInitOption } from "complex-data/src/dictionary/DefaultEditButtonGroup"
 import AntdFormValue from "./class/AntdFormValue"
 import AutoFormItem from "./components/AutoFormItem"
@@ -112,18 +112,18 @@ export default defineComponent({
         return null
       }
     },
-    renderItem(item: DefaultEdit, index: number) {
+    renderItem(item: DictionaryEditMod, index: number) {
       return h(AutoFormItem, this.getItemProps(item, index))
     },
     renderList() {
       if (this.layout === 'inline') {
         return this.list.data.map((item, index) => {
-          return this.renderItem((item as DefaultEdit), index)
+          return this.renderItem((item as DictionaryEditMod), index)
         })
       } else {
         return this.list.data.map((item, index) => {
           return h(Col, this.getItemGrid(item), {
-            default: () => this.renderItem((item as DefaultEdit), index)
+            default: () => this.renderItem((item as DictionaryEditMod), index)
           })
         })
       }

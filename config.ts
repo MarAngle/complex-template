@@ -1,4 +1,5 @@
 import { h } from "vue"
+import { getType } from "complex-utils"
 import { layout } from "complex-plugin"
 import { ChoiceData, PaginationData, AttrsValue } from "complex-data"
 import dataConfig from "complex-data/config"
@@ -7,7 +8,6 @@ import InterfaceLayoutValue from "complex-data/src/lib/InterfaceLayoutValue"
 import { AutoIndex } from "complex-component"
 import componentConfig from "complex-component/config"
 import AutoText from "./src/AutoText.vue"
-import { getType } from "complex-utils"
 
 export class LayoutLifeData {
   life: number
