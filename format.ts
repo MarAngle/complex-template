@@ -9,6 +9,8 @@ import DefaultEditSwitch from "complex-data/src/dictionary/DefaultEditSwitch"
 import DefaultEditSelect from "complex-data/src/dictionary/DefaultEditSelect"
 import DefaultEditCascader from "complex-data/src/dictionary/DefaultEditCascader"
 import DefaultEditFile from "complex-data/src/dictionary/DefaultEditFile"
+import DefaultEditDateRange from "complex-data/src/dictionary/DefaultEditDateRange"
+import DefaultEditDate from "complex-data/src/dictionary/DefaultEditDate"
 import DefaultEditButton from "complex-data/src/dictionary/DefaultEditButton"
 import DefaultEditButtonGroup from "complex-data/src/dictionary/DefaultEditButtonGroup"
 import DefaultEditContent from "complex-data/src/dictionary/DefaultEditContent"
@@ -48,6 +50,7 @@ const modelFuncDict = {
   }
 }
 type modelFuncDictType = typeof modelFuncDict
+
 interface dictItemType {
   init: false | modelFuncDictType['checkInit'] | modelFuncDictType['valueInit']
   on?: {
@@ -59,27 +62,24 @@ interface dictItemType {
 }
 
 const bindEvent = function(dictItem: dictItemType, itemAttrs: AttrsValue, edit: DictionaryEditMod, payload: FormItemPayloadType) {
-  const formData = payload.form.data
+  const formData = payload.targetData
   const onData = dictItem.on
   if (dictItem.init) {
     dictItem.init(itemAttrs, formData, edit.$prop)
   }
-
-  const eventData = new EventData()
   // 加载双向绑定逻辑
   for (const funcName in onData) {
-    eventData.add(funcName, payload.target, edit.$prop, function (...args: any[]) {
+    itemAttrs.pushEvent(funcName, (...args) => {
       onData[funcName as 'input' | 'change' | 'select']!(formData, edit.$prop, args)
-    })
+    }, 'before')
   }
-  // 加载单独设置的事件监控,false仅生成函数不做回调
+  // 加载单独设置的事件监控
   for (const funcName in edit.$on) {
-    eventData.add(funcName, payload.target, edit.$prop, edit.$on[funcName] ? function (...args: any[]) {
+    itemAttrs.pushEvent(funcName, (...args) => {
       args.push(payload)
       edit.$on[funcName](...args)
-    } : false)
+    })
   }
-  itemAttrs.on = eventData.getData()
 }
 
 const dict = {
@@ -170,6 +170,7 @@ const dict = {
           allowClear: !edit.$option.hideClear,
           dropdownMatchSelectWidth: edit.$option.autoWidth,
           notFoundContent: edit.$option.emptyOptionContent,
+          fieldNames: { value: edit.$option.optionValue, label: edit.$option.optionLabel },
           disabled: payload.disabled || edit.disabled.getValue(payload.type),
           placeholder: edit.placeholder ? edit.placeholder.getValue(payload.type) : undefined
         }
@@ -189,6 +190,7 @@ const dict = {
           options: edit.$option.list,
           showArrow: !edit.$option.hideArrow,
           allowClear: !edit.$option.hideClear,
+          fieldNames: { value: edit.$option.optionValue, label: edit.$option.optionLabel, children: edit.$option.optionChildren },
           disabled: payload.disabled || edit.disabled.getValue(payload.type),
           placeholder: edit.placeholder ? edit.placeholder.getValue(payload.type) : undefined
         }
@@ -203,15 +205,16 @@ const dict = {
       change: modelFuncDict.change
     },
     format(edit: DefaultEditDate, payload: FormItemPayloadType) {
+      const format = edit.$option.time ? edit.$option.format + ' ' + edit.$option.time.format : edit.$option.format
       const showTime = edit.$option.time ? {
-        format: edit.$option.time.show,
+        format: edit.$option.time.format,
         defaultValue: edit.$option.time.defaultValue
       } : false
       const itemAttrs = new AttrsValue({
         props: {
           disabled: payload.disabled || edit.disabled.getValue(payload.type),
           placeholder: edit.placeholder ? edit.placeholder.getValue(payload.type) : undefined,
-          format: edit.$option.show,
+          format: format,
           allowClear: !edit.$option.hideClear,
           showTime: showTime,
           disabledDate: edit.$option.disabledDate,
@@ -228,15 +231,16 @@ const dict = {
       change: modelFuncDict.change
     },
     format(edit: DefaultEditDateRange, payload: FormItemPayloadType) {
+      const format = edit.$option.time ? edit.$option.format + ' ' + edit.$option.time.format : edit.$option.format
       const showTime = edit.$option.time ? {
-        format: (edit.$option.time as any).show,
-        defaultValue: (edit.$option.time as any).defaultValue
+        format: edit.$option.time.format,
+        defaultValue: edit.$option.time.defaultValue
       } : false
       const itemAttrs = new AttrsValue({
         props: {
           disabled: payload.disabled || edit.disabled.getValue(payload.type),
           placeholder: edit.placeholder ? edit.placeholder.getValue(payload.type) : undefined,
-          format: edit.$option.show,
+          format: format,
           allowClear: !edit.$option.hideClear,
           separator: edit.$option.separator,
           showTime: showTime,
@@ -293,7 +297,12 @@ const dict = {
           placeholder: edit.placeholder ? edit.placeholder.getValue(payload.type) : undefined
         },
         on: {
-          click: edit.$option.click
+          click: () => {
+            payload.target.$emit('menu', edit.$prop, payload)
+            if(edit.$option.click) {
+              edit.$option.click!(payload)
+            }
+          }
         }
       })
       bindEvent(this as dictItemType, itemAttrs, edit, payload)
@@ -330,7 +339,7 @@ const dict = {
       return itemAttrs
     }
   },
-  $customize: {
+  $custom: {
     init: false,
     on: {},
     format(edit: DefaultEditCustom, payload: FormItemPayloadType) {
@@ -345,10 +354,35 @@ const dict = {
     }
   }
 }
-type dictType = typeof dict
 
-export const parseEditAttrs = function (edit: DictionaryEditMod, payload: FormItemPayloadType): AttrsValue {
-  const prop = ('$' + edit.type) as keyof dictType
-  const attrs = dict[prop].format(edit, payload)
-  return attrs
+export const parseEditAttrs = function (edit: DictionaryEditMod, payload: FormItemPayloadType) {
+  if (edit.type === 'input') {
+    return dict.$input.format(edit, payload)
+  } else if (edit.type === 'inputNumber') {
+    return dict.$inputNumber.format(edit, payload)
+  } else if (edit.type === 'textArea') {
+    return dict.$textArea.format(edit, payload)
+  } else if (edit.type === 'switch') {
+    return dict.$switch.format(edit, payload)
+  } else if (edit.type === 'select') {
+    return dict.$select.format(edit, payload)
+  } else if (edit.type === 'cascader') {
+    return dict.$cascader.format(edit, payload)
+  } else if (edit.type === 'date') {
+    return dict.$date.format(edit, payload)
+  } else if (edit.type === 'dateRange') {
+    return dict.$dateRange.format(edit, payload)
+  } else if (edit.type === 'file') {
+    return dict.$file.format(edit, payload)
+  } else if (edit.type === 'button') {
+    return dict.$button.format(edit, payload)
+  } else if (edit.type === 'buttonGroup') {
+    return dict.$buttonGroup.format(edit, payload)
+  } else if (edit.type === 'content') {
+    return dict.$content.format(edit, payload)
+  } else if (edit.type === 'custom') {
+    return dict.$custom.format(edit, payload)
+  } else {
+    console.error(`[${(edit as any).type}]:FormItem类型匹配失败，请检查代码`)
+  }
 }

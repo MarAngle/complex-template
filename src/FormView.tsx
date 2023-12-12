@@ -23,7 +23,7 @@ export default defineComponent({
       required: true
     },
     menu: {
-      type: Object as PropType<DefaultEditButtonGroupInitOption>,
+      type: Object as PropType<DefaultEditButtonGroup | DefaultEditButtonGroupInitOption>,
       required: false
     },
     type: {
@@ -73,7 +73,11 @@ export default defineComponent({
     },
     currentMenu() {
       if (this.menu) {
-        return new DefaultEditButtonGroup(this.menu, this.type)
+        if (this.menu instanceof DefaultEditButtonGroup) {
+          return this.menu
+        } else {
+          return new DefaultEditButtonGroup(this.menu, this.type)
+        }
       } else {
         return null
       }
@@ -93,7 +97,7 @@ export default defineComponent({
     getItemGrid(data: DefaultMod) {
       return config.parseGrid(data.$layout, 'main', this.type)
     },
-    getItemProps(data: DefaultMod, index: number) {
+    getItemProps(data: DictionaryEditMod, index: number) {
       return {
         data: data,
         index: index,

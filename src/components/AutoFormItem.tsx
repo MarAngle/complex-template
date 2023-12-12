@@ -6,6 +6,7 @@ import ObserveList from "complex-data/src/dictionary/ObserveList"
 import AntdFormValue from "./../class/AntdFormValue"
 import config from "../../config"
 import { parseEditAttrs } from "../../format"
+import { ButtonType } from "ant-design-vue/es/button"
 
 export interface FormItemPayloadType {
   prop: string
@@ -13,7 +14,9 @@ export interface FormItemPayloadType {
   data: DictionaryEditMod
   index: number
   form: AntdFormValue
+  targetData: Record<PropertyKey, unknown>
   list: ObserveList
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   target: any
   disabled?: boolean
   loading?: boolean
@@ -63,6 +66,7 @@ export default defineComponent({
         data: this.data,
         index: this.index,
         form: this.form,
+        targetData: this.form.data,
         list: this.list,
         target: this.target,
         disabled: this.disabled,
@@ -87,12 +91,14 @@ export default defineComponent({
       }
     },
     renderItem() {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       let tag: any
-      const itemAttrs = parseEditAttrs(this.data, this.payload)
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      let children: any
+      const itemAttrs = parseEditAttrs(this.data, this.payload)!
       itemAttrs.pushClass('complex-form-item-type')
       itemAttrs.pushClass('complex-form-item-type-' + this.data.type)
       itemAttrs.merge(config.component.parseData(this.data.$local, 'target'))
-      let children: any
       let item = null
       if (this.target.layout === 'inline') {
         const width = config.parseWidth(this.data.$layout, 'target', this.type)
@@ -155,19 +161,33 @@ export default defineComponent({
           if (buttonOption.render) {
             return buttonOption.render({
               ...this.payload,
+              onClick: () => {
+                this.target.$emit('menu', this.data.$prop, this.payload)
+                if(buttonOption.click) {
+                  buttonOption.click!(this.payload)
+                }
+              },
               option: buttonOption
             })
           } else {
             return h(Button, {
               disabled: this.disabled || this.data.disabled.getValue(this.type) || buttonOption.disabled,
-              type: buttonOption.type,
+              type: buttonOption.type as ButtonType,
               icon: buttonOption.icon,
-              loading: buttonOption.loading,
+              loading: !!buttonOption.loading,
               uploader: buttonOption.uploader,
-              onClick: buttonOption.click
+              onClick: () => {
+                this.target.$emit('menu', this.data.$prop, this.payload)
+                if(buttonOption.click) {
+                  buttonOption.click!(this.payload)
+                }
+              }
             })
           }
         })
+      } else if (this.data.type === 'content') {
+        tag = 'div'
+        children = this.data.$option.data
       } else if (this.data.type === 'custom') {
         tag = this.data.$custom
       }
