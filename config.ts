@@ -3,6 +3,7 @@ import { layout } from "complex-plugin"
 import { ChoiceData, PaginationData, AttrsValue } from "complex-data"
 import dataConfig from "complex-data/config"
 import DefaultList from 'complex-data/src/dictionary/DefaultList'
+import InterfaceLayoutValue from "complex-data/src/lib/InterfaceLayoutValue"
 import { AutoIndex } from "complex-component"
 import componentConfig from "complex-component/config"
 import AutoText from "./src/AutoText.vue"
@@ -97,6 +98,48 @@ const config = {
   pagination: {
     formatInfo(payload: { pagination: PaginationData, auto: boolean }) {
       return `共${payload.pagination.page.total}页/${payload.pagination.count}条`
+    }
+  },
+  form: {
+    layout: 'horizontal',
+    layoutOption: {
+      gutter: 24
+    },
+    labelAlign: 'right',
+    checkOnRuleChange: true,
+    checkOnInit: false,
+    clearCheckOnInit: true,
+    grid: {
+      main: {
+        span: 24
+      },
+      label: {
+        span: 8
+      },
+      content: {
+        span: 16
+      }
+    }
+  },
+  parseLayout(interfaceLayout: undefined | InterfaceLayoutValue, type?: string) {
+    if (interfaceLayout) {
+      return interfaceLayout.getValue(type)
+    } else {
+      return null
+    }
+  },
+  parseGrid(interfaceLayout: undefined | InterfaceLayoutValue, prop: 'main' | 'label' | 'content', type?: string) {
+    const layout = this.parseLayout(interfaceLayout, type)
+    if (layout && layout.grid[prop]) {
+      return layout.grid[prop]
+    } else {
+      return this.form.grid[prop]
+    }
+  },
+  parseWidth(interfaceLayout: undefined | InterfaceLayoutValue, prop: string, type?: string) {
+    const layout = this.parseLayout(interfaceLayout, type)
+    if (layout && layout.width[prop]) {
+      return layout.width[prop]
     }
   }
 }
