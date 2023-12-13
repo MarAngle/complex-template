@@ -1,6 +1,6 @@
 import { AttrsValue } from "complex-data"
 import { DictionaryEditMod } from "complex-data/src/dictionary/DictionaryValue"
-import { getEnv } from "complex-utils"
+import { getEnv, isPromise } from "complex-utils"
 import { FormItemPayloadType } from "./src/components/AutoFormItem"
 import DefaultEditInput from "complex-data/src/dictionary/DefaultEditInput"
 import DefaultEditInputNumber from "complex-data/src/dictionary/DefaultEditInputNumber"
@@ -38,6 +38,7 @@ const modelFuncDict = {
   },
   input: function (formdata: Record<PropertyKey, unknown>, prop: PropertyKey, args: unknown[]) {
     if (showLogs.model) { console.log(formdata, prop, args) }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     formdata[prop] = (args[0] as any).target.value
   },
   select: function (formdata: Record<PropertyKey, unknown>, prop: PropertyKey, args: unknown[]) {
@@ -297,12 +298,7 @@ const dict = {
           placeholder: edit.placeholder ? edit.placeholder.getValue(payload.type) : undefined
         },
         on: {
-          click: () => {
-            payload.target.$emit('menu', edit.$prop, payload)
-            if(edit.$option.click) {
-              edit.$option.click!(payload)
-            }
-          }
+          click: bindButtonClick(edit.$prop, edit.$option, payload)
         }
       })
       bindEvent(this as dictItemType, itemAttrs, edit, payload)
@@ -355,6 +351,21 @@ const dict = {
   }
 }
 
+export const bindButtonClick = function(prop: string, option: DefaultEditButton['$option'], payload: FormItemPayloadType) {
+  return function() {
+    payload.target.$emit('menu', prop, payload)
+    if(option.click) {
+      const res = option.click!(payload)
+      if (isPromise(res)) {
+        option.loading = true
+        res.finally(() => {
+          option.loading = false
+        })
+      }
+    }
+  }
+}
+
 export const parseEditAttrs = function (edit: DictionaryEditMod, payload: FormItemPayloadType) {
   if (edit.type === 'input') {
     return dict.$input.format(edit, payload)
@@ -383,6 +394,7 @@ export const parseEditAttrs = function (edit: DictionaryEditMod, payload: FormIt
   } else if (edit.type === 'custom') {
     return dict.$custom.format(edit, payload)
   } else {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     console.error(`[${(edit as any).type}]:FormItem类型匹配失败，请检查代码`)
   }
 }

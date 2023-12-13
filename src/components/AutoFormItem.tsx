@@ -5,7 +5,7 @@ import { DictionaryEditMod } from "complex-data/src/dictionary/DictionaryValue"
 import ObserveList from "complex-data/src/dictionary/ObserveList"
 import AntdFormValue from "./../class/AntdFormValue"
 import config from "../../config"
-import { parseEditAttrs } from "../../format"
+import { bindButtonClick, parseEditAttrs } from "../../format"
 import { ButtonType } from "ant-design-vue/es/button"
 
 export interface FormItemPayloadType {
@@ -176,12 +176,7 @@ export default defineComponent({
               icon: buttonOption.icon,
               loading: !!buttonOption.loading,
               uploader: buttonOption.uploader,
-              onClick: () => {
-                this.target.$emit('menu', this.data.$prop, this.payload)
-                if(buttonOption.click) {
-                  buttonOption.click!(this.payload)
-                }
-              }
+              onClick: bindButtonClick(this.data.$prop, buttonOption, this.payload)
             })
           }
         })
