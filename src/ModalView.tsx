@@ -10,7 +10,6 @@ export interface menuType extends DefaultEditButtonGroupOption {
   prop: string
 }
 
-
 export type modalLayoutOption = {
   type: 'auto' | 'fixed'
   top: number

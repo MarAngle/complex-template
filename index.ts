@@ -10,10 +10,12 @@ import './src/style/index.css'
 
 SearchData.$form = AntdFormValue
 
-export const ComplexAutoText = AutoText
-export const ComplexButtonView = ButtonView
-export const ComplexSimpleTableView = SimpleTableView
-export const ComplexTableView = TableView
-export const ComplexModalView = ModalView
-export const ComplexFormView = FormView
+export {
+  AutoText,
+  ButtonView,
+  SimpleTableView,
+  TableView,
+  ModalView,
+  FormView,
+}
 
