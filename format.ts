@@ -291,14 +291,15 @@ const dict = {
     format(edit: DefaultEditButton, payload: FormItemPayloadType) {
       const itemAttrs = new AttrsValue({
         props: {
-          loading: payload.loading || edit.$option.loading,
-          type: edit.$option.type,
-          icon: edit.$option.icon,
-          disabled: payload.disabled || edit.disabled.getValue(payload.type),
-          placeholder: edit.placeholder ? edit.placeholder.getValue(payload.type) : undefined
-        },
-        on: {
-          click: bindButtonClick(edit.$prop, edit.$option, payload)
+          data: {
+            type: edit.$option.type,
+            icon: edit.$option.icon,
+            name: edit.$option.name || edit.$name.getValue(payload.type),
+            loading: payload.loading || edit.$option.loading,
+            uploader: edit.$option.uploader,
+            disabled: payload.disabled || edit.disabled.getValue(payload.type),
+            click: bindButtonClick(edit.$prop, edit.$option, payload)
+          }
         }
       })
       bindEvent(this as dictItemType, itemAttrs, edit, payload)
@@ -355,13 +356,7 @@ export const bindButtonClick = function(prop: string, option: DefaultEditButton[
   return function() {
     payload.target.$emit('menu', prop, payload)
     if(option.click) {
-      const res = option.click!(payload)
-      if (isPromise(res)) {
-        option.loading = true
-        res.finally(() => {
-          option.loading = false
-        })
-      }
+      return option.click(payload)
     }
   }
 }

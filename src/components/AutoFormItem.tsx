@@ -1,12 +1,12 @@
 import { defineComponent, h, PropType } from "vue"
-import { FormItem, Tooltip, Input, InputNumber, Textarea, Switch, Select, SelectOption, Cascader, DatePicker, RangePicker, Button } from "ant-design-vue"
+import { FormItem, Tooltip, Input, InputNumber, Textarea, Switch, Select, SelectOption, Cascader, DatePicker, RangePicker } from "ant-design-vue"
 import { AttrsValue } from "complex-data"
 import { DictionaryEditMod } from "complex-data/src/dictionary/DictionaryValue"
 import ObserveList from "complex-data/src/dictionary/ObserveList"
 import AntdFormValue from "./../class/AntdFormValue"
-import config from "../../config"
+import ButtonView from "../ButtonView"
 import { bindButtonClick, parseEditAttrs } from "../../format"
-import { ButtonType } from "ant-design-vue/es/button"
+import config from "../../config"
 
 export interface FormItemPayloadType {
   prop: string
@@ -152,9 +152,7 @@ export default defineComponent({
       } else if (this.data.type === 'file') {
         // tag = UploadFile
       } else if (this.data.type === 'button') {
-        tag = Button
-        const text = this.data.$option.name || this.data.$name.getValue(this.type)
-        children = text
+        tag = ButtonView
       } else if (this.data.type === 'buttonGroup') {
         tag = 'div'
         children = this.data.$list.forEach(buttonOption => {
@@ -170,13 +168,16 @@ export default defineComponent({
               option: buttonOption
             })
           } else {
-            return h(Button, {
-              disabled: this.disabled || this.data.disabled.getValue(this.type) || buttonOption.disabled,
-              type: buttonOption.type as ButtonType,
-              icon: buttonOption.icon,
-              loading: !!buttonOption.loading,
-              uploader: buttonOption.uploader,
-              onClick: bindButtonClick(this.data.$prop, buttonOption, this.payload)
+            return h(ButtonView, {
+              data: {
+                type: buttonOption.type,
+                icon: buttonOption.icon,
+                name: buttonOption.name || this.data.$name.getValue(this.type)!,
+                loading: this.loading || buttonOption.loading,
+                uploader: buttonOption.uploader,
+                disabled: this.disabled || this.data.disabled.getValue(this.type) || buttonOption.disabled,
+                click: bindButtonClick(this.data.$prop, buttonOption, this.payload)
+              }
             })
           }
         })

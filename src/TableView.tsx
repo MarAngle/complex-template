@@ -1,6 +1,6 @@
 import { defineComponent, h, PropType } from "vue"
 import { Table, TableColumnType, TableProps } from 'ant-design-vue'
-import { setDataByDefault } from "complex-utils"
+import { deepCloneData, updateData } from "complex-utils"
 import { ComplexList, PaginationData } from "complex-data"
 import DefaultList from "complex-data/src/dictionary/DefaultList"
 import Pagination from "./components/Pagination"
@@ -85,7 +85,7 @@ export default defineComponent({
       })
     },
     currentAuto() {
-      return setDataByDefault(this.auto, config.table.auto) as Required<autoType>
+      return updateData(deepCloneData(config.table.auto), this.auto)
     },
     currentPaginationData() {
       if (this.paginationData) {

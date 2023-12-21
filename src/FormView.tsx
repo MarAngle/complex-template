@@ -76,7 +76,7 @@ export default defineComponent({
         if (this.menu instanceof DefaultEditButtonGroup) {
           return this.menu
         } else {
-          return new DefaultEditButtonGroup(this.menu, this.type)
+          return new DefaultEditButtonGroup(this.menu)
         }
       } else {
         return null

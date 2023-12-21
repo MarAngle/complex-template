@@ -1,16 +1,19 @@
 import { SearchData } from "complex-data"
 import AntdFormValue from "./src/class/AntdFormValue"
-import AutoRender from "./src/components/AutoRender"
 import AutoText from "./src/AutoText.vue"
-import SimpleTable from "./src/SimpleTable"
+import ButtonView from "./src/ButtonView"
+import SimpleTableView from "./src/SimpleTableView"
 import TableView from "./src/TableView"
+import ModalView from "./src/ModalView"
+import FormView from "./src/FormView"
 import './src/style/index.css'
 
 SearchData.$form = AntdFormValue
 
-export {
-  AutoRender,
-  AutoText,
-  SimpleTable,
-  TableView
-}
+export const ComplexAutoText = AutoText
+export const ComplexButtonView = ButtonView
+export const ComplexSimpleTableView = SimpleTableView
+export const ComplexTableView = TableView
+export const ComplexModalView = ModalView
+export const ComplexFormView = FormView
+

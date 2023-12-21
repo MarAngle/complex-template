@@ -8,6 +8,7 @@ import InterfaceLayoutValue from "complex-data/src/lib/InterfaceLayoutValue"
 import { AutoIndex } from "complex-component"
 import componentConfig from "complex-component/config"
 import AutoText from "./src/AutoText.vue"
+import { menuType, modalLayoutOption } from "./src/ModalView"
 
 export class LayoutLifeData {
   life: number
@@ -118,6 +119,52 @@ const config = {
       },
       content: {
         span: 16
+      }
+    }
+  },
+  modal: {
+    width: 520,
+    layout: {
+      type: 'auto',
+      top: 100,
+      bottom: 100,
+      header: 24 + 8,
+      menu: 32 + 12,
+      padding: [24, 24, 24, 24],
+      mainPadding: [20, 24, 20, 24]
+    } as modalLayoutOption,
+    menu: {
+      close: {
+        type: 'default',
+        name: '关闭',
+        prop: 'close'
+      },
+      cancel: {
+        type: 'default',
+        name: '取消',
+        prop: 'close'
+      },
+      submit: {
+        type: 'primary',
+        name: '确认',
+        prop: 'submit'
+      }
+    },
+    getMenu(prop: string, targetOption?: Partial<menuType>): menuType {
+      const data = this.menu[prop as keyof typeof config.modal.menu]
+      if (data) {
+        return {
+          ...data,
+          ...targetOption
+        }
+      } else {
+        console.error(`${prop}未获取到menu初始化参数，请检查代码！`)
+        return {
+          type: 'default',
+          name: prop,
+          prop: prop,
+          ...targetOption
+        }
       }
     }
   },
