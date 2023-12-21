@@ -61,11 +61,10 @@ export default defineComponent({
   data() {
     return {
       type: '',
-      edit: '',
       localForm: new AntdFormValue(),
       data: undefined as dataType,
       dictionaryList: [] as DictionaryValue[],
-      list: null as null | ObserveList,
+      list: undefined as undefined | ObserveList,
     }
   },
   computed: {
@@ -74,9 +73,8 @@ export default defineComponent({
     }
   },
   methods: {
-    $show(type: string, edit: string, data?: dataType) {
+    show(type: string, data?: dataType) {
       this.type = type
-      this.edit = edit
       this.data = data || undefined
       this.init()
       this.$nextTick(() => {
@@ -100,28 +98,42 @@ export default defineComponent({
       })
     },
     renderForm() {
+      console.log(this, this.list)
       if (this.list) {
         return h(FormView, {
           form: this.currentForm!,
           list: this.list as ObserveList,
           menu: this.menu,
-          type: this.edit,
+          type: this.type,
           layout: this.layout!,
           labelAlign: this.labelAlign!,
           layoutOption: this.layoutOption!,
           formOption: this.formOption,
           disabled: this.disabled,
           loading: this.loading,
-          onMenu(prop: string, payload: FormItemPayloadType) {
+          onMenu: (prop: string, payload: FormItemPayloadType) => {
             this.$emit('menu', prop, payload)
           }
         })
+      } else {
+        return null
       }
     }
   },
   render() {
+    // return h('div', { class: 'complex-edit' }, {
+    //   default: () => {
+    //     const form = this.renderForm()
+    //     console.log(form)
+    //     return form
+    //   }
+    // })
     return h('div', { class: 'complex-edit' }, {
-      default: () => this.renderForm()
+      default: () => {
+        const form = this.renderForm()
+        console.log(form)
+        return form
+      }
     })
   }
 })

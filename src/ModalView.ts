@@ -51,10 +51,7 @@ export default defineComponent({
     },
     submit: {
       type: Function as PropType<() => Promise<unknown>>,
-      required: false,
-      default: () => {
-        return null
-      }
+      required: false
     },
     modalOption: {
       type: Object as PropType<ModalProps>,
@@ -68,10 +65,14 @@ export default defineComponent({
     return {
       open: false,
       layoutPlugin: layout,
-      currentModalOption: null as null | ModalProps
+      localTitle: undefined as undefined | string,
+      localModalOption: undefined as undefined | ModalProps
     }
   },
   computed: {
+    currentTitle() {
+      return this.localTitle || this.title
+    },
     currentLayout() {
       return updateData(deepCloneData(config.modal.layout), this.layout)
     },
@@ -83,7 +84,7 @@ export default defineComponent({
       const submit = () => {
         if (this.submit) {
           return new Promise((resolve, reject) => {
-            this.submit().then(() => {
+            this.submit!().then(() => {
               this.hide('submit')
               resolve({ status: 'success' })
             }).catch(err => {
@@ -146,14 +147,16 @@ export default defineComponent({
     }
   },
   methods: {
-    show(option?: ModalProps) {
-      this.currentModalOption = option || null
+    show(title?: string, option?: ModalProps) {
+      this.localTitle = title
+      this.localModalOption = option
       this.open = true
     },
     hide(from: string) {
       this.open = false
       this.$emit('hide', from)
-      this.currentModalOption = null
+      this.localTitle = undefined
+      this.localModalOption = undefined
     },
     renderContent() {
       return this.$slots.default!({
@@ -200,9 +203,9 @@ export default defineComponent({
     const props: ModalProps = {
       open: this.open,
       width: this.currentWidth,
-      title: this.title,
+      title: this.currentTitle,
       ...this.modalOption,
-      ...this.currentModalOption,
+      ...this.localModalOption,
       onCancel: (e: MouseEvent | KeyboardEvent) => {
         if (e instanceof KeyboardEvent) {
           this.hide('escape')

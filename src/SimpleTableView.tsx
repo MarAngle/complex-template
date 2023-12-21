@@ -163,7 +163,7 @@ export default defineComponent({
   },
   /**
    * 主要模板
-   * @param {*} h createElement
+
    * @returns {VNode}
    */
   render() {

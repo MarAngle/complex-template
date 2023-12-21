@@ -6,6 +6,7 @@ import SimpleTableView from "./src/SimpleTableView"
 import TableView from "./src/TableView"
 import ModalView from "./src/ModalView"
 import FormView from "./src/FormView"
+import EditView from "./src/EditView"
 import './src/style/index.css'
 
 SearchData.$form = AntdFormValue
@@ -16,4 +17,5 @@ export const ComplexSimpleTableView = SimpleTableView
 export const ComplexTableView = TableView
 export const ComplexModalView = ModalView
 export const ComplexFormView = FormView
+export const ComplexEditView = EditView
 
