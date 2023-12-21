@@ -1,5 +1,5 @@
 import { defineComponent, h, PropType } from "vue"
-import { Col, Form, Row } from "ant-design-vue"
+import { Col, Form, Row, FormProps } from "ant-design-vue"
 import { FormLabelAlign } from "ant-design-vue/es/form/interface"
 import { FormLayout } from "ant-design-vue/es/form/Form"
 import { mergeData } from "complex-utils"
@@ -47,10 +47,9 @@ export default defineComponent({
         return config.form.layoutOption
       }
     },
-    formProps: { // form-model-view设置项
-      type: Object,
-      required: false,
-      default: null
+    formOption: { // form-model-view设置项
+      type: Object as PropType<FormProps>,
+      required: false
     },
     disabled: {
       type: Boolean,
@@ -62,14 +61,14 @@ export default defineComponent({
     }
   },
   computed: {
-    currentFormProps() {
-      const formProps = {
+    currentFormOption() {
+      const formOption = {
         ref: 'form',
         model: this.form.data,
         layout: this.layout,
         labelAlign: this.labelAlign
       }
-      return mergeData(formProps, this.formProps)
+      return mergeData(formOption, this.formOption)
     },
     currentMenu() {
       if (this.menu) {
@@ -91,7 +90,7 @@ export default defineComponent({
     }
   },
   mounted () {
-    this.form.setRef(this.$refs[this.currentFormProps.ref])
+    this.form.setRef(this.$refs[this.currentFormOption.ref])
   },
   methods: {
     getItemGrid(data: DefaultMod) {
@@ -142,7 +141,7 @@ export default defineComponent({
     const layoutClass = `complex-form-${this.layout}`
     const render = h(Form, {
       class: `complex-form ${layoutClass}`,
-      ...this.currentFormProps
+      ...this.currentFormOption
     }, {
       default: () => {
         const list = this.renderList()

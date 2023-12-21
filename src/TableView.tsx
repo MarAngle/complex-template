@@ -46,7 +46,7 @@ export default defineComponent({
       required: false,
       default: null
     },
-    optionProps: { // 单独制定分页器数据，不从listData中取值
+    tableOption: { // 单独制定分页器数据，不从listData中取值
       type: Object as PropType<TableProps>,
       required: false,
       default: () => {
@@ -154,23 +154,23 @@ export default defineComponent({
       }
       return list
     },
-    currentOptionProps() {
-      const currentOptionProps = { ...this.optionProps }
-      if (!currentOptionProps.columns) {
-        currentOptionProps.columns = this.currentColumnList
+    currentTableOption() {
+      const currentTableOption = { ...this.tableOption }
+      if (!currentTableOption.columns) {
+        currentTableOption.columns = this.currentColumnList
       }
-      if (!currentOptionProps.dataSource) {
-        currentOptionProps.dataSource = this.currentData
+      if (!currentTableOption.dataSource) {
+        currentTableOption.dataSource = this.currentData
       }
-      if (!currentOptionProps.rowKey) {
-        currentOptionProps.rowKey = this.listData.$getDictionaryProp('id')
+      if (!currentTableOption.rowKey) {
+        currentTableOption.rowKey = this.listData.$getDictionaryProp('id')
       }
-      if (currentOptionProps.pagination === undefined) {
-        currentOptionProps.pagination = false
+      if (currentTableOption.pagination === undefined) {
+        currentTableOption.pagination = false
       }
       const choice = this.listData.$module.choice
       if (choice) {
-        currentOptionProps.rowSelection = {
+        currentTableOption.rowSelection = {
           columnWidth: 50,
           selectedRowKeys: choice.data.id as (string | number)[],
           onChange: (selectedRowKeys: (string | number)[], selectedRows: Record<string, unknown>[]) => {
@@ -192,7 +192,7 @@ export default defineComponent({
           ...config.component.parseAttrs(config.component.parseData(choice.$local, 'target'))
         }
       }
-      return currentOptionProps
+      return currentTableOption
     },
   },
   mounted() {
@@ -204,7 +204,7 @@ export default defineComponent({
   methods: {
     renderTable() {
       const table = h(Table, {
-        ...this.currentOptionProps
+        ...this.currentTableOption
       })
       return table
     },
