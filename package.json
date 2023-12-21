@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "ant-design-vue": "^4.0.7",
-    "complex-data": "4.0.13 - 4.0.99",
+    "complex-data": "4.0.14 - 4.0.99",
     "complex-component": "4.0.11 - 4.0.99"
   },
   "devDependencies": {

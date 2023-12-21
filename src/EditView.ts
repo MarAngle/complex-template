@@ -1,8 +1,7 @@
 import { defineComponent, h, PropType } from "vue"
 import { FormLayout, FormProps } from "ant-design-vue/es/form/Form"
 import { FormLabelAlign } from "ant-design-vue/es/form/interface"
-import { DictionaryData } from "complex-data"
-import DictionaryValue from "complex-data/src/dictionary/DictionaryValue"
+import { DictionaryData, DictionaryValue } from "complex-data"
 import ObserveList from "complex-data/src/dictionary/ObserveList"
 import DefaultEditButtonGroup, { DefaultEditButtonGroupInitOption } from "complex-data/src/dictionary/DefaultEditButtonGroup"
 import AntdFormValue from "./class/AntdFormValue"
@@ -98,9 +97,8 @@ export default defineComponent({
       })
     },
     renderForm() {
-      console.log(this, this.list)
       if (this.list) {
-        return h(FormView, {
+        const form = h(FormView, {
           form: this.currentForm!,
           list: this.list as ObserveList,
           menu: this.menu,
@@ -115,25 +113,13 @@ export default defineComponent({
             this.$emit('menu', prop, payload)
           }
         })
+        return form
       } else {
         return null
       }
     }
   },
   render() {
-    // return h('div', { class: 'complex-edit' }, {
-    //   default: () => {
-    //     const form = this.renderForm()
-    //     console.log(form)
-    //     return form
-    //   }
-    // })
-    return h('div', { class: 'complex-edit' }, {
-      default: () => {
-        const form = this.renderForm()
-        console.log(form)
-        return form
-      }
-    })
+    return h('div', { class: 'complex-edit' }, [this.renderForm()])
   }
 })

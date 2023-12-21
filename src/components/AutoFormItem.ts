@@ -1,7 +1,7 @@
 import { defineComponent, h, PropType } from "vue"
 import { FormItem, Tooltip, Input, InputNumber, Textarea, Switch, Select, SelectOption, Cascader, DatePicker, RangePicker } from "ant-design-vue"
 import { AttrsValue } from "complex-data"
-import { DictionaryEditMod } from "complex-data/src/dictionary/DictionaryValue"
+import { DictionaryEditMod } from "complex-data/src/lib/DictionaryValue"
 import ObserveList from "complex-data/src/dictionary/ObserveList"
 import AntdFormValue from "./../class/AntdFormValue"
 import ButtonView from "../ButtonView"
@@ -213,7 +213,7 @@ export default defineComponent({
         props: {
           name: this.data.$prop,
           label: label,
-          colon: this.data.colon,
+          colon: this.data.colon.getValue(this.type),
           required: this.data.required.getValue(this.type),
           rules: this.data.$rules.getValue(this.type)
         }

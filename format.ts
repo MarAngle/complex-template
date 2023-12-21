@@ -1,7 +1,6 @@
+import { getEnv } from "complex-utils"
 import { AttrsValue } from "complex-data"
-import { DictionaryEditMod } from "complex-data/src/dictionary/DictionaryValue"
-import { getEnv, isPromise } from "complex-utils"
-import { FormItemPayloadType } from "./src/components/AutoFormItem"
+import { DictionaryEditMod } from "complex-data/src/lib/DictionaryValue"
 import DefaultEditInput from "complex-data/src/dictionary/DefaultEditInput"
 import DefaultEditInputNumber from "complex-data/src/dictionary/DefaultEditInputNumber"
 import DefaultEditTextArea from "complex-data/src/dictionary/DefaultEditTextArea"
@@ -15,6 +14,7 @@ import DefaultEditButton from "complex-data/src/dictionary/DefaultEditButton"
 import DefaultEditButtonGroup from "complex-data/src/dictionary/DefaultEditButtonGroup"
 import DefaultEditContent from "complex-data/src/dictionary/DefaultEditContent"
 import DefaultEditCustom from "complex-data/src/dictionary/DefaultEditCustom"
+import { FormItemPayloadType } from "./src/components/AutoFormItem"
 
 const showLogs = {
   init: true,

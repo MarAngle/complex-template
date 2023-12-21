@@ -3,7 +3,7 @@ import { Col, Form, Row, FormProps } from "ant-design-vue"
 import { FormLabelAlign } from "ant-design-vue/es/form/interface"
 import { FormLayout } from "ant-design-vue/es/form/Form"
 import { mergeData } from "complex-utils"
-import { DictionaryEditMod } from "complex-data/src/dictionary/DictionaryValue"
+import { DictionaryEditMod } from "complex-data/src/lib/DictionaryValue"
 import ObserveList from "complex-data/src/dictionary/ObserveList"
 import DefaultMod from "complex-data/src/dictionary/DefaultMod"
 import DefaultEditButtonGroup, { DefaultEditButtonGroupInitOption } from "complex-data/src/dictionary/DefaultEditButtonGroup"
@@ -138,15 +138,14 @@ export default defineComponent({
    * @returns {VNode}
    */
   render() {
-    console.log(this)
     const layoutClass = `complex-form-${this.layout}`
+    const list = this.renderList()
+    const menu = this.renderMenu()
     const render = h(Form, {
       class: `complex-form ${layoutClass}`,
       ...this.currentFormOption
     }, {
       default: () => {
-        const list = this.renderList()
-        const menu = this.renderMenu()
         if (this.layout === 'inline') {
           return [...list, menu]
         } else {
