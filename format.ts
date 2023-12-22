@@ -1,3 +1,4 @@
+import dayjs from 'dayjs'
 import { getEnv } from "complex-utils"
 import { AttrsValue } from "complex-data"
 import { DictionaryEditMod } from "complex-data/src/lib/DictionaryValue"
@@ -17,8 +18,8 @@ import DefaultEditCustom from "complex-data/src/dictionary/DefaultEditCustom"
 import { FormItemPayloadType } from "./src/components/AutoFormItem"
 
 const showLogs = {
-  init: true,
-  model: true
+  init: false,
+  model: false
 }
 
 if (getEnv('real') === 'production') {
@@ -166,6 +167,7 @@ const dict = {
       const itemAttrs = new AttrsValue({
         props: {
           mode: edit.multiple ? 'multiple' : 'default',
+          options: edit.$option.list,
           showSearch: false,
           showArrow: !edit.$option.hideArrow,
           allowClear: !edit.$option.hideClear,
@@ -209,7 +211,7 @@ const dict = {
       const format = edit.$option.time ? edit.$option.format + ' ' + edit.$option.time.format : edit.$option.format
       const showTime = edit.$option.time ? {
         format: edit.$option.time.format,
-        defaultValue: edit.$option.time.defaultValue
+        defaultValue: dayjs(edit.$option.time.defaultValue, edit.$option.time.format)
       } : false
       const itemAttrs = new AttrsValue({
         props: {
@@ -235,7 +237,9 @@ const dict = {
       const format = edit.$option.time ? edit.$option.format + ' ' + edit.$option.time.format : edit.$option.format
       const showTime = edit.$option.time ? {
         format: edit.$option.time.format,
-        defaultValue: edit.$option.time.defaultValue
+        defaultValue: edit.$option.time.defaultValue.map(timeValueStr => {
+          return dayjs(timeValueStr, edit.$option.time!.format)
+        })
       } : false
       const itemAttrs = new AttrsValue({
         props: {

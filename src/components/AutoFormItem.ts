@@ -94,7 +94,7 @@ export default defineComponent({
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       let tag: any
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      let children: any
+      let children: any[] = []
       const itemAttrs = parseEditAttrs(this.data, this.payload)!
       itemAttrs.pushClass('complex-form-item-type')
       itemAttrs.pushClass('complex-form-item-type-' + this.data.type)
@@ -124,25 +124,29 @@ export default defineComponent({
       } else if (this.data.type === 'select') {
         tag = Select
         // 设置字典
-        const dict = {
-          key: this.data.$option.optionValue || 'value',
-          value: this.data.$option.optionValue || 'value',
-          label: this.data.$option.optionLabel || 'label',
-          disabled: this.data.$option.optionDisabled || 'disabled'
-        }
-        children = this.data.$option.list.map((itemData: Record<string, unknown>) => {
-          const optionAttrs = new AttrsValue({
-            props: {
-              key: itemData[dict.key],
-              value: itemData[dict.value],
-              disabled: itemData[dict.disabled] || false
-            }
-          })
-          optionAttrs.merge(config.component.parseData(this.data.$local, 'child'))
-          return h(SelectOption, config.component.parseAttrs(optionAttrs), {
-            default: () => itemData[dict.label]
-          })
-        })
+        // const dict = {
+        //   key: this.data.$option.optionValue || 'value',
+        //   value: this.data.$option.optionValue || 'value',
+        //   label: this.data.$option.optionLabel || 'label',
+        //   disabled: this.data.$option.optionDisabled || 'disabled'
+        // }
+        // children = this.data.$option.list.map((optionItem: Record<string, unknown>) => {
+        //   const optionAttrs = new AttrsValue({
+        //     props: {
+        //       key: optionItem[dict.key],
+        //       value: optionItem[dict.value],
+        //       disabled: !!optionItem[dict.disabled]
+        //     }
+        //   })
+        //   optionAttrs.merge(config.component.parseData(this.data.$local, 'child'))
+        //   return h(SelectOption, config.component.parseAttrs(optionAttrs), {
+        //     default: () => {
+        //       console.log(optionItem, dict)
+        //       return optionItem[dict.label] + '123'
+        //     }
+        //   })
+        // })
+        // console.log(this.data.$option, children)
       } else if (this.data.type === 'cascader') {
         tag = Cascader
       } else if (this.data.type === 'date') {
@@ -155,7 +159,7 @@ export default defineComponent({
         tag = ButtonView
       } else if (this.data.type === 'buttonGroup') {
         tag = 'div'
-        children = this.data.$list.forEach(buttonOption => {
+        children = this.data.$list.map(buttonOption => {
           if (buttonOption.render) {
             return buttonOption.render({
               ...this.payload,
@@ -183,12 +187,12 @@ export default defineComponent({
         })
       } else if (this.data.type === 'content') {
         tag = 'div'
-        children = this.data.$option.data
+        children = [this.data.$option.data]
       } else if (this.data.type === 'custom') {
         tag = this.data.$custom
       }
       if (tag) {
-        if (!children) {
+        if (children.length === 0) {
           item = h(tag, config.component.parseAttrs(itemAttrs))
         } else {
           item = h(tag, config.component.parseAttrs(itemAttrs), {
