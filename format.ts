@@ -208,16 +208,15 @@ const dict = {
       change: modelFuncDict.change
     },
     format(edit: DefaultEditDate, payload: FormItemPayloadType) {
-      const format = edit.$option.time ? edit.$option.format + ' ' + edit.$option.time.format : edit.$option.format
       const showTime = edit.$option.time ? {
-        format: edit.$option.time.format,
+        format: edit.$option.time.showFormat,
         defaultValue: dayjs(edit.$option.time.defaultValue, edit.$option.time.format)
       } : false
       const itemAttrs = new AttrsValue({
         props: {
           disabled: payload.disabled || edit.disabled.getValue(payload.type),
           placeholder: edit.placeholder ? edit.placeholder.getValue(payload.type) : undefined,
-          format: format,
+          format: edit.$option.showFormat,
           allowClear: !edit.$option.hideClear,
           showTime: showTime,
           disabledDate: edit.$option.disabledDate,
@@ -234,9 +233,8 @@ const dict = {
       change: modelFuncDict.change
     },
     format(edit: DefaultEditDateRange, payload: FormItemPayloadType) {
-      const format = edit.$option.time ? edit.$option.format + ' ' + edit.$option.time.format : edit.$option.format
       const showTime = edit.$option.time ? {
-        format: edit.$option.time.format,
+        format: edit.$option.time.showFormat,
         defaultValue: edit.$option.time.defaultValue.map(timeValueStr => {
           return dayjs(timeValueStr, edit.$option.time!.format)
         })
@@ -245,7 +243,7 @@ const dict = {
         props: {
           disabled: payload.disabled || edit.disabled.getValue(payload.type),
           placeholder: edit.placeholder ? edit.placeholder.getValue(payload.type) : undefined,
-          format: format,
+          format: edit.$option.showFormat,
           allowClear: !edit.$option.hideClear,
           separator: edit.$option.separator,
           showTime: showTime,

@@ -83,7 +83,7 @@ export default defineComponent({
     init() {
       this.dictionaryList = this.dictionary.$getList(this.type) 
       this.list = this.dictionary.$buildObserveList(this.type, this.dictionaryList as DictionaryValue[])
-      this.dictionary.$createFormData(this.dictionaryList as DictionaryValue[], this.type, this.data).then(res => {
+      this.dictionary.$createEditData(this.dictionaryList as DictionaryValue[], this.type, this.data).then(res => {
         this.currentForm.setData(res.data)
         if (this.observe) {
           this.list!.setForm(this.currentForm.getData(), this.type)
