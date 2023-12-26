@@ -10,8 +10,6 @@ import { FormItemPayloadType } from "./components/AutoFormItem"
 
 type dataType = undefined | Record<PropertyKey, unknown>
 
-export type submitNextType = (postData: Record<PropertyKey, unknown>, targetData: dataType, type: string) => unknown
-
 export default defineComponent({
   name: 'EditView',
   props: {
@@ -90,10 +88,14 @@ export default defineComponent({
         }
       })
     },
-    submit(next: submitNextType) {
-      this.currentForm.validate().then(() => {
-        const postdata = this.dictionary.$createPostData(this.currentForm.getData(), this.dictionaryList as DictionaryValue[], this.type)
-        next(postdata, this.data, this.type)
+    submit(): Promise<{ targetData: Record<PropertyKey, unknown>, originData: dataType, type: string }> {
+      return new Promise((resolve, reject) => {
+        this.currentForm.validate().then(() => {
+          const postData = this.dictionary.$createPostData(this.currentForm.getData(), this.dictionaryList as DictionaryValue[], this.type)
+          resolve({ targetData: postData, originData: this.data, type: this.type })
+        }).catch(err => {
+          reject(err)
+        })
       })
     },
     renderForm() {
