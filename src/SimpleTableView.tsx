@@ -21,8 +21,6 @@ export type autoType = {
   }
 }
 
-export type renderDataType = { text: unknown, record: Record<PropertyKey, unknown>, index: number }
-
 export default defineComponent({
   name: 'SimpleTable',
   props: {
@@ -32,7 +30,7 @@ export default defineComponent({
     },
     columnList: { // 定制列配置
       type: Object as PropType<DefaultList[]>,
-      required: true
+      required: false
     },
     data: { // 单独指定列表数据，不从listData.$list中取值
       type: Array as PropType<Record<PropertyKey, unknown>[]>,
@@ -80,7 +78,7 @@ export default defineComponent({
       }
     },
     currentColumnList() {
-      return this.columnList
+      return this.columnList || this.listData.$getDictionaryPageList(this.listType) as DefaultList[]
     }
   },
   methods: {

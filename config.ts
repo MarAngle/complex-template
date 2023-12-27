@@ -3,12 +3,13 @@ import { getType } from "complex-utils"
 import { layout } from "complex-plugin"
 import { ChoiceData, PaginationData, AttrsValue } from "complex-data"
 import dataConfig from "complex-data/config"
-import DefaultList from 'complex-data/src/dictionary/DefaultList'
 import InterfaceLayoutValue from "complex-data/src/lib/InterfaceLayoutValue"
+import DefaultList from 'complex-data/src/dictionary/DefaultList'
+import { DefaultEditButtonGroupOption } from "complex-data/src/dictionary/DefaultEditButtonGroup"
 import { AutoIndex } from "complex-component"
 import componentConfig from "complex-component/config"
 import AutoText from "./src/AutoText.vue"
-import { menuType, modalLayoutOption } from "./src/ModalView"
+import { modalLayoutOption } from "./src/ModalView"
 
 export class LayoutLifeData {
   life: number
@@ -150,7 +151,7 @@ const config = {
         prop: 'submit'
       }
     },
-    getMenu(prop: string, targetOption?: Partial<menuType>): menuType {
+    getMenu(prop: string, targetOption?: Partial<DefaultEditButtonGroupOption>): DefaultEditButtonGroupOption {
       const data = this.menu[prop as keyof typeof config.modal.menu]
       if (data) {
         return {

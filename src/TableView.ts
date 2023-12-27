@@ -35,7 +35,7 @@ export default defineComponent({
     },
     columnList: { // 定制列配置
       type: Object as PropType<DefaultList[]>,
-      required: true
+      required: false
     },
     data: { // 单独指定列表数据，不从listData.$list中取值
       type: Array as PropType<Record<PropertyKey, unknown>[]>,
@@ -96,8 +96,9 @@ export default defineComponent({
     },
     currentColumnList() {
       const list = []
-      for (let i = 0; i < this.columnList.length; i++) {
-        const column = this.columnList[i]
+      const columnList = this.columnList || this.listData.$getDictionaryPageList(this.listType) as DefaultList[]
+      for (let i = 0; i < columnList.length; i++) {
+        const column = columnList[i]
         const currentProp = column.$prop
         const targetRender = this.$slots[currentProp] || config.component.parseData(column.$renders, 'target')
         const pureRender = config.component.parseData(column.$renders, 'pure')

@@ -1,8 +1,8 @@
 import { defineComponent, h, PropType } from "vue"
 import { Button } from "ant-design-vue"
+import { ButtonType } from "ant-design-vue/es/button"
 import { isPromise } from "complex-utils"
 import { DefaultEditButtonGroupOption } from "complex-data/src/dictionary/DefaultEditButtonGroup"
-import { ButtonType } from "ant-design-vue/es/button"
 import icon from "../icon"
 
 export default defineComponent({

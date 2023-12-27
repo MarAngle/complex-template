@@ -6,10 +6,6 @@ import { DefaultEditButtonGroupOption } from "complex-data/src/dictionary/Defaul
 import ButtonView from "./ButtonView"
 import config from "../config"
 
-export interface menuType extends DefaultEditButtonGroupOption {
-  prop: string
-}
-
 export type modalLayoutOption = {
   type: 'auto' | 'fixed'
   top: number
@@ -39,11 +35,11 @@ export default defineComponent({
       }
     },
     menu: {
-      type: Object as PropType<(string | menuType)[]>,
+      type: Object as PropType<(string | DefaultEditButtonGroupOption)[]>,
       required: false
     },
     menuOption: {
-      type: Object as PropType<Record<string, menuType>>,
+      type: Object as PropType<Record<string, DefaultEditButtonGroupOption>>,
       required: false,
       default: () => {
         return null
@@ -77,7 +73,7 @@ export default defineComponent({
       return updateData(deepCloneData(config.modal.layout), this.layout)
     },
     menuList() {
-      let menuList: menuType[]
+      let menuList: DefaultEditButtonGroupOption[]
       const close = () => {
         this.hide('close')
       }
