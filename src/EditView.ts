@@ -17,6 +17,10 @@ export default defineComponent({
       type: Object as PropType<DictionaryData>,
       required: true
     },
+    type: {
+      type: String,
+      required: false
+    },
     menu: {
       type: Object as PropType<DefaultEditButtonGroup | DefaultEditButtonGroupInitOption>,
       required: false
@@ -57,7 +61,7 @@ export default defineComponent({
   },
   data() {
     return {
-      type: '',
+      localType: undefined as undefined | string,
       localForm: new AntdFormValue(),
       data: undefined as dataType,
       dictionaryList: [] as DictionaryValue[],
@@ -65,13 +69,21 @@ export default defineComponent({
     }
   },
   computed: {
+    currentType() {
+      return (this.localType || this.type) as string
+    },
     currentForm() {
       return this.form || this.localForm
     }
   },
+  mounted() {
+    if (this.type) {
+      this.show()
+    }
+  },
   methods: {
-    show(type: string, data?: dataType) {
-      this.type = type
+    show(type?: string, data?: dataType) {
+      this.localType = type
       this.data = data || undefined
       this.init()
       this.$nextTick(() => {
@@ -79,20 +91,20 @@ export default defineComponent({
       })
     },
     init() {
-      this.dictionaryList = this.dictionary.$getList(this.type) 
-      this.list = this.dictionary.$buildObserveList(this.type, this.dictionaryList as DictionaryValue[])
-      this.dictionary.$createEditData(this.dictionaryList as DictionaryValue[], this.type, this.data).then(res => {
+      this.dictionaryList = this.dictionary.$getList(this.currentType) 
+      this.list = this.dictionary.$buildObserveList(this.currentType, this.dictionaryList as DictionaryValue[])
+      this.dictionary.$createEditData(this.dictionaryList as DictionaryValue[], this.currentType, this.data).then(res => {
         this.currentForm.setData(res.data)
         if (this.observe) {
-          this.list!.setForm(this.currentForm.getData(), this.type)
+          this.list!.setForm(this.currentForm.getData(), this.currentType)
         }
       })
     },
     submit(): Promise<{ targetData: Record<PropertyKey, unknown>, originData: dataType, type: string }> {
       return new Promise((resolve, reject) => {
         this.currentForm.validate().then(() => {
-          const postData = this.dictionary.$createPostData(this.currentForm.getData(), this.dictionaryList as DictionaryValue[], this.type)
-          resolve({ targetData: postData, originData: this.data, type: this.type })
+          const postData = this.dictionary.$createPostData(this.currentForm.getData(), this.dictionaryList as DictionaryValue[], this.currentType)
+          resolve({ targetData: postData, originData: this.data, type: this.currentType })
         }).catch(err => {
           reject(err)
         })
@@ -104,7 +116,7 @@ export default defineComponent({
           form: this.currentForm!,
           list: this.list as ObserveList,
           menu: this.menu,
-          type: this.type,
+          type: this.currentType,
           layout: this.layout!,
           labelAlign: this.labelAlign!,
           layoutOption: this.layoutOption!,

@@ -41,7 +41,7 @@ export default defineComponent({
             })
           }
         } : e => {
-          this.$emit('click', e)
+          this.$emit('click', e, this.data.prop)
         }
       }, {
         default: () => this.data.name

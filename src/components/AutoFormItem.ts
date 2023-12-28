@@ -1,5 +1,6 @@
 import { defineComponent, h, PropType } from "vue"
 import { FormItem, Tooltip, Input, InputNumber, Textarea, Switch, Select, SelectOption, Cascader, DatePicker, RangePicker } from "ant-design-vue"
+import { camelToUnderline } from "complex-utils"
 import { AttrsValue } from "complex-data"
 import { DictionaryEditMod } from "complex-data/src/lib/DictionaryValue"
 import ObserveList from "complex-data/src/dictionary/ObserveList"
@@ -96,8 +97,7 @@ export default defineComponent({
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       let children: any[] = []
       const itemAttrs = parseEditAttrs(this.data, this.payload)!
-      itemAttrs.pushClass('complex-form-item-type')
-      itemAttrs.pushClass('complex-form-item-type-' + this.data.type)
+      itemAttrs.pushClass('complex-form-item-type-' + camelToUnderline(this.data.type))
       itemAttrs.merge(config.component.parseData(this.data.$local, 'target'))
       let item = null
       if (this.target.layout === 'inline') {
@@ -176,6 +176,7 @@ export default defineComponent({
               data: {
                 type: buttonOption.type,
                 icon: buttonOption.icon,
+                prop: buttonOption.prop,
                 name: buttonOption.name || this.data.$name.getValue(this.type)!,
                 loading: this.loading || buttonOption.loading,
                 uploader: buttonOption.uploader,

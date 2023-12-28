@@ -194,8 +194,8 @@ export default defineComponent({
     }
   },
   render() {
-    const top = config.component.formatStyle(this.currentLayout.top)
-    const padding = this.currentLayout.padding.map(num => config.component.formatStyle(num)).join(' ')
+    const top = config.component.data.formatPixel(this.currentLayout.top)
+    const padding = this.currentLayout.padding.map(num => config.component.data.formatPixel(num)).join(' ')
     const props: ModalProps = {
       open: this.open,
       width: this.currentWidth,

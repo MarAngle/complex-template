@@ -108,7 +108,7 @@ export default defineComponent({
       const style: Record<string, string | number> = {}
       if (column.width !== undefined) {
         if (typeof column.width === 'number') {
-          style.width = config.component.formatStyle(column.width)
+          style.width = config.component.data.formatPixel(column.width)
         } else {
           style.width = column.width
         }

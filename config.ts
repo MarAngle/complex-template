@@ -169,6 +169,9 @@ const config = {
       }
     }
   },
+  list: {
+    components: ['spin', 'search', 'table', 'edit'] as ('spin' | 'search' | 'table' | 'info' | 'edit' | 'child')[]
+  },
   parseLayout(interfaceLayout: undefined | InterfaceLayoutValue, type?: string) {
     if (interfaceLayout) {
       return interfaceLayout.getValue(type)

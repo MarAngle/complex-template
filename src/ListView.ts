@@ -1,13 +1,14 @@
 import { defineComponent, h, PropType } from "vue"
 import { notice } from "complex-plugin"
 import { ComplexList } from "complex-data"
-import AntdFormValue from "./class/AntdFormValue"
 import AutoSpin from "./components/AutoSpin.vue"
+import SearchView from "./SearchView"
 import TableView, { renderDataType } from "./TableView"
 import SimpleTableView from "./SimpleTableView"
 import ModalView from "./ModalView"
 import EditView from "./EditView"
 import { FormItemPayloadType } from "./components/AutoFormItem"
+import config from "./../config"
 
 export type optionType = {
   search?: Record<string, unknown>
@@ -51,10 +52,7 @@ export default defineComponent({
     },
     components: {
       type: Array as PropType<('spin' | 'search' | 'table' | 'info' | 'edit' | 'child')[]>,
-      required: false,
-      default: () => {
-        return ['spin', 'search', 'table', 'edit']
-      }
+      required: false
     },
     option: {
       type: Object as PropType<optionType>,
@@ -73,6 +71,9 @@ export default defineComponent({
     operate() {
       return this.listData.$getStatus('operate')
     },
+    currentComponents() {
+      return this.components || [...config.list.components]
+    },
     currentOption() {
       return this.option || {}
     },
@@ -85,23 +86,21 @@ export default defineComponent({
   },
   methods: {
     renderSpin() {
-      if (this.components.indexOf('spin') > -1) {
+      if (this.currentComponents.indexOf('spin') > -1) {
         return h(AutoSpin, { spinning: this.operate === 'ing' })
       } else {
         return null
       }
     },
     renderSearch() {
-      if (this.components.indexOf('search') > -1 && this.listData.$module.search) {
-        const searchOption = {
-          ref: 'search-form',
-          dictionary: this.listData.$module.search,
-          form: this.listData.$module.search.$search.form as AntdFormValue,
-          type: this.listData.$module.search.$prop,
+      if (this.currentComponents.indexOf('search') > -1 && this.listData.$module.search) {
+        return h(SearchView, {
+          ref: 'search-view',
+          search: this.listData.$module.search,
+          layout: 'inline',
           onMenu: this.onSearchMenu,
           ...this.currentOption.search
-        }
-        return h(EditView, searchOption)
+        })
       } else {
         return null
       }
@@ -115,7 +114,7 @@ export default defineComponent({
       }
     },
     renderTable() {
-      if (this.components.indexOf('table') > -1) {
+      if (this.currentComponents.indexOf('table') > -1) {
         const tableOption = {
           listData: this.listData,
           ...this.currentOption.table
@@ -176,7 +175,7 @@ export default defineComponent({
       return list
     },
     renderEdit() {
-      if (this.components.indexOf('edit') > -1) {
+      if (this.currentComponents.indexOf('edit') > -1) {
         const editModalOption = {
           ref: 'edit-modal',
           menu: ['cancel', 'submit'],
@@ -198,7 +197,7 @@ export default defineComponent({
       }
     },
     renderChild() {
-      if (this.components.indexOf('child') > -1) {
+      if (this.currentComponents.indexOf('child') > -1) {
         //
       } else {
         return null
