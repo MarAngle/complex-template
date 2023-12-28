@@ -196,7 +196,11 @@ export default defineComponent({
   render() {
     const top = config.component.data.formatPixel(this.currentLayout.top)
     const padding = this.currentLayout.padding.map(num => config.component.data.formatPixel(num)).join(' ')
-    const props: ModalProps = {
+    interface ModalPropsWithClass extends ModalProps {
+      class: string
+    }
+    const props: ModalPropsWithClass = {
+      class: 'complex-modal',
       open: this.open,
       width: this.currentWidth,
       title: this.currentTitle,

@@ -281,7 +281,7 @@ export default defineComponent({
    * @returns {VNode}
    */
   render() {
-    const render = h('div', { class: 'complex-list-view', style: { position: 'relative' } }, {
+    const render = h('div', { class: 'complex-list', style: { position: 'relative' } }, {
       default: () => [this.renderSpin(), this.renderSearch(), this.renderTop(), this.renderTable(), this.renderEdit(), this.renderChild()]
     })
     return render

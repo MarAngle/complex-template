@@ -97,7 +97,8 @@ export default defineComponent({
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       let children: any[] = []
       const itemAttrs = parseEditAttrs(this.data, this.payload)!
-      itemAttrs.pushClass('complex-form-item-type-' + camelToUnderline(this.data.type))
+      itemAttrs.pushClass('complex-form-item-type')
+      itemAttrs.pushClass('complex-form-item-' + camelToUnderline(this.data.type))
       itemAttrs.merge(config.component.parseData(this.data.$local, 'target'))
       let item = null
       if (this.target.layout === 'inline') {
@@ -159,12 +160,17 @@ export default defineComponent({
         tag = ButtonView
       } else if (this.data.type === 'buttonGroup') {
         tag = 'div'
-        children = this.data.$list.map(buttonOption => {
+        const $data = this.data
+        children = $data.$list.map((buttonOption, index) => {
+          const interval = (index !== $data.$list.length - 1) ? $data.interval : undefined
           if (buttonOption.render) {
             return buttonOption.render({
               ...this.payload,
+              style: {
+                marginRight: interval
+              },
               onClick: () => {
-                this.target.$emit('menu', this.data.$prop, this.payload)
+                this.target.$emit('menu', $data.$prop, this.payload)
                 if(buttonOption.click) {
                   buttonOption.click!(this.payload)
                 }
@@ -173,6 +179,9 @@ export default defineComponent({
             })
           } else {
             return h(ButtonView, {
+              style: {
+                marginRight: interval
+              },
               data: {
                 type: buttonOption.type,
                 icon: buttonOption.icon,
