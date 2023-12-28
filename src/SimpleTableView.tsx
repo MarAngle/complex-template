@@ -3,7 +3,7 @@ import { deepCloneData, updateData } from "complex-utils"
 import { ComplexList, PaginationData } from "complex-data"
 import DefaultList from "complex-data/src/dictionary/DefaultList"
 import SimpleTableContent from "./components/SimpleTableContent.vue"
-import Pagination from "./components/Pagination"
+import PaginationView from "./components/PaginationView"
 import config from "../config"
 
 export type autoType = {
@@ -115,7 +115,7 @@ export default defineComponent({
     },
     renderPagination() {
       if (this.currentPaginationData) {
-        const data = h(Pagination, {
+        const data = h(PaginationView, {
           pagination: this.currentPaginationData,
           style: {
             padding: '10px 0'

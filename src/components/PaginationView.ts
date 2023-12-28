@@ -4,8 +4,7 @@ import { AttrsValue, PaginationData } from "complex-data"
 import config from "../../config"
 
 export default defineComponent({
-  // eslint-disable-next-line vue/multi-word-component-names
-  name: 'Pagination',
+  name: 'PaginationView',
   props: {
     pagination: {
       type: Object as PropType<PaginationData>,
