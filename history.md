@@ -3,6 +3,7 @@
 - ListView的整体逻辑实现
 - ListView的TableMenu实现级联
 - SearchView
+- 通过antd实现基础主题色的设置:全局样式
 
 ### 重要
 - SimpleTableView的插槽和菜单逻辑同步

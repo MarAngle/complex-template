@@ -34,3 +34,9 @@
 .complex-list .complex-search{
   padding-top: 24px;
 }
+.complex-list .complex-table .complex-list-table-menu .complex-list-table-menu-item{
+  margin-right: 8px;
+}
+.complex-list .complex-table .complex-list-table-menu .complex-list-table-menu-item:last-child{
+  margin-right: 0px;
+}

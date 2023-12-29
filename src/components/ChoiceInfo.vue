@@ -2,6 +2,10 @@
 .complex-choice-info{
   padding: 10px 0px;
   line-height: 32px;
+  margin: 0;
+}
+.complex-choice-info-content-empty{
+  color: rgba(0, 0, 0, 0.45);
 }
 .complex-choice-info-menu{
   margin-left: 10px;
@@ -9,8 +13,9 @@
 }
 </style>
 <template>
-  <p class="complex-choice-info" v-if="auto || size > 0" >
-    <span >{{ formatInfo(payload) }}</span>
+  <p class="complex-choice-info" v-if="show" >
+    <span v-show="size > 0" class="complex-choice-info-content" >{{ currentFormatInfo(payload) }}</span>
+    <span v-show="size === 0" class="complex-choice-info-content-empty" >{{ emptyContent }}</span>
     <span v-if="menu" v-show="size > 0" class="complex-choice-info-menu" @click="onCancel" >取消选择</span>
   </p>
 </template>
@@ -21,17 +26,17 @@ import { ChoiceData } from "complex-data"
 import config from "../../config"
 
 export default defineComponent({
-  name: 'ComplexChoiceInfo',
+  name: 'ChoiceInfo',
   props: {
     choice: {
       type: Object as PropType<ChoiceData>,
       required: true
     },
-    auto: {
+    show: {
       type: Boolean,
       required: false,
       default: () => {
-        return config.choice.auto
+        return config.choice.show
       }
     },
     menu: {
@@ -42,10 +47,16 @@ export default defineComponent({
       }
     },
     formatInfo: {
-      type: Function as PropType<(payload: { choice: ChoiceData, size: number, auto: boolean, menu: boolean }) => string>,
+      type: Function as PropType<(payload: { choice: ChoiceData, size: number, menu: boolean }) => string>,
+      required: false
+    },
+    emptyContent: {
+      type: String,
       required: false,
-      default: config.choice.formatInfo
-    }
+      default: () => {
+        return config.choice.emptyContent
+      }
+    },
   },
   computed: {
     size() {
@@ -55,14 +66,16 @@ export default defineComponent({
       return {
         choice: this.choice,
         size: this.size,
-        auto: this.auto,
         menu: this.menu
       }
+    },
+    currentFormatInfo() {
+      return this.formatInfo || config.choice.formatInfo
     }
   },
   methods: {
     onCancel() {
-      this.choice.$reset()
+      this.choice.reset()
     }
   }
 })

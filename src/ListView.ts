@@ -214,7 +214,7 @@ export default defineComponent({
       } else if (prop === 'delete') {
         notice.confirm('确认进行删除操作吗？', '警告', (act: string) => {
           if (act === 'ok') {
-            this.listData.triggerMethod('$multipleDeleteData', [], true)
+            this.listData.triggerMethod('$multipleDeleteData', [this.listData.$module.choice ? this.listData.$module.choice.getList() : []], true)
           }
         })
       } else if (prop === 'export') {

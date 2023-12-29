@@ -260,6 +260,7 @@ export default defineComponent({
       if (this.currentPaginationData) {
         const data = h(PaginationView, {
           pagination: this.currentPaginationData,
+          assign: true,
           style: {
             padding: '10px 0'
           },

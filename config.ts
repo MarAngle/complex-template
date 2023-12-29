@@ -91,14 +91,19 @@ const config = {
     }
   },
   choice: {
-    auto: true,
-    menu: false,
-    formatInfo(payload: { choice: ChoiceData, size: number, auto: boolean, menu: boolean }) {
-      return `已选择${payload.size}条数据`
+    show: true,
+    menu: true,
+    emptyContent: '未选择',
+    formatInfo(payload: { choice: ChoiceData, size: number, menu: boolean }) {
+      if (payload.size > 0) {
+        return `已选择 ${payload.size}条数据`
+      } else {
+        return `未选择`
+      }
     }
   },
   pagination: {
-    formatInfo(payload: { pagination: PaginationData, auto: boolean }) {
+    formatInfo(payload: { pagination: PaginationData }) {
       return `共${payload.pagination.page.total}页/${payload.pagination.count}条`
     }
   },

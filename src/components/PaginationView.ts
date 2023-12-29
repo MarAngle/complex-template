@@ -10,23 +10,24 @@ export default defineComponent({
       type: Object as PropType<PaginationData>,
       required: true
     },
-    auto: {
+    assign: {
       type: Boolean,
       required: false,
       default: true
     },
     formatInfo: {
-      type: Function as PropType<(payload: { pagination: PaginationData, auto: boolean }) => string>,
-      required: false,
-      default: config.pagination.formatInfo
+      type: Function as PropType<(payload: { pagination: PaginationData }) => string>,
+      required: false
     }
   },
   computed: {
     payload() {
       return {
-        pagination: this.pagination,
-        auto: this.auto
+        pagination: this.pagination
       }
+    },
+    currentFormatInfo() {
+      return this.formatInfo || config.pagination.formatInfo
     }
   },
   methods: {
@@ -43,7 +44,7 @@ export default defineComponent({
       return h('span', {
         class: 'complex-pagination-info'
       }, {
-        default: () => !infoRender ? this.formatInfo(this.payload) : infoRender(this.payload)
+        default: () => !infoRender ? this.currentFormatInfo(this.payload) : infoRender(this.payload)
       })
     },
     renderPagination() {
@@ -60,13 +61,13 @@ export default defineComponent({
           },
           on: {
             change: (page: number, size: number) => {
-              if (this.auto) {
+              if (this.assign !== false) {
                 this.pagination.setPage(page)
               }
               this.$emit('page', page, size)
             },
             showSizeChange: (page: number, size: number) => {
-              if (this.auto) {
+              if (this.assign !== false) {
                 this.pagination.setPageAndSize({ page, size })
               }
               this.$emit('size', size, page)
