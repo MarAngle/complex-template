@@ -254,7 +254,7 @@ export default defineComponent({
           style: {
             padding: '10px 0'
           },
-          onCurrent: (current: number) => {
+          onPage: (page: number) => {
             if (this.currentAuto.pagination.auto) {
               this.listData.$reloadData({
                 data: true,
@@ -268,9 +268,9 @@ export default defineComponent({
                 }
               })
             }
-            this.$emit('pagination', 'current', current)
+            this.$emit('pagination', 'page', page)
           },
-          onSize: (size: number, current: number) => {
+          onSize: (size: number, page: number) => {
             if (this.currentAuto.pagination.auto) {
               this.listData.$reloadData({
                 data: true,
@@ -284,7 +284,7 @@ export default defineComponent({
                 }
               })
             }
-            this.$emit('pagination', 'size', size, current)
+            this.$emit('pagination', 'size', size, page)
           }
         })
         return data

@@ -170,7 +170,7 @@ export default defineComponent({
                 marginRight: interval
               },
               onClick: () => {
-                this.target.$emit('menu', $data.$prop, this.payload)
+                this.target.$emit('menu', buttonOption.prop, this.payload)
                 if(buttonOption.click) {
                   buttonOption.click!(this.payload)
                 }
@@ -190,7 +190,7 @@ export default defineComponent({
                 loading: this.loading || buttonOption.loading,
                 uploader: buttonOption.uploader,
                 disabled: this.disabled || this.data.disabled.getValue(this.type) || buttonOption.disabled,
-                click: bindButtonClick(this.data.$prop, buttonOption, this.payload)
+                click: bindButtonClick(buttonOption.prop, buttonOption, this.payload)
               }
             })
           }
