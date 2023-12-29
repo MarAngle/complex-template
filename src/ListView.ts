@@ -69,7 +69,7 @@ export default defineComponent({
   },
   computed: {
     operate() {
-      return this.listData.$getStatus('operate')
+      return this.listData.getStatus('operate')
     },
     currentComponents() {
       return this.components || [...config.list.components]
@@ -206,19 +206,19 @@ export default defineComponent({
     onSearchMenu(prop: string, payload: FormItemPayloadType) {
       this.$emit('menu', 'search', prop, payload)
       if (prop === 'search') {
-        this.listData.$setSearch()
+        this.listData.setSearch()
       } else if (prop === 'reset') {
-        this.listData.$resetSearch()
+        this.listData.resetSearch()
       } else if (prop === 'build') {
         this.onEdit()
       } else if (prop === 'delete') {
         notice.confirm('确认进行删除操作吗？', '警告', (act: string) => {
           if (act === 'ok') {
-            this.listData.$triggerMethod('$multipleDeleteData', [], true)
+            this.listData.triggerMethod('$multipleDeleteData', [], true)
           }
         })
       } else if (prop === 'export') {
-        this.listData.$triggerMethod('$exportData', [], true)
+        this.listData.triggerMethod('$exportData', [], true)
       }
     },
     onTableMenu(act: string, payload?: renderDataType) {
@@ -230,7 +230,7 @@ export default defineComponent({
       } else if (act === 'delete') {
         notice.confirm('确认进行删除操作吗？', '警告', (act: string) => {
           if (act === 'ok') {
-            this.listData.$triggerMethod('$deleteData', [payload!.record], true)
+            this.listData.triggerMethod('$deleteData', [payload!.record], true)
           }
         })
       }
@@ -254,13 +254,13 @@ export default defineComponent({
       return new Promise((resolve, reject) => {
         (this.$refs['edit-view'] as InstanceType<typeof EditView>).submit().then(res => {
           if (res.type === 'build') {
-            this.listData.$triggerMethod('$buildData', [res.targetData], true).then(() => {
+            this.listData.triggerMethod('$buildData', [res.targetData], true).then(() => {
               resolve(res)
             }).catch((err: unknown) => {
               reject(err)
             })
           } else if (res.type === 'change') {
-            this.listData.$triggerMethod('$changeData', [res.targetData, res.originData, res.type], true).then(() => {
+            this.listData.triggerMethod('$changeData', [res.targetData, res.originData, res.type], true).then(() => {
               resolve(res)
             }).catch((err: unknown) => {
               reject(err)

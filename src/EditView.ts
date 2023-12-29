@@ -91,9 +91,9 @@ export default defineComponent({
       })
     },
     init() {
-      this.dictionaryList = this.dictionary.$getList(this.currentType) 
-      this.list = this.dictionary.$buildObserveList(this.currentType, this.dictionaryList as DictionaryValue[])
-      this.dictionary.$createEditData(this.dictionaryList as DictionaryValue[], this.currentType, this.data).then(res => {
+      this.dictionaryList = this.dictionary.getList(this.currentType) 
+      this.list = this.dictionary.buildObserveList(this.currentType, this.dictionaryList as DictionaryValue[])
+      this.dictionary.createEditData(this.dictionaryList as DictionaryValue[], this.currentType, this.data).then(res => {
         this.currentForm.setData(res.data)
         if (this.observe) {
           this.list!.setForm(this.currentForm.getData(), this.currentType)
@@ -103,7 +103,7 @@ export default defineComponent({
     submit(): Promise<{ targetData: Record<PropertyKey, unknown>, originData: dataType, type: string }> {
       return new Promise((resolve, reject) => {
         this.currentForm.validate().then(() => {
-          const postData = this.dictionary.$createPostData(this.currentForm.getData(), this.dictionaryList as DictionaryValue[], this.currentType)
+          const postData = this.dictionary.createPostData(this.currentForm.getData(), this.dictionaryList as DictionaryValue[], this.currentType)
           resolve({ targetData: postData, originData: this.data, type: this.currentType })
         }).catch(err => {
           reject(err)

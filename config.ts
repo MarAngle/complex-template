@@ -19,14 +19,14 @@ export class LayoutLifeData {
     this.data = 0
   }
   bind() {
-    this.life = layout.$onLife('recount', {
+    this.life = layout.onLife('recount', {
       data: () => {
         this.data++
       }
     }) as number
   }
   unbind() {
-    layout.$offLife('recount', this.life)
+    layout.offLife('recount', this.life)
     this.data = 0
     this.life = 0
   }

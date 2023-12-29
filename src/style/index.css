@@ -22,6 +22,9 @@
 .complex-form-horizontal .complex-form-item .complex-form-item-input-number{
   width: 100%;
 }
+.complex-form-horizontal .complex-form-item .complex-form-item-date{
+  width: 100%;
+}
 .complex-form-horizontal .complex-form-item .complex-form-item-date-range{
   width: 100%;
 }

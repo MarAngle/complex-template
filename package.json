@@ -8,9 +8,9 @@
     "url": "https://github.com/MarAngle/complex-component-antd.git"
   },
   "dependencies": {
-    "ant-design-vue": "^4.0.7",
-    "complex-data": "4.0.19 - 4.0.99",
-    "complex-component": "4.0.12 - 4.0.99"
+    "ant-design-vue": "^4.0.8",
+    "complex-data": "4.1.0 - 4.1.99",
+    "complex-component": "4.1.0 - 4.1.99"
   },
   "devDependencies": {
     "typescript": "^5.2.2"

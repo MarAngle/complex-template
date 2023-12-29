@@ -64,7 +64,7 @@ export default defineComponent({
     },
     currentIdList() {
       return this.currentData.map(item => {
-        return item[this.listData.$getDictionaryProp('id')]
+        return item[this.listData.getDictionaryProp('id')]
       })
     },
     currentAuto() {
@@ -78,7 +78,7 @@ export default defineComponent({
       }
     },
     currentColumnList() {
-      return this.columnList || this.listData.$getDictionaryPageList(this.listType) as DefaultList[]
+      return this.columnList || this.listData.getDictionaryPageList(this.listType) as DefaultList[]
     }
   },
   methods: {
@@ -87,7 +87,7 @@ export default defineComponent({
         columns: this.currentColumnList,
         data: this.currentData,
         type: this.listType,
-        id: this.listData.$getDictionaryProp('id'),
+        id: this.listData.getDictionaryProp('id'),
         index: {
           prop: this.currentAuto.index.prop,
           pagination: this.currentAuto.index.pagination ? this.currentPaginationData : undefined
@@ -122,7 +122,7 @@ export default defineComponent({
           },
           onCurrent: (current: number) => {
             if (this.currentAuto.pagination.auto) {
-              this.listData.$reloadData({
+              this.listData.reloadData({
                 data: true,
                 ing: true,
                 sync: true,
@@ -138,7 +138,7 @@ export default defineComponent({
           },
           onSize: (size: number, current: number) => {
             if (this.currentAuto.pagination.auto) {
-              this.listData.$reloadData({
+              this.listData.reloadData({
                 data: true,
                 ing: true,
                 sync: true,
