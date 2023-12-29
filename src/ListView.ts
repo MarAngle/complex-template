@@ -3,7 +3,7 @@ import { notice } from "complex-plugin"
 import { ComplexList } from "complex-data"
 import AutoSpin from "./components/AutoSpin.vue"
 import SearchView from "./SearchView"
-import TableView, { renderDataType } from "./TableView"
+import TableView, { tablePayload } from "./TableView"
 import SimpleTableView from "./SimpleTableView"
 import ModalView from "./ModalView"
 import EditView from "./EditView"
@@ -24,7 +24,7 @@ export type optionType = {
 export type renderType = {
   top?: (...args: unknown[]) => unknown
   search?: Record<string, (...args: unknown[]) => unknown>
-  table?: Record<string, (payload: renderDataType) => unknown>
+  table?: Record<string, (payload: tablePayload) => unknown>
   edit?: Record<string, (...args: unknown[]) => unknown>
   info?: Record<string, (...args: unknown[]) => unknown>
   child?: Record<string, (...args: unknown[]) => unknown>
@@ -33,8 +33,8 @@ export type renderType = {
 export type menuValue = {
   name: string
   prop: string
-  hidden?: boolean | ((payload: renderDataType) => boolean)
-  class?: string[] | ((payload: renderDataType) => string[])
+  hidden?: boolean | ((payload: tablePayload) => boolean)
+  class?: string[] | ((payload: tablePayload) => string[])
   option?: Record<string, unknown>
   children?: menuValue[]
 }
@@ -120,7 +120,7 @@ export default defineComponent({
           ...this.currentOption.table
         }
         const tableSlot = {
-          menu: (payload: renderDataType) => {
+          menu: ({ payload }: { payload: tablePayload }) => {
             return this.renderTableMenu(payload)
           },
           ...this.currentRender.table
@@ -130,7 +130,7 @@ export default defineComponent({
         return null
       }
     },
-    renderTableMenu(payload: renderDataType) {
+    renderTableMenu(payload: tablePayload) {
       if (this.currentMenu.table) {
         return h('span', {
           class: 'complex-list-table-menu'
@@ -141,7 +141,7 @@ export default defineComponent({
         })
       }
     },
-    renderTableMenuList(menuList: menuValue[], payload: renderDataType) {
+    renderTableMenuList(menuList: menuValue[], payload: tablePayload) {
       const list: unknown[] = []
       for (let i = 0; i < menuList.length; i++) {
       const menuItem = menuList[i]
@@ -221,16 +221,16 @@ export default defineComponent({
         this.listData.triggerMethod('$exportData', [], true)
       }
     },
-    onTableMenu(act: string, payload?: renderDataType) {
+    onTableMenu(act: string, payload?: tablePayload) {
       this.$emit('menu', 'table', act, payload)
       if (act === 'build') {
         this.onEdit()
       } else if (act === 'change') {
-        this.onEdit(payload!.record)
+        this.onEdit(payload!.targetData)
       } else if (act === 'delete') {
         notice.confirm('确认进行删除操作吗？', '警告', (act: string) => {
           if (act === 'ok') {
-            this.listData.triggerMethod('$deleteData', [payload!.record], true)
+            this.listData.triggerMethod('$deleteData', [payload!.targetData], true)
           }
         })
       }

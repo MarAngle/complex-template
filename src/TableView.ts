@@ -22,7 +22,16 @@ export type autoType = {
   }
 }
 
-export type renderDataType = { text: unknown, record: Record<PropertyKey, unknown>, index: number }
+type customRenderPayload = { text: unknown, record: Record<PropertyKey, unknown>, index: number }
+
+export type tablePayload = {
+  targetData: Record<PropertyKey, unknown>
+  type: string
+  index: number
+  payload: {
+    column: DefaultList
+  }
+}
 
 export type ColumnItemType = TableColumnType
 
@@ -112,12 +121,12 @@ export default defineComponent({
           ...config.component.parseAttrs(attrs)
         }
         if (!pureRender) {
-          pitem.customRender = ({ text, record, index }: renderDataType) => {
+          pitem.customRender = ({ text, record, index }: customRenderPayload) => {
             if (currentProp === this.currentAuto.index.prop && !targetRender) {
               // 自动index
               return config.table.renderIndex(record, index, this.currentAuto.index.pagination ? this.currentPaginationData : undefined)
             }
-            const payload = {
+            const payload: tablePayload = {
               targetData: record,
               type: this.listType,
               index: index,
@@ -138,8 +147,8 @@ export default defineComponent({
             return text
           }
         } else {
-          pitem.customRender = ({ text, record, index }: renderDataType) => {
-            const payload = {
+          pitem.customRender = ({ text, record, index }: customRenderPayload) => {
+            const payload: tablePayload = {
               targetData: record,
               type: this.listType,
               index: index,

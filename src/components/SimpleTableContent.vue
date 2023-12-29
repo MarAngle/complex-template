@@ -63,6 +63,7 @@ import { PaginationData } from 'complex-data'
 import DefaultList from 'complex-data/src/dictionary/DefaultList'
 import AutoRender from './AutoRender'
 import config, { LayoutLifeData } from '../../config'
+import { tablePayload } from '../TableView'
 
 export default defineComponent({
   name: 'SimpleTable',
@@ -116,7 +117,7 @@ export default defineComponent({
       return style
     },
     parseRender(column: DefaultList, record: Record<PropertyKey, unknown>, index: number) {
-      const payload = {
+      const payload: tablePayload = {
         targetData: record,
         type: this.type,
         index: index,
