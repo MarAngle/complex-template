@@ -297,11 +297,15 @@ const dict = {
       if (!option.name) {
         option.name = edit.$name.getValue(payload.type)
       }
-      if (!option.loading && payload.loading) {
-        option.loading = payload.loading
+      if (payload.loading) {
+        option.loading = true
+      } else if (option.loading && typeof option.loading === 'function') {
+        option.loading = option.loading(payload)
       }
-      if (!option.disabled && (payload.disabled || edit.disabled.getValue(payload.type))) {
-        option.disabled = payload.disabled || edit.disabled.getValue(payload.type)
+      if (payload.disabled || edit.disabled.getValue(payload.type)) {
+        option.disabled = true
+      } else if (option.disabled && typeof option.disabled === 'function') {
+        option.disabled = option.disabled(payload)
       }
       option.click = bindButtonClick(edit.$prop, edit.$option, payload)
       const itemAttrs = new AttrsValue({

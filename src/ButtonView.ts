@@ -21,13 +21,18 @@ export default defineComponent({
   render() {
     if (!this.data.render) {
       const type = this.data.type
+      let loading = this.operate
+      if (!loading) {
+        loading = typeof this.data.loading === 'function' ? this.data.loading() : (this.data.loading || false)
+      }
+      const disabled = typeof this.data.disabled === 'function' ? this.data.disabled() : (this.data.disabled || false)
       const render = h(Button, {
-        loading: !!this.data.loading || this.operate,
+        loading: loading,
         type: type === 'danger' ? 'primary' : type as ButtonType,
         danger: type === 'danger',
         icon: icon.parse(this.data.icon),
         uploader: this.data.uploader,
-        disabled: this.data.disabled,
+        disabled: disabled,
         onClick: this.data.click ? e => {
           const res = this.data.click!({
             targetData: this.data as unknown as Record<PropertyKey, unknown>,

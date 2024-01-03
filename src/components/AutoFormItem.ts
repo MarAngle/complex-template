@@ -166,11 +166,15 @@ export default defineComponent({
           const option = {
             ...buttonOption
           }
-          if (!option.loading && this.loading) {
-            option.loading = this.loading
+          if (this.loading) {
+            option.loading = true
+          } else if (option.loading && typeof option.loading === 'function') {
+            option.loading = option.loading(this.payload)
           }
-          if (!option.disabled && (this.disabled || this.data.disabled.getValue(this.type))) {
-            option.disabled = this.disabled || this.data.disabled.getValue(this.type)
+          if (this.disabled || this.data.disabled.getValue(this.type)) {
+            option.disabled = true
+          } else if (option.disabled && typeof option.disabled === 'function') {
+            option.disabled = option.disabled(this.payload)
           }
           option.click = bindButtonClick(buttonOption.prop, buttonOption, this.payload)
           return h(ButtonView, {

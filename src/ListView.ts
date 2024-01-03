@@ -1,6 +1,7 @@
 import { defineComponent, h, PropType } from "vue"
 import { notice } from "complex-plugin"
 import { ComplexList } from "complex-data"
+import { DictionaryEditMod, DictionaryEditModInitOption } from "complex-data/src/lib/DictionaryValue"
 import AutoSpin from "./components/AutoSpin.vue"
 import SearchView from "./SearchView"
 import TableView, { tablePayload } from "./TableView"
@@ -63,7 +64,7 @@ export default defineComponent({
       required: false
     },
     menu: {
-      type: Object as PropType<{ search?: menuValue[], table?: menuValue[] }>,
+      type: Object as PropType<{ search?: (DictionaryEditMod | DictionaryEditModInitOption)[], table?: menuValue[] }>,
       required: false
     }
   },
@@ -98,6 +99,7 @@ export default defineComponent({
           ref: 'search-view',
           search: this.listData.$module.search,
           layout: 'inline',
+          menu: this.currentMenu.search,
           onMenu: this.onSearchMenu,
           ...this.currentOption.search
         })

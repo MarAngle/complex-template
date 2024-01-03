@@ -34,6 +34,27 @@ export class LayoutLifeData {
 
 const config = {
   component: componentConfig,
+  parseLayout(interfaceLayout: undefined | InterfaceLayoutValue, type?: string) {
+    if (interfaceLayout) {
+      return interfaceLayout.getValue(type)
+    } else {
+      return null
+    }
+  },
+  parseGrid(interfaceLayout: undefined | InterfaceLayoutValue, prop: 'main' | 'label' | 'content', type?: string) {
+    const layout = this.parseLayout(interfaceLayout, type)
+    if (layout && layout.grid[prop]) {
+      return layout.grid[prop]
+    } else {
+      return this.form.grid[prop]
+    }
+  },
+  parseWidth(interfaceLayout: undefined | InterfaceLayoutValue, prop: string, type?: string) {
+    const layout = this.parseLayout(interfaceLayout, type)
+    if (layout && layout.width[prop]) {
+      return layout.width[prop]
+    }
+  },
   table: {
     size: 'default',
     bordered: true,
@@ -172,27 +193,6 @@ const config = {
   },
   list: {
     components: ['spin', 'search', 'table', 'edit'] as ('spin' | 'search' | 'table' | 'info' | 'edit' | 'child')[]
-  },
-  parseLayout(interfaceLayout: undefined | InterfaceLayoutValue, type?: string) {
-    if (interfaceLayout) {
-      return interfaceLayout.getValue(type)
-    } else {
-      return null
-    }
-  },
-  parseGrid(interfaceLayout: undefined | InterfaceLayoutValue, prop: 'main' | 'label' | 'content', type?: string) {
-    const layout = this.parseLayout(interfaceLayout, type)
-    if (layout && layout.grid[prop]) {
-      return layout.grid[prop]
-    } else {
-      return this.form.grid[prop]
-    }
-  },
-  parseWidth(interfaceLayout: undefined | InterfaceLayoutValue, prop: string, type?: string) {
-    const layout = this.parseLayout(interfaceLayout, type)
-    if (layout && layout.width[prop]) {
-      return layout.width[prop]
-    }
   }
 }
 
