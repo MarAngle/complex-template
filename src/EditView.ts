@@ -3,7 +3,7 @@ import { FormLayout, FormProps } from "ant-design-vue/es/form/Form"
 import { FormLabelAlign } from "ant-design-vue/es/form/interface"
 import { DictionaryData, DictionaryValue } from "complex-data"
 import ObserveList from "complex-data/src/dictionary/ObserveList"
-import DefaultEditButtonGroup, { DefaultEditButtonGroupInitOption } from "complex-data/src/dictionary/DefaultEditButtonGroup"
+import { DictionaryEditMod, DictionaryEditModInitOption } from "complex-data/src/lib/DictionaryValue"
 import AntdFormValue from "./class/AntdFormValue"
 import FormView from "./FormView"
 import { FormItemPayloadType } from "./components/AutoFormItem"
@@ -22,7 +22,7 @@ export default defineComponent({
       required: false
     },
     menu: {
-      type: Object as PropType<DefaultEditButtonGroup | DefaultEditButtonGroupInitOption>,
+      type: Object as PropType<(DictionaryEditMod | DictionaryEditModInitOption)[]>,
       required: false
     },
     observe: {

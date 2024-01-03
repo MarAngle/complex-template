@@ -3,10 +3,9 @@ import { Col, Form, Row, FormProps } from "ant-design-vue"
 import { FormLabelAlign } from "ant-design-vue/es/form/interface"
 import { FormLayout } from "ant-design-vue/es/form/Form"
 import { mergeData } from "complex-utils"
-import { DictionaryEditMod } from "complex-data/src/lib/DictionaryValue"
+import DictionaryValue, { DictionaryEditMod, DictionaryEditModInitOption } from "complex-data/src/lib/DictionaryValue"
 import ObserveList from "complex-data/src/dictionary/ObserveList"
 import DefaultMod from "complex-data/src/dictionary/DefaultMod"
-import DefaultEditButtonGroup, { DefaultEditButtonGroupInitOption } from "complex-data/src/dictionary/DefaultEditButtonGroup"
 import AntdFormValue from "./class/AntdFormValue"
 import AutoFormItem from "./components/AutoFormItem"
 import config from "../config"
@@ -23,7 +22,7 @@ export default defineComponent({
       required: true
     },
     menu: {
-      type: Object as PropType<DefaultEditButtonGroup | DefaultEditButtonGroupInitOption>,
+      type: Object as PropType<(DictionaryEditMod | DictionaryEditModInitOption)[]>,
       required: false
     },
     type: {
@@ -71,21 +70,10 @@ export default defineComponent({
       return mergeData(formOption, this.formOption)
     },
     currentMenu() {
-      if (this.menu) {
-        if (this.menu instanceof DefaultEditButtonGroup) {
-          return this.menu
-        } else {
-          return new DefaultEditButtonGroup(this.menu)
-        }
+      if (this.menu && this.menu.length > 0) {
+        return this.menu.map(item => DictionaryValue.$initEditMod(item)!)
       } else {
         return null
-      }
-    },
-    payload() {
-      return {
-        type: this.type,
-        form: this.form,
-        list: this.list
       }
     }
   },
@@ -109,8 +97,18 @@ export default defineComponent({
       }
     },
     renderMenu() {
-      if (this.currentMenu) {
-        return this.renderItem(this.currentMenu, this.list.data.length)
+      if (this.currentMenu && this.currentMenu.length > 0) {
+        if (this.layout === 'inline') {
+          return this.currentMenu.map((item, index) => {
+            return this.renderItem((item), index)
+          })
+        } else {
+          return this.currentMenu.map((item, index) => {
+            return h(Col, this.getItemGrid(item), {
+              default: () => this.renderItem((item), index)
+            })
+          })
+        }
       } else {
         return null
       }
@@ -140,17 +138,17 @@ export default defineComponent({
   render() {
     const layoutClass = `complex-form-${this.layout}`
     const list = this.renderList()
-    const menu = this.renderMenu()
+    const menu = this.renderMenu() || []
     const render = h(Form, {
       class: `complex-form ${layoutClass}`,
       ...this.currentFormOption
     }, {
       default: () => {
         if (this.layout === 'inline') {
-          return [...list, menu]
+          return [...list, ...menu]
         } else {
           return h(Row, this.layoutOption, {
-            default: () => [...list, menu]
+            default: () => [...list, ...menu]
           })
         }
       }

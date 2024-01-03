@@ -2,7 +2,7 @@ import { defineComponent, h, PropType } from "vue"
 import { FormLayout, FormProps } from "ant-design-vue/es/form/Form"
 import { FormLabelAlign } from "ant-design-vue/es/form/interface"
 import { SearchData } from "complex-data"
-import DefaultEditButtonGroup, { DefaultEditButtonGroupInitOption } from "complex-data/src/dictionary/DefaultEditButtonGroup"
+import { DictionaryEditMod, DictionaryEditModInitOption } from "complex-data/src/lib/DictionaryValue"
 import FormView from "./FormView"
 import { FormItemPayloadType } from "./components/AutoFormItem"
 import AntdFormValue from "./class/AntdFormValue"
@@ -15,7 +15,7 @@ export default defineComponent({
       required: true
     },
     menu: {
-      type: Object as PropType<DefaultEditButtonGroup | DefaultEditButtonGroupInitOption>,
+      type: Object as PropType<(DictionaryEditMod | DictionaryEditModInitOption)[]>,
       required: false
     },
     layout: { // 表单布局'horizontal'|'vertical'|'inline'
