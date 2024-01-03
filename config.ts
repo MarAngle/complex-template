@@ -95,11 +95,7 @@ const config = {
     menu: true,
     emptyContent: '未选择',
     formatInfo(payload: { choice: ChoiceData, size: number, menu: boolean }) {
-      if (payload.size > 0) {
-        return `已选择 ${payload.size}条数据`
-      } else {
-        return `未选择`
-      }
+      return `已选择 ${payload.size}条数据`
     }
   },
   pagination: {

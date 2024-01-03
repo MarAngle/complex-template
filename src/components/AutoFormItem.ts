@@ -163,37 +163,22 @@ export default defineComponent({
         const $data = this.data
         children = $data.$list.map((buttonOption, index) => {
           const interval = (index !== $data.$list.length - 1) ? $data.interval : undefined
-          if (buttonOption.render) {
-            return buttonOption.render({
-              ...this.payload,
-              style: {
-                marginRight: interval
-              },
-              onClick: () => {
-                this.target.$emit('menu', buttonOption.prop, this.payload)
-                if(buttonOption.click) {
-                  buttonOption.click!(this.payload)
-                }
-              },
-              option: buttonOption
-            })
-          } else {
-            return h(ButtonView, {
-              style: {
-                marginRight: interval
-              },
-              data: {
-                type: buttonOption.type,
-                icon: buttonOption.icon,
-                prop: buttonOption.prop,
-                name: buttonOption.name || this.data.$name.getValue(this.type)!,
-                loading: this.loading || buttonOption.loading,
-                uploader: buttonOption.uploader,
-                disabled: this.disabled || this.data.disabled.getValue(this.type) || buttonOption.disabled,
-                click: bindButtonClick(buttonOption.prop, buttonOption, this.payload)
-              }
-            })
+          const option = {
+            ...buttonOption
           }
+          if (!option.loading && this.loading) {
+            option.loading = this.loading
+          }
+          if (!option.disabled && (this.disabled || this.data.disabled.getValue(this.type))) {
+            option.disabled = this.disabled || this.data.disabled.getValue(this.type)
+          }
+          option.click = bindButtonClick(buttonOption.prop, buttonOption, this.payload)
+          return h(ButtonView, {
+            style: {
+              marginRight: interval
+            },
+            data: option
+          })
         })
       } else if (this.data.type === 'content') {
         tag = 'div'

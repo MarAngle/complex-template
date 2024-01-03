@@ -2,14 +2,14 @@ import { defineComponent, h, PropType } from "vue"
 import { Button } from "ant-design-vue"
 import { ButtonType } from "ant-design-vue/es/button"
 import { isPromise } from "complex-utils"
-import { DefaultEditButtonGroupOption } from "complex-data/src/dictionary/DefaultEditButtonGroup"
+import { DefaultEditButtonOption } from "complex-data/src/dictionary/DefaultEditButton"
 import icon from "../icon"
 
 export default defineComponent({
   name: 'ButtonView',
   props: {
     data: {
-      type: Object as PropType<DefaultEditButtonGroupOption>,
+      type: Object as PropType<DefaultEditButtonOption>,
       required: true
     }
   },
@@ -20,9 +20,11 @@ export default defineComponent({
   },
   render() {
     if (!this.data.render) {
+      const type = this.data.type
       const render = h(Button, {
         loading: !!this.data.loading || this.operate,
-        type: this.data.type as ButtonType,
+        type: type === 'danger' ? 'primary' : type as ButtonType,
+        danger: type === 'danger',
         icon: icon.parse(this.data.icon),
         uploader: this.data.uploader,
         disabled: this.data.disabled,
@@ -41,7 +43,7 @@ export default defineComponent({
             })
           }
         } : e => {
-          this.$emit('click', e, this.data.prop)
+          this.$emit('click', e)
         }
       }, {
         default: () => this.data.name

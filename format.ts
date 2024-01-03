@@ -291,17 +291,22 @@ const dict = {
     init: false,
     on: {},
     format(edit: DefaultEditButton, payload: FormItemPayloadType) {
+      const option = {
+        ...edit.$option
+      }
+      if (!option.name) {
+        option.name = edit.$name.getValue(payload.type)
+      }
+      if (!option.loading && payload.loading) {
+        option.loading = payload.loading
+      }
+      if (!option.disabled && (payload.disabled || edit.disabled.getValue(payload.type))) {
+        option.disabled = payload.disabled || edit.disabled.getValue(payload.type)
+      }
+      option.click = bindButtonClick(edit.$prop, edit.$option, payload)
       const itemAttrs = new AttrsValue({
         props: {
-          data: {
-            type: edit.$option.type,
-            icon: edit.$option.icon,
-            name: edit.$option.name || edit.$name.getValue(payload.type),
-            loading: payload.loading || edit.$option.loading,
-            uploader: edit.$option.uploader,
-            disabled: payload.disabled || edit.disabled.getValue(payload.type),
-            click: bindButtonClick(edit.$prop, edit.$option, payload)
-          }
+          data: option
         }
       })
       bindEvent(this as dictItemType, itemAttrs, edit, payload)
