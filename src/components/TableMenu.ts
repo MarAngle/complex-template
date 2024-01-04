@@ -1,9 +1,11 @@
 import { defineComponent, h, PropType } from "vue"
 import { tablePayload } from "../TableView"
+import config, { colorKeys } from "../../config"
 
 export type tableMenuType = {
   name: string
   prop: string
+  color?: | colorKeys
   hidden?: boolean | ((payload: tablePayload) => boolean)
   class?: string[] | ((payload: tablePayload) => string[])
   option?: Record<string, unknown>
@@ -37,6 +39,9 @@ export default defineComponent({
           }
         }
         let classList = ['complex-list-table-menu-item']
+        if (menuItem.color) {
+          classList.push('complex-color-' + config.camelToline(menuItem.color))
+        }
         if (menuItem.class) {
           if (typeof menuItem.class === 'function') {
             classList = classList.concat(menuItem.class(payload))

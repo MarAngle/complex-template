@@ -4,9 +4,6 @@
   line-height: 32px;
   margin: 0;
 }
-.complex-choice-info-content-empty{
-  color: rgba(0, 0, 0, 0.45);
-}
 .complex-choice-info-menu{
   margin-left: 10px;
   cursor: pointer;
@@ -15,8 +12,8 @@
 <template>
   <p class="complex-choice-info" v-if="show" >
     <span v-show="size > 0" class="complex-choice-info-content" >{{ currentFormatInfo(payload) }}</span>
-    <span v-show="size === 0" class="complex-choice-info-content-empty" >{{ emptyContent }}</span>
-    <span v-if="menu" v-show="size > 0" class="complex-choice-info-menu" @click="onCancel" >取消选择</span>
+    <span v-show="size === 0" class="complex-choice-info-content-empty complex-color-disabled" >{{ emptyContent }}</span>
+    <span v-if="menu" v-show="size > 0" class="complex-choice-info-menu complex-color-link" @click="onCancel" >取消选择</span>
   </p>
 </template>
 

@@ -31,8 +31,26 @@ export class LayoutLifeData {
   }
 }
 
+export type colorKeys = keyof typeof config.style.color
+
 const config = {
   component: componentConfig,
+  camelToline(str: string): string {
+    return str.replace(/([A-Z])/g, '-$1').toLowerCase()
+  },
+  initStyle() {
+    const style = document.createElement('style')
+    let innerHTML = ''
+    for (const name in config.style.color) {
+      const styleName = 'complex-color-' + this.camelToline(name)
+      const content = `\n.${styleName}{ color: ${config.style.color[name as colorKeys]}; }`
+      innerHTML += content
+    }
+    // 设置样式规则
+    style.innerHTML = innerHTML
+    // 将样式元素节点添加到页面头部
+    document.head.appendChild(style)
+  },
   parseLayout(interfaceLayout: undefined | InterfaceLayoutValue, type?: string) {
     if (interfaceLayout) {
       return interfaceLayout.getValue(type)
@@ -52,6 +70,18 @@ const config = {
     const layout = this.parseLayout(interfaceLayout, type)
     if (layout && layout.width[prop]) {
       return layout.width[prop]
+    }
+  },
+  style: {
+    color: {
+      primary: '#1677ff',
+      link: '#1677ff',
+      success: '#52c41a',
+      warning: '#faad14',
+      danger: '#ff4d4f',
+      disabled: 'rgba(0, 0, 0, 0.25)',
+      text: 'rgba(0, 0, 0, 0.88)',
+      secondaryText: 'rgba(0, 0, 0, 0.45)'
     }
   },
   table: {
@@ -194,5 +224,6 @@ const config = {
     components: ['spin', 'search', 'table', 'edit'] as ('spin' | 'search' | 'table' | 'info' | 'edit' | 'child')[]
   }
 }
+
 
 export default config
