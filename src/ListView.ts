@@ -1,7 +1,7 @@
 import { defineComponent, h, PropType } from "vue"
 import { notice } from "complex-plugin"
 import { ComplexList } from "complex-data"
-import { DictionaryEditMod, DictionaryEditModInitOption } from "complex-data/src/lib/DictionaryValue"
+import { searchMenuType } from "complex-data/src/module/SearchData"
 import AutoSpin from "./components/AutoSpin.vue"
 import SearchView from "./SearchView"
 import TableView, { tablePayload } from "./TableView"
@@ -31,13 +31,18 @@ export type renderType = {
   child?: Record<string, (...args: unknown[]) => unknown>
 }
 
-export type menuValue = {
+export type tableMenuType = {
   name: string
   prop: string
   hidden?: boolean | ((payload: tablePayload) => boolean)
   class?: string[] | ((payload: tablePayload) => string[])
   option?: Record<string, unknown>
-  children?: menuValue[]
+  children?: tableMenuType[]
+}
+
+export type ListMenuType = {
+  search?: (string | searchMenuType)[]
+  table?: tableMenuType[]
 }
 
 export default defineComponent({
@@ -64,7 +69,7 @@ export default defineComponent({
       required: false
     },
     menu: {
-      type: Object as PropType<{ search?: (DictionaryEditMod | DictionaryEditModInitOption)[], table?: menuValue[] }>,
+      type: Object as PropType<ListMenuType>,
       required: false
     }
   },
@@ -83,6 +88,9 @@ export default defineComponent({
     },
     currentMenu() {
       return this.menu || {}
+    },
+    currentChoice() {
+      return this.listData.$module.choice ? this.listData.$module.choice.getData() : undefined
     }
   },
   methods: {
@@ -98,7 +106,9 @@ export default defineComponent({
         return h(SearchView, {
           ref: 'search-view',
           search: this.listData.$module.search,
+          choice: this.currentChoice,
           layout: 'inline',
+          loading: this.operate === 'ing',
           menu: this.currentMenu.search,
           onMenu: this.onSearchMenu,
           ...this.currentOption.search
@@ -143,7 +153,7 @@ export default defineComponent({
         })
       }
     },
-    renderTableMenuList(menuList: menuValue[], payload: tablePayload) {
+    renderTableMenuList(menuList: tableMenuType[], payload: tablePayload) {
       const list: unknown[] = []
       for (let i = 0; i < menuList.length; i++) {
       const menuItem = menuList[i]
@@ -188,7 +198,9 @@ export default defineComponent({
           default: () => {
             const editFormOption = {
               ref: 'edit-view',
-              dictionary: this.listData.$module.dictionary!
+              dictionary: this.listData.$module.dictionary!,
+              loading: this.operate === 'ing',
+              ...this.currentOption.edit
             }
             return h(EditView, editFormOption)
           }
@@ -206,6 +218,7 @@ export default defineComponent({
       }
     },
     onSearchMenu(prop: string, payload: FormItemPayloadType) {
+      console.log('menu', 'search', prop, payload)
       this.$emit('menu', 'search', prop, payload)
       if (prop === 'search') {
         this.listData.setSearch()
@@ -216,7 +229,7 @@ export default defineComponent({
       } else if (prop === 'delete') {
         notice.confirm('确认进行删除操作吗？', '警告', (act: string) => {
           if (act === 'ok') {
-            this.listData.triggerMethod('$multipleDeleteData', [this.listData.$module.choice ? this.listData.$module.choice.getList() : []], true)
+            this.listData.triggerMethod('$multipleDeleteData', [this.currentChoice ? this.currentChoice.list : []], true)
           }
         })
       } else if (prop === 'export') {

@@ -1,8 +1,7 @@
 import { h } from "vue"
 import { getType } from "complex-utils"
 import { layout } from "complex-plugin"
-import { ChoiceData, PaginationData, AttrsValue } from "complex-data"
-import dataConfig from "complex-data/config"
+import { ChoiceData, PaginationData, AttrsValue, DictionaryData } from "complex-data"
 import InterfaceLayoutValue from "complex-data/src/lib/InterfaceLayoutValue"
 import DefaultList from 'complex-data/src/dictionary/DefaultList'
 import { DefaultEditButtonGroupOption } from "complex-data/src/dictionary/DefaultEditButtonGroup"
@@ -100,7 +99,7 @@ const config = {
     renderIndex(record: Record<PropertyKey, unknown>, index: number, pagination?: PaginationData) {
       let buildPagination = !!pagination
       if (pagination) {
-        const depth = record[dataConfig.dictionary.depth]
+        const depth = record[DictionaryData.$depth]
         if (depth !== undefined && depth !== 0) {
           buildPagination = false
         }
