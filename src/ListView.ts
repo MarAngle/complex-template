@@ -15,14 +15,14 @@ export interface ListModalViewProps extends ModalViewProps {
 }
 
 export type componentsProps = {
-  search?: SearchViewProps
-  table?: TableViewProps
-  editModal?: ListModalViewProps
-  edit?: EditViewProps
-  infoModal?: ListModalViewProps
+  search?: Partial<SearchViewProps>
+  table?: Partial<TableViewProps>
+  editModal?: Partial<ListModalViewProps>
+  edit?: Partial<EditViewProps>
+  infoModal?: Partial<ListModalViewProps>
   info?: Record<string, unknown>
-  childModal?: ListModalViewProps
-  child?: Record<string, unknown>
+  childModal?: Partial<ListModalViewProps>
+  child?: Partial<ListViewProps>
 }
 
 export type renderType = {
@@ -34,26 +34,12 @@ export type renderType = {
   child?: Record<string, (...args: unknown[]) => unknown>
 }
 
-export type tableMenuType = {
-  name: string
-  prop: string
-  hidden?: boolean | ((payload: tablePayload) => boolean)
-  class?: string[] | ((payload: tablePayload) => string[])
-  option?: Record<string, unknown>
-  children?: tableMenuType[]
-}
-
-export type ListMenuType = {
-  table?: tableMenuType[]
-}
-
 export interface ListViewProps {
   listData: ComplexList
   simpleTable?: boolean
   components?: ('spin' | 'search' | 'table' | 'info' | 'edit' | 'child')[]
   componentsProps?: componentsProps
   render?: renderType
-  menu?: ListMenuType
 }
 
 export default defineComponent({
@@ -79,10 +65,6 @@ export default defineComponent({
       type: Object as PropType<ListViewProps['render']>,
       required: false
     },
-    menu: {
-      type: Object as PropType<ListViewProps['menu']>,
-      required: false
-    }
   },
   computed: {
     operate() {
@@ -97,11 +79,16 @@ export default defineComponent({
     currentRender() {
       return this.render || {}
     },
-    currentMenu() {
-      return this.menu || {}
-    },
     currentChoice() {
       return this.listData.$module.choice ? this.listData.$module.choice.getData() : undefined
+    },
+    currentSimpleTable() {
+      if (this.simpleTable && this.currentChoice) {
+        console.error('SimpleTable无法实现选择功能，无法启用SimpleTable！')
+        return false
+      } else {
+        return this.simpleTable
+      }
     }
   },
   methods: {
@@ -139,62 +126,17 @@ export default defineComponent({
       if (this.currentComponents.indexOf('table') > -1) {
         const tableOption = {
           listData: this.listData,
+          onMenu: (prop: string, payload: tablePayload) => {
+            this.onTableMenu(prop, payload)
+          },
           ...this.currentComponentsProps.table
         }
-        const tableSlot = {
-          menu: ({ payload }: { payload: tablePayload }) => {
-            return this.renderTableMenu(payload)
-          },
+        return h(!this.currentSimpleTable ? TableView : SimpleTableView, tableOption, {
           ...this.currentRender.table
-        }
-        return h(!this.simpleTable ? TableView : SimpleTableView, tableOption, tableSlot)
+        })
       } else {
         return null
       }
-    },
-    renderTableMenu(payload: tablePayload) {
-      if (this.currentMenu.table) {
-        return h('span', {
-          class: 'complex-list-table-menu'
-        }, {
-          default: () => {
-            return this.renderTableMenuList(this.currentMenu.table!, payload)
-          }
-        })
-      }
-    },
-    renderTableMenuList(menuList: tableMenuType[], payload: tablePayload) {
-      const list: unknown[] = []
-      for (let i = 0; i < menuList.length; i++) {
-      const menuItem = menuList[i]
-        let hidden = menuItem.hidden
-        if (hidden) {
-          if (typeof hidden === 'function') {
-            hidden = hidden(payload)
-          }
-          if (hidden) {
-            break
-          }
-        }
-        let classList = ['complex-list-table-menu-item']
-        if (menuItem.class) {
-          if (typeof menuItem.class === 'function') {
-            classList = classList.concat(menuItem.class(payload))
-          } else {
-            classList = classList.concat(menuItem.class)
-          }
-        }
-        list.push(h('span', {
-          class: classList.join(' '),
-          onClick: () => {
-            this.onTableMenu(menuItem.prop, payload)
-          },
-          ...menuItem.option
-        }, {
-          default: () => menuItem.name
-        }))
-      }
-      return list
     },
     renderEdit() {
       if (this.currentComponents.indexOf('edit') > -1) {
@@ -246,13 +188,12 @@ export default defineComponent({
         this.listData.triggerMethod('$exportData', [], true)
       }
     },
-    onTableMenu(act: string, payload?: tablePayload) {
-      this.$emit('menu', 'table', act, payload)
-      if (act === 'build') {
-        this.onEdit()
-      } else if (act === 'change') {
+    onTableMenu(prop: string, payload?: tablePayload) {
+      console.log('menu', 'table', prop, payload)
+      this.$emit('menu', 'table', prop, payload)
+      if (prop === 'change') {
         this.onEdit(payload!.targetData)
-      } else if (act === 'delete') {
+      } else if (prop === 'delete') {
         notice.confirm('确认进行删除操作吗？', '警告', (act: string) => {
           if (act === 'ok') {
             this.listData.triggerMethod('$deleteData', [payload!.targetData], true)

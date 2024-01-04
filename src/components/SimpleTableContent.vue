@@ -6,8 +6,9 @@
   justify-content: stretch;
   align-items: stretch;
   .complex-simple-table-content-column{
-    color: rgba(255, 255, 255, 0.85);
-    line-height: 32px;
+    flex-grow: 1;
+    color: rgba(0, 0, 0, 0.85);
+    line-height: 22px;
     &.complex-simple-table-content-column-left{
       text-align: left;
     }
@@ -18,22 +19,38 @@
       text-align: center;
     }
     .complex-simple-table-content-header{
-      height: 33px;
       white-space: nowrap; /* 不换行 */
       overflow: hidden; /* 隐藏超出部分 */
       text-overflow: ellipsis; /* 显示省略号 */
       word-wrap: break-word;
       word-break: break-all;
-      padding: 0 4px;
+      padding: 16px 16px;
       cursor: pointer;
-      border-bottom: 1px rgba(255, 255, 255, 0.25) solid;
-      background-color: rgba(255, 255, 255, 0.1);
+      border-bottom: 1px solid #f0f0f0;
+      background-color: #fafafa;
+      position: relative;
+      &::before{
+        position: absolute;
+        top: 50%;
+        inset-inline-end: 0;
+        width: 1px;
+        height: 1.6em;
+        background-color: #f0f0f0;
+        transform: translateY(-50%);
+        transition: background-color 0.2s;
+        content: "";
+      }
+    }
+    &:last-child{
+      .complex-simple-table-content-header::before{
+        display: none;
+      }
     }
     .complex-simple-table-content-row{
-      padding: 0 4px;
-      border-bottom: 1px rgba(255, 255, 255, 0.25) solid;
-      p{
-        height: 33px;
+      padding: 16px 16px;
+      border-bottom: 1px solid #f0f0f0;
+      :deep(p){
+        height: 22px;
         white-space: nowrap; /* 不换行 */
         overflow: hidden; /* 隐藏超出部分 */
         text-overflow: ellipsis; /* 显示省略号 */
@@ -48,10 +65,9 @@
 <template>
   <div class="complex-simple-table-content">
     <div class="complex-simple-table-content-column" v-for="column in columns" :class="'complex-simple-table-content-column-' + column.align || 'left'" :key="column.$prop" :style="rowWidth(column)" >
-      <div class="complex-simple-table-content-header">{{ column.$name.getValue(type) }}</div>
+      <div class="complex-simple-table-content-header">{{ column.$name.getValue(listProp) }}</div>
       <div class="complex-simple-table-content-row" v-for="(val, key) in data" :key="key" >
         <AutoRender :render="parseRender(column, val, key)" />
-        <!-- <p>{{ column.show ? column.show(val[column.$prop], { targetData: val, type: type, index: key, payload: { mod: column } }) : val[column.$prop] }}</p> -->
       </div>
     </div>
   </div>
@@ -64,9 +80,11 @@ import DefaultList from 'complex-data/src/dictionary/DefaultList'
 import AutoRender from './AutoRender'
 import config, { LayoutLifeData } from '../../config'
 import { tablePayload } from '../TableView'
+import { SimpleTableProps } from '../SimpleTableView'
+import TableMenu from './TableMenu'
 
 export default defineComponent({
-  name: 'SimpleTable',
+  name: 'SimpleTableContent',
   components: {
     AutoRender
   },
@@ -81,10 +99,14 @@ export default defineComponent({
       required: true
     },
     data: {
-      type: Array as PropType<Record<PropertyKey, unknown>[]>,
+      type: Array as PropType<SimpleTableProps['data']>,
       required: true
     },
-    type: {
+    menu: { // 单独制定分页器数据，不从listData中取值
+      type: Object as PropType<SimpleTableProps['menu']>,
+      required: false
+    },
+    listProp: {
       type: String,
       required: false,
       default: 'list'
@@ -119,13 +141,14 @@ export default defineComponent({
     parseRender(column: DefaultList, record: Record<PropertyKey, unknown>, index: number) {
       const payload: tablePayload = {
         targetData: record,
-        type: this.type,
+        type: this.listProp,
         index: index,
         payload: { column: column }
       }
       const text = config.table.renderTableValue(record[column.$prop], payload)
       const targetRender = config.component.parseData(column.$renders, 'target')
       const pureRender = config.component.parseData(column.$renders, 'pure')
+      const menuOption = config.component.parseData(this.menu, column.$prop)
       const attrs = config.component.parseData(column.$local, 'target')
       if (pureRender) {
         return () => {
@@ -139,6 +162,16 @@ export default defineComponent({
           return targetRender({
             text: text,
             payload
+          })
+        }
+      } else if (menuOption) {
+        return () => {
+          return h(TableMenu, {
+            list: menuOption,
+            payload: payload,
+            onMenu: (prop: string, payload: tablePayload) => {
+              this.$emit('menu', prop, payload)
+            }
           })
         }
       } else if (this.index && column.$prop === this.index.prop) {

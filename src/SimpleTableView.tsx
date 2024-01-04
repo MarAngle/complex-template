@@ -1,34 +1,12 @@
 import { defineComponent, h, PropType } from "vue"
 import { deepCloneData, updateData } from "complex-utils"
-import { ComplexList, PaginationData } from "complex-data"
 import DefaultList from "complex-data/src/dictionary/DefaultList"
 import SimpleTableContent from "./components/SimpleTableContent.vue"
 import PaginationView from "./components/PaginationView"
+import { tablePayload, TableViewDefaultProps } from "./TableView"
 import config from "../config"
 
-export type autoType = {
-  expandWidth?: number
-  choiceWidth?: number
-  index?: {
-    prop: string
-    pagination: boolean
-  },
-  pagination?: {
-    auto?: boolean
-    default: string
-    front: string
-    end: boolean
-  }
-}
-
-export interface SimpleTableProps {
-  listData: ComplexList
-  columnList?: DefaultList[]
-  data?: Record<PropertyKey, unknown>[]
-  paginationData?: PaginationData
-  listType?: string
-  auto?: autoType
-}
+export type SimpleTableProps = TableViewDefaultProps
 
 export default defineComponent({
   name: 'SimpleTable',
@@ -50,7 +28,11 @@ export default defineComponent({
       required: false,
       default: null
     },
-    listType: {
+    menu: { // 单独制定分页器数据，不从listData中取值
+      type: Object as PropType<SimpleTableProps['menu']>,
+      required: false
+    },
+    listProp: {
       type: String,
       required: false,
       default: 'list'
@@ -84,7 +66,7 @@ export default defineComponent({
       }
     },
     currentColumnList() {
-      return this.columnList || this.listData.getDictionaryPageList(this.listType) as DefaultList[]
+      return this.columnList || this.listData.getDictionaryPageList(this.listProp) as DefaultList[]
     }
   },
   methods: {
@@ -92,11 +74,15 @@ export default defineComponent({
       const table = h(SimpleTableContent, {
         columns: this.currentColumnList,
         data: this.currentData,
-        type: this.listType,
+        listProp: this.listProp,
+        menu: this.menu,
         id: this.listData.getDictionaryProp('id'),
         index: {
           prop: this.currentAuto.index.prop,
           pagination: this.currentAuto.index.pagination ? this.currentPaginationData : undefined
+        },
+        onMenu(prop: string, payload: tablePayload) {
+          this.$emit('menu', prop, payload)
         }
       })
       return table

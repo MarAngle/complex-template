@@ -1,13 +1,31 @@
 import { defineComponent, h, PropType } from "vue"
 import { Table, TableColumnType, TableProps } from 'ant-design-vue'
 import { deepCloneData, updateData } from "complex-utils"
+import { ComplexList, PaginationData } from "complex-data"
 import DefaultList from "complex-data/src/dictionary/DefaultList"
 import PaginationView from "./components/PaginationView"
 import ChoiceInfo from "./components/ChoiceInfo.vue"
-import { SimpleTableProps } from "./SimpleTableView"
+import TableMenu, { tableMenuType } from "./components/TableMenu"
 import config, { LayoutLifeData } from "../config"
 
 type customRenderPayload = { text: unknown, record: Record<PropertyKey, unknown>, index: number }
+
+export type ColumnItemType = TableColumnType
+
+export type autoType = {
+  expandWidth?: number
+  choiceWidth?: number
+  index?: {
+    prop: string
+    pagination: boolean
+  },
+  pagination?: {
+    auto?: boolean
+    default: string
+    front: string
+    end: boolean
+  }
+}
 
 export type tablePayload = {
   targetData: Record<PropertyKey, unknown>
@@ -18,9 +36,17 @@ export type tablePayload = {
   }
 }
 
-export type ColumnItemType = TableColumnType
+export interface TableViewDefaultProps {
+  listData: ComplexList
+  columnList?: DefaultList[]
+  data?: Record<PropertyKey, unknown>[]
+  paginationData?: PaginationData
+  menu?: Record<string, tableMenuType[]>
+  listProp?: string
+  auto?: autoType
+}
 
-export interface TableViewProps extends SimpleTableProps {
+export interface TableViewProps extends TableViewDefaultProps {
   tableProps?: TableProps
 }
 
@@ -44,11 +70,15 @@ export default defineComponent({
       required: false,
       default: null
     },
+    menu: { // 单独制定分页器数据，不从listData中取值
+      type: Object as PropType<TableViewProps['menu']>,
+      required: false
+    },
     tableProps: { // 单独制定分页器数据，不从listData中取值
       type: Object as PropType<TableViewProps['tableProps']>,
       required: false
     },
-    listType: {
+    listProp: {
       type: String,
       required: false,
       default: 'list'
@@ -88,52 +118,71 @@ export default defineComponent({
     },
     currentColumnList() {
       const list = []
-      const columnList = this.columnList || this.listData.getDictionaryPageList(this.listType) as DefaultList[]
+      const columnList = this.columnList || this.listData.getDictionaryPageList(this.listProp) as DefaultList[]
       for (let i = 0; i < columnList.length; i++) {
         const column = columnList[i]
         const currentProp = column.$prop
         const targetRender = this.$slots[currentProp] || config.component.parseData(column.$renders, 'target')
         const pureRender = config.component.parseData(column.$renders, 'pure')
+        const menuOption = config.component.parseData(this.menu, currentProp)
         const attrs = config.component.parseData(column.$local, 'target')
         const pitem: ColumnItemType = {
           dataIndex: currentProp,
-          title: column.$name.getValue(this.listType),
+          title: column.$name.getValue(this.listProp),
           align: column.align,
           width: column.width,
           ellipsis: column.ellipsis,
           ...config.component.parseAttrs(attrs)
         }
         if (!pureRender) {
-          pitem.customRender = ({ text, record, index }: customRenderPayload) => {
-            if (currentProp === this.currentAuto.index.prop && !targetRender) {
-              // 自动index
-              return config.table.renderIndex(record, index, this.currentAuto.index.pagination ? this.currentPaginationData : undefined)
+          if (!menuOption || targetRender) {
+            pitem.customRender = ({ text, record, index }: customRenderPayload) => {
+              if (currentProp === this.currentAuto.index.prop && !targetRender) {
+                // 自动index
+                return config.table.renderIndex(record, index, this.currentAuto.index.pagination ? this.currentPaginationData : undefined)
+              }
+              const payload: tablePayload = {
+                targetData: record,
+                type: this.listProp,
+                index: index,
+                payload: { column: column }
+              }
+              text = config.table.renderTableValue(text, payload)
+              if (targetRender) {
+                // 插槽
+                return targetRender({
+                  text: text,
+                  payload
+                })
+              }
+              if (pitem.ellipsis && column.auto) {
+                // 自动省略切自动换行
+                return config.table.renderAutoText(text as string, column, this.layoutLifeData, attrs)
+              }
+              return text
             }
-            const payload: tablePayload = {
-              targetData: record,
-              type: this.listType,
-              index: index,
-              payload: { column: column }
-            }
-            text = config.table.renderTableValue(text, payload)
-            if (targetRender) {
-              // 插槽
-              return targetRender({
-                text: text,
-                payload
+          } else {
+            pitem.customRender = ({ record, index }: customRenderPayload) => {
+              const payload: tablePayload = {
+                targetData: record,
+                type: this.listProp,
+                index: index,
+                payload: { column: column }
+              }
+              return h(TableMenu, {
+                list: menuOption,
+                payload: payload,
+                onMenu: (prop: string, payload: tablePayload) => {
+                  this.$emit('menu', prop, payload)
+                }
               })
             }
-            if (pitem.ellipsis && column.auto) {
-              // 自动省略切自动换行
-              return config.table.renderAutoText(text as string, column, this.layoutLifeData, attrs)
-            }
-            return text
           }
         } else {
           pitem.customRender = ({ text, record, index }: customRenderPayload) => {
             const payload: tablePayload = {
               targetData: record,
-              type: this.listType,
+              type: this.listProp,
               index: index,
               payload: { column: column }
             }

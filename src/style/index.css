@@ -4,6 +4,12 @@
   justify-content: space-between;
   align-items: center;
 }
+.complex-simple-table .complex-simple-table-footer {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
 .complex-pagination{
   display: flex;
   flex-direction: row;
@@ -34,9 +40,9 @@
 .complex-list .complex-search{
   padding-top: 24px;
 }
-.complex-list .complex-table .complex-list-table-menu .complex-list-table-menu-item{
+.complex-list-table-menu .complex-list-table-menu-item{
   margin-right: 8px;
 }
-.complex-list .complex-table .complex-list-table-menu .complex-list-table-menu-item:last-child{
+.complex-list-table-menu .complex-list-table-menu-item:last-child{
   margin-right: 0px;
 }
