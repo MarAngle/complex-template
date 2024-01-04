@@ -7,22 +7,38 @@ import DictionaryValue, { DictionaryEditMod, DictionaryEditModInitOption } from 
 import ObserveList from "complex-data/src/dictionary/ObserveList"
 import DefaultMod from "complex-data/src/dictionary/DefaultMod"
 import AntdFormValue from "./class/AntdFormValue"
-import AutoFormItem from "./components/AutoFormItem"
+import AutoFormItem, { AutoFormItemProps } from "./components/AutoFormItem"
 import config from "../config"
+
+export interface FormViewDefaultProps {
+  menu?: (DictionaryEditMod | DictionaryEditModInitOption)[]
+  layout?: FormLayout
+  labelAlign?: FormLabelAlign
+  layoutProps?: Record<string, unknown>
+  formProps?: FormProps
+  disabled?: boolean
+  loading?: boolean
+}
+
+export interface FormViewProps extends FormViewDefaultProps {
+  form: AntdFormValue
+  list: ObserveList
+  type: string
+}
 
 export default defineComponent({
   name: 'FormView',
   props: {
     form: {
-      type: Object as PropType<AntdFormValue>,
+      type: Object as PropType<FormViewProps['form']>,
       required: true
     },
     list: {
-      type: Object as PropType<ObserveList>,
+      type: Object as PropType<FormViewProps['list']>,
       required: true
     },
     menu: {
-      type: Object as PropType<(DictionaryEditMod | DictionaryEditModInitOption)[]>,
+      type: Object as PropType<FormViewProps['menu']>,
       required: false
     },
     type: {
@@ -30,24 +46,24 @@ export default defineComponent({
       required: true
     },
     layout: { // 表单布局'horizontal'|'vertical'|'inline'
-      type: String as PropType<FormLayout>,
+      type: String as PropType<FormViewProps['layout']>,
       required: false,
       default: 'horizontal'
     },
     labelAlign: { // label 标签的文本对齐方式
-      type: String as PropType<FormLabelAlign>,
+      type: String as PropType<FormViewProps['labelAlign']>,
       required: false,
       default: 'right'
     },
-    layoutOption: { // layout != inline时的a-row的参数设置项
+    layoutProps: { // layout != inline时的a-row的参数设置项
       type: Object,
       required: false,
       default: () => {
-        return config.form.layoutOption
+        return config.form.layoutProps
       }
     },
-    formOption: { // form-model-view设置项
-      type: Object as PropType<FormProps>,
+    formProps: { // form-model-view设置项
+      type: Object as PropType<FormViewProps['formProps']>,
       required: false
     },
     disabled: {
@@ -60,14 +76,14 @@ export default defineComponent({
     }
   },
   computed: {
-    currentFormOption() {
-      const formOption = {
+    currentFormProps() {
+      const formProps = {
         ref: 'form',
         model: this.form.data,
         layout: this.layout,
         labelAlign: this.labelAlign
       }
-      return mergeData(formOption, this.formOption)
+      return mergeData(formProps, this.formProps)
     },
     currentMenu() {
       if (this.menu && this.menu.length > 0) {
@@ -78,7 +94,7 @@ export default defineComponent({
     }
   },
   mounted () {
-    this.form.setRef(this.$refs[this.currentFormOption.ref])
+    this.form.setRef(this.$refs[this.currentFormProps.ref])
   },
   methods: {
     getItemGrid(data: DefaultMod) {
@@ -94,7 +110,7 @@ export default defineComponent({
         disabled: this.disabled,
         loading: this.loading,
         target: this
-      }
+      } as AutoFormItemProps
     },
     renderMenu() {
       if (this.currentMenu && this.currentMenu.length > 0) {
@@ -141,13 +157,13 @@ export default defineComponent({
     const menu = this.renderMenu() || []
     const render = h(Form, {
       class: `complex-form ${layoutClass}`,
-      ...this.currentFormOption
+      ...this.currentFormProps
     }, {
       default: () => {
         if (this.layout === 'inline') {
           return [...list, ...menu]
         } else {
-          return h(Row, this.layoutOption, {
+          return h(Row, this.layoutProps, {
             default: () => [...list, ...menu]
           })
         }

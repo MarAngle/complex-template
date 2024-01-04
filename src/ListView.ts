@@ -1,24 +1,27 @@
 import { defineComponent, h, PropType } from "vue"
 import { notice } from "complex-plugin"
 import { ComplexList } from "complex-data"
-import { searchMenuType } from "complex-data/src/module/SearchData"
 import AutoSpin from "./components/AutoSpin.vue"
-import SearchView from "./SearchView"
-import TableView, { tablePayload } from "./TableView"
+import SearchView, { SearchViewProps } from "./SearchView"
+import TableView, { tablePayload, TableViewProps } from "./TableView"
 import SimpleTableView from "./SimpleTableView"
-import ModalView from "./ModalView"
-import EditView from "./EditView"
+import ModalView, { ModalViewProps } from "./ModalView"
+import EditView, { EditViewProps } from "./EditView"
 import { FormItemPayloadType } from "./components/AutoFormItem"
 import config from "./../config"
 
-export type optionType = {
-  search?: Record<string, unknown>
-  table?: Record<string, unknown>
-  editModal?: Record<string, unknown>
-  edit?: Record<string, unknown>
-  infoModal?: Record<string, unknown>
+export interface ListModalViewProps extends ModalViewProps {
+  formatName?: (name: string, payload?: unknown) => string
+}
+
+export type componentsProps = {
+  search?: SearchViewProps
+  table?: TableViewProps
+  editModal?: ListModalViewProps
+  edit?: EditViewProps
+  infoModal?: ListModalViewProps
   info?: Record<string, unknown>
-  childModal?: Record<string, unknown>
+  childModal?: ListModalViewProps
   child?: Record<string, unknown>
 }
 
@@ -41,15 +44,23 @@ export type tableMenuType = {
 }
 
 export type ListMenuType = {
-  search?: (string | searchMenuType)[]
   table?: tableMenuType[]
+}
+
+export interface ListViewProps {
+  listData: ComplexList
+  simpleTable?: boolean
+  components?: ('spin' | 'search' | 'table' | 'info' | 'edit' | 'child')[]
+  componentsProps?: componentsProps
+  render?: renderType
+  menu?: ListMenuType
 }
 
 export default defineComponent({
   name: 'ListView',
   props: {
     listData: {
-      type: Object as PropType<ComplexList>,
+      type: Object as PropType<ListViewProps['listData']>,
       required: true
     },
     simpleTable: {
@@ -57,19 +68,19 @@ export default defineComponent({
       required: false
     },
     components: {
-      type: Array as PropType<('spin' | 'search' | 'table' | 'info' | 'edit' | 'child')[]>,
+      type: Array as PropType<ListViewProps['components']>,
       required: false
     },
-    option: {
-      type: Object as PropType<optionType>,
+    componentsProps: {
+      type: Object as PropType<ListViewProps['componentsProps']>,
       required: false
     },
     render: {
-      type: Object as PropType<renderType>,
+      type: Object as PropType<ListViewProps['render']>,
       required: false
     },
     menu: {
-      type: Object as PropType<ListMenuType>,
+      type: Object as PropType<ListViewProps['menu']>,
       required: false
     }
   },
@@ -80,8 +91,8 @@ export default defineComponent({
     currentComponents() {
       return this.components || [...config.list.components]
     },
-    currentOption() {
-      return this.option || {}
+    currentComponentsProps() {
+      return this.componentsProps || {}
     },
     currentRender() {
       return this.render || {}
@@ -109,9 +120,8 @@ export default defineComponent({
           choice: this.currentChoice,
           layout: 'inline',
           loading: this.operate === 'ing',
-          menu: this.currentMenu.search,
           onMenu: this.onSearchMenu,
-          ...this.currentOption.search
+          ...this.currentComponentsProps.search
         })
       } else {
         return null
@@ -129,7 +139,7 @@ export default defineComponent({
       if (this.currentComponents.indexOf('table') > -1) {
         const tableOption = {
           listData: this.listData,
-          ...this.currentOption.table
+          ...this.currentComponentsProps.table
         }
         const tableSlot = {
           menu: ({ payload }: { payload: tablePayload }) => {
@@ -192,7 +202,7 @@ export default defineComponent({
           ref: 'edit-modal',
           menu: ['cancel', 'submit'],
           submit: this.editSubmit,
-          ...this.currentOption.editModal
+          ...this.currentComponentsProps.editModal
         }
         const editModalSlot = {
           default: () => {
@@ -200,7 +210,7 @@ export default defineComponent({
               ref: 'edit-view',
               dictionary: this.listData.$module.dictionary!,
               loading: this.operate === 'ing',
-              ...this.currentOption.edit
+              ...this.currentComponentsProps.edit
             }
             return h(EditView, editFormOption)
           }
@@ -257,8 +267,8 @@ export default defineComponent({
         type = 'change'
         name = '编辑'
       }
-      if (this.currentOption.editModal && this.currentOption.editModal.formatName) {
-        name = (this.currentOption.editModal.formatName as any)(name, type) as string
+      if (this.currentComponentsProps.editModal && this.currentComponentsProps.editModal.formatName) {
+        name = this.currentComponentsProps.editModal.formatName(name, type)
       }
       (this.$refs['edit-modal'] as InstanceType<typeof ModalView>).show(name)
       this.$nextTick(() => {

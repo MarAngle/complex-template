@@ -125,7 +125,7 @@ const config = {
   },
   form: {
     layout: 'horizontal',
-    layoutOption: {
+    layoutProps: {
       gutter: 24
     },
     labelAlign: 'right',

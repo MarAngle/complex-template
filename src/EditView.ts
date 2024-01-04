@@ -1,20 +1,24 @@
 import { defineComponent, h, PropType } from "vue"
-import { FormLayout, FormProps } from "ant-design-vue/es/form/Form"
-import { FormLabelAlign } from "ant-design-vue/es/form/interface"
 import { DictionaryData, DictionaryValue } from "complex-data"
 import ObserveList from "complex-data/src/dictionary/ObserveList"
-import { DictionaryEditMod, DictionaryEditModInitOption } from "complex-data/src/lib/DictionaryValue"
 import AntdFormValue from "./class/AntdFormValue"
-import FormView from "./FormView"
+import FormView, { FormViewDefaultProps } from "./FormView"
 import { FormItemPayloadType } from "./components/AutoFormItem"
 
 type dataType = undefined | Record<PropertyKey, unknown>
+
+export interface EditViewProps extends FormViewDefaultProps {
+  dictionary: DictionaryData
+  type?: string
+  observe?: boolean
+  form?: AntdFormValue
+}
 
 export default defineComponent({
   name: 'EditView',
   props: {
     dictionary: {
-      type: Object as PropType<DictionaryData>,
+      type: Object as PropType<EditViewProps['dictionary']>,
       required: true
     },
     type: {
@@ -22,7 +26,7 @@ export default defineComponent({
       required: false
     },
     menu: {
-      type: Object as PropType<(DictionaryEditMod | DictionaryEditModInitOption)[]>,
+      type: Object as PropType<EditViewProps['menu']>,
       required: false
     },
     observe: {
@@ -31,23 +35,23 @@ export default defineComponent({
       default: true
     },
     form: {
-      type: Object as PropType<AntdFormValue>,
+      type: Object as PropType<EditViewProps['form']>,
       required: false
     },
     layout: { // 表单布局'horizontal'|'vertical'|'inline'
-      type: String as PropType<FormLayout>,
+      type: String as PropType<EditViewProps['layout']>,
       required: false
     },
     labelAlign: { // label 标签的文本对齐方式
-      type: String as PropType<FormLabelAlign>,
+      type: String as PropType<EditViewProps['labelAlign']>,
       required: false
     },
-    layoutOption: { // layout != inline时的a-row的参数设置项
+    layoutProps: { // layout != inline时的a-row的参数设置项
       type: Object,
       required: false
     },
-    formOption: { // form-model-view设置项
-      type: Object as PropType<FormProps>,
+    formProps: { // form-model-view设置项
+      type: Object as PropType<EditViewProps['formProps']>,
       required: false
     },
     disabled: {
@@ -119,8 +123,8 @@ export default defineComponent({
           type: this.currentType,
           layout: this.layout!,
           labelAlign: this.labelAlign!,
-          layoutOption: this.layoutOption!,
-          formOption: this.formOption,
+          layoutProps: this.layoutProps!,
+          formProps: this.formProps,
           disabled: this.disabled,
           loading: this.loading,
           onMenu: (prop: string, payload: FormItemPayloadType) => {

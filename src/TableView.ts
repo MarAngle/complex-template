@@ -1,26 +1,11 @@
 import { defineComponent, h, PropType } from "vue"
 import { Table, TableColumnType, TableProps } from 'ant-design-vue'
 import { deepCloneData, updateData } from "complex-utils"
-import { ComplexList, PaginationData } from "complex-data"
 import DefaultList from "complex-data/src/dictionary/DefaultList"
 import PaginationView from "./components/PaginationView"
 import ChoiceInfo from "./components/ChoiceInfo.vue"
+import { SimpleTableProps } from "./SimpleTableView"
 import config, { LayoutLifeData } from "../config"
-
-export type autoType = {
-  expandWidth?: number
-  choiceWidth?: number
-  index?: {
-    prop: string
-    pagination: boolean
-  },
-  pagination?: {
-    auto?: boolean
-    default: string
-    front: string
-    end: boolean
-  }
-}
 
 type customRenderPayload = { text: unknown, record: Record<PropertyKey, unknown>, index: number }
 
@@ -35,32 +20,33 @@ export type tablePayload = {
 
 export type ColumnItemType = TableColumnType
 
+export interface TableViewProps extends SimpleTableProps {
+  tableProps?: TableProps
+}
+
 export default defineComponent({
   name: 'TableView',
   props: {
     listData: {
-      type: Object as PropType<ComplexList>,
+      type: Object as PropType<TableViewProps['listData']>,
       required: true
     },
     columnList: { // 定制列配置
-      type: Object as PropType<DefaultList[]>,
+      type: Object as PropType<TableViewProps['columnList']>,
       required: false
     },
     data: { // 单独指定列表数据，不从listData.$list中取值
-      type: Array as PropType<Record<PropertyKey, unknown>[]>,
+      type: Array as PropType<TableViewProps['data']>,
       required: false
     },
     paginationData: { // 单独制定分页器数据，不从listData中取值
-      type: Object as PropType<PaginationData>,
+      type: Object as PropType<TableViewProps['paginationData']>,
       required: false,
       default: null
     },
-    tableOption: { // 单独制定分页器数据，不从listData中取值
-      type: Object as PropType<TableProps>,
-      required: false,
-      default: () => {
-        return {}
-      }
+    tableProps: { // 单独制定分页器数据，不从listData中取值
+      type: Object as PropType<TableViewProps['tableProps']>,
+      required: false
     },
     listType: {
       type: String,
@@ -68,11 +54,8 @@ export default defineComponent({
       default: 'list'
     },
     auto: {
-      type: Object as PropType<autoType>,
-      required: false,
-      default: () => {
-        return {}
-      }
+      type: Object as PropType<TableViewProps['auto']>,
+      required: false
     }
   },
   data () {
@@ -164,23 +147,23 @@ export default defineComponent({
       }
       return list
     },
-    currentTableOption() {
-      const currentTableOption = { ...this.tableOption }
-      if (!currentTableOption.columns) {
-        currentTableOption.columns = this.currentColumnList
+    currentTableProps() {
+      const currentTableProps = this.tableProps ? { ...this.tableProps } : {}
+      if (!currentTableProps.columns) {
+        currentTableProps.columns = this.currentColumnList
       }
-      if (!currentTableOption.dataSource) {
-        currentTableOption.dataSource = this.currentData
+      if (!currentTableProps.dataSource) {
+        currentTableProps.dataSource = this.currentData
       }
-      if (!currentTableOption.rowKey) {
-        currentTableOption.rowKey = this.listData.getDictionaryProp('id')
+      if (!currentTableProps.rowKey) {
+        currentTableProps.rowKey = this.listData.getDictionaryProp('id')
       }
-      if (currentTableOption.pagination === undefined) {
-        currentTableOption.pagination = false
+      if (currentTableProps.pagination === undefined) {
+        currentTableProps.pagination = false
       }
       const choice = this.listData.$module.choice
       if (choice) {
-        currentTableOption.rowSelection = {
+        currentTableProps.rowSelection = {
           columnWidth: 50,
           selectedRowKeys: choice.data.id as (string | number)[],
           onChange: (selectedRowKeys: (string | number)[], selectedRows: Record<string, unknown>[]) => {
@@ -202,7 +185,7 @@ export default defineComponent({
           ...config.component.parseAttrs(config.component.parseData(choice.$local, 'target'))
         }
       }
-      return currentTableOption
+      return currentTableProps
     },
   },
   mounted() {
@@ -214,7 +197,7 @@ export default defineComponent({
   methods: {
     renderTable() {
       const table = h(Table, {
-        ...this.currentTableOption
+        ...this.currentTableProps
       })
       return table
     },

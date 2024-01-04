@@ -8,6 +8,7 @@ import AntdFormValue from "./../class/AntdFormValue"
 import ButtonView from "../ButtonView"
 import { bindButtonClick, parseEditAttrs } from "../../format"
 import config from "../../config"
+import FormView from "../FormView"
 
 export interface FormItemPayloadType {
   prop: string
@@ -17,8 +18,18 @@ export interface FormItemPayloadType {
   form: AntdFormValue
   targetData: Record<PropertyKey, unknown>
   list: ObserveList
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  target: any
+  target: InstanceType<typeof FormView>
+  disabled?: boolean
+  loading?: boolean
+}
+
+export interface AutoFormItemProps {
+  data: DictionaryEditMod
+  index: number
+  form: AntdFormValue
+  list: ObserveList
+  type: string
+  target: InstanceType<typeof FormView>
   disabled?: boolean
   loading?: boolean
 }
@@ -27,7 +38,7 @@ export default defineComponent({
   name: 'AutoFormItem',
   props: {
     data: {
-      type: Object as PropType<DictionaryEditMod>,
+      type: Object as PropType<AutoFormItemProps['data']>,
       required: true
     },
     index: {
@@ -35,11 +46,11 @@ export default defineComponent({
       required: true
     },
     list: {
-      type: Object as PropType<ObserveList>,
+      type: Object as PropType<AutoFormItemProps['list']>,
       required: true
     },
     form: { // form数据{ data, num }
-      type: Object as PropType<AntdFormValue>,
+      type: Object as PropType<AutoFormItemProps['form']>,
       required: true
     },
     type: { // formType
@@ -47,7 +58,7 @@ export default defineComponent({
       required: true
     },
     target: { // FormView实例
-      type: Object,
+      type: Object as PropType<AutoFormItemProps['target']>,
       required: true
     },
     disabled: {

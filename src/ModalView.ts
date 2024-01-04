@@ -16,6 +16,16 @@ export type modalLayoutOption = {
   mainPadding: [number, number, number, number]
 }
 
+export interface ModalViewProps {
+  width?: number
+  title?: string
+  layout?: Partial<modalLayoutOption>
+  menu?: (string | DefaultEditButtonGroupOption)[]
+  menuOption?: Record<string, DefaultEditButtonGroupOption>
+  submit?: () => Promise<unknown>
+  modalProps?: ModalProps
+}
+
 export default defineComponent({
   name: 'ModalView',
   props: {
@@ -28,29 +38,23 @@ export default defineComponent({
       required: false
     },
     layout: {
-      type: Object as PropType<Partial<modalLayoutOption>>,
-      required: false,
-      default: () => {
-        return null
-      }
+      type: Object as PropType<ModalViewProps['layout']>,
+      required: false
     },
     menu: {
-      type: Object as PropType<(string | DefaultEditButtonGroupOption)[]>,
+      type: Object as PropType<ModalViewProps['menu']>,
       required: false
     },
     menuOption: {
-      type: Object as PropType<Record<string, DefaultEditButtonGroupOption>>,
-      required: false,
-      default: () => {
-        return null
-      }
-    },
-    submit: {
-      type: Function as PropType<() => Promise<unknown>>,
+      type: Object as PropType<ModalViewProps['menuOption']>,
       required: false
     },
-    modalOption: {
-      type: Object as PropType<ModalProps>,
+    submit: {
+      type: Function as PropType<ModalViewProps['submit']>,
+      required: false
+    },
+    modalProps: {
+      type: Object as PropType<ModalViewProps['modalProps']>,
       required: false,
       default: () => {
         return null
@@ -62,7 +66,7 @@ export default defineComponent({
       open: false,
       layoutPlugin: layout,
       localTitle: undefined as undefined | string,
-      localModalOption: undefined as undefined | ModalProps
+      localModalProps: undefined as undefined | ModalProps
     }
   },
   computed: {
@@ -145,14 +149,14 @@ export default defineComponent({
   methods: {
     show(title?: string, option?: ModalProps) {
       this.localTitle = title
-      this.localModalOption = option
+      this.localModalProps = option
       this.open = true
     },
     hide(from: string) {
       this.open = false
       this.$emit('hide', from)
       this.localTitle = undefined
-      this.localModalOption = undefined
+      this.localModalProps = undefined
     },
     renderContent() {
       return this.$slots.default!({
@@ -204,8 +208,8 @@ export default defineComponent({
       open: this.open,
       width: this.currentWidth,
       title: this.currentTitle,
-      ...this.modalOption,
-      ...this.localModalOption,
+      ...this.modalProps,
+      ...this.localModalProps,
       onCancel: (e: MouseEvent | KeyboardEvent) => {
         if (e instanceof KeyboardEvent) {
           this.hide('escape')

@@ -21,23 +21,32 @@ export type autoType = {
   }
 }
 
+export interface SimpleTableProps {
+  listData: ComplexList
+  columnList?: DefaultList[]
+  data?: Record<PropertyKey, unknown>[]
+  paginationData?: PaginationData
+  listType?: string
+  auto?: autoType
+}
+
 export default defineComponent({
   name: 'SimpleTable',
   props: {
     listData: {
-      type: Object as PropType<ComplexList>,
+      type: Object as PropType<SimpleTableProps['listData']>,
       required: true
     },
     columnList: { // 定制列配置
-      type: Object as PropType<DefaultList[]>,
+      type: Object as PropType<SimpleTableProps['columnList']>,
       required: false
     },
     data: { // 单独指定列表数据，不从listData.$list中取值
-      type: Array as PropType<Record<PropertyKey, unknown>[]>,
+      type: Array as PropType<SimpleTableProps['data']>,
       required: false
     },
     paginationData: { // 单独制定分页器数据，不从listData中取值
-      type: Object as PropType<PaginationData>,
+      type: Object as PropType<SimpleTableProps['paginationData']>,
       required: false,
       default: null
     },
@@ -47,11 +56,8 @@ export default defineComponent({
       default: 'list'
     },
     auto: {
-      type: Object as PropType<autoType>,
-      required: false,
-      default: () => {
-        return {}
-      }
+      type: Object as PropType<SimpleTableProps['auto']>,
+      required: false
     }
   },
   computed: {
