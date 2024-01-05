@@ -23,7 +23,7 @@ export interface FormItemPayloadType {
   loading?: boolean
 }
 
-export interface AutoFormItemProps {
+export interface BaseFormItemProps {
   data: DictionaryEditMod
   index: number
   form: AntdFormValue
@@ -35,10 +35,10 @@ export interface AutoFormItemProps {
 }
 
 export default defineComponent({
-  name: 'AutoFormItem',
+  name: 'BaseFormItem',
   props: {
     data: {
-      type: Object as PropType<AutoFormItemProps['data']>,
+      type: Object as PropType<BaseFormItemProps['data']>,
       required: true
     },
     index: {
@@ -46,11 +46,11 @@ export default defineComponent({
       required: true
     },
     list: {
-      type: Object as PropType<AutoFormItemProps['list']>,
+      type: Object as PropType<BaseFormItemProps['list']>,
       required: true
     },
     form: { // form数据{ data, num }
-      type: Object as PropType<AutoFormItemProps['form']>,
+      type: Object as PropType<BaseFormItemProps['form']>,
       required: true
     },
     type: { // formType
@@ -58,7 +58,7 @@ export default defineComponent({
       required: true
     },
     target: { // FormView实例
-      type: Object as PropType<AutoFormItemProps['target']>,
+      type: Object as PropType<BaseFormItemProps['target']>,
       required: true
     },
     disabled: {

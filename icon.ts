@@ -1,6 +1,6 @@
 import { h } from 'vue';
 import { SearchOutlined, SettingOutlined, PlusOutlined, DeleteOutlined, ReloadOutlined, CloseOutlined, StopOutlined, DownloadOutlined, UploadOutlined, LinkOutlined } from '@ant-design/icons-vue';
-import { DefaultEditButtonGroupOption } from 'complex-data/src/dictionary/DefaultEditButtonGroup';
+import { DefaultEditButtonOption } from 'complex-data/src/dictionary/DefaultEditButton';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const iconDict: Record<string, any> = {
@@ -17,7 +17,7 @@ export const iconDict: Record<string, any> = {
 }
 
 const icon = {
-  parse(name: DefaultEditButtonGroupOption['icon']) {
+  parse(name: DefaultEditButtonOption['icon']) {
     if (name) {
       if (typeof name === 'string') {
         if (iconDict[name]) {

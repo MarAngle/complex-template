@@ -4,7 +4,7 @@ import { ChoiceDataData } from "complex-data/src/module/ChoiceData"
 import { DefaultEditButtonInitOption } from "complex-data/src/dictionary/DefaultEditButton"
 import { searchMenuType } from "complex-data/src/module/SearchData"
 import FormView, { FormViewDefaultProps } from "./FormView"
-import { FormItemPayloadType } from "./components/AutoFormItem"
+import { FormItemPayloadType } from "./components/BaseFormItem"
 import AntdFormValue from "./class/AntdFormValue"
 
 export interface SearchViewProps extends FormViewDefaultProps {

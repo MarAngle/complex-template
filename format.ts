@@ -15,7 +15,7 @@ import DefaultEditButton from "complex-data/src/dictionary/DefaultEditButton"
 import DefaultEditButtonGroup from "complex-data/src/dictionary/DefaultEditButtonGroup"
 import DefaultEditContent from "complex-data/src/dictionary/DefaultEditContent"
 import DefaultEditCustom from "complex-data/src/dictionary/DefaultEditCustom"
-import { FormItemPayloadType } from "./src/components/AutoFormItem"
+import { FormItemPayloadType } from "./src/components/BaseFormItem"
 
 const showLogs = {
   init: false,

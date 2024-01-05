@@ -3,7 +3,7 @@ import { DictionaryData, DictionaryValue } from "complex-data"
 import ObserveList from "complex-data/src/dictionary/ObserveList"
 import AntdFormValue from "./class/AntdFormValue"
 import FormView, { FormViewDefaultProps } from "./FormView"
-import { FormItemPayloadType } from "./components/AutoFormItem"
+import { FormItemPayloadType } from "./components/BaseFormItem"
 
 type dataType = undefined | Record<PropertyKey, unknown>
 
