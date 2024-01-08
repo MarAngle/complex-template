@@ -9,6 +9,7 @@ import ButtonView from "../ButtonView"
 import { bindButtonClick, parseEditAttrs } from "../../format"
 import config from "../../config"
 import FormView from "../FormView"
+import ImportView from "../ImportView"
 
 export interface FormItemPayloadType {
   prop: string
@@ -166,7 +167,7 @@ export default defineComponent({
       } else if (this.data.type === 'dateRange') {
         tag = RangePicker
       } else if (this.data.type === 'file') {
-        // tag = UploadFile
+        tag = ImportView
       } else if (this.data.type === 'button') {
         tag = ButtonView
       } else if (this.data.type === 'buttonGroup') {

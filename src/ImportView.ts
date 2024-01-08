@@ -1,17 +1,17 @@
 import { defineComponent, h, PropType } from "vue"
-import { InputFile } from "complex-component"
-import { InputFileProps } from "complex-component/src/type"
+import { FileView } from "complex-component"
+import { FileProps } from "complex-component/src/type"
 import { DefaultEditFileOption, uploadFileDataType } from "complex-data/src/dictionary/DefaultEditFile"
 import { DefaultEditButtonOption } from "complex-data/src/dictionary/DefaultEditButton"
 import { Button } from "ant-design-vue"
 import { ButtonType } from "ant-design-vue/es/button"
-import icon, { iconDict } from "../icon"
 import { downloadFile } from "complex-utils"
+import icon from "../../icon"
 
-export interface ImportProps extends InputFileProps{
+export interface ImportProps extends FileProps{
   name?: string
-  menuType?: string
-  menuIcon?: DefaultEditButtonOption['icon']
+  type?: string
+  icon?: DefaultEditButtonOption['icon']
   loading?: boolean
   upload?: DefaultEditFileOption['upload']
   render?: {
@@ -39,11 +39,11 @@ export default defineComponent({
       required: false,
       default: '上传'
     },
-    menuType: {
+    type: {
       type: String,
       required: false
     },
-    menuIcon: {
+    icon: {
       type: [String, Function],
       required: false,
       default: 'upload'
@@ -128,17 +128,14 @@ export default defineComponent({
         if (value) {
           const file = value as File
           if (this.file.data !== file) {
-            this.setData(file, 'watch')
+            this.setData(file, true)
           }
         } else {
           this.clearData()
         }
       } else {
         if (value) {
-          for (let i = 0; i < (value as File[]).length; i++) {
-            const file = (value as File[])[i]
-            this.setData(file, 'watch')
-          }
+          this.setData(value, true)
         } else {
           this.clearData()
         }
@@ -173,16 +170,22 @@ export default defineComponent({
         }
       }
     },
-    setData(file: File, from: 'change' | 'watch') {
+    setData(file: File | File[], sync: boolean) {
       if (!this.multiple) {
         if (this.file.data !== file) {
-          this.file.data = file
-          this.file.name = file.name
-          if (from === 'change') {
+          this.file.data = file as File
+          this.file.name = (file as File).name
+          if (!sync) {
             this.emitData()
           }
         }
       } else {
+        if (sync) {
+          (file as File[]).forEach(fileItem => {
+            
+          })
+        }
+        const fileList = file as File[]
         for (let i = 0; i < this.list.length; i++) {
           const item = this.list[i]
           if (item.data === file) {
@@ -232,13 +235,15 @@ export default defineComponent({
     },
     emitData() {
       if (!this.multiple) {
+        console.log(this.file.data)
         this.$emit('change', this.file.data)
       } else {
+        console.log(this.list.map(item => item.data))
         this.$emit('change', this.list.map(item => item.data))
       }
     },
     renderFile() {
-      return h(InputFile, {
+      return h(FileView, {
         class: 'complex-import-file',
         ref: 'file',
         accept: this.accept,
@@ -248,7 +253,7 @@ export default defineComponent({
         append: this.append,
         disabled: this.disabled,
         size: this.size,
-        onChange: (file: File) => {
+        onFile: (file: File | File[]) => {
           if (this.upload) {
             this.operate = true
             this.upload(file).then(res => {
@@ -259,7 +264,7 @@ export default defineComponent({
               this.operate = false
             })
           } else {
-            this.setData(file, 'change')
+            this.setData(file, false)
           }
         }
       })
@@ -268,13 +273,15 @@ export default defineComponent({
       return h(Button, {
         class: 'complex-import-menu',
         loading: this.loading || this.operate,
-        type: this.menuType === 'danger' ? 'primary' : this.menuType as ButtonType,
-        danger: this.menuType === 'danger',
-        icon: icon.parse(this.menuIcon as ImportProps['menuIcon']),
+        type: this.type === 'danger' ? 'primary' : this.type as ButtonType,
+        danger: this.type === 'danger',
+        icon: icon.parse(this.icon as ImportProps['icon']),
         disabled: this.disabled,
         onClick: () => {
-          (this.$refs.file as InstanceType<typeof InputFile>).$el.click()
+          (this.$refs.file as InstanceType<typeof FileView>).$el.click()
         }
+      }, {
+        default: () => this.name
       })
     },
     renderList() {
@@ -301,7 +308,7 @@ export default defineComponent({
       return h('div', {
         class: 'complex-import-item'
       }, {
-        default: [
+        default: () => [
           h('span', {
             class: 'complex-import-item-name',
             onClick: () => {
@@ -318,7 +325,7 @@ export default defineComponent({
               this.removeData(index)
             }
           }, {
-            default: () => iconDict.parse('close')
+            default: () => icon.parse('close')
           }),
         ]
       })
