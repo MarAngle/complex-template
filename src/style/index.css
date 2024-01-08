@@ -1,3 +1,10 @@
+.complex-import-file{
+  display: none !important;
+}
+.complex-button-file{
+  display: none !important;
+}
+
 .complex-table .complex-table-footer {
   display: flex;
   flex-direction: row;

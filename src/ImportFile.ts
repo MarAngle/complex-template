@@ -5,9 +5,10 @@ import { DefaultEditFileOption, uploadFileDataType } from "complex-data/src/dict
 import { DefaultEditButtonOption } from "complex-data/src/dictionary/DefaultEditButton"
 import { Button } from "ant-design-vue"
 import { ButtonType } from "ant-design-vue/es/button"
-import icon from "../icon"
+import icon, { iconDict } from "../icon"
+import { downloadFile } from "complex-utils"
 
-export interface ImportFileProps extends InputFileProps{
+export interface ImportProps extends InputFileProps{
   name?: string
   menuType?: string
   menuIcon?: DefaultEditButtonOption['icon']
@@ -25,10 +26,10 @@ export interface fileDataType {
   name: string
 }
 
-export type importFileDataType = uploadFileDataType | fileDataType
+export type importDataType = uploadFileDataType | fileDataType
 
 export default defineComponent({
-  name: 'ImportFile',
+  name: 'ImportView',
   props: {
     value: {
       type: [String, Number, File, Object]
@@ -48,11 +49,11 @@ export default defineComponent({
       default: 'upload'
     },
     upload: {
-      type: Object as PropType<ImportFileProps['upload']>,
+      type: Object as PropType<ImportProps['upload']>,
       required: false
     },
     render: {
-      type: Object as PropType<ImportFileProps['render']>,
+      type: Object as PropType<ImportProps['render']>,
       required: false
     },
     loading: {
@@ -104,8 +105,8 @@ export default defineComponent({
         data: undefined,
         name: undefined,
         url: undefined
-      } as Partial<importFileDataType>,
-      list: [] as importFileDataType[]
+      } as Partial<importDataType>,
+      list: [] as importDataType[]
     }
   },
   methods: {
@@ -221,6 +222,14 @@ export default defineComponent({
         }
       }
     },
+    removeData(index?: number) {
+      if (index === undefined) {
+        this.clearData()
+      } else {
+        this.list.splice(index, 1)
+      }
+      this.emitData()
+    },
     emitData() {
       if (!this.multiple) {
         this.$emit('change', this.file.data)
@@ -228,8 +237,9 @@ export default defineComponent({
         this.$emit('change', this.list.map(item => item.data))
       }
     },
-    renderInput() {
+    renderFile() {
       return h(InputFile, {
+        class: 'complex-import-file',
         ref: 'file',
         accept: this.accept,
         multiple: this.multiple,
@@ -254,30 +264,74 @@ export default defineComponent({
         }
       })
     },
-    renderButton() {
+    renderMenu() {
       return h(Button, {
+        class: 'complex-import-menu',
         loading: this.loading || this.operate,
         type: this.menuType === 'danger' ? 'primary' : this.menuType as ButtonType,
         danger: this.menuType === 'danger',
-        icon: icon.parse(this.menuIcon as ImportFileProps['menuIcon']),
+        icon: icon.parse(this.menuIcon as ImportProps['menuIcon']),
         disabled: this.disabled,
         onClick: () => {
           (this.$refs.file as InstanceType<typeof InputFile>).$el.click()
         }
       })
     },
-    renderContent() {
-      return h(InputFile)
+    renderList() {
+      if (!this.multiple) {
+        if (this.file.data) {
+          return h('div', {
+            class: 'complex-import-list'
+          }, {
+            default: () => this.renderItem(this.file as importDataType)
+          })
+        }
+      } else {
+        return h('div', {
+          class: 'complex-import-list'
+        }, {
+          default: () => this.list.map((item, index) => {
+            return this.renderItem(item, index)
+          })
+        })
+      }
+      return null
     },
+    renderItem(data: importDataType, index?: number) {
+      return h('div', {
+        class: 'complex-import-item'
+      }, {
+        default: [
+          h('span', {
+            class: 'complex-import-item-name',
+            onClick: () => {
+              if (data.url) {
+                downloadFile(data.url, data.name)
+              }
+            }
+          }, {
+            default: () => data.name
+          }),
+          h('span', {
+            class: 'complex-import-item-delete',
+            onClick: () => {
+              this.removeData(index)
+            }
+          }, {
+            default: () => iconDict.parse('close')
+          }),
+        ]
+      })
+    }
   },
   render() {
     return h('div', {
-      class: 'complex-import-file'
+      class: 'complex-import'
     }, {
       default: () => [
-        this.renderInput(),
-        this.renderButton(),
-        this.renderContent()
+        this.renderFile(),
+        this.renderMenu(),
+        this.renderList()
       ]
     })
   }
