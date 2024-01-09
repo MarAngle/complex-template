@@ -160,9 +160,7 @@ export default defineComponent({
             onClick: () => {
               this.removeData(index)
             }
-          }, {
-            default: () => icon.parse('close')
-          }),
+          }, [icon.parse('close')]),
         ]
       }) : null
     }

@@ -118,9 +118,7 @@ export default defineComponent({
             onClick: () => {
               this.clearData()
             }
-          }, {
-            default: () => icon.parse('close')
-          }),
+          }, [icon.parse('close')]),
         ]
       }) : null
     }

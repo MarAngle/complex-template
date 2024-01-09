@@ -1,9 +1,9 @@
-import { h } from 'vue';
+import { Component, VNode, h } from 'vue';
 import { SearchOutlined, SettingOutlined, PlusOutlined, DeleteOutlined, ReloadOutlined, CloseOutlined, StopOutlined, DownloadOutlined, UploadOutlined, LinkOutlined } from '@ant-design/icons-vue';
 import { DefaultEditButtonOption } from 'complex-data/src/dictionary/DefaultEditButton';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const iconDict: Record<string, any> = {
+export const iconDict: Record<string, Component> = {
   search: SearchOutlined,
   setting: SettingOutlined,
   plus: PlusOutlined,
@@ -27,7 +27,7 @@ const icon = {
           return name
         }
       } else {
-        return name()
+        return name() as VNode
       }
     } else {
       return null

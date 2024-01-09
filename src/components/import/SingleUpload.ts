@@ -27,7 +27,7 @@ export default defineComponent({
       default: 'upload'
     },
     upload: {
-      type: Object as PropType<ImportProps['upload']>,
+      type: Function as PropType<ImportProps['upload']>,
       required: true
     },
     render: {
@@ -87,7 +87,7 @@ export default defineComponent({
       this.emitData()
     },
     emitData() {
-      this.$emit('select', this.data)
+      this.$emit('select', this.data.data)
     },
     renderFile() {
       return h(FileView, {
@@ -124,7 +124,7 @@ export default defineComponent({
       })
     },
     renderContent() {
-      return this.data ? h('div', {
+      return this.data.data ? h('div', {
         class: 'complex-import-content'
       }, {
         default: () => [
@@ -138,9 +138,7 @@ export default defineComponent({
             onClick: () => {
               this.clearData()
             }
-          }, {
-            default: () => icon.parse('close')
-          }),
+          }, [icon.parse('close')]),
         ]
       }) : null
     }

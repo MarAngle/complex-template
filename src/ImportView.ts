@@ -39,7 +39,7 @@ export default defineComponent({
       default: 'upload'
     },
     upload: {
-      type: Object as PropType<ImportProps['upload']>,
+      type: Function as PropType<ImportProps['upload']>,
       required: false
     },
     render: {

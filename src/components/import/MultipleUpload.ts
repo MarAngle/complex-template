@@ -32,7 +32,7 @@ export default defineComponent({
       required: false
     },
     upload: {
-      type: Object as PropType<ImportProps['upload']>,
+      type: Function as PropType<ImportProps['upload']>,
       required: true
     },
     loading: {
@@ -180,9 +180,7 @@ export default defineComponent({
             onClick: () => {
               this.removeData(index)
             }
-          }, {
-            default: () => icon.parse('close')
-          }),
+          }, [icon.parse('close')]),
         ]
       }) : null
     }
