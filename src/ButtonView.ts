@@ -3,7 +3,7 @@ import { Button } from "ant-design-vue"
 import { ButtonType } from "ant-design-vue/es/button"
 import { isPromise } from "complex-utils"
 import { DefaultEditButtonOption } from "complex-data/src/dictionary/DefaultEditButton"
-import { InputFile } from "complex-component"
+import { FileView } from "complex-component"
 import icon from "../icon"
 
 export default defineComponent({
@@ -21,7 +21,7 @@ export default defineComponent({
   },
   methods: {
     renderFile() {
-      return h(InputFile, {
+      return h(FileView, {
         class: 'complex-button-file',
         ref: 'file',
         ...this.data.uploadOption,
@@ -82,7 +82,7 @@ export default defineComponent({
         }
       } else {
         return () => {
-          (this.$refs.file as InstanceType<typeof InputFile>).$el.click()
+          (this.$refs.file as InstanceType<typeof FileView>).$el.click()
         }
       }
     }

@@ -16,7 +16,6 @@ import DefaultEditButtonGroup from "complex-data/src/dictionary/DefaultEditButto
 import DefaultEditContent from "complex-data/src/dictionary/DefaultEditContent"
 import DefaultEditCustom from "complex-data/src/dictionary/DefaultEditCustom"
 import { FormItemPayloadType } from "./src/components/BaseFormItem"
-import { ImportProps } from './src/ImportView'
 
 const showLogs = {
   init: false,
@@ -270,17 +269,15 @@ const dict = {
           layout = 'bottom'
         }
       }
+      const buttonOption = edit.$option.button || {}
       const itemAttrs = new AttrsValue({
         props: {
-          name: edit.$name.getValue(payload.type),
           accept: edit.$option.accept,
-          type: edit.$option.type,
-          icon: edit.$option.icon,
-          multiple: edit.multiple,
-          multipleAppend: edit.$option.multipleAppend,
-          maxNum: edit.$option.max,
-          minNum: edit.$option.min,
           maxSize: edit.$option.size,
+          name: buttonOption.name || edit.$name.getValue(payload.type),
+          type: buttonOption.type,
+          icon: buttonOption.icon,
+          multiple: edit.multiple,
           upload: edit.$option.upload,
           layout: layout,
           disabled: payload.disabled || edit.disabled.getValue(payload.type)
