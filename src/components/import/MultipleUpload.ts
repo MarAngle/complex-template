@@ -6,11 +6,13 @@ import { Button } from "ant-design-vue"
 import { ButtonType } from "ant-design-vue/es/button"
 import icon from "../../../icon"
 import { notice } from "complex-plugin"
+import { uploadFileDataType } from "complex-data/src/dictionary/DefaultEditFile"
 
-export interface MultipleFileProps extends FileProps{
+export interface MultipleUploadProps extends FileProps{
   name?: string
   type?: string
   icon?: DefaultEditButtonOption['icon']
+  upload: (file: File[]) => Promise<{ file: uploadFileDataType[] }>
   loading?: boolean
   render?: {
     menu?: () => unknown
@@ -22,7 +24,7 @@ export default defineComponent({
   name: 'MultipleFile',
   props: {
     value: {
-      type: Object as PropType<File[]>
+      type: Object as PropType<string[]>
     },
     name: {
       type: String,
@@ -39,8 +41,12 @@ export default defineComponent({
       default: 'upload'
     },
     render: {
-      type: Object as PropType<MultipleFileProps['render']>,
+      type: Object as PropType<MultipleUploadProps['render']>,
       required: false
+    },
+    upload: {
+      type: Object as PropType<MultipleUploadProps['upload']>,
+      required: true
     },
     loading: {
       type: Boolean,
@@ -55,7 +61,7 @@ export default defineComponent({
       required: false
     },
     multiple: {
-      type: Object as PropType<MultipleFileProps['multiple']>,
+      type: Object as PropType<MultipleUploadProps['multiple']>,
       required: false
     },
     disabled: {
@@ -64,8 +70,11 @@ export default defineComponent({
     }
   },
   watch: {
-    value: function(value) {
-      this.syncData(value)
+    value: {
+      immediate: true,
+      handler: function() {
+        this.syncData()
+      }
     }
   },
   computed: {
@@ -80,37 +89,42 @@ export default defineComponent({
   data() {
     return {
       operate: false,
-      data: this.value || []
+      data: [] as string[],
+      list: [] as uploadFileDataType[]
     }
   },
   methods: {
-    syncData(file: undefined | File[]) {
-      this.setData(file, false, false)
-    },
-    setData(file: undefined | File[], append?: boolean, emit?: boolean) {
-      if (this.data !== file) {
-        if (!append) {
-          this.data = file || []
-        } else if (!file) {
-          // append模式下file无值不做操作
-        } else {
-          file.forEach(fileItem => {
-            if (this.data.indexOf(fileItem) === -1) {
-              this.data.push(fileItem)
-            }
-          })
-          if (this.max && this.data.length > this.max) {
-            this.data.length = this.max
-            notice.showMsg(`当前选择的文件数量超过限制值${this.max}，超过部分已被删除！`, 'error')
+    syncData() {
+      if (this.value !== this.data) {
+        this.data = this.value || []
+        this.list = this.data.map(item => {
+          return {
+            data: item,
+            name: item,
+            url: undefined
           }
+        })
+      }
+    },
+    setData(file: uploadFileDataType[], emit?: boolean) {
+      file.forEach(fileItem => {
+        if (this.data.indexOf(fileItem.data) === -1) {
+          this.data.push(fileItem.data)
+          this.list.push(fileItem)
         }
-        if (emit) {
-          this.emitData()
-        }
+      })
+      if (this.max && this.data.length > this.max) {
+        this.data.length = this.max
+        this.list.length = this.max
+        notice.showMsg(`当前选择的文件数量超过限制值${this.max}，超过部分已被删除！`, 'error')
+      }
+      if (emit) {
+        this.emitData()
       }
     },
     removeData(index: number) {
       this.data.splice(index, 1)
+      this.list.splice(index, 1)
       this.emitData()
     },
     emitData() {
@@ -129,7 +143,14 @@ export default defineComponent({
         disabled: disabled,
         size: this.size,
         onFile: (file: File[]) => {
-          this.setData(file, true, true)
+          this.operate = true
+          this.upload(file).then(res => {
+            this.setData(res.file, true)
+          }).catch((err: unknown) => {
+            console.error(err)
+          }).finally(() => {
+            this.operate = false
+          })
         }
       })
     },
@@ -139,7 +160,7 @@ export default defineComponent({
         loading: this.loading || this.operate,
         type: this.type === 'danger' ? 'primary' : this.type as ButtonType,
         danger: this.type === 'danger',
-        icon: icon.parse(this.icon as MultipleFileProps['icon']),
+        icon: icon.parse(this.icon as MultipleUploadProps['icon']),
         disabled: this.disabled,
         onClick: () => {
           (this.$refs.file as InstanceType<typeof FileView>).$el.click()
@@ -152,12 +173,12 @@ export default defineComponent({
       return h('div', {
         class: 'complex-import-multiple-file-list'
       }, {
-        default: () => this.data.map((file, index) => {
+        default: () => this.list.map((file, index) => {
           return this.renderContent(file, index)
         })
       })
     },
-    renderContent(file: File, index: number) {
+    renderContent(file: uploadFileDataType, index: number) {
       return this.data ? h('div', {
         class: 'complex-import-multiple-file-item'
       }, {
