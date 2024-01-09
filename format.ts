@@ -270,6 +270,7 @@ const dict = {
         }
       }
       const buttonOption = edit.$option.button || {}
+      const multiple = edit.multiple ? (edit.$option.multiple || {}) : undefined
       const itemAttrs = new AttrsValue({
         props: {
           accept: edit.$option.accept,
@@ -277,7 +278,7 @@ const dict = {
           name: buttonOption.name || edit.$name.getValue(payload.type),
           type: buttonOption.type,
           icon: buttonOption.icon,
-          multiple: edit.multiple,
+          multiple: multiple,
           upload: edit.$option.upload,
           layout: layout,
           disabled: payload.disabled || edit.disabled.getValue(payload.type)

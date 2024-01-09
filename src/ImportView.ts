@@ -1,33 +1,24 @@
 import { defineComponent, h, PropType } from "vue"
 import { FileProps } from "complex-component/src/type"
-import { DefaultEditFileOption, uploadFileDataType } from "complex-data/src/dictionary/DefaultEditFile"
-import { DefaultEditButtonOption } from "complex-data/src/dictionary/DefaultEditButton"
+import { DefaultEditFileOption } from "complex-data/src/dictionary/DefaultEditFile"
 
 export interface ImportProps extends FileProps{
-  name?: string
-  type?: string
-  icon?: DefaultEditButtonOption['icon']
-  loading?: boolean
+  name?: NonNullable<DefaultEditFileOption['button']>['name']
+  type?: NonNullable<DefaultEditFileOption['button']>['type']
+  icon?: NonNullable<DefaultEditFileOption['button']>['icon']
   upload?: DefaultEditFileOption['upload']
+  loading?: boolean
   render?: {
     menu?: () => unknown
     content?: () => unknown
   }
 }
 
-export interface fileDataType {
-  data: File
-  url?: string
-  name: string
-}
-
-export type importDataType = uploadFileDataType | fileDataType
-
 export default defineComponent({
   name: 'ImportView',
   props: {
     value: {
-      type: [String, Number, File, Object]
+      type: [String, Object]
     },
     name: {
       type: String,

@@ -1,24 +1,11 @@
 import { defineComponent, h, PropType } from "vue"
-import { FileProps } from "complex-component/src/type"
-import { DefaultEditButtonOption } from "complex-data/src/dictionary/DefaultEditButton"
-import { FileView } from "complex-component"
 import { Button } from "ant-design-vue"
 import { ButtonType } from "ant-design-vue/es/button"
-import icon from "../../../icon"
 import { notice } from "complex-plugin"
 import { uploadFileDataType } from "complex-data/src/dictionary/DefaultEditFile"
-
-export interface MultipleUploadProps extends FileProps{
-  name?: string
-  type?: string
-  icon?: DefaultEditButtonOption['icon']
-  upload: (file: File[]) => Promise<{ file: uploadFileDataType[] }>
-  loading?: boolean
-  render?: {
-    menu?: () => unknown
-    content?: () => unknown
-  }
-}
+import { FileView } from "complex-component"
+import { ImportProps } from "../../ImportView"
+import icon from "../../../icon"
 
 export default defineComponent({
   name: 'MultipleFile',
@@ -41,11 +28,11 @@ export default defineComponent({
       default: 'upload'
     },
     render: {
-      type: Object as PropType<MultipleUploadProps['render']>,
+      type: Object as PropType<ImportProps['render']>,
       required: false
     },
     upload: {
-      type: Object as PropType<MultipleUploadProps['upload']>,
+      type: Object as PropType<ImportProps['upload']>,
       required: true
     },
     loading: {
@@ -61,7 +48,7 @@ export default defineComponent({
       required: false
     },
     multiple: {
-      type: Object as PropType<MultipleUploadProps['multiple']>,
+      type: Object as PropType<ImportProps['multiple']>,
       required: false
     },
     disabled: {
@@ -79,7 +66,7 @@ export default defineComponent({
   },
   computed: {
     max() {
-      if (this.multiple && this.multiple !== true) {
+      if (this.multiple) {
         return this.multiple.max || 0
       } else {
         return 0
@@ -144,8 +131,8 @@ export default defineComponent({
         size: this.size,
         onFile: (file: File[]) => {
           this.operate = true
-          this.upload(file).then(res => {
-            this.setData(res.file, true)
+          this.upload!(file).then(res => {
+            this.setData(res.file as uploadFileDataType[], true)
           }).catch((err: unknown) => {
             console.error(err)
           }).finally(() => {
@@ -160,7 +147,7 @@ export default defineComponent({
         loading: this.loading || this.operate,
         type: this.type === 'danger' ? 'primary' : this.type as ButtonType,
         danger: this.type === 'danger',
-        icon: icon.parse(this.icon as MultipleUploadProps['icon']),
+        icon: icon.parse(this.icon as ImportProps['icon']),
         disabled: this.disabled,
         onClick: () => {
           (this.$refs.file as InstanceType<typeof FileView>).$el.click()

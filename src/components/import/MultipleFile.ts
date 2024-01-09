@@ -1,22 +1,10 @@
 import { defineComponent, h, PropType } from "vue"
-import { FileProps } from "complex-component/src/type"
-import { DefaultEditButtonOption } from "complex-data/src/dictionary/DefaultEditButton"
-import { FileView } from "complex-component"
 import { Button } from "ant-design-vue"
 import { ButtonType } from "ant-design-vue/es/button"
-import icon from "../../../icon"
 import { notice } from "complex-plugin"
-
-export interface MultipleFileProps extends FileProps{
-  name?: string
-  type?: string
-  icon?: DefaultEditButtonOption['icon']
-  loading?: boolean
-  render?: {
-    menu?: () => unknown
-    content?: () => unknown
-  }
-}
+import { FileView } from "complex-component"
+import icon from "../../../icon"
+import { ImportProps } from "../../ImportView"
 
 export default defineComponent({
   name: 'MultipleFile',
@@ -39,7 +27,7 @@ export default defineComponent({
       default: 'upload'
     },
     render: {
-      type: Object as PropType<MultipleFileProps['render']>,
+      type: Object as PropType<ImportProps['render']>,
       required: false
     },
     loading: {
@@ -55,7 +43,7 @@ export default defineComponent({
       required: false
     },
     multiple: {
-      type: Object as PropType<MultipleFileProps['multiple']>,
+      type: Object as PropType<ImportProps['multiple']>,
       required: false
     },
     disabled: {
@@ -70,7 +58,7 @@ export default defineComponent({
   },
   computed: {
     max() {
-      if (this.multiple && this.multiple !== true) {
+      if (this.multiple) {
         return this.multiple.max || 0
       } else {
         return 0
@@ -139,7 +127,7 @@ export default defineComponent({
         loading: this.loading || this.operate,
         type: this.type === 'danger' ? 'primary' : this.type as ButtonType,
         danger: this.type === 'danger',
-        icon: icon.parse(this.icon as MultipleFileProps['icon']),
+        icon: icon.parse(this.icon as ImportProps['icon']),
         disabled: this.disabled,
         onClick: () => {
           (this.$refs.file as InstanceType<typeof FileView>).$el.click()

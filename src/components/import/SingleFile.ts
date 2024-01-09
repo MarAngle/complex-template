@@ -1,21 +1,9 @@
 import { defineComponent, h, PropType } from "vue"
-import { FileProps } from "complex-component/src/type"
-import { DefaultEditButtonOption } from "complex-data/src/dictionary/DefaultEditButton"
-import { FileView } from "complex-component"
 import { Button } from "ant-design-vue"
 import { ButtonType } from "ant-design-vue/es/button"
+import { FileView } from "complex-component"
+import { ImportProps } from "../../ImportView"
 import icon from "../../../icon"
-
-export interface SingleFileProps extends FileProps{
-  name?: string
-  type?: string
-  icon?: DefaultEditButtonOption['icon']
-  loading?: boolean
-  render?: {
-    menu?: () => unknown
-    content?: () => unknown
-  }
-}
 
 export default defineComponent({
   name: 'SingleFile',
@@ -38,7 +26,7 @@ export default defineComponent({
       default: 'upload'
     },
     render: {
-      type: Object as PropType<SingleFileProps['render']>,
+      type: Object as PropType<ImportProps['render']>,
       required: false
     },
     loading: {
@@ -106,7 +94,7 @@ export default defineComponent({
         loading: this.loading || this.operate,
         type: this.type === 'danger' ? 'primary' : this.type as ButtonType,
         danger: this.type === 'danger',
-        icon: icon.parse(this.icon as SingleFileProps['icon']),
+        icon: icon.parse(this.icon as ImportProps['icon']),
         disabled: this.disabled,
         onClick: () => {
           (this.$refs.file as InstanceType<typeof FileView>).$el.click()
