@@ -115,7 +115,7 @@ export default defineComponent({
       this.emitData()
     },
     emitData() {
-      this.$emit('change', this.data)
+      this.$emit('select', this.data)
     },
     renderFile() {
       let disabled = this.disabled
@@ -123,7 +123,7 @@ export default defineComponent({
         disabled = true
       }
       return h(FileView, {
-        class: 'complex-import-multiple-file-file',
+        class: 'complex-import-file',
         ref: 'file',
         accept: this.accept,
         multiple: this.multiple,
@@ -143,7 +143,7 @@ export default defineComponent({
     },
     renderMenu() {
       return h(Button, {
-        class: 'complex-import-multiple-file-menu',
+        class: 'complex-import-menu',
         loading: this.loading || this.operate,
         type: this.type === 'danger' ? 'primary' : this.type as ButtonType,
         danger: this.type === 'danger',
@@ -158,7 +158,7 @@ export default defineComponent({
     },
     renderList() {
       return h('div', {
-        class: 'complex-import-multiple-file-list'
+        class: 'complex-import-content-list'
       }, {
         default: () => this.list.map((file, index) => {
           return this.renderContent(file, index)
@@ -167,16 +167,16 @@ export default defineComponent({
     },
     renderContent(file: uploadFileDataType, index: number) {
       return this.data ? h('div', {
-        class: 'complex-import-multiple-file-item'
+        class: 'complex-import-content'
       }, {
         default: () => [
           h('span', {
-            class: 'complex-import-multiple-file-item-name'
+            class: 'complex-import-content-name'
           }, {
             default: () => file.name
           }),
           h('span', {
-            class: 'complex-import-multiple-file-item-delete',
+            class: 'complex-import-content-delete',
             onClick: () => {
               this.removeData(index)
             }
@@ -189,7 +189,7 @@ export default defineComponent({
   },
   render() {
     return h('div', {
-      class: 'complex-import-multiple-file'
+      class: 'complex-import-multiple-upload'
     }, {
       default: () => [
         this.renderFile(),

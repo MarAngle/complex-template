@@ -30,24 +30,24 @@ if (getEnv('real') === 'production') {
 
 const modelFuncDict = {
   valueInit: function (itemAttrs: AttrsValue, formData: Record<PropertyKey, unknown>, prop: PropertyKey) {
-    if (showLogs.init) { console.log(itemAttrs, formData, prop) }
+    if (showLogs.init) { console.log('init', itemAttrs, formData, prop) }
     itemAttrs.props.value = formData[prop]
   },
   checkInit: function (itemAttrs: AttrsValue, formData: Record<PropertyKey, unknown>, prop: PropertyKey) {
-    if (showLogs.init) { console.log(itemAttrs, formData, prop) }
+    if (showLogs.init) { console.log('init', itemAttrs, formData, prop) }
     itemAttrs.props.checked = formData[prop]
   },
   input: function (formdata: Record<PropertyKey, unknown>, prop: PropertyKey, args: unknown[]) {
-    if (showLogs.model) { console.log(formdata, prop, args) }
+    if (showLogs.model) { console.log('input', formdata, prop, args) }
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     formdata[prop] = (args[0] as any).target.value
   },
   select: function (formdata: Record<PropertyKey, unknown>, prop: PropertyKey, args: unknown[]) {
-    if (showLogs.model) { console.log(formdata, prop, args) }
+    if (showLogs.model) { console.log('select', formdata, prop, args) }
     formdata[prop] = args[0]
   },
   change: function (formdata: Record<PropertyKey, unknown>, prop: PropertyKey, args: unknown[]) {
-    if (showLogs.model) { console.log(formdata, prop, args) }
+    if (showLogs.model) { console.log('change', formdata, prop, args) }
     formdata[prop] = args[0]
   }
 }
@@ -258,7 +258,7 @@ const dict = {
   $file: {
     init: modelFuncDict.valueInit,
     on: {
-      change: modelFuncDict.change
+      select: modelFuncDict.select
     },
     format(edit: DefaultEditFile, payload: FormItemPayloadType) {
       let layout = edit.$option.layout

@@ -1,6 +1,10 @@
 import { defineComponent, h, PropType } from "vue"
 import { FileProps } from "complex-component/src/type"
 import { DefaultEditFileOption } from "complex-data/src/dictionary/DefaultEditFile"
+import SingleUpload from "./components/import/SingleUpload"
+import MultipleUpload from "./components/import/MultipleUpload"
+import SingleFile from "./components/import/SingleFile"
+import MultipleFile from "./components/import/MultipleFile"
 
 export interface ImportProps extends FileProps{
   name?: NonNullable<DefaultEditFileOption['button']>['name']
@@ -64,14 +68,66 @@ export default defineComponent({
     }
   },
   render() {
-    return h('div', {
-      class: 'complex-import'
-    }, {
-      // default: () => [
-      //   this.renderFile(),
-      //   this.renderMenu(),
-      //   this.renderList()
-      // ]
-    })
+    if (this.upload) {
+      if (!this.multiple) {
+        return h(SingleUpload, {
+          class: 'complex-import',
+          value: this.value as undefined | string,
+          name: this.name,
+          type: this.type,
+          icon: this.icon,
+          upload: this.upload,
+          render: this.render,
+          loading: this.loading,
+          accept: this.accept,
+          size: this.size,
+          disabled: this.disabled
+        })
+      } else {
+        return h(MultipleUpload, {
+          class: 'complex-import',
+          value: this.value as undefined | string[],
+          name: this.name,
+          type: this.type,
+          icon: this.icon,
+          upload: this.upload,
+          render: this.render,
+          loading: this.loading,
+          accept: this.accept,
+          size: this.size,
+          multiple: this.multiple,
+          disabled: this.disabled
+        })
+      }
+    } else {
+      if (!this.multiple) {
+        return h(SingleFile, {
+          class: 'complex-import',
+          value: this.value as undefined | File,
+          name: this.name,
+          type: this.type,
+          icon: this.icon,
+          render: this.render,
+          loading: this.loading,
+          accept: this.accept,
+          size: this.size,
+          disabled: this.disabled
+        })
+      } else {
+        return h(MultipleFile, {
+          class: 'complex-import',
+          value: this.value as undefined | File[],
+          name: this.name,
+          type: this.type,
+          icon: this.icon,
+          render: this.render,
+          loading: this.loading,
+          accept: this.accept,
+          size: this.size,
+          multiple: this.multiple,
+          disabled: this.disabled
+        })
+      }
+    }
   }
 })

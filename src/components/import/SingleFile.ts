@@ -74,11 +74,11 @@ export default defineComponent({
       this.emitData()
     },
     emitData() {
-      this.$emit('change', this.data)
+      this.$emit('select', this.data)
     },
     renderFile() {
       return h(FileView, {
-        class: 'complex-import-single-file-file',
+        class: 'complex-import-file',
         ref: 'file',
         accept: this.accept,
         disabled: this.disabled,
@@ -90,7 +90,7 @@ export default defineComponent({
     },
     renderMenu() {
       return h(Button, {
-        class: 'complex-import-single-file-menu',
+        class: 'complex-import-menu',
         loading: this.loading || this.operate,
         type: this.type === 'danger' ? 'primary' : this.type as ButtonType,
         danger: this.type === 'danger',
@@ -105,16 +105,16 @@ export default defineComponent({
     },
     renderContent() {
       return this.data ? h('div', {
-        class: 'complex-import-single-file-item'
+        class: 'complex-import-content'
       }, {
         default: () => [
           h('span', {
-            class: 'complex-import-single-file-item-name'
+            class: 'complex-import-content-name'
           }, {
             default: () => this.data!.name
           }),
           h('span', {
-            class: 'complex-import-single-file-item-delete',
+            class: 'complex-import-content-delete',
             onClick: () => {
               this.clearData()
             }
