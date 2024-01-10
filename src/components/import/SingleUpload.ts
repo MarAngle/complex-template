@@ -52,42 +52,40 @@ export default defineComponent({
     }
   },
   watch: {
-    value: function(value) {
-      this.syncData(value)
+    value: function() {
+      this.syncData()
     }
   },
   data() {
     return {
       operate: false,
-      data: { data: this.value, name: this.value, url: undefined } as Partial<uploadFileDataType>
+      currentValue: this.value,
+      data: this.value ? { data: this.value, name: this.value, url: undefined } : undefined as undefined | uploadFileDataType
     }
   },
   methods: {
-    syncData(file?: string) {
-      if (this.data.data !== file) {
-        this.data.data = file
-        this.data.name = file
-        this.data.url = undefined
+    syncData() {
+      if (this.currentValue !== this.value) {
+        this.currentValue = this.value
+        this.data = this.value ? { data: this.value, name: this.value, url: undefined } : undefined
       }
     },
     setData(file: uploadFileDataType, emit?: boolean) {
-      if (this.data.data !== file.data) {
-        this.data.data = file.data
-        this.data.name = file.name
-        this.data.url = file.url
+      if (this.currentValue !== file.data) {
+        this.currentValue= file.data
+        this.data = file
         if (emit) {
           this.emitData()
         }
       }
     },
     clearData() {
-      this.data.data = undefined
-      this.data.name = undefined
-      this.data.url = undefined
+      this.currentValue = undefined
+      this.data = undefined
       this.emitData()
     },
     emitData() {
-      this.$emit('select', this.data.data)
+      this.$emit('select', this.currentValue)
     },
     renderFile() {
       return h(FileView, {
@@ -124,7 +122,7 @@ export default defineComponent({
       })
     },
     renderContent() {
-      return this.data.data ? h('div', {
+      return this.data ? h('div', {
         class: 'complex-import-content'
       }, {
         default: () => [

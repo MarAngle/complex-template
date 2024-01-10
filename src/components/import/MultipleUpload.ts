@@ -76,15 +76,15 @@ export default defineComponent({
   data() {
     return {
       operate: false,
-      data: [] as string[],
-      list: [] as uploadFileDataType[]
+      currentValue: [] as string[],
+      data: [] as uploadFileDataType[]
     }
   },
   methods: {
     syncData() {
-      if (this.value !== this.data) {
-        this.data = this.value || []
-        this.list = this.data.map(item => {
+      if (this.value !== this.currentValue) {
+        this.currentValue = this.value || []
+        this.data = this.currentValue.map(item => {
           return {
             data: item,
             name: item,
@@ -95,14 +95,14 @@ export default defineComponent({
     },
     setData(file: uploadFileDataType[], emit?: boolean) {
       file.forEach(fileItem => {
-        if (this.data.indexOf(fileItem.data) === -1) {
-          this.data.push(fileItem.data)
-          this.list.push(fileItem)
+        if (this.currentValue.indexOf(fileItem.data) === -1) {
+          this.currentValue.push(fileItem.data)
+          this.data.push(fileItem)
         }
       })
-      if (this.max && this.data.length > this.max) {
+      if (this.max && this.currentValue.length > this.max) {
+        this.currentValue.length = this.max
         this.data.length = this.max
-        this.list.length = this.max
         notice.showMsg(`当前选择的文件数量超过限制值${this.max}，超过部分已被删除！`, 'error')
       }
       if (emit) {
@@ -110,16 +110,16 @@ export default defineComponent({
       }
     },
     removeData(index: number) {
+      this.currentValue.splice(index, 1)
       this.data.splice(index, 1)
-      this.list.splice(index, 1)
       this.emitData()
     },
     emitData() {
-      this.$emit('select', this.data)
+      this.$emit('select', this.currentValue)
     },
     renderFile() {
       let disabled = this.disabled
-      if (this.max && this.data.length >= this.max) {
+      if (this.max && this.currentValue.length >= this.max) {
         disabled = true
       }
       return h(FileView, {
@@ -160,13 +160,13 @@ export default defineComponent({
       return h('div', {
         class: 'complex-import-content-list'
       }, {
-        default: () => this.list.map((file, index) => {
+        default: () => this.data.map((file, index) => {
           return this.renderContent(file, index)
         })
       })
     },
     renderContent(file: uploadFileDataType, index: number) {
-      return this.data ? h('div', {
+      return this.currentValue ? h('div', {
         class: 'complex-import-content'
       }, {
         default: () => [
