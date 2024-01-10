@@ -197,7 +197,7 @@ export default defineComponent({
         multiple: this.multiple,
         disabled: disabled,
         size: this.size,
-        onFile: (file: File | File[]) => {
+        onSelect: (file: File | File[]) => {
           if (this.upload) {
             this.operate = true
             this.upload!(file).then(res => {

@@ -1,5 +1,5 @@
 import { h } from "vue"
-import { getType } from "complex-utils"
+import { getType, camelToLine } from "complex-utils"
 import { layout } from "complex-plugin"
 import { ChoiceData, PaginationData, AttrsValue, DictionaryData } from "complex-data"
 import InterfaceLayoutValue from "complex-data/src/lib/InterfaceLayoutValue"
@@ -35,14 +35,11 @@ export type colorKeys = keyof typeof config.style.color
 
 const config = {
   component: componentConfig,
-  camelToline(str: string): string {
-    return str.replace(/([A-Z])/g, '-$1').toLowerCase()
-  },
   initStyle() {
     const style = document.createElement('style')
     let innerHTML = ''
     for (const name in config.style.color) {
-      const styleName = 'complex-color-' + this.camelToline(name)
+      const styleName = 'complex-color-' + camelToLine(name, '-')
       const content = `\n.${styleName}{ color: ${config.style.color[name as colorKeys]}; }`
       innerHTML += content
     }
