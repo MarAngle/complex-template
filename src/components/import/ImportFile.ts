@@ -7,10 +7,10 @@ import icon from "../../../icon"
 import { ImportProps } from "../../ImportView"
 
 export default defineComponent({
-  name: 'MultipleFile',
+  name: 'ImportFile',
   props: {
     value: {
-      type: Object as PropType<File[]>
+      type: Object as PropType<File | File[]>
     },
     name: {
       type: String,
@@ -68,14 +68,22 @@ export default defineComponent({
   data() {
     return {
       operate: false,
-      data: this.value || []
+      data: this.value || (!this.multiple ? undefined : [])
     }
   },
   methods: {
-    syncData(file: undefined | File[]) {
-      this.setData(file, false, false)
+    syncData(file: undefined | File | File[]) {
+      !this.multiple ? this.setSingleData(file as undefined | File, false) : this.setMutipleData(file as undefined | File[], false, false)
     },
-    setData(file: undefined | File[], append?: boolean, emit?: boolean) {
+    setSingleData(file?: File, emit?: boolean) {
+      if (this.data !== file) {
+        (this.data as undefined | File) = file
+        if (emit) {
+          this.emitData()
+        }
+      }
+    },
+    setMutipleData(file: undefined | File[], append?: boolean, emit?: boolean) {
       if (this.data !== file) {
         if (!append) {
           this.data = file || []
@@ -83,12 +91,12 @@ export default defineComponent({
           // append模式下file无值不做操作
         } else {
           file.forEach(fileItem => {
-            if (this.data.indexOf(fileItem) === -1) {
-              this.data.push(fileItem)
+            if ((this.data as File[]).indexOf(fileItem) === -1) {
+              (this.data as File[]).push(fileItem)
             }
           })
-          if (this.max && this.data.length > this.max) {
-            this.data.length = this.max
+          if (this.max && (this.data as File[]).length > this.max) {
+            (this.data as File[]).length = this.max
             notice.showMsg(`当前选择的文件数量超过限制值${this.max}，超过部分已被删除！`, 'error')
           }
         }
@@ -97,8 +105,12 @@ export default defineComponent({
         }
       }
     },
-    removeData(index: number) {
-      this.data.splice(index, 1)
+    removeData(index?: number) {
+      if (index === undefined) {
+        this.data = undefined
+      } else {
+        (this.data as File[]).splice(index, 1)
+      }
       this.emitData()
     },
     emitData() {
@@ -106,18 +118,18 @@ export default defineComponent({
     },
     renderFile() {
       let disabled = this.disabled
-      if (this.max && this.data.length >= this.max) {
+      if (this.max && (this.data as File[]).length >= this.max) {
         disabled = true
       }
       return h(FileView, {
-        class: 'complex-import-file',
+        class: 'complex-import-input-file',
         ref: 'file',
         accept: this.accept,
         multiple: this.multiple,
         disabled: disabled,
         size: this.size,
-        onFile: (file: File[]) => {
-          this.setData(file, true, true)
+        onFile: (file: File | File[]) => {
+          !this.multiple ? this.setSingleData(file as File, true) : this.setMutipleData(file as File[], true, true)
         }
       })
     },
@@ -140,13 +152,13 @@ export default defineComponent({
       return h('div', {
         class: 'complex-import-content-list'
       }, {
-        default: () => this.data.map((file, index) => {
+        default: () => (this.data as File[]).map((file, index) => {
           return this.renderContent(file, index)
         })
       })
     },
-    renderContent(file: File, index: number) {
-      return this.data ? h('div', {
+    renderContent(file?: File, index?: number) {
+      return file ? h('div', {
         class: 'complex-import-content'
       }, {
         default: () => [
@@ -156,7 +168,7 @@ export default defineComponent({
             default: () => file.name
           }),
           h('span', {
-            class: 'complex-import-content-delete',
+            class: 'complex-import-content-delete complex-color-danger',
             onClick: () => {
               this.removeData(index)
             }
@@ -167,12 +179,12 @@ export default defineComponent({
   },
   render() {
     return h('div', {
-      class: 'complex-import-multiple-file'
+      class: 'complex-import-file'
     }, {
       default: () => [
         this.renderFile(),
         this.renderMenu(),
-        this.renderList()
+        !this.multiple ? this.renderContent(this.data as undefined | File) : this.renderList()
       ]
     })
   }

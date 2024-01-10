@@ -3,8 +3,7 @@ import { FileProps } from "complex-component/src/type"
 import { DefaultEditFileOption } from "complex-data/src/dictionary/DefaultEditFile"
 import SingleUpload from "./components/import/SingleUpload"
 import MultipleUpload from "./components/import/MultipleUpload"
-import SingleFile from "./components/import/SingleFile"
-import MultipleFile from "./components/import/MultipleFile"
+import ImportFile from "./components/import/ImportFile"
 
 export interface ImportProps extends FileProps{
   name?: NonNullable<DefaultEditFileOption['button']>['name']
@@ -100,34 +99,19 @@ export default defineComponent({
         })
       }
     } else {
-      if (!this.multiple) {
-        return h(SingleFile, {
-          class: 'complex-import',
-          value: this.value as undefined | File,
-          name: this.name,
-          type: this.type,
-          icon: this.icon,
-          render: this.render,
-          loading: this.loading,
-          accept: this.accept,
-          size: this.size,
-          disabled: this.disabled
-        })
-      } else {
-        return h(MultipleFile, {
-          class: 'complex-import',
-          value: this.value as undefined | File[],
-          name: this.name,
-          type: this.type,
-          icon: this.icon,
-          render: this.render,
-          loading: this.loading,
-          accept: this.accept,
-          size: this.size,
-          multiple: this.multiple,
-          disabled: this.disabled
-        })
-      }
+      return h(ImportFile, {
+        class: 'complex-import',
+        value: this.value as undefined | File | File[],
+        name: this.name,
+        type: this.type,
+        icon: this.icon,
+        render: this.render,
+        loading: this.loading,
+        accept: this.accept,
+        size: this.size,
+        multiple: this.multiple,
+        disabled: this.disabled
+      })
     }
   }
 })

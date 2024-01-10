@@ -1,8 +1,16 @@
-.complex-import-file{
+.complex-import .complex-import-input-file{
   display: none !important;
 }
 .complex-button-file{
   display: none !important;
+}
+.complex-import .complex-import-content{
+  line-height: 22px;
+}
+.complex-import .complex-import-content .complex-import-content-delete{
+  display: inline-block;
+  margin-left: 8px;
+  cursor: pointer;
 }
 
 .complex-table .complex-table-footer {
