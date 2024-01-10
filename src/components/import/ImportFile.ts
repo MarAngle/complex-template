@@ -5,6 +5,7 @@ import { notice } from "complex-plugin"
 import { FileView } from "complex-component"
 import icon from "../../../icon"
 import { ImportProps } from "../../ImportView"
+import { uploadFileDataType } from "complex-data/src/dictionary/DefaultEditFile"
 
 export default defineComponent({
   name: 'ImportFile',
@@ -25,6 +26,10 @@ export default defineComponent({
       type: [String, Function],
       required: false,
       default: 'upload'
+    },
+    upload: {
+      type: Function as PropType<ImportProps['upload']>,
+      required: false
     },
     render: {
       type: Object as PropType<ImportProps['render']>,
@@ -68,7 +73,8 @@ export default defineComponent({
   data() {
     return {
       operate: false,
-      data: this.value || (!this.multiple ? undefined : [])
+      currentValue: this.value || (!this.multiple ? undefined : []),
+      data: this.upload ? (!this.multiple ? undefined : [] as uploadFileDataType[]) : undefined as undefined | uploadFileDataType
     }
   },
   methods: {
@@ -76,27 +82,27 @@ export default defineComponent({
       !this.multiple ? this.setSingleData(file as undefined | File, false) : this.setMutipleData(file as undefined | File[], false, false)
     },
     setSingleData(file?: File, emit?: boolean) {
-      if (this.data !== file) {
-        (this.data as undefined | File) = file
+      if (this.currentValue !== file) {
+        (this.currentValue as undefined | File) = file
         if (emit) {
           this.emitData()
         }
       }
     },
     setMutipleData(file: undefined | File[], append?: boolean, emit?: boolean) {
-      if (this.data !== file) {
+      if (this.currentValue !== file) {
         if (!append) {
-          this.data = file || []
+          this.currentValue = file || []
         } else if (!file) {
           // append模式下file无值不做操作
         } else {
           file.forEach(fileItem => {
-            if ((this.data as File[]).indexOf(fileItem) === -1) {
-              (this.data as File[]).push(fileItem)
+            if ((this.currentValue as File[]).indexOf(fileItem) === -1) {
+              (this.currentValue as File[]).push(fileItem)
             }
           })
-          if (this.max && (this.data as File[]).length > this.max) {
-            (this.data as File[]).length = this.max
+          if (this.max && (this.currentValue as File[]).length > this.max) {
+            (this.currentValue as File[]).length = this.max
             notice.showMsg(`当前选择的文件数量超过限制值${this.max}，超过部分已被删除！`, 'error')
           }
         }
@@ -107,18 +113,18 @@ export default defineComponent({
     },
     removeData(index?: number) {
       if (index === undefined) {
-        this.data = undefined
+        this.currentValue = undefined
       } else {
-        (this.data as File[]).splice(index, 1)
+        (this.currentValue as File[]).splice(index, 1)
       }
       this.emitData()
     },
     emitData() {
-      this.$emit('select', this.data)
+      this.$emit('select', this.currentValue)
     },
     renderFile() {
       let disabled = this.disabled
-      if (this.max && (this.data as File[]).length >= this.max) {
+      if (this.max && (this.currentValue as File[]).length >= this.max) {
         disabled = true
       }
       return h(FileView, {
@@ -152,7 +158,7 @@ export default defineComponent({
       return h('div', {
         class: 'complex-import-content-list'
       }, {
-        default: () => (this.data as File[]).map((file, index) => {
+        default: () => (this.currentValue as File[]).map((file, index) => {
           return this.renderContent(file, index)
         })
       })
@@ -184,7 +190,7 @@ export default defineComponent({
       default: () => [
         this.renderFile(),
         this.renderMenu(),
-        !this.multiple ? this.renderContent(this.data as undefined | File) : this.renderList()
+        !this.multiple ? this.renderContent(this.currentValue as undefined | File) : this.renderList()
       ]
     })
   }
