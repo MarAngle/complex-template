@@ -219,6 +219,7 @@ const dict = {
           format: edit.$option.showFormat,
           allowClear: !edit.$option.hideClear,
           showTime: showTime,
+          defaultPickerValue: dayjs('00:00:00', 'HH:mm:ss'),
           disabledDate: edit.$option.disabledDate,
           disabledTime: edit.$option.disabledTime
         }

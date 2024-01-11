@@ -18,12 +18,14 @@ DefaultEditDate.$parseDate = function(dateValue) {
 }
 
 DefaultEditDate.$compareDate = function(target, other) {
-  if ((other as Dayjs).isBefore(target as Dayjs)) {
+  const otherUnix = (other as Dayjs).unix()
+  const targetUnix = (target as Dayjs).unix()
+  if (otherUnix < targetUnix) {
     return 'before'
-  } else if ((other as Dayjs).isSame(target as Dayjs)) {
-    return 'same'
-  } else {
+  } else if (otherUnix > targetUnix) {
     return 'after'
+  } else {
+    return 'same'
   }
 }
 
