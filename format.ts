@@ -167,7 +167,6 @@ const dict = {
       const itemAttrs = new AttrsValue({
         props: {
           mode: edit.multiple ? 'multiple' : 'default',
-          options: edit.$option.list,
           showSearch: false,
           showArrow: !edit.$option.hideArrow,
           allowClear: !edit.$option.hideClear,

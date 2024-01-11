@@ -107,7 +107,7 @@ export default defineComponent({
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       let tag: any
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      let children: any[] = []
+      let children: any = undefined
       const itemAttrs = parseEditAttrs(this.data, this.payload)!
       itemAttrs.pushClass('complex-form-item-type')
       itemAttrs.pushClass('complex-form-item-' + camelToLine(this.data.type))
@@ -136,30 +136,30 @@ export default defineComponent({
         tag = Switch
       } else if (this.data.type === 'select') {
         tag = Select
+        const $data = this.data
         // 设置字典
-        // const dict = {
-        //   key: this.data.$option.optionValue || 'value',
-        //   value: this.data.$option.optionValue || 'value',
-        //   label: this.data.$option.optionLabel || 'label',
-        //   disabled: this.data.$option.optionDisabled || 'disabled'
-        // }
-        // children = this.data.$option.list.map((optionItem: Record<string, unknown>) => {
-        //   const optionAttrs = new AttrsValue({
-        //     props: {
-        //       key: optionItem[dict.key],
-        //       value: optionItem[dict.value],
-        //       disabled: !!optionItem[dict.disabled]
-        //     }
-        //   })
-        //   optionAttrs.merge(config.component.parseData(this.data.$local, 'child'))
-        //   return h(SelectOption, config.component.parseAttrs(optionAttrs), {
-        //     default: () => {
-        //       console.log(optionItem, dict)
-        //       return optionItem[dict.label] + '123'
-        //     }
-        //   })
-        // })
-        // console.log(this.data.$option, children)
+        const dict = {
+          key: $data.$option.optionValue,
+          value: $data.$option.optionValue,
+          label: $data.$option.optionLabel,
+          disabled: $data.$option.optionDisabled
+        }
+        children = {
+          default: () => {
+              $data.$option.list.map((optionItem: Record<string, unknown>) => {
+              const optionAttrs = new AttrsValue({
+                props: {
+                  key: optionItem[dict.key],
+                  value: optionItem[dict.value],
+                  label: optionItem[dict.label],
+                  disabled: !!optionItem[dict.disabled]
+                }
+              })
+              optionAttrs.merge(config.component.parseData($data.$local, 'child'))
+              return h(SelectOption, config.component.parseAttrs(optionAttrs))
+            })
+          }
+        }
       } else if (this.data.type === 'cascader') {
         tag = Cascader
       } else if (this.data.type === 'date') {
@@ -173,43 +173,48 @@ export default defineComponent({
       } else if (this.data.type === 'buttonGroup') {
         tag = 'div'
         const $data = this.data
-        children = $data.$list.map((buttonOption, index) => {
-          const interval = (index !== $data.$list.length - 1) ? $data.interval : undefined
-          const option = {
-            ...buttonOption
-          }
-          if (this.loading) {
-            option.loading = true
-          } else if (option.loading && typeof option.loading === 'function') {
-            option.loading = option.loading(this.payload)
-          }
-          if (this.disabled || this.data.disabled.getValue(this.type)) {
-            option.disabled = true
-          } else if (option.disabled && typeof option.disabled === 'function') {
-            option.disabled = option.disabled(this.payload)
-          }
-          option.click = bindButtonClick(buttonOption.prop, buttonOption, this.payload)
-          return h(ButtonView, {
-            style: {
-              marginRight: interval
-            },
-            data: option
+        children = {
+          default: () => {
+            $data.$list.map((buttonOption, index) => {
+            const interval = (index !== $data.$list.length - 1) ? $data.interval : undefined
+            const option = {
+              ...buttonOption
+            }
+            if (this.loading) {
+              option.loading = true
+            } else if (option.loading && typeof option.loading === 'function') {
+              option.loading = option.loading(this.payload)
+            }
+            if (this.disabled || this.data.disabled.getValue(this.type)) {
+              option.disabled = true
+            } else if (option.disabled && typeof option.disabled === 'function') {
+              option.disabled = option.disabled(this.payload)
+            }
+            option.click = bindButtonClick(buttonOption.prop, buttonOption, this.payload)
+            return h(ButtonView, {
+              style: {
+                marginRight: interval
+              },
+              data: option
+            })
           })
-        })
+          }
+        }
       } else if (this.data.type === 'content') {
         tag = 'div'
-        children = [this.data.$option.data]
+        const $data = this.data
+        children = {
+          default: () => [$data.$option.data]
+        }
       } else if (this.data.type === 'custom') {
         tag = this.data.$custom
       }
       if (tag) {
-        if (children.length === 0) {
-          item = h(tag, config.component.parseAttrs(itemAttrs))
-        } else {
-          item = h(tag, config.component.parseAttrs(itemAttrs), {
-            default: () => children
-          })
-        }
+        // if (!children) {
+        //   item = h(tag, config.component.parseAttrs(itemAttrs))
+        // } else {
+          item = h(tag, config.component.parseAttrs(itemAttrs), children)
+        // }
       }
       return item
     }
