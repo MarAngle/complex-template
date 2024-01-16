@@ -1,64 +1,81 @@
-<style lang="less" scoped>
+<style scoped>
 .complex-simple-table-content{
   width: 100%;
   display: flex;
   flex-direction: row;
   justify-content: stretch;
   align-items: stretch;
-  .complex-simple-table-content-column{
-    flex-grow: 1;
-    color: rgba(0, 0, 0, 0.85);
-    line-height: 22px;
-    &.complex-simple-table-content-column-left{
-      text-align: left;
-    }
-    &.complex-simple-table-content-column-right{
-      text-align: right;
-    }
-    &.complex-simple-table-content-column-center{
-      text-align: center;
-    }
-    .complex-simple-table-content-header{
+}
+.complex-simple-table-content .complex-simple-table-content-column{
+
+
+  .complex-simple-table-content-row{
+    padding: 16px 16px;
+    border-bottom: 1px solid #f0f0f0;
+    :deep(p){
+      height: 22px;
       white-space: nowrap; /* 不换行 */
       overflow: hidden; /* 隐藏超出部分 */
       text-overflow: ellipsis; /* 显示省略号 */
       word-wrap: break-word;
       word-break: break-all;
-      padding: 16px 16px;
-      cursor: pointer;
-      border-bottom: 1px solid #f0f0f0;
-      background-color: #fafafa;
-      position: relative;
-      &::before{
-        position: absolute;
-        top: 50%;
-        inset-inline-end: 0;
-        width: 1px;
-        height: 1.6em;
-        background-color: #f0f0f0;
-        transform: translateY(-50%);
-        transition: background-color 0.2s;
-        content: "";
-      }
-    }
-    &:last-child{
-      .complex-simple-table-content-header::before{
-        display: none;
-      }
-    }
-    .complex-simple-table-content-row{
-      padding: 16px 16px;
-      border-bottom: 1px solid #f0f0f0;
-      :deep(p){
-        height: 22px;
-        white-space: nowrap; /* 不换行 */
-        overflow: hidden; /* 隐藏超出部分 */
-        text-overflow: ellipsis; /* 显示省略号 */
-        word-wrap: break-word;
-        word-break: break-all;
-      }
     }
   }
+}
+.complex-simple-table-content .complex-simple-table-content-column.complex-simple-table-content-column-left{
+  text-align: left;
+}
+.complex-simple-table-content .complex-simple-table-content-column.complex-simple-table-content-column-right{
+  text-align: right;
+}
+.complex-simple-table-content .complex-simple-table-content-column.complex-simple-table-content-column-center{
+  text-align: center;
+}
+.complex-simple-table-content .complex-simple-table-content-column .complex-simple-table-content-header{
+  white-space: nowrap; /* 不换行 */
+  overflow: hidden; /* 隐藏超出部分 */
+  text-overflow: ellipsis; /* 显示省略号 */
+  word-wrap: break-word;
+  word-break: break-all;
+  padding: 16px 16px;
+  cursor: pointer;
+  border-bottom: 1px solid #f0f0f0;
+  background-color: #fafafa;
+  position: relative;
+}
+.complex-simple-table-content .complex-simple-table-content-column .complex-simple-table-content-header::before{
+  position: absolute;
+  top: 50%;
+  inset-inline-end: 0;
+  width: 1px;
+  height: 1.6em;
+  background-color: #f0f0f0;
+  transform: translateY(-50%);
+  transition: background-color 0.2s;
+  content: "";
+}
+.complex-simple-table-content .complex-simple-table-content-column:last-child .complex-simple-table-content-header::before{
+  display: none;
+}
+.complex-simple-table-content .complex-simple-table-content-column .complex-simple-table-content-row{
+  padding: 16px 16px;
+  border-bottom: 1px solid #f0f0f0;
+  :deep(p){
+    height: 22px;
+    white-space: nowrap; /* 不换行 */
+    overflow: hidden; /* 隐藏超出部分 */
+    text-overflow: ellipsis; /* 显示省略号 */
+    word-wrap: break-word;
+    word-break: break-all;
+  }
+}
+.complex-simple-table-content .complex-simple-table-content-column .complex-simple-table-content-row:deep(p){
+  height: 22px;
+  white-space: nowrap; /* 不换行 */
+  overflow: hidden; /* 隐藏超出部分 */
+  text-overflow: ellipsis; /* 显示省略号 */
+  word-wrap: break-word;
+  word-break: break-all;
 }
 </style>
 

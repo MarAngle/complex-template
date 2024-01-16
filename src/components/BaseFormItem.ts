@@ -1,5 +1,5 @@
-import { defineComponent, h, PropType } from "vue"
-import { FormItem, Tooltip, Input, InputNumber, Textarea, Switch, Select, SelectOption, Cascader, DatePicker, RangePicker } from "ant-design-vue"
+import { defineComponent, h, PropType, VNode } from "vue"
+import { FormItem, Tooltip, Input, InputNumber, Textarea, Switch, Select, Divider, Cascader, DatePicker, RangePicker } from "ant-design-vue"
 import { camelToLine } from "complex-utils"
 import { AttrsValue } from "complex-data"
 import { DictionaryEditMod } from "complex-data/src/lib/DictionaryValue"
@@ -10,6 +10,7 @@ import { bindButtonClick, parseEditAttrs } from "../../format"
 import config from "../../config"
 import FormView from "../FormView"
 import ImportView from "../ImportView"
+import PaginationView from "./PaginationView"
 
 export interface FormItemPayloadType {
   prop: string
@@ -137,28 +138,75 @@ export default defineComponent({
       } else if (this.data.type === 'select') {
         tag = Select
         const $data = this.data
-        // 设置字典
-        const dict = {
-          key: $data.$option.optionValue,
-          value: $data.$option.optionValue,
-          label: $data.$option.optionLabel,
-          disabled: $data.$option.optionDisabled
-        }
-        children = {
-          default: () => {
-              $data.$option.list.map((optionItem: Record<string, unknown>) => {
-              const optionAttrs = new AttrsValue({
-                props: {
-                  key: optionItem[dict.key],
-                  value: optionItem[dict.value],
-                  label: optionItem[dict.label],
-                  disabled: !!optionItem[dict.disabled]
+        children = {}
+        const dropdownRender = config.component.parseData(this.data.$renders, 'dropdown')
+        const optionRender = config.component.parseData(this.data.$renders, 'option')
+        const tagRender = config.component.parseData(this.data.$renders, 'tag')
+        if (dropdownRender) {
+          children.dropdownRender = dropdownRender
+        } else {
+          const dropdownTopRender = config.component.parseData(this.data.$renders, 'dropdownTop')
+          const dropdownBottomRender = config.component.parseData(this.data.$renders, 'dropdownBottom')
+          if (dropdownTopRender || $data.$pagination || dropdownBottomRender) {
+            children.dropdownRender = (payload: { menuNode: VNode }) => {
+              const vNodes = [payload.menuNode]
+              if (dropdownTopRender) {
+                vNodes.unshift(dropdownTopRender({
+                  payload: this.payload
+                }) as VNode)
+                vNodes.unshift(h(Divider, {
+                  style: {
+                    margin: '4px 0'
+                  }
+                }))
+              }
+              if (dropdownBottomRender) {
+                vNodes.push(h(Divider, {
+                  style: {
+                    margin: '4px 0'
+                  }
+                }))
+                vNodes.push(dropdownBottomRender({
+                  payload: this.payload
+                }) as VNode)
+              }
+              if ($data.$pagination) {
+                vNodes.push(h(Divider, {
+                  style: {
+                    margin: '4px 0'
+                  }
+                }))
+                vNodes.push(h(PaginationView, {
+                  pagination: $data.$pagination,
+                  simple: true,
+                  onPage() {
+                    $data.loadData(true).then(() => { /* */}, () => { /* */})
+                  },
+                  onSize() {
+                    $data.loadData(true).then(() => { /* */}, () => { /* */})
+                  }
+                }))
+                const dropdownPaginationBottomRender = config.component.parseData(this.data.$renders, 'dropdownPaginationBottom')
+                if (dropdownPaginationBottomRender) {
+                  vNodes.push(h(Divider, {
+                    style: {
+                      margin: '4px 0'
+                    }
+                  }))
+                  vNodes.push(dropdownPaginationBottomRender({
+                    payload: this.payload
+                  }) as VNode)
                 }
-              })
-              optionAttrs.merge(config.component.parseData($data.$local, 'child'))
-              return h(SelectOption, config.component.parseAttrs(optionAttrs))
-            })
+              }
+              return vNodes
+            }
           }
+        }
+        if (optionRender) {
+          children.option = optionRender
+        }
+        if (tagRender) {
+          children.tagRender = tagRender
         }
       } else if (this.data.type === 'cascader') {
         tag = Cascader

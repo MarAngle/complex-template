@@ -15,6 +15,11 @@ export default defineComponent({
       required: false,
       default: true
     },
+    simple: {
+      type: Boolean,
+      required: false,
+      default: false
+    },
     formatInfo: {
       type: Function as PropType<(payload: { pagination: PaginationData }) => string>,
       required: false
@@ -57,7 +62,8 @@ export default defineComponent({
             pageSize: this.pagination.size.data,
             pageSizeOptions: this.pagination.size.list,
             showSizeChanger: this.pagination.size.show,
-            showQuickJumper: this.pagination.jumper
+            showQuickJumper: this.pagination.jumper,
+            simple: this.simple
           },
           on: {
             change: (page: number, size: number) => {

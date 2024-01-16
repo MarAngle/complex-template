@@ -1,4 +1,4 @@
-import { defineComponent, h, PropType } from "vue"
+import { defineComponent, h, PropType, VNode } from "vue"
 import { Button } from "ant-design-vue"
 import { ButtonType } from "ant-design-vue/es/button"
 import { notice } from "complex-plugin"
@@ -14,8 +14,8 @@ export interface ImportProps extends FileProps{
   upload?: DefaultEditFileOption['upload']
   loading?: boolean
   render?: {
-    menu?: () => unknown
-    content?: () => unknown
+    menu?: () => (VNode | VNode[])
+    content?: () => (VNode | VNode[])
   }
 }
 
@@ -214,7 +214,7 @@ export default defineComponent({
       })
     },
     renderMenu() {
-      return h(Button, {
+      const props = {
         class: 'complex-import-menu',
         loading: this.loading || this.operate,
         type: this.type === 'danger' ? 'primary' : this.type as ButtonType,
@@ -224,7 +224,17 @@ export default defineComponent({
         onClick: () => {
           (this.$refs.file as InstanceType<typeof FileView>).$el.click()
         }
-      }, {
+      }
+      if (this.$slots.menu || (this.render && this.render.menu)) {
+        return (this.$slots.menu || this.render!.menu)!({
+          props,
+          name: this.name,
+          payload: {
+            value: this.currentValue
+          }
+        })
+      }
+      return h(Button, props, {
         default: () => this.name
       })
     },
@@ -258,13 +268,26 @@ export default defineComponent({
     }
   },
   render() {
+    let content: null | VNode | VNode[]
+    if (this.$slots.content || (this.render && this.render.content)) {
+      content = (this.$slots.content || this.render!.content)!({
+        props: {
+          multiple: this.multiple,
+          upload: this.upload,
+          value: this.currentValue,
+          data: this.data
+        }
+      })
+    } else {
+      content = !this.multiple ? (this.upload ? this.renderContent(this.data as undefined | uploadFileDataType) : this.renderContent(this.currentValue as undefined | File)) : (this.upload ? this.renderList(this.data as uploadFileDataType[]) : this.renderList(this.currentValue as File[]))
+    }
     return h('div', {
       class: 'complex-import'
     }, {
       default: () => [
         this.renderFile(),
         this.renderMenu(),
-        !this.multiple ? (this.upload ? this.renderContent(this.data as undefined | uploadFileDataType) : this.renderContent(this.currentValue as undefined | File)) : (this.upload ? this.renderList(this.data as uploadFileDataType[]) : this.renderList(this.currentValue as File[]))
+        content
       ]
     })
   }

@@ -2,6 +2,7 @@ import dayjs, { Dayjs } from 'dayjs'
 import { date } from 'complex-plugin'
 import { SearchData } from "complex-data"
 import DefaultEditDate from "complex-data/src/dictionary/DefaultEditDate"
+import customParseFormat from "dayjs/plugin/customParseFormat"
 import AntdFormValue from "./src/class/AntdFormValue"
 import './src/style/index.css'
 
@@ -29,8 +30,6 @@ DefaultEditDate.$compareDate = function(target, other) {
   }
 }
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const customParseFormat = require('dayjs/plugin/customParseFormat')
 dayjs.extend(customParseFormat)
 
 DefaultEditDate.$edit = function(value, format) {

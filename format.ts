@@ -164,16 +164,18 @@ const dict = {
       change: modelFuncDict.change
     },
     format(edit: DefaultEditSelect, payload: FormItemPayloadType) {
+      const isLoading = edit.$load ? edit.$load.status === 'ing' : false
       const itemAttrs = new AttrsValue({
         props: {
           mode: edit.multiple ? 'multiple' : 'default',
+          options: edit.$option.list,
           showSearch: false,
           showArrow: !edit.$option.hideArrow,
           allowClear: !edit.$option.hideClear,
           dropdownMatchSelectWidth: edit.$option.autoWidth,
           notFoundContent: edit.$option.emptyOptionContent,
           fieldNames: { value: edit.$option.optionValue, label: edit.$option.optionLabel },
-          disabled: payload.disabled || edit.disabled.getValue(payload.type),
+          disabled: payload.disabled || edit.disabled.getValue(payload.type) || isLoading,
           placeholder: edit.placeholder ? edit.placeholder.getValue(payload.type) : undefined
         }
       })
@@ -187,13 +189,14 @@ const dict = {
       change: modelFuncDict.change
     },
     format(edit: DefaultEditCascader, payload: FormItemPayloadType) {
+      const isLoading = edit.$load ? edit.$load.status === 'ing' : false
       const itemAttrs = new AttrsValue({
         props: {
           options: edit.$option.list,
           showArrow: !edit.$option.hideArrow,
           allowClear: !edit.$option.hideClear,
           fieldNames: { value: edit.$option.optionValue, label: edit.$option.optionLabel, children: edit.$option.optionChildren },
-          disabled: payload.disabled || edit.disabled.getValue(payload.type),
+          disabled: payload.disabled || edit.disabled.getValue(payload.type) || isLoading,
           placeholder: edit.placeholder ? edit.placeholder.getValue(payload.type) : undefined
         }
       })

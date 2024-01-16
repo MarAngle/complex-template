@@ -1,4 +1,4 @@
-<style lang="less" scoped>
+<style scoped>
 .auto-spin{
   position: absolute;
   top: 0;
@@ -7,14 +7,14 @@
   bottom: 0;
   z-index: 100;
   background-color: rgba(255, 255, 255, 0.55);
-  .ant-spin{
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-  }
+}
+.auto-spin>.ant-spin{
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 </style>
 <template>
