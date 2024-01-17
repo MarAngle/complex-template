@@ -45,12 +45,16 @@ export default defineComponent({
       }
     },
     renderInfo() {
-      const infoRender = config.component.parseData(this.pagination.$renders, 'info')
-      return h('span', {
-        class: 'complex-pagination-info'
-      }, {
-        default: () => !infoRender ? this.currentFormatInfo(this.payload) : infoRender(this.payload)
-      })
+      if (!this.simple) {
+        const infoRender = config.component.parseData(this.pagination.$renders, 'info')
+        return h('span', {
+          class: 'complex-pagination-info'
+        }, {
+          default: () => !infoRender ? this.currentFormatInfo(this.payload) : infoRender(this.payload)
+        })
+      } else {
+        return null
+      }
     },
     renderPagination() {
       const targetRender = config.component.parseData(this.pagination.$renders, 'target')

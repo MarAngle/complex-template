@@ -142,66 +142,69 @@ export default defineComponent({
         const dropdownRender = config.component.parseData(this.data.$renders, 'dropdown')
         const optionRender = config.component.parseData(this.data.$renders, 'option')
         const tagRender = config.component.parseData(this.data.$renders, 'tag')
-        if (dropdownRender) {
-          children.dropdownRender = dropdownRender
-        } else {
-          const dropdownTopRender = config.component.parseData(this.data.$renders, 'dropdownTop')
-          const dropdownBottomRender = config.component.parseData(this.data.$renders, 'dropdownBottom')
-          if (dropdownTopRender || $data.$pagination || dropdownBottomRender) {
-            children.dropdownRender = (payload: { menuNode: VNode }) => {
-              const vNodes = [payload.menuNode]
-              if (dropdownTopRender) {
-                vNodes.unshift(dropdownTopRender({
-                  payload: this.payload
-                }) as VNode)
-                vNodes.unshift(h(Divider, {
-                  style: {
-                    margin: '4px 0'
-                  }
-                }))
-              }
-              if (dropdownBottomRender) {
-                vNodes.push(h(Divider, {
-                  style: {
-                    margin: '4px 0'
-                  }
-                }))
-                vNodes.push(dropdownBottomRender({
-                  payload: this.payload
-                }) as VNode)
-              }
-              if ($data.$pagination) {
-                vNodes.push(h(Divider, {
-                  style: {
-                    margin: '4px 0'
-                  }
-                }))
-                vNodes.push(h(PaginationView, {
-                  pagination: $data.$pagination,
-                  simple: true,
-                  onPage() {
-                    $data.loadData(true).then(() => { /* */}, () => { /* */})
-                  },
-                  onSize() {
-                    $data.loadData(true).then(() => { /* */}, () => { /* */})
-                  }
-                }))
-                const dropdownPaginationBottomRender = config.component.parseData(this.data.$renders, 'dropdownPaginationBottom')
-                if (dropdownPaginationBottomRender) {
-                  vNodes.push(h(Divider, {
-                    style: {
-                      margin: '4px 0'
-                    }
-                  }))
-                  vNodes.push(dropdownPaginationBottomRender({
-                    payload: this.payload
-                  }) as VNode)
-                }
-              }
-              return vNodes
-            }
-          }
-        }
+        // if (dropdownRender) {
+        //   children.dropdownRender = dropdownRender
+        // } else {
+        //   const dropdownTopRender = config.component.parseData(this.data.$renders, 'dropdownTop')
+        //   const dropdownBottomRender = config.component.parseData(this.data.$renders, 'dropdownBottom')
+        //   if (dropdownTopRender || $data.$pagination || dropdownBottomRender) {
+        //     children.dropdownRender = (payload: { menuNode: VNode }) => {
+        //       const vNodes = [payload.menuNode]
+        //       if (dropdownTopRender) {
+        //         vNodes.unshift(dropdownTopRender({
+        //           payload: this.payload
+        //         }) as VNode)
+        //         vNodes.unshift(h(Divider, {
+        //           style: {
+        //             margin: '4px 0'
+        //           }
+        //         }))
+        //       }
+        //       if (dropdownBottomRender) {
+        //         vNodes.push(h(Divider, {
+        //           style: {
+        //             margin: '4px 0'
+        //           }
+        //         }))
+        //         vNodes.push(dropdownBottomRender({
+        //           payload: this.payload
+        //         }) as VNode)
+        //       }
+        //       if ($data.$pagination) {
+        //         vNodes.push(h(Divider, {
+        //           style: {
+        //             margin: '4px 0'
+        //           }
+        //         }))
+        //         vNodes.push(h(PaginationView, {
+        //           pagination: $data.$pagination,
+        //           simple: true,
+        //           onPage() {
+        //             $data.loadData(true).then(() => { /* */}, () => { /* */})
+        //           },
+        //           onSize() {
+        //             $data.loadData(true).then(() => { /* */}, () => { /* */})
+        //           },
+        //           onClick(e: Event) {
+        //             e.preventDefault()
+        //           }
+        //         }))
+        //         const dropdownPaginationBottomRender = config.component.parseData(this.data.$renders, 'dropdownPaginationBottom')
+        //         if (dropdownPaginationBottomRender) {
+        //           vNodes.push(h(Divider, {
+        //             style: {
+        //               margin: '4px 0'
+        //             }
+        //           }))
+        //           vNodes.push(dropdownPaginationBottomRender({
+        //             payload: this.payload
+        //           }) as VNode)
+        //         }
+        //       }
+        //       return vNodes
+        //     }
+        //   }
+        // }
         if (optionRender) {
           children.option = optionRender
         }
