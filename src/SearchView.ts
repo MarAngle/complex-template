@@ -5,7 +5,6 @@ import { DefaultEditButtonInitOption } from "complex-data/src/dictionary/Default
 import { searchMenuType } from "complex-data/src/module/SearchData"
 import FormView, { FormViewDefaultProps } from "./FormView"
 import { FormItemPayloadType } from "./components/BaseFormItem"
-import AntdFormValue from "./class/AntdFormValue"
 
 export interface SearchViewProps extends FormViewDefaultProps {
   search: SearchData
@@ -103,7 +102,7 @@ export default defineComponent({
   methods: {
     renderForm() {
       const form = h(FormView, {
-        form: this.search.$search.form as AntdFormValue,
+        form: this.search.$search.form,
         list: this.search.$search.observe,
         type: this.search.$prop,
         menu: this.currentMenu,

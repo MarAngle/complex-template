@@ -1,10 +1,9 @@
 import { defineComponent, h, PropType, VNode } from "vue"
 import { FormItem, Tooltip, Input, InputNumber, Textarea, Switch, Select, Divider, Cascader, DatePicker, RangePicker } from "ant-design-vue"
 import { camelToLine } from "complex-utils"
-import { AttrsValue } from "complex-data"
+import { AttrsValue, FormValue } from "complex-data"
 import { DictionaryEditMod } from "complex-data/src/lib/DictionaryValue"
 import ObserveList from "complex-data/src/dictionary/ObserveList"
-import AntdFormValue from "./../class/AntdFormValue"
 import ButtonView from "../ButtonView"
 import { bindButtonClick, parseEditAttrs } from "../../format"
 import config from "../../config"
@@ -17,7 +16,7 @@ export interface FormItemPayloadType {
   type: string
   data: DictionaryEditMod
   index: number
-  form: AntdFormValue
+  form: FormValue
   targetData: Record<PropertyKey, unknown>
   list: ObserveList
   target: InstanceType<typeof FormView>
@@ -28,7 +27,7 @@ export interface FormItemPayloadType {
 export interface BaseFormItemProps {
   data: DictionaryEditMod
   index: number
-  form: AntdFormValue
+  form: FormValue
   list: ObserveList
   type: string
   target: InstanceType<typeof FormView>

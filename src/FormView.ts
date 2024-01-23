@@ -3,10 +3,10 @@ import { Col, Form, Row, FormProps } from "ant-design-vue"
 import { FormLabelAlign } from "ant-design-vue/es/form/interface"
 import { FormLayout } from "ant-design-vue/es/form/Form"
 import { mergeData } from "complex-utils"
+import { FormValue } from "complex-data"
 import DictionaryValue, { DictionaryEditMod, DictionaryEditModInitOption } from "complex-data/src/lib/DictionaryValue"
 import ObserveList from "complex-data/src/dictionary/ObserveList"
 import DefaultMod from "complex-data/src/dictionary/DefaultMod"
-import AntdFormValue from "./class/AntdFormValue"
 import BaseFormItem, { BaseFormItemProps } from "./components/BaseFormItem"
 import config from "../config"
 
@@ -21,7 +21,7 @@ export interface FormViewDefaultProps {
 }
 
 export interface FormViewProps extends FormViewDefaultProps {
-  form: AntdFormValue
+  form: FormValue
   list: ObserveList
   type: string
 }

@@ -1,7 +1,6 @@
 import { defineComponent, h, PropType } from "vue"
-import { DictionaryData, DictionaryValue } from "complex-data"
+import { DictionaryData, DictionaryValue, FormValue } from "complex-data"
 import ObserveList from "complex-data/src/dictionary/ObserveList"
-import AntdFormValue from "./class/AntdFormValue"
 import FormView, { FormViewDefaultProps } from "./FormView"
 import { FormItemPayloadType } from "./components/BaseFormItem"
 
@@ -11,7 +10,7 @@ export interface EditViewProps extends FormViewDefaultProps {
   dictionary: DictionaryData
   type?: string
   observe?: boolean
-  form?: AntdFormValue
+  form?: FormValue
 }
 
 export default defineComponent({
@@ -66,7 +65,7 @@ export default defineComponent({
   data() {
     return {
       localType: undefined as undefined | string,
-      localForm: new AntdFormValue(),
+      localForm: new FormValue(),
       data: undefined as dataType,
       dictionaryList: [] as DictionaryValue[],
       list: undefined as undefined | ObserveList,

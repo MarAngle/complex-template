@@ -1,12 +1,23 @@
+import { FormInstance } from 'ant-design-vue'
 import dayjs, { Dayjs } from 'dayjs'
 import { date } from 'complex-plugin'
-import { SearchData } from "complex-data"
+import { FormValue } from "complex-data"
 import DefaultEditDate from "complex-data/src/dictionary/DefaultEditDate"
 import customParseFormat from "dayjs/plugin/customParseFormat"
-import AntdFormValue from "./src/class/AntdFormValue"
 import './src/style/index.css'
 
-SearchData.$form = AntdFormValue
+FormValue.clearValidate = function(formValue, ...args: Parameters<FormInstance['clearValidate']>) {
+  if (formValue.ref) {
+    (formValue.ref as FormInstance).clearValidate(...args)
+  }
+}
+FormValue.validate = function(formValue, ...args: Parameters<FormInstance['validate']>) {
+  if (formValue.ref) {
+    return (formValue.ref as FormInstance).validate(...args)
+  } else {
+    return Promise.reject({ status: 'fail', code: 'no ref' })
+  }
+}
 
 date.pushParse('dayjs', value => dayjs(value))
 
