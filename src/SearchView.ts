@@ -2,13 +2,13 @@ import { defineComponent, h, PropType } from "vue"
 import { SearchData } from "complex-data"
 import { ChoiceDataData } from "complex-data/src/module/ChoiceData"
 import { DefaultEditButtonInitOption } from "complex-data/src/dictionary/DefaultEditButton"
-import { searchMenuType } from "complex-data/src/module/SearchData"
+import { SearchButtonValue } from "complex-data/src/module/SearchData"
 import FormView, { FormViewDefaultProps } from "./FormView"
 import { FormItemPayloadType } from "./components/BaseFormItem"
 
 export interface SearchViewProps extends FormViewDefaultProps {
   search: SearchData
-  searchMenu?: (string | searchMenuType)[]
+  searchMenu?: (string | SearchButtonValue)[]
   choice?: ChoiceDataData
 }
 

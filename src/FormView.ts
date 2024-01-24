@@ -7,7 +7,7 @@ import { FormValue } from "complex-data"
 import DictionaryValue, { DictionaryEditMod, DictionaryEditModInitOption } from "complex-data/src/lib/DictionaryValue"
 import ObserveList from "complex-data/src/dictionary/ObserveList"
 import DefaultMod from "complex-data/src/dictionary/DefaultMod"
-import BaseFormItem, { BaseFormItemProps } from "./components/BaseFormItem"
+import AutoFormItem, { AutoFormItemProps } from "./components/AutoFormItem"
 import config from "../config"
 
 export interface FormViewDefaultProps {
@@ -110,7 +110,7 @@ export default defineComponent({
         disabled: this.disabled,
         loading: this.loading,
         target: this
-      } as BaseFormItemProps
+      } as AutoFormItemProps
     },
     renderMenu() {
       if (this.currentMenu && this.currentMenu.length > 0) {
@@ -130,7 +130,7 @@ export default defineComponent({
       }
     },
     renderItem(item: DictionaryEditMod, index: number) {
-      return h(BaseFormItem, this.getItemProps(item, index))
+      return h(AutoFormItem, this.getItemProps(item, index))
     },
     renderList() {
       if (this.layout === 'inline') {

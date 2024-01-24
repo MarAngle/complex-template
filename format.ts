@@ -11,11 +11,8 @@ import DefaultEditCascader from "complex-data/src/dictionary/DefaultEditCascader
 import DefaultEditFile from "complex-data/src/dictionary/DefaultEditFile"
 import DefaultEditDateRange from "complex-data/src/dictionary/DefaultEditDateRange"
 import DefaultEditDate from "complex-data/src/dictionary/DefaultEditDate"
-import DefaultEditButton from "complex-data/src/dictionary/DefaultEditButton"
-import DefaultEditButtonGroup from "complex-data/src/dictionary/DefaultEditButtonGroup"
-import DefaultEditContent from "complex-data/src/dictionary/DefaultEditContent"
 import DefaultEditCustom from "complex-data/src/dictionary/DefaultEditCustom"
-import { FormItemPayloadType } from "./src/components/BaseFormItem"
+import { FormItemPayloadType } from './src/components/AutoFormItem'
 
 const showLogs = {
   init: false,
@@ -289,66 +286,6 @@ const dict = {
       return itemAttrs
     }
   },
-  $button: {
-    init: false,
-    on: {},
-    format(edit: DefaultEditButton, payload: FormItemPayloadType) {
-      const option = {
-        ...edit.$option
-      }
-      if (!option.name) {
-        option.name = edit.$name.getValue(payload.type)
-      }
-      if (payload.loading) {
-        option.loading = true
-      } else if (edit.$option.loading && typeof edit.$option.loading === 'function') {
-        option.loading = edit.$option.loading(payload)
-      }
-      if (payload.disabled || edit.disabled.getValue(payload.type)) {
-        option.disabled = true
-      } else if (edit.$option.disabled && typeof edit.$option.disabled === 'function') {
-        option.disabled = edit.$option.disabled(payload)
-      }
-      option.click = bindButtonClick(edit.$prop, edit.$option, payload)
-      const itemAttrs = new AttrsValue({
-        props: {
-          data: option
-        }
-      })
-      bindEvent(this as dictItemType, itemAttrs, edit, payload)
-      return itemAttrs
-    }
-  },
-  $buttonGroup: {
-    init: false,
-    on: {},
-    format(edit: DefaultEditButtonGroup, payload: FormItemPayloadType) {
-      const itemAttrs = new AttrsValue({
-        props: {
-          loading: payload.loading,
-          disabled: payload.disabled || edit.disabled.getValue(payload.type)
-        }
-      })
-      bindEvent(this as dictItemType, itemAttrs, edit, payload)
-      return itemAttrs
-    }
-  },
-  $content: {
-    init: false,
-    on: {},
-    format(edit: DefaultEditContent, payload: FormItemPayloadType) {
-      const itemAttrs = new AttrsValue({
-        props: {
-          disabled: payload.disabled || edit.disabled.getValue(payload.type)
-        },
-        style: {
-          ...edit.$option.style
-        }
-      })
-      bindEvent(this as dictItemType, itemAttrs, edit, payload)
-      return itemAttrs
-    }
-  },
   $custom: {
     init: false,
     on: {},
@@ -361,15 +298,6 @@ const dict = {
       })
       bindEvent(this as dictItemType, itemAttrs, edit, payload)
       return itemAttrs
-    }
-  }
-}
-
-export const bindButtonClick = function(prop: string, option: DefaultEditButton['$option'], payload: FormItemPayloadType) {
-  return function() {
-    payload.target.$emit('menu', prop, payload)
-    if(option.click) {
-      return option.click(payload)
     }
   }
 }
@@ -393,12 +321,6 @@ export const parseEditAttrs = function (edit: DictionaryEditMod, payload: FormIt
     return dict.$dateRange.format(edit, payload)
   } else if (edit.type === 'file') {
     return dict.$file.format(edit, payload)
-  } else if (edit.type === 'button') {
-    return dict.$button.format(edit, payload)
-  } else if (edit.type === 'buttonGroup') {
-    return dict.$buttonGroup.format(edit, payload)
-  } else if (edit.type === 'content') {
-    return dict.$content.format(edit, payload)
   } else if (edit.type === 'custom') {
     return dict.$custom.format(edit, payload)
   } else {

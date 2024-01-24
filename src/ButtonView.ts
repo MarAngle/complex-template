@@ -2,7 +2,7 @@ import { defineComponent, h, PropType } from "vue"
 import { Button } from "ant-design-vue"
 import { ButtonType } from "ant-design-vue/es/button"
 import { isPromise } from "complex-utils"
-import { DefaultEditButtonOption } from "complex-data/src/dictionary/DefaultEditButton"
+import { ButtonValue } from "complex-data/src/dictionary/DefaultEditButton"
 import { FileView } from "complex-component"
 import icon from "../icon"
 
@@ -10,7 +10,7 @@ export default defineComponent({
   name: 'ButtonView',
   props: {
     data: {
-      type: Object as PropType<DefaultEditButtonOption>,
+      type: Object as PropType<ButtonValue<any>>,
       required: true
     }
   },
