@@ -86,7 +86,7 @@ export default defineComponent({
       return mergeData(formProps, this.formProps)
     },
     currentMenu() {
-      if (this.menu && this.menu.length > 0) {
+      if (this.menu) {
         return this.menu.map(item => DictionaryValue.$initEditMod(item)!)
       } else {
         return null
