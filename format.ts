@@ -222,8 +222,7 @@ const dict = {
           allowClear: !edit.$option.hideClear,
           showTime: showTime,
           defaultPickerValue: dayjs('00:00:00', 'HH:mm:ss'),
-          disabledDate: edit.$option.disabledDate,
-          disabledTime: edit.$option.disabledTime
+          disabledDate: edit.$option.disabledDate
         }
       })
       bindEvent(this as dictItemType, itemAttrs, edit, payload)
@@ -250,8 +249,7 @@ const dict = {
           allowClear: !edit.$option.hideClear,
           separator: edit.$option.separator,
           showTime: showTime,
-          disabledDate: edit.$option.disabledDate,
-          disabledTime: edit.$option.disabledTime
+          disabledDate: edit.$option.disabledDate
         }
       })
       bindEvent(this as dictItemType, itemAttrs, edit, payload)
@@ -303,13 +301,13 @@ const dict = {
       }
       if (payload.loading) {
         option.loading = true
-      } else if (option.loading && typeof option.loading === 'function') {
-        option.loading = option.loading(payload)
+      } else if (edit.$option.loading && typeof edit.$option.loading === 'function') {
+        option.loading = edit.$option.loading(payload)
       }
       if (payload.disabled || edit.disabled.getValue(payload.type)) {
         option.disabled = true
-      } else if (option.disabled && typeof option.disabled === 'function') {
-        option.disabled = option.disabled(payload)
+      } else if (edit.$option.disabled && typeof edit.$option.disabled === 'function') {
+        option.disabled = edit.$option.disabled(payload)
       }
       option.click = bindButtonClick(edit.$prop, edit.$option, payload)
       const itemAttrs = new AttrsValue({

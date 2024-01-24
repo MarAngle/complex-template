@@ -232,13 +232,13 @@ export default defineComponent({
             }
             if (this.loading) {
               option.loading = true
-            } else if (option.loading && typeof option.loading === 'function') {
-              option.loading = option.loading(this.payload)
+            } else if (buttonOption.loading && typeof buttonOption.loading === 'function') {
+              option.loading = buttonOption.loading(this.payload)
             }
             if (this.disabled || this.data.disabled.getValue(this.type)) {
               option.disabled = true
-            } else if (option.disabled && typeof option.disabled === 'function') {
-              option.disabled = option.disabled(this.payload)
+            } else if (buttonOption.disabled && typeof buttonOption.disabled === 'function') {
+              option.disabled = buttonOption.disabled(this.payload)
             }
             option.click = bindButtonClick(buttonOption.prop, buttonOption, this.payload)
             return h(ButtonView, {
