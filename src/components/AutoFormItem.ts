@@ -6,6 +6,7 @@ import ObserveList from "complex-data/src/dictionary/ObserveList"
 import config from "../../config"
 import FormView from "../FormView"
 import ModelFormItem from "./ModelFormItem"
+import ContentFormItem from "./ContentFormItem"
 
 export interface FormItemPayloadType {
   prop: string
@@ -102,6 +103,10 @@ export default defineComponent({
     renderItem() {
       if (['button', 'buttonGroup', 'content'].indexOf(this.data.type) === -1) {
         return h(ModelFormItem, {
+          payload: this.payload
+        })
+      } else {
+        return h(ContentFormItem, {
           payload: this.payload
         })
       }

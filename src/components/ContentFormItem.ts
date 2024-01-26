@@ -5,11 +5,15 @@ import config from "../../config"
 import { FormItemPayloadType } from "./AutoFormItem"
 
 export const bindButtonClick = function(prop: string, option: DefaultEditButton['$option'], payload: FormItemPayloadType) {
-  return function() {
-    payload.target.$emit('menu', prop, payload)
-    if(option.click) {
-      return option.click(payload)
+  if (!option.upload) {
+    return function() {
+      payload.target.$emit('menu', prop, payload)
+      if(option.click) {
+        return option.click(payload)
+      }
     }
+  } else {
+    return option.click
   }
 }
 
