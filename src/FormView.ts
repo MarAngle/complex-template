@@ -11,11 +11,12 @@ import AutoFormItem, { AutoFormItemProps } from "./components/AutoFormItem"
 import config from "../config"
 
 export interface FormViewDefaultProps {
-  menu?: (DictionaryEditMod | DictionaryEditModInitOption)[]
+  menu?: DictionaryEditMod[]
   layout?: FormLayout
   labelAlign?: FormLabelAlign
   layoutProps?: Record<string, unknown>
   formProps?: FormProps
+  choice?: number
   disabled?: boolean
   loading?: boolean
 }
@@ -66,6 +67,10 @@ export default defineComponent({
       type: Object as PropType<FormViewProps['formProps']>,
       required: false
     },
+    choice: {
+      type: Number,
+      required: false
+    },
     disabled: {
       type: Boolean,
       required: false
@@ -87,7 +92,7 @@ export default defineComponent({
     },
     currentMenu() {
       if (this.menu) {
-        return this.menu.map(item => DictionaryValue.$initEditMod(item)!)
+        return this.menu
       } else {
         return null
       }
@@ -107,6 +112,7 @@ export default defineComponent({
         list: this.list,
         form: this.form,
         type: this.type,
+        choice: this.choice,
         disabled: this.disabled,
         loading: this.loading,
         target: this

@@ -1,23 +1,22 @@
 import { defineComponent, h, PropType } from "vue"
+import { camelToLine } from "complex-utils"
+import { PureButtonValue } from "complex-data/src/dictionary/DefaultEditButton"
 import { tablePayload } from "../TableView"
 import { colorKeys } from "../../config"
-import { camelToLine } from "complex-utils"
 
-export type tableMenuType = {
-  name: string
-  prop: string
+export interface tableButtonValue extends PureButtonValue<never, [tablePayload]> {
   color?: | colorKeys
   hidden?: boolean | ((payload: tablePayload) => boolean)
   class?: string[] | ((payload: tablePayload) => string[])
   option?: Record<string, unknown>
-  children?: tableMenuType[]
+  children?: tableButtonValue[]
 }
 
 export default defineComponent({
   name: 'TableMenu',
   props: {
     list: {
-      type: Object as PropType<tableMenuType[]>,
+      type: Object as PropType<tableButtonValue[]>,
       required: true
     },
     payload: {
@@ -26,7 +25,7 @@ export default defineComponent({
     }
   },
   methods: {
-    render(menuList: tableMenuType[], payload: tablePayload) {
+    renderList(menuList: tableButtonValue[], payload: tablePayload) {
       const list: unknown[] = []
       for (let i = 0; i < menuList.length; i++) {
       const menuItem = menuList[i]
@@ -73,7 +72,7 @@ export default defineComponent({
       class: 'complex-list-table-menu'
     }, {
       default: () => {
-        return this.render(this.list, this.payload)
+        return this.renderList(this.list, this.payload)
       }
     })
   }

@@ -1,15 +1,13 @@
 import { defineComponent, h, PropType } from "vue"
 import { SearchData } from "complex-data"
 import { ChoiceDataData } from "complex-data/src/module/ChoiceData"
-import { DefaultEditButtonInitOption } from "complex-data/src/dictionary/DefaultEditButton"
-import { SearchButtonValue } from "complex-data/src/module/SearchData"
+import { DictionaryEditMod } from "complex-data/src/lib/DictionaryValue"
 import FormView, { FormViewDefaultProps } from "./FormView"
 import { FormItemPayloadType } from "./components/AutoFormItem"
 
 export interface SearchViewProps extends FormViewDefaultProps {
   search: SearchData
-  searchMenu?: (string | SearchButtonValue)[]
-  choice?: ChoiceDataData
+  searchMenu?: (string | DictionaryEditMod)[]
 }
 
 export default defineComponent({
@@ -25,10 +23,6 @@ export default defineComponent({
     },
     menu: {
       type: Object as PropType<SearchViewProps['menu']>,
-      required: false
-    },
-    choice: {
-      type: Object as PropType<SearchViewProps['choice']>,
       required: false
     },
     layout: { // 表单布局'horizontal'|'vertical'|'inline'
@@ -47,6 +41,10 @@ export default defineComponent({
       type: Object as PropType<SearchViewProps['formProps']>,
       required: false
     },
+    choice: {
+      type: Number,
+      required: false
+    },
     disabled: {
       type: Boolean,
       required: false
@@ -59,36 +57,11 @@ export default defineComponent({
   computed: {
     currentSearchMenu() {
       const currentSearchMenu = this.searchMenu ? this.search.$menu.list.concat(this.searchMenu) : this.search.$menu.list
-      const choiceSize = this.choice ? this.choice.id.length : -1
       return currentSearchMenu.map(menuOption => {
         if (typeof menuOption === 'string') {
           menuOption = SearchData.$getMenu(menuOption)!
         }
-        const menuInitOption = {
-          $format: 'edit',
-          prop: menuOption.prop,
-          type: 'button',
-          option: {
-            ...menuOption
-          }
-        }
-        // const choice = menuOption.choice
-        // if (choice !== undefined && choiceSize > -1) {
-        //   if (choice === true) {
-        //     menuInitOption.option!.disabled = function() {
-        //       return choiceSize === 0
-        //     }
-        //   } else if (choice === false) {
-        //     menuInitOption.option!.disabled = function() {
-        //       return choiceSize > 0
-        //     }
-        //   } else {
-        //     menuInitOption.option!.disabled = function() {
-        //       return choiceSize !== choice
-        //     }
-        //   }
-        // }
-        return menuInitOption as DefaultEditButtonInitOption
+        return menuOption
       })
     },
     currentMenu() {
@@ -110,6 +83,7 @@ export default defineComponent({
         labelAlign: this.labelAlign,
         layoutProps: this.layoutProps,
         formProps: this.formProps,
+        choice: this.choice,
         disabled: this.disabled,
         loading: this.loading,
         onMenu: (prop: string, payload: FormItemPayloadType) => {

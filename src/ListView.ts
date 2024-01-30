@@ -82,6 +82,9 @@ export default defineComponent({
     currentChoice() {
       return this.listData.$module.choice ? this.listData.$module.choice.getData() : undefined
     },
+    choiceSize() {
+      return this.currentChoice ? this.currentChoice.id.length : undefined
+    },
     currentSimpleTable() {
       if (this.simpleTable && this.currentChoice) {
         console.error('SimpleTable无法实现选择功能，无法启用SimpleTable！')
@@ -104,7 +107,7 @@ export default defineComponent({
         return h(SearchView, {
           ref: 'search-view',
           search: this.listData.$module.search,
-          choice: this.currentChoice,
+          choice: this.choiceSize,
           layout: 'inline',
           loading: this.operate === 'ing',
           onMenu: this.onSearchMenu,
@@ -170,30 +173,28 @@ export default defineComponent({
       }
     },
     onSearchMenu(prop: string, payload: FormItemPayloadType) {
-      console.log('menu', 'search', prop, payload)
       this.$emit('menu', 'search', prop, payload)
-      if (prop === 'search') {
+      if (prop === '$search') {
         this.listData.setSearch()
-      } else if (prop === 'reset') {
+      } else if (prop === '$reset') {
         this.listData.resetSearch()
-      } else if (prop === 'build') {
+      } else if (prop === '$build') {
         this.onEdit()
-      } else if (prop === 'delete') {
+      } else if (prop === '$delete') {
         notice.confirm('确认进行删除操作吗？', '警告', (act: string) => {
           if (act === 'ok') {
             this.listData.triggerMethod('$multipleDeleteData', [this.currentChoice ? this.currentChoice.list : []], true)
           }
         })
-      } else if (prop === 'export') {
+      } else if (prop === '$export') {
         this.listData.triggerMethod('$exportData', [], true)
       }
     },
     onTableMenu(prop: string, payload?: tablePayload) {
-      console.log('menu', 'table', prop, payload)
       this.$emit('menu', 'table', prop, payload)
-      if (prop === 'change') {
+      if (prop === '$change') {
         this.onEdit(payload!.targetData)
-      } else if (prop === 'delete') {
+      } else if (prop === '$delete') {
         notice.confirm('确认进行删除操作吗？', '警告', (act: string) => {
           if (act === 'ok') {
             this.listData.triggerMethod('$deleteData', [payload!.targetData], true)

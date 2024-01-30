@@ -17,6 +17,7 @@ export interface FormItemPayloadType {
   targetData: Record<PropertyKey, unknown>
   list: ObserveList
   target: InstanceType<typeof FormView>
+  choice?: number
   disabled?: boolean
   loading?: boolean
 }
@@ -28,6 +29,7 @@ export interface AutoFormItemProps {
   list: ObserveList
   type: string
   target: InstanceType<typeof FormView>
+  choice?: number
   disabled?: boolean
   loading?: boolean
 }
@@ -59,6 +61,10 @@ export default defineComponent({
       type: Object as PropType<AutoFormItemProps['target']>,
       required: true
     },
+    choice: {
+      type: Number,
+      required: false
+    },
     disabled: {
       type: Boolean,
       required: false
@@ -79,6 +85,7 @@ export default defineComponent({
         targetData: this.form.data,
         list: this.list,
         target: this.target,
+        choice: this.choice,
         disabled: this.disabled,
         loading: this.loading
       }
