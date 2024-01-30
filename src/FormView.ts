@@ -112,7 +112,7 @@ export default defineComponent({
         target: this
       } as AutoFormItemProps
     },
-    renderMenu() {
+    renderMenuList() {
       if (this.currentMenu && this.currentMenu.length > 0) {
         if (this.layout === 'inline') {
           return this.currentMenu.map((item, index) => {
@@ -154,17 +154,17 @@ export default defineComponent({
   render() {
     const layoutClass = `complex-form-${this.layout}`
     const list = this.renderList()
-    const menu = this.renderMenu() || []
+    const menuList = this.renderMenuList() || []
     const render = h(Form, {
       class: `complex-form ${layoutClass}`,
       ...this.currentFormProps
     }, {
       default: () => {
         if (this.layout === 'inline') {
-          return [...list, ...menu]
+          return [...list, ...menuList]
         } else {
           return h(Row, this.layoutProps, {
-            default: () => [...list, ...menu]
+            default: () => [...list, ...menuList]
           })
         }
       }
