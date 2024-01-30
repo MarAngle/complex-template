@@ -4,7 +4,7 @@ import { ChoiceDataData } from "complex-data/src/module/ChoiceData"
 import { DefaultEditButtonInitOption } from "complex-data/src/dictionary/DefaultEditButton"
 import { SearchButtonValue } from "complex-data/src/module/SearchData"
 import FormView, { FormViewDefaultProps } from "./FormView"
-import { FormItemPayloadType } from "./components/BaseFormItem"
+import { FormItemPayloadType } from "./components/AutoFormItem"
 
 export interface SearchViewProps extends FormViewDefaultProps {
   search: SearchData
@@ -72,22 +72,22 @@ export default defineComponent({
             ...menuOption
           }
         }
-        const choice = menuOption.choice
-        if (choice !== undefined && choiceSize > -1) {
-          if (choice === true) {
-            menuInitOption.option!.disabled = function() {
-              return choiceSize === 0
-            }
-          } else if (choice === false) {
-            menuInitOption.option!.disabled = function() {
-              return choiceSize > 0
-            }
-          } else {
-            menuInitOption.option!.disabled = function() {
-              return choiceSize !== choice
-            }
-          }
-        }
+        // const choice = menuOption.choice
+        // if (choice !== undefined && choiceSize > -1) {
+        //   if (choice === true) {
+        //     menuInitOption.option!.disabled = function() {
+        //       return choiceSize === 0
+        //     }
+        //   } else if (choice === false) {
+        //     menuInitOption.option!.disabled = function() {
+        //       return choiceSize > 0
+        //     }
+        //   } else {
+        //     menuInitOption.option!.disabled = function() {
+        //       return choiceSize !== choice
+        //     }
+        //   }
+        // }
         return menuInitOption as DefaultEditButtonInitOption
       })
     },

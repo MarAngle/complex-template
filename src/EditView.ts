@@ -2,7 +2,7 @@ import { defineComponent, h, PropType } from "vue"
 import { DictionaryData, DictionaryValue, FormValue } from "complex-data"
 import ObserveList from "complex-data/src/dictionary/ObserveList"
 import FormView, { FormViewDefaultProps } from "./FormView"
-import { FormItemPayloadType } from "./components/BaseFormItem"
+import { FormItemPayloadType } from "./components/AutoFormItem"
 
 type dataType = undefined | Record<PropertyKey, unknown>
 
