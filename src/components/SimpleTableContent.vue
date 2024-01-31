@@ -92,6 +92,7 @@
 
 <script lang="ts">
 import { defineComponent, PropType, h } from 'vue'
+import { PluginLayout } from "complex-plugin"
 import { PaginationData } from 'complex-data'
 import DefaultList from 'complex-data/src/dictionary/DefaultList'
 import AutoRender from './AutoRender'
@@ -105,6 +106,7 @@ export default defineComponent({
   components: {
     AutoRender
   },
+  inject: ['pluginLayout'],
   data () {
     return {
       layoutLifeData: new LayoutLifeData()
@@ -138,10 +140,10 @@ export default defineComponent({
     }
   },
   mounted() {
-    this.layoutLifeData.bind()
+    this.layoutLifeData.bind(this.pluginLayout as PluginLayout)
   },
   beforeMount() {
-    this.layoutLifeData.unbind()
+    this.layoutLifeData.unbind(this.pluginLayout as PluginLayout)
   },
   methods: {
     rowWidth(column: DefaultList) {

@@ -1,6 +1,7 @@
 import { defineComponent, h, PropType } from "vue"
 import { Table, TableColumnType, TableProps } from 'ant-design-vue'
 import { deepCloneData, updateData } from "complex-utils"
+import { PluginLayout } from "complex-plugin"
 import { ComplexList, PaginationData } from "complex-data"
 import DefaultList from "complex-data/src/dictionary/DefaultList"
 import PaginationView from "./components/PaginationView"
@@ -88,6 +89,7 @@ export default defineComponent({
       required: false
     }
   },
+  inject: ['pluginLayout'],
   data () {
     return {
       layoutLifeData: new LayoutLifeData()
@@ -238,10 +240,10 @@ export default defineComponent({
     },
   },
   mounted() {
-    this.layoutLifeData.bind()
+    this.layoutLifeData.bind(this.pluginLayout as PluginLayout)
   },
   beforeMount() {
-    this.layoutLifeData.unbind()
+    this.layoutLifeData.unbind(this.pluginLayout as PluginLayout)
   },
   methods: {
     renderTable() {

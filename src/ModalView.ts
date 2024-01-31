@@ -1,7 +1,6 @@
 import { defineComponent, h, PropType } from "vue"
 import { Modal, ModalProps } from "ant-design-vue"
 import { deepCloneData, updateData } from "complex-utils"
-import { layout } from "complex-plugin"
 import { DefaultEditButtonGroupOption } from "complex-data/src/dictionary/DefaultEditButtonGroup"
 import ButtonView from "./ButtonView"
 import config from "../config"
@@ -64,7 +63,6 @@ export default defineComponent({
   data() {
     return {
       open: false,
-      layoutPlugin: layout,
       localTitle: undefined as undefined | string,
       localModalProps: undefined as undefined | ModalProps
     }
@@ -135,7 +133,7 @@ export default defineComponent({
       }
     },
     contentHeight() {
-      const mainHeight = this.layoutPlugin.body.height
+      const mainHeight = document.documentElement.clientHeight
       let height = mainHeight - this.currentLayout.top - this.currentLayout.bottom - this.currentLayout.header - this.currentLayout.padding[0] - this.currentLayout.padding[2] - this.currentLayout.mainPadding[0] - this.currentLayout.mainPadding[2]
       if (this.menuList.length > 0) {
         height = height - this.currentLayout.menu

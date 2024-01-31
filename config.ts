@@ -1,6 +1,6 @@
 import { h } from "vue"
 import { getType, camelToLine } from "complex-utils"
-import { layout } from "complex-plugin"
+import { PluginLayout } from "complex-plugin"
 import { ChoiceData, PaginationData, AttrsValue, DictionaryData } from "complex-data"
 import InterfaceLayoutValue from "complex-data/src/lib/InterfaceLayoutValue"
 import DefaultList from 'complex-data/src/dictionary/DefaultList'
@@ -17,14 +17,14 @@ export class LayoutLifeData {
     this.life = 0
     this.data = 0
   }
-  bind() {
+  bind(layout: PluginLayout) {
     this.life = layout.onLife('recount', {
       data: () => {
         this.data++
       }
     }) as number
   }
-  unbind() {
+  unbind(layout: PluginLayout) {
     layout.offLife('recount', this.life)
     this.data = 0
     this.life = 0

@@ -30,7 +30,7 @@ const icon = {
         return name() as VNode
       }
     } else {
-      return null
+      return undefined
     }
   }
 }

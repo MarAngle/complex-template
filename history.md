@@ -7,5 +7,8 @@
 ### 重要
 - SimpleTableView的插槽和菜单逻辑同步
 
-### 4.0.1
+### 4.1.2
+- 升级plugin依赖,适配新版layout
+
+### 4.1.1
 - 基于v4版本的ant-design和complex-component构建模板
