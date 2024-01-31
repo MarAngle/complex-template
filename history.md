@@ -9,6 +9,7 @@
 
 ### 4.1.2
 - 升级plugin依赖,适配新版layout
+- 优化ModalView的菜单属性
 
 ### 4.1.1
 - 基于v4版本的ant-design和complex-component构建模板
