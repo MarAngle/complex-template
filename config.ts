@@ -4,7 +4,7 @@ import { PluginLayout } from "complex-plugin"
 import { ChoiceData, PaginationData, AttrsValue, DictionaryData } from "complex-data"
 import InterfaceLayoutValue from "complex-data/src/lib/InterfaceLayoutValue"
 import DefaultList from 'complex-data/src/dictionary/DefaultList'
-import { DefaultEditButtonGroupOption } from "complex-data/src/dictionary/DefaultEditButtonGroup"
+import { ButtonValue } from "complex-data/src/dictionary/DefaultEditButton"
 import { AutoIndex } from "complex-component"
 import componentConfig from "complex-component/config"
 import AutoText from "./src/AutoText.vue"
@@ -199,7 +199,7 @@ const config = {
         prop: 'submit'
       }
     },
-    getMenu(prop: string, targetOption?: Partial<DefaultEditButtonGroupOption>): DefaultEditButtonGroupOption {
+    getMenu(prop: string, targetOption?: Partial<ButtonValue>): ButtonValue {
       const data = this.menu[prop as keyof typeof config.modal.menu]
       if (data) {
         return {

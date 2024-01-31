@@ -1,7 +1,7 @@
 import { defineComponent, h, PropType } from "vue"
 import { Modal, ModalProps } from "ant-design-vue"
 import { deepCloneData, updateData } from "complex-utils"
-import { DefaultEditButtonGroupOption } from "complex-data/src/dictionary/DefaultEditButtonGroup"
+import { ButtonValue } from "complex-data/src/dictionary/DefaultEditButton"
 import ButtonView from "./ButtonView"
 import config from "../config"
 
@@ -19,8 +19,8 @@ export interface ModalViewProps {
   width?: number
   title?: string
   layout?: Partial<modalLayoutOption>
-  menu?: (string | DefaultEditButtonGroupOption)[]
-  menuOption?: Record<string, DefaultEditButtonGroupOption>
+  menu?: (string | ButtonValue)[]
+  menuOption?: Record<string, ButtonValue>
   submit?: () => Promise<unknown>
   modalProps?: ModalProps
 }
@@ -75,7 +75,7 @@ export default defineComponent({
       return updateData(deepCloneData(config.modal.layout), this.layout)
     },
     menuList() {
-      let menuList: DefaultEditButtonGroupOption[]
+      let menuList: ButtonValue[]
       const close = () => {
         this.hide('close')
       }
