@@ -7,6 +7,10 @@
 ### 重要
 - SimpleTableView的插槽和菜单逻辑同步
 
+### 4.1.3
+- 升级data依赖,适配非编辑模块
+- 修正样式和类型
+
 ### 4.1.2
 - 升级plugin依赖,适配新版layout
 - 优化ModalView的菜单属性

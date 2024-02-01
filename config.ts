@@ -43,6 +43,7 @@ const config = {
       const content = `\n.${styleName}{ color: ${config.style.color[name as colorKeys]}; }`
       innerHTML += content
     }
+    innerHTML += `\n.complex-auto-index{ color: ${config.style.color.primary}; }`
     // 设置样式规则
     style.innerHTML = innerHTML
     // 将样式元素节点添加到页面头部

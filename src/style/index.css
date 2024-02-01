@@ -12,6 +12,9 @@
   margin-left: 8px;
   cursor: pointer;
 }
+.complex-form .complex-form-item .ant-input-number {
+  width: 100%;
+}
 
 .complex-table .complex-table-footer {
   display: flex;

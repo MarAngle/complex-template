@@ -7,7 +7,7 @@ export default defineComponent({
   name: 'ButtonView',
   props: {
     data: {
-      type: Object as PropType<ButtonValue<any>>,
+      type: Object as PropType<ButtonValue<any, [any]>>,
       required: true
     }
   },
