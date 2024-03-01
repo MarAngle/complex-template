@@ -166,6 +166,7 @@ const dict = {
         props: {
           mode: edit.multiple ? 'multiple' : 'default',
           options: edit.$option.list,
+          open: edit.$option.open,
           showSearch: false,
           showArrow: !edit.$option.hideArrow,
           allowClear: !edit.$option.hideClear,

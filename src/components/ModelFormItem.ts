@@ -1,5 +1,5 @@
 import { defineComponent, h, PropType, VNode } from "vue"
-import { Input, InputNumber, Textarea, Switch, Select, Divider, Cascader, DatePicker, RangePicker } from "ant-design-vue"
+import { Input, InputNumber, Textarea, Switch, Select, Divider, Cascader, DatePicker, RangePicker, Button } from "ant-design-vue"
 import { camelToLine } from "complex-utils"
 import { parseEditAttrs } from "../../format"
 import config from "../../config"
@@ -36,11 +36,12 @@ export default defineComponent({
       }
     }
     const targetRender = config.component.parseData(this.payload.data.$renders, 'target')
+    const option = config.component.parseAttrs(itemAttrs)
     // 考虑一个默认的值，inline模式下和其他模式下的默认值，避免出现问题
     if (targetRender) {
       item = targetRender({
         ...this.payload,
-        option: config.component.parseAttrs(itemAttrs)
+        option: option
       })
     } else if (this.payload.data.type === 'input') {
       tag = Input
@@ -57,69 +58,79 @@ export default defineComponent({
       const dropdownRender = config.component.parseData(this.payload.data.$renders, 'dropdown')
       const optionRender = config.component.parseData(this.payload.data.$renders, 'option')
       const tagRender = config.component.parseData(this.payload.data.$renders, 'tag')
-      // if (dropdownRender) {
-      //   children.dropdownRender = dropdownRender
-      // } else {
-      //   const dropdownTopRender = config.component.parseData(this.payload.data.$renders, 'dropdownTop')
-      //   const dropdownBottomRender = config.component.parseData(this.payload.data.$renders, 'dropdownBottom')
-      //   if (dropdownTopRender || $data.$pagination || dropdownBottomRender) {
-      //     children.dropdownRender = (payload: { menuNode: VNode }) => {
-      //       const vNodes = [payload.menuNode]
-      //       if (dropdownTopRender) {
-      //         vNodes.unshift(dropdownTopRender({
-      //           payload: this.payload
-      //         }) as VNode)
-      //         vNodes.unshift(h(Divider, {
-      //           style: {
-      //             margin: '4px 0'
-      //           }
-      //         }))
-      //       }
-      //       if (dropdownBottomRender) {
-      //         vNodes.push(h(Divider, {
-      //           style: {
-      //             margin: '4px 0'
-      //           }
-      //         }))
-      //         vNodes.push(dropdownBottomRender({
-      //           payload: this.payload
-      //         }) as VNode)
-      //       }
-      //       if ($data.$pagination) {
-      //         vNodes.push(h(Divider, {
-      //           style: {
-      //             margin: '4px 0'
-      //           }
-      //         }))
-      //         vNodes.push(h(PaginationView, {
-      //           pagination: $data.$pagination,
-      //           simple: true,
-      //           onPage() {
-      //             $data.loadData(true).then(() => { /* */}, () => { /* */})
-      //           },
-      //           onSize() {
-      //             $data.loadData(true).then(() => { /* */}, () => { /* */})
-      //           },
-      //           onClick(e: Event) {
-      //             e.preventDefault()
-      //           }
-      //         }))
-      //         const dropdownPaginationBottomRender = config.component.parseData(this.payload.data.$renders, 'dropdownPaginationBottom')
-      //         if (dropdownPaginationBottomRender) {
-      //           vNodes.push(h(Divider, {
-      //             style: {
-      //               margin: '4px 0'
-      //             }
-      //           }))
-      //           vNodes.push(dropdownPaginationBottomRender({
-      //             payload: this.payload
-      //           }) as VNode)
-      //         }
-      //       }
-      //       return vNodes
-      //     }
-      //   }
-      // }
+      if (dropdownRender) {
+        children.dropdownRender = dropdownRender
+      } else {
+        const dropdownTopRender = config.component.parseData(this.payload.data.$renders, 'dropdownTop')
+        const dropdownBottomRender = config.component.parseData(this.payload.data.$renders, 'dropdownBottom')
+        if (dropdownTopRender || $data.$pagination || dropdownBottomRender) {
+          children.dropdownRender = (payload: { menuNode: VNode }) => {
+            const vNodes = [payload.menuNode]
+            if (dropdownTopRender) {
+              vNodes.unshift(dropdownTopRender({
+                payload: this.payload
+              }) as VNode)
+              vNodes.unshift(h(Divider, {
+                style: {
+                  margin: '4px 0'
+                }
+              }))
+            }
+            if (dropdownBottomRender) {
+              vNodes.push(h(Divider, {
+                style: {
+                  margin: '4px 0'
+                }
+              }))
+              vNodes.push(dropdownBottomRender({
+                payload: this.payload
+              }) as VNode)
+            }
+            if ($data.$pagination) {
+              vNodes.push(h(Divider, {
+                style: {
+                  margin: '4px 0'
+                }
+              }))
+              vNodes.push(h(PaginationView, {
+                pagination: $data.$pagination,
+                simple: true,
+                onPage() {
+                  $data.$option.open = true
+                  $data.loadData(true).then(() => {
+                    $data.$option.open = undefined
+                  }, () => {
+                    $data.$option.open = undefined
+                  })
+                },
+                onSize() {
+                  $data.$option.open = true
+                  $data.loadData(true).then(() => {
+                    $data.$option.open = undefined
+                  }, () => {
+                    $data.$option.open = undefined
+                  })
+                },
+                onClick(e: Event) {
+                  e.preventDefault()
+                }
+              }))
+              const dropdownPaginationBottomRender = config.component.parseData(this.payload.data.$renders, 'dropdownPaginationBottom')
+              if (dropdownPaginationBottomRender) {
+                vNodes.push(h(Divider, {
+                  style: {
+                    margin: '4px 0'
+                  }
+                }))
+                vNodes.push(dropdownPaginationBottomRender({
+                  payload: this.payload
+                }) as VNode)
+              }
+            }
+            return vNodes
+          }
+        }
+      }
       if (optionRender) {
         children.option = optionRender
       }
@@ -138,7 +149,7 @@ export default defineComponent({
       tag = this.payload.data.$custom
     }
     if (tag) {
-      item = h(tag, config.component.parseAttrs(itemAttrs), children)
+      item = h(tag, option, children)
     }
     return item
   }
