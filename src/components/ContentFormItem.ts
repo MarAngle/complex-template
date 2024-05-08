@@ -1,10 +1,11 @@
 import { defineComponent, h, PropType, VNode } from "vue"
-import DefaultEditButton, { ButtonValue } from "complex-data/src/dictionary/DefaultEditButton"
+import { ButtonValue } from "complex-data"
+import ButtonEdit from "complex-data/src/dictionary/ButtonEdit"
 import ButtonView from "../ButtonView"
 import config from "../../config"
 import { FormItemPayloadType } from "./AutoFormItem"
 
-export const bindButtonClick = function(prop: string, option: DefaultEditButton['$option'], payload: FormItemPayloadType) {
+export const bindButtonClick = function(prop: string, option: ButtonEdit['$option'], payload: FormItemPayloadType) {
   if (!option.upload) {
     return function() {
       payload.target.$emit('menu', prop, payload)
@@ -41,7 +42,7 @@ export default defineComponent({
         ...this.payload.data.$option
       }
       if (!option.name) {
-        option.name = this.payload.data.$name.getValue(this.payload.type)
+        option.name = this.payload.data.$name.getValue(this.payload.type)!
       }
       if (!option.prop) {
         option.prop = this.payload.prop

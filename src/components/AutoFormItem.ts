@@ -7,6 +7,7 @@ import config from "../../config"
 import FormView from "../FormView"
 import ModelFormItem from "./ModelFormItem"
 import ContentFormItem from "./ContentFormItem"
+import DefaultEdit from "complex-data/src/dictionary/DefaultEdit"
 
 export interface FormItemPayloadType {
   prop: string
@@ -95,11 +96,11 @@ export default defineComponent({
     renderTip() {
       const mainRender = config.component.parseData(this.data.$renders, 'main')
       const item = !mainRender ? this.renderItem() : mainRender(this.payload)
-      if (this.data.tip) {
+      if (this.data.$tip) {
         return h(Tooltip, {
-          title: this.data.tip.getData ? this.data.tip.getData(this.payload) : this.data.tip.data,
-          placement: this.data.tip.location,
-          ...config.component.parseAttrs(this.data.tip.$attrs)
+          title: this.data.$tip.getData ? this.data.$tip.getData(this.payload) : this.data.$tip.data,
+          placement: this.data.$tip.location,
+          ...config.component.parseAttrs(this.data.$tip.$attrs)
         }, {
           default: () => item
         })
@@ -135,7 +136,7 @@ export default defineComponent({
           label: label,
           colon: this.data.colon.getValue(this.type),
           required: this.data.required.getValue(this.type),
-          rules: this.data.$rules.getValue(this.type)
+          rules: (this.data instanceof DefaultEdit && this.data.$rules) ? this.data.$rules.getValue(this.type) : undefined
         }
       })
       if (this.target.layout === 'horizontal') {

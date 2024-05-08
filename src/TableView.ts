@@ -132,7 +132,7 @@ export default defineComponent({
           dataIndex: currentProp,
           title: column.$name.getValue(this.listProp),
           align: column.align,
-          width: column.width,
+          width: column.$width,
           ellipsis: column.ellipsis,
           ...config.component.parseAttrs(attrs)
         }

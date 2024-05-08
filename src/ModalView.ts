@@ -1,7 +1,7 @@
 import { defineComponent, h, PropType } from "vue"
 import { Modal, ModalProps } from "ant-design-vue"
 import { deepCloneData, updateData } from "complex-utils"
-import { ButtonValue } from "complex-data/src/dictionary/DefaultEditButton"
+import { ButtonValue } from "complex-data"
 import ButtonView from "./ButtonView"
 import config from "../config"
 

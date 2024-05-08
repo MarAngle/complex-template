@@ -11,6 +11,7 @@ export interface ImportProps extends FileProps{
   name?: NonNullable<DefaultEditFileOption['button']>['name']
   type?: NonNullable<DefaultEditFileOption['button']>['type']
   icon?: NonNullable<DefaultEditFileOption['button']>['icon']
+  complex?: DefaultEditFileOption['complex']
   upload?: DefaultEditFileOption['upload']
   loading?: boolean
   render?: {
@@ -18,12 +19,13 @@ export interface ImportProps extends FileProps{
     content?: () => (VNode | VNode[])
   }
 }
-
+// 考虑单选为限制情况的多选
+// 考虑添加complex，接收一个复杂对象实现，具体的名称和URL解析考虑单独参数或者额外包装
 export default defineComponent({
   name: 'ImportView',
   props: {
     value: {
-      type: [String, Object] as PropType<string | string[] | File | File[]>
+      type: [String, Object, Array] as PropType<any | any[]>
     },
     name: {
       type: String,
@@ -38,6 +40,10 @@ export default defineComponent({
       type: [String, Function],
       required: false,
       default: 'upload'
+    },
+    complex: {
+      type: Boolean,
+      required: false
     },
     upload: {
       type: Function as PropType<ImportProps['upload']>,
@@ -83,34 +89,41 @@ export default defineComponent({
     }
   },
   data() {
+    const currentValue = this.parseValue(this.value)
     return {
       operate: false,
-      currentValue: this.value || (!this.multiple ? undefined : []),
-      data: this.upload ? (!this.multiple ? undefined : [] as uploadFileDataType[]) : undefined as undefined | uploadFileDataType
+      currentValue: currentValue,
+      data: this.parseCurrentValue(currentValue)
     }
   },
   methods: {
-    syncData() {
+    parseValue(value: any) {
+      return value || (!this.multiple ? undefined : [])
+    },
+    parseCurrentValue(currentValue: any) {
+      // if (this.complex) {
+      //   return currentValue
+      // }
       if (this.upload) {
         if (!this.multiple) {
-          if (this.currentValue !== this.value) {
-            this.currentValue = this.value
-            this.data = this.value ? { data: this.value as string, name: this.value as string, url: undefined } : undefined
-          }
+          return currentValue ? { data: currentValue as string, name: currentValue as string, url: undefined } : undefined
         } else {
-          if (this.value !== this.currentValue) {
-            this.currentValue = this.value || []
-            this.data = (this.currentValue as string[]).map(item => {
-              return {
-                data: item,
-                name: item,
-                url: undefined
-              }
-            })
-          }
+          return (currentValue as string[]).map(item => {
+            return {
+              data: item,
+              name: item,
+              url: undefined
+            }
+          })
         }
       } else {
-        !this.multiple ? this.setSingleData(this.value as undefined | File, false) : this.setMutipleData(this.value as undefined | File[], false, false)
+        return currentValue
+      }
+    },
+    syncData() {
+      if (this.currentValue !== this.value) {
+        this.currentValue = this.parseValue(this.value)
+        this.data = this.parseCurrentValue(this.currentValue)
       }
     },
     setSingleUpload(file: uploadFileDataType, emit?: boolean) {
@@ -169,6 +182,9 @@ export default defineComponent({
       }
     },
     removeData(index?: number) {
+      if (this.disabled || this.loading) {
+        return
+      }
       if (index === undefined) {
         this.currentValue = undefined
         if (this.upload) {
@@ -262,7 +278,7 @@ export default defineComponent({
             onClick: () => {
               this.removeData(index)
             }
-          }, [icon.parse('close')]),
+          }, this.disabled ? [] : [icon.parse('close')]),
         ]
       }) : null
     }

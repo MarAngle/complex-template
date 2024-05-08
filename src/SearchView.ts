@@ -1,6 +1,5 @@
 import { defineComponent, h, PropType } from "vue"
 import { SearchData } from "complex-data"
-import { ChoiceDataData } from "complex-data/src/module/ChoiceData"
 import { DictionaryEditMod } from "complex-data/src/lib/DictionaryValue"
 import FormView, { FormViewDefaultProps } from "./FormView"
 import { FormItemPayloadType } from "./components/AutoFormItem"

@@ -148,11 +148,11 @@ export default defineComponent({
   methods: {
     rowWidth(column: DefaultList) {
       const style: Record<string, string | number> = {}
-      if (column.width !== undefined) {
-        if (typeof column.width === 'number') {
-          style.width = config.component.data.formatPixel(column.width)
+      if (column.$width !== undefined) {
+        if (typeof column.$width === 'number') {
+          style.width = config.component.data.formatPixel(column.$width)
         } else {
-          style.width = column.width
+          style.width = column.$width
         }
       }
       return style
