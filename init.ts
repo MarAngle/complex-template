@@ -2,7 +2,7 @@ import { FormInstance } from 'ant-design-vue'
 import dayjs, { Dayjs } from 'dayjs'
 import { date } from 'complex-plugin'
 import { FormValue } from "complex-data"
-import DateEdit from "complex-data/src/dictionary/DateEdit"
+import SimpleDateEdit from "complex-data/src/dictionary/SimpleDateEdit"
 import customParseFormat from "dayjs/plugin/customParseFormat"
 import './src/style/index.css'
 
@@ -21,7 +21,7 @@ FormValue.validate = function(formValue, ...args: Parameters<FormInstance['valid
 
 date.pushParse('dayjs', value => dayjs(value))
 
-DateEdit.$parseDate = function(dateValue) {
+SimpleDateEdit.$parseDate = function(dateValue) {
   if (typeof dateValue.value === 'string') {
     return date.getData('dayjs', dateValue.value)
   } else {
@@ -29,7 +29,7 @@ DateEdit.$parseDate = function(dateValue) {
   }
 }
 
-DateEdit.$compareDate = function(target, other) {
+SimpleDateEdit.$compareDate = function(target, other) {
   const otherUnix = (other as Dayjs).unix()
   const targetUnix = (target as Dayjs).unix()
   if (otherUnix < targetUnix) {
@@ -43,10 +43,10 @@ DateEdit.$compareDate = function(target, other) {
 
 dayjs.extend(customParseFormat)
 
-DateEdit.$edit = function(value, format) {
+SimpleDateEdit.$parse = function(value, format) {
   return value !== undefined ? dayjs(value, format) : value
 }
 
-DateEdit.$post = function(value, format) {
+SimpleDateEdit.$collect = function(value, format) {
   return value !== undefined ? (value as Dayjs).format(format) : value
 }

@@ -108,7 +108,7 @@ export default defineComponent({
           ref: 'search-view',
           search: this.listData.$module.search,
           choice: this.choiceSize,
-          layout: 'inline',
+          inline: true,
           loading: this.operate === 'ing',
           onMenu: this.onSearchMenu,
           ...this.currentComponentsProps.search

@@ -233,14 +233,12 @@ const dict = {
     format(edit: DateRangeEdit, payload: FormItemPayloadType) {
       const showTime = edit.$option.time ? {
         format: edit.$option.time.showFormat,
-        defaultValue: edit.$option.time.defaultValue.map(timeValueStr => {
-          return dayjs(timeValueStr, edit.$option.time!.format)
-        })
+        defaultValue: [dayjs(edit.$option.time!.defaultValue, edit.$option.time.format), dayjs(edit.$option.time!.defaultEndValue, edit.$option.time.format)]
       } : false
       const itemAttrs = new AttrsValue({
         props: {
           disabled: payload.disabled || edit.disabled,
-          placeholder: edit.placeholder ? edit.placeholder : undefined,
+          placeholder: [edit.placeholder, edit.endPlaceholder],
           format: edit.$option.showFormat,
           allowClear: !edit.$option.hideClear,
           separator: edit.$option.separator,
