@@ -11,6 +11,7 @@ export interface EditViewProps extends FormViewDefaultProps {
   type?: string
   observe?: boolean
   form?: FormValue
+  inline?: boolean
 }
 
 export default defineComponent({
@@ -37,16 +38,20 @@ export default defineComponent({
       type: Object as PropType<EditViewProps['form']>,
       required: false
     },
-    layout: { // 表单布局'horizontal'|'vertical'|'inline'
-      type: String as PropType<EditViewProps['layout']>,
-      required: false
-    },
     labelAlign: { // label 标签的文本对齐方式
       type: String as PropType<EditViewProps['labelAlign']>,
       required: false
     },
-    layoutProps: { // layout != inline时的a-row的参数设置项
-      type: Object,
+    inline: {
+      type: Boolean,
+      required: false
+    },
+    gridParse: {
+      type: Object as PropType<EditViewProps['gridParse']>,
+      required: false
+    },
+    gridRowProps: { // form-model-view设置项
+      type: Object as PropType<EditViewProps['gridRowProps']>,
       required: false
     },
     formProps: { // form-model-view设置项
@@ -99,7 +104,7 @@ export default defineComponent({
       this.dictionary.createEditData(this.dictionaryList as DictionaryValue[], this.currentType, this.data).then(res => {
         this.currentForm.setData(res.data)
         if (this.observe) {
-          this.list!.setForm(this.currentForm.getData(), this.currentType)
+          this.list!.startObserve(this.currentForm.getData(), this.currentType)
         }
       })
     },
@@ -120,9 +125,9 @@ export default defineComponent({
           list: this.list as ObserveList,
           menu: this.menu,
           type: this.currentType,
-          layout: this.layout!,
           labelAlign: this.labelAlign!,
-          layoutProps: this.layoutProps!,
+          gridParse: this.inline ? undefined : (this.gridParse || this.dictionary.$layout.grid.getValue(this.currentType)),
+          gridRowProps: this.gridRowProps!,
           formProps: this.formProps,
           disabled: this.disabled,
           loading: this.loading,

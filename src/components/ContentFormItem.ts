@@ -42,7 +42,7 @@ export default defineComponent({
         ...this.payload.data.$option
       }
       if (!option.name) {
-        option.name = this.payload.data.$name.getValue(this.payload.type)!
+        option.name = this.payload.data.$name
       }
       if (!option.prop) {
         option.prop = this.payload.prop
@@ -52,7 +52,7 @@ export default defineComponent({
       } else if (this.payload.data.$option.loading && typeof this.payload.data.$option.loading === 'function') {
         option.loading = this.payload.data.$option.loading(this.payload)
       }
-      if (this.payload.disabled || this.payload.data.disabled.getValue(this.payload.type)) {
+      if (this.payload.disabled || this.payload.data.disabled) {
         option.disabled = true
       } else if (this.payload.data.$option.disabled && typeof this.payload.data.$option.disabled === 'function') {
         option.disabled = this.payload.data.$option.disabled(this.payload)
@@ -74,12 +74,12 @@ export default defineComponent({
           } else if (buttonOption.loading && typeof buttonOption.loading === 'function') {
             option.loading = buttonOption.loading(this.payload)
           }
-          if (this.payload.disabled || this.payload.data.disabled.getValue(this.payload.type)) {
+          if (this.payload.disabled || this.payload.data.disabled) {
             option.disabled = true
           } else if (buttonOption.disabled && typeof buttonOption.disabled === 'function') {
             option.disabled = buttonOption.disabled(this.payload)
           }
-          option.click = bindButtonClick(buttonOption.prop, buttonOption, this.payload)
+          option.click = bindButtonClick(buttonOption.prop!, buttonOption, this.payload)
           return h(ButtonView, {
             style: {
               marginRight: interval

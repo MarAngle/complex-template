@@ -92,8 +92,8 @@ const dict = {
           type: edit.$option.type,
           allowClear: !edit.$option.hideClear,
           maxLength: edit.$option.size,
-          disabled: payload.disabled || edit.disabled.getValue(payload.type),
-          placeholder: edit.placeholder ? edit.placeholder.getValue(payload.type) : undefined
+          disabled: payload.disabled || edit.disabled,
+          placeholder: edit.placeholder ? edit.placeholder : undefined
         }
       })
       bindEvent(this as dictItemType, itemAttrs, edit, payload)
@@ -112,8 +112,8 @@ const dict = {
           max: edit.$option.max,
           precision: edit.$option.precision,
           step: edit.$option.step,
-          disabled: payload.disabled || edit.disabled.getValue(payload.type),
-          placeholder: edit.placeholder ? edit.placeholder.getValue(payload.type) : undefined
+          disabled: payload.disabled || edit.disabled,
+          placeholder: edit.placeholder ? edit.placeholder : undefined
         }
       })
       bindEvent(this as dictItemType, itemAttrs, edit, payload)
@@ -131,8 +131,8 @@ const dict = {
           maxLength: edit.$option.size,
           autoSize: edit.$option.autoSize,
           allowClear: !edit.$option.hideClear,
-          disabled: payload.disabled || edit.disabled.getValue(payload.type),
-          placeholder: edit.placeholder ? edit.placeholder.getValue(payload.type) : undefined
+          disabled: payload.disabled || edit.disabled,
+          placeholder: edit.placeholder ? edit.placeholder : undefined
         }
       })
       bindEvent(this as dictItemType, itemAttrs, edit, payload)
@@ -147,7 +147,7 @@ const dict = {
     format(edit: SwitchEdit, payload: FormItemPayloadType) {
       const itemAttrs = new AttrsValue({
         props: {
-          disabled: payload.disabled || edit.disabled.getValue(payload.type)
+          disabled: payload.disabled || edit.disabled
         }
       })
       bindEvent(this as dictItemType, itemAttrs, edit, payload)
@@ -171,8 +171,8 @@ const dict = {
           allowClear: !edit.$option.hideClear,
           dropdownMatchSelectWidth: edit.$option.autoWidth,
           fieldNames: { value: edit.$option.optionValue, label: edit.$option.optionLabel },
-          disabled: payload.disabled || edit.disabled.getValue(payload.type) || isLoading,
-          placeholder: edit.placeholder ? edit.placeholder.getValue(payload.type) : undefined
+          disabled: payload.disabled || edit.disabled || isLoading,
+          placeholder: edit.placeholder ? edit.placeholder : undefined
         }
       })
       bindEvent(this as dictItemType, itemAttrs, edit, payload)
@@ -192,8 +192,8 @@ const dict = {
           showArrow: !edit.$option.hideArrow,
           allowClear: !edit.$option.hideClear,
           fieldNames: { value: edit.$option.optionValue, label: edit.$option.optionLabel, children: edit.$option.cascader },
-          disabled: payload.disabled || edit.disabled.getValue(payload.type) || isLoading,
-          placeholder: edit.placeholder ? edit.placeholder.getValue(payload.type) : undefined
+          disabled: payload.disabled || edit.disabled || isLoading,
+          placeholder: edit.placeholder ? edit.placeholder : undefined
         }
       })
       bindEvent(this as dictItemType, itemAttrs, edit, payload)
@@ -212,8 +212,8 @@ const dict = {
       } : false
       const itemAttrs = new AttrsValue({
         props: {
-          disabled: payload.disabled || edit.disabled.getValue(payload.type),
-          placeholder: edit.placeholder ? edit.placeholder.getValue(payload.type) : undefined,
+          disabled: payload.disabled || edit.disabled,
+          placeholder: edit.placeholder ? edit.placeholder : undefined,
           format: edit.$option.showFormat,
           allowClear: !edit.$option.hideClear,
           showTime: showTime,
@@ -239,8 +239,8 @@ const dict = {
       } : false
       const itemAttrs = new AttrsValue({
         props: {
-          disabled: payload.disabled || edit.disabled.getValue(payload.type),
-          placeholder: edit.placeholder ? edit.placeholder.getValue(payload.type) : undefined,
+          disabled: payload.disabled || edit.disabled,
+          placeholder: edit.placeholder ? edit.placeholder : undefined,
           format: edit.$option.showFormat,
           allowClear: !edit.$option.hideClear,
           separator: edit.$option.separator,
@@ -260,7 +260,7 @@ const dict = {
     format(edit: FileEdit, payload: FormItemPayloadType) {
       let layout = edit.$option.layout
       if (layout == 'auto') {
-        if (payload.target.layout == 'inline') {
+        if (!payload.target.gridParse) {
           layout = 'end'
         } else {
           layout = 'bottom'
@@ -272,13 +272,13 @@ const dict = {
         props: {
           accept: edit.$option.accept,
           maxSize: edit.$option.size,
-          name: buttonOption.name || edit.$name.getValue(payload.type),
+          name: buttonOption.name || edit.$name,
           type: buttonOption.type,
           icon: buttonOption.icon,
           multiple: multiple,
           upload: edit.$option.upload,
           layout: layout,
-          disabled: payload.disabled || edit.disabled.getValue(payload.type)
+          disabled: payload.disabled || edit.disabled
         }
       })
       bindEvent(this as dictItemType, itemAttrs, edit, payload)
@@ -292,7 +292,7 @@ const dict = {
       const itemAttrs = new AttrsValue({
         props: {
           ...edit.$option,
-          disabled: payload.disabled || edit.disabled.getValue(payload.type)
+          disabled: payload.disabled || edit.disabled
         }
       })
       bindEvent(this as dictItemType, itemAttrs, edit, payload)

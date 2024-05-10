@@ -1,20 +1,20 @@
 import { defineComponent, h, PropType } from "vue"
-import { Col, Form, Row, FormProps } from "ant-design-vue"
+import { Col, Form, Row, FormProps, RowProps } from "ant-design-vue"
 import { FormLabelAlign } from "ant-design-vue/es/form/interface"
-import { FormLayout } from "ant-design-vue/es/form/Form"
 import { mergeData } from "complex-utils"
 import { FormValue } from "complex-data"
-import DictionaryValue, { DictionaryEditMod, DictionaryEditModInitOption } from "complex-data/src/lib/DictionaryValue"
+import { DictionaryEditMod } from "complex-data/src/lib/DictionaryValue"
 import ObserveList from "complex-data/src/dictionary/ObserveList"
 import DefaultMod from "complex-data/src/dictionary/DefaultMod"
+import GridParse from "complex-data/src/lib/GridParse"
 import AutoFormItem, { AutoFormItemProps } from "./components/AutoFormItem"
 import config from "../config"
 
 export interface FormViewDefaultProps {
   menu?: DictionaryEditMod[]
-  layout?: FormLayout
   labelAlign?: FormLabelAlign
-  layoutProps?: Record<string, unknown>
+  gridParse?: GridParse
+  gridRowProps?: RowProps
   formProps?: FormProps
   choice?: number
   disabled?: boolean
@@ -46,22 +46,18 @@ export default defineComponent({
       type: String,
       required: true
     },
-    layout: { // 表单布局'horizontal'|'vertical'|'inline'
-      type: String as PropType<FormViewProps['layout']>,
-      required: false,
-      default: 'horizontal'
-    },
     labelAlign: { // label 标签的文本对齐方式
       type: String as PropType<FormViewProps['labelAlign']>,
       required: false,
       default: 'right'
     },
-    layoutProps: { // layout != inline时的a-row的参数设置项
-      type: Object,
-      required: false,
-      default: () => {
-        return config.form.layoutProps
-      }
+    gridParse: {
+      type: Object as PropType<FormViewProps['gridParse']>,
+      required: false
+    },
+    gridRowProps: { // form-model-view设置项
+      type: Object as PropType<FormViewProps['gridRowProps']>,
+      required: false
     },
     formProps: { // form-model-view设置项
       type: Object as PropType<FormViewProps['formProps']>,
@@ -85,10 +81,10 @@ export default defineComponent({
       const formProps = {
         ref: 'form',
         model: this.form.data,
-        layout: this.layout,
+        layout: this.gridParse ? 'horizontal' : 'inline',
         labelAlign: this.labelAlign
       }
-      return mergeData(formProps, this.formProps)
+      return mergeData(formProps, this.formProps!)
     },
     currentMenu() {
       if (this.menu) {
@@ -102,8 +98,8 @@ export default defineComponent({
     this.form.setRef(this.$refs[this.currentFormProps.ref])
   },
   methods: {
-    getItemGrid(data: DefaultMod) {
-      return config.parseGrid(data.$layout, 'main', this.type)
+    parseGrid(data: DefaultMod) {
+      return config.parseGrid(this.gridParse!.parseData(data.$grid, 'main', this.type))
     },
     getItemProps(data: DictionaryEditMod, index: number) {
       return {
@@ -120,13 +116,13 @@ export default defineComponent({
     },
     renderMenuList() {
       if (this.currentMenu && this.currentMenu.length > 0) {
-        if (this.layout === 'inline') {
+        if (!this.gridParse) {
           return this.currentMenu.map((item, index) => {
             return this.renderItem((item), index)
           })
         } else {
           return this.currentMenu.map((item, index) => {
-            return h(Col, this.getItemGrid(item), {
+            return h(Col, this.parseGrid(item), {
               default: () => this.renderItem((item), index)
             })
           })
@@ -139,13 +135,13 @@ export default defineComponent({
       return h(AutoFormItem, this.getItemProps(item, index))
     },
     renderList() {
-      if (this.layout === 'inline') {
+      if (!this.gridParse) {
         return this.list.data.map((item, index) => {
           return this.renderItem((item as DictionaryEditMod), index)
         })
       } else {
         return this.list.data.map((item, index) => {
-          return h(Col, this.getItemGrid(item), {
+          return h(Col, this.parseGrid(item), {
             default: () => this.renderItem((item as DictionaryEditMod), index)
           })
         })
@@ -158,7 +154,7 @@ export default defineComponent({
    * @returns {VNode}
    */
   render() {
-    const layoutClass = `complex-form-${this.layout}`
+    const layoutClass = `complex-form-${this.gridParse ? 'grid' : 'inline'}`
     const list = this.renderList()
     const menuList = this.renderMenuList() || []
     const render = h(Form, {
@@ -166,10 +162,10 @@ export default defineComponent({
       ...this.currentFormProps
     }, {
       default: () => {
-        if (this.layout === 'inline') {
+        if (!this.gridParse) {
           return [...list, ...menuList]
         } else {
-          return h(Row, this.layoutProps, {
+          return h(Row, { ...this.gridRowProps }, {
             default: () => [...list, ...menuList]
           })
         }

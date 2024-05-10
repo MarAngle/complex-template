@@ -29,8 +29,8 @@ export default defineComponent({
     itemAttrs.pushClass('complex-form-item-' + camelToLine(this.payload.data.type))
     itemAttrs.merge(config.component.parseData(this.payload.data.$local, 'target'))
     let item = null
-    if (this.payload.target.layout === 'inline') {
-      const width = config.parseWidth(this.payload.data.$layout, 'target', this.payload.type)
+    if (!this.payload.target.gridParse) {
+      const width = this.payload.data.$width
       if (width) {
         itemAttrs.style.width = width
       }

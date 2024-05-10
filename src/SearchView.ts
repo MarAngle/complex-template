@@ -7,6 +7,7 @@ import { FormItemPayloadType } from "./components/AutoFormItem"
 export interface SearchViewProps extends FormViewDefaultProps {
   search: SearchData
   searchMenu?: (string | DictionaryEditMod)[]
+  inline?: boolean
 }
 
 export default defineComponent({
@@ -24,16 +25,20 @@ export default defineComponent({
       type: Object as PropType<SearchViewProps['menu']>,
       required: false
     },
-    layout: { // 表单布局'horizontal'|'vertical'|'inline'
-      type: String as PropType<SearchViewProps['layout']>,
-      required: false
-    },
     labelAlign: { // label 标签的文本对齐方式
       type: String as PropType<SearchViewProps['labelAlign']>,
       required: false
     },
-    layoutProps: { // layout != inline时的a-row的参数设置项
-      type: Object,
+    inline: {
+      type: Boolean,
+      required: false
+    },
+    gridParse: {
+      type: Object as PropType<SearchViewProps['gridParse']>,
+      required: false
+    },
+    gridRowProps: { // form-model-view设置项
+      type: Object as PropType<SearchViewProps['gridRowProps']>,
       required: false
     },
     formProps: { // form-model-view设置项
@@ -78,9 +83,9 @@ export default defineComponent({
         list: this.search.$search.observe,
         type: this.search.$prop,
         menu: this.currentMenu,
-        layout: this.layout,
         labelAlign: this.labelAlign,
-        layoutProps: this.layoutProps,
+        gridParse: this.inline ? undefined : (this.gridParse || this.search.$layout.grid.getValue(this.search.$prop)),
+        gridRowProps: this.gridRowProps!,
         formProps: this.formProps,
         choice: this.choice,
         disabled: this.disabled,

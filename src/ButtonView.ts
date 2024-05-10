@@ -1,5 +1,5 @@
 import { defineComponent, h, PropType } from "vue"
-import { ButtonValue } from "complex-data/src/dictionary/DefaultEditButton"
+import { ButtonValue } from "complex-data"
 import { FileView } from "complex-component"
 import PureButton from "./components/PureButton"
 
@@ -16,7 +16,7 @@ export default defineComponent({
       return h(FileView, {
         class: 'complex-button-file',
         ref: 'file',
-        ...this.data.uploadOption,
+        ...this.data.fileOption,
         onChange: (file: File) => {
           (this.$refs.button as InstanceType<typeof PureButton>).operate = true
           this.data.upload!(file).finally(() => {

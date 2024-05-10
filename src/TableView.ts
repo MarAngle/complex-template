@@ -130,7 +130,7 @@ export default defineComponent({
         const attrs = config.component.parseData(column.$local, 'target')
         const pitem: ColumnItemType = {
           dataIndex: currentProp,
-          title: column.$name.getValue(this.listProp),
+          title: column.$name,
           align: column.align,
           width: column.$width,
           ellipsis: column.ellipsis,

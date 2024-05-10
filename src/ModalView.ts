@@ -2,6 +2,7 @@ import { defineComponent, h, PropType } from "vue"
 import { Modal, ModalProps } from "ant-design-vue"
 import { deepCloneData, updateData } from "complex-utils"
 import { ButtonValue } from "complex-data"
+import { ButtonValueInitOption } from "complex-data/src/lib/ButtonValue"
 import ButtonView from "./ButtonView"
 import config from "../config"
 
@@ -20,7 +21,7 @@ export interface ModalViewProps {
   title?: string
   layout?: Partial<modalLayoutOption>
   menu?: (string | ButtonValue)[]
-  menuOption?: Record<string, ButtonValue>
+  menuOption?: Record<string, ButtonValueInitOption>
   submit?: () => Promise<unknown>
   modalProps?: ModalProps
 }
@@ -174,8 +175,8 @@ export default defineComponent({
             return h(ButtonView, {
               data: {
                 ...item,
-                click: payload => {
-                  this.onMenu(item.prop)
+                click: (payload: any) => {
+                  this.onMenu(item.prop!)
                   if (onClick) {
                     return onClick(payload)
                   }

@@ -8,6 +8,7 @@ import FormView from "../FormView"
 import ModelFormItem from "./ModelFormItem"
 import ContentFormItem from "./ContentFormItem"
 import DefaultEdit from "complex-data/src/dictionary/DefaultEdit"
+import GridParse from "complex-data/src/lib/GridParse"
 
 export interface FormItemPayloadType {
   prop: string
@@ -30,6 +31,7 @@ export interface AutoFormItemProps {
   list: ObserveList
   type: string
   target: InstanceType<typeof FormView>
+  gridParse?: GridParse
   choice?: number
   disabled?: boolean
   loading?: boolean
@@ -50,7 +52,7 @@ export default defineComponent({
       type: Object as PropType<AutoFormItemProps['list']>,
       required: true
     },
-    form: { // form数据{ data, num }
+    form: {
       type: Object as PropType<AutoFormItemProps['form']>,
       required: true
     },
@@ -61,6 +63,10 @@ export default defineComponent({
     target: { // FormView实例
       type: Object as PropType<AutoFormItemProps['target']>,
       required: true
+    },
+    gridParse: {
+      type: Object as PropType<AutoFormItemProps['gridParse']>,
+      required: false
     },
     choice: {
       type: Number,
@@ -128,25 +134,19 @@ export default defineComponent({
   render() {
     const parentRender = config.component.parseData(this.data.$renders, 'parent')
     if (!parentRender) {
-      const label = this.data.$name.getValue(this.type)
       const parentAttributes = new AttrsValue({
         class: ['complex-form-item'],
         props: {
           name: this.data.$prop,
-          label: label,
-          colon: this.data.colon.getValue(this.type),
-          required: this.data.required.getValue(this.type),
-          rules: (this.data instanceof DefaultEdit && this.data.$rules) ? this.data.$rules.getValue(this.type) : undefined
+          label: this.data.$name,
+          colon: this.data.colon,
+          required: this.data.required,
+          rules: this.data instanceof DefaultEdit ? this.data.$rules : undefined
         }
       })
-      if (this.target.layout === 'horizontal') {
-        parentAttributes.props.labelCol = config.parseGrid(this.data.$layout, 'label', this.type)
-        parentAttributes.props.wrapperCol = config.parseGrid(this.data.$layout, 'content', this.type)
-      } else if (this.target.layout === 'inline') {
-        const mainWidth = config.parseWidth(this.data.$layout, 'main', this.type)
-        if (mainWidth) {
-          parentAttributes.style.width = mainWidth
-        }
+      if (this.gridParse) {
+        parentAttributes.props.labelCol = this.gridParse!.parseData(this.data.$grid, 'label', this.type)
+        parentAttributes.props.wrapperCol = this.gridParse!.parseData(this.data.$grid, 'content', this.type)
       }
       const attrs = config.component.parseData(this.data.$local, 'parent')
       parentAttributes.merge(attrs)

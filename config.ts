@@ -2,19 +2,19 @@ import { h } from "vue"
 import { getType, camelToLine } from "complex-utils"
 import { PluginLayout } from "complex-plugin"
 import { ChoiceData, PaginationData, AttrsValue, DictionaryData } from "complex-data"
-import InterfaceLayoutValue from "complex-data/src/lib/InterfaceLayoutValue"
 import DefaultList from 'complex-data/src/dictionary/DefaultList'
-import { ButtonValue } from "complex-data/src/dictionary/DefaultEditButton"
+import { GridValue } from "complex-data/src/lib/GridParse"
+import { ButtonValueInitOption } from "complex-data/src/lib/ButtonValue"
 import { AutoIndex } from "complex-component"
 import componentConfig from "complex-component/config"
 import AutoText from "./src/AutoText.vue"
 import { modalLayoutOption } from "./src/ModalView"
 
 export class LayoutLifeData {
-  life: number
+  life: string
   data: number
   constructor() {
-    this.life = 0
+    this.life = ''
     this.data = 0
   }
   bind(layout: PluginLayout) {
@@ -22,12 +22,12 @@ export class LayoutLifeData {
       data: () => {
         this.data++
       }
-    }) as number
+    })!
   }
   unbind(layout: PluginLayout) {
     layout.offLife('recount', this.life)
     this.data = 0
-    this.life = 0
+    this.life = ''
   }
 }
 
@@ -49,26 +49,8 @@ const config = {
     // 将样式元素节点添加到页面头部
     document.head.appendChild(style)
   },
-  parseLayout(interfaceLayout: undefined | InterfaceLayoutValue, type?: string) {
-    if (interfaceLayout) {
-      return interfaceLayout.getValue(type)
-    } else {
-      return null
-    }
-  },
-  parseGrid(interfaceLayout: undefined | InterfaceLayoutValue, prop: 'main' | 'label' | 'content', type?: string) {
-    const layout = this.parseLayout(interfaceLayout, type)
-    if (layout && layout.grid[prop]) {
-      return layout.grid[prop]
-    } else {
-      return this.form.grid[prop]
-    }
-  },
-  parseWidth(interfaceLayout: undefined | InterfaceLayoutValue, prop: string, type?: string) {
-    const layout = this.parseLayout(interfaceLayout, type)
-    if (layout && layout.width[prop]) {
-      return layout.width[prop]
-    }
+  parseGrid(gridValue: GridValue) {
+    return gridValue
   },
   style: {
     color: {
@@ -107,8 +89,8 @@ const config = {
         column: DefaultList
       }
     }) {
-      if (payload.payload.column.show) {
-        text = payload.payload.column.show(text, payload)
+      if (payload.payload.column.parse) {
+        text = payload.payload.column.parse(text, payload)
       }
       if (getType(text) === 'object') {
         text = JSON.stringify(text)
@@ -120,7 +102,7 @@ const config = {
         text: text,
         auto: true,
         recount: layoutLifeData.data,
-        tip: column.tip,
+        tip: column.$tip,
         ...componentConfig.parseAttrs(attrs)
       })
     },
@@ -152,25 +134,9 @@ const config = {
     }
   },
   form: {
-    layout: 'horizontal',
-    layoutProps: {
-      gutter: 24
-    },
-    labelAlign: 'right',
     checkOnRuleChange: true,
     checkOnInit: false,
-    clearCheckOnInit: true,
-    grid: {
-      main: {
-        span: 24
-      },
-      label: {
-        span: 8
-      },
-      content: {
-        span: 16
-      }
-    }
+    clearCheckOnInit: true
   },
   modal: {
     width: 520,
@@ -199,8 +165,8 @@ const config = {
         name: '确认',
         prop: 'submit'
       }
-    },
-    getMenu(prop: string, targetOption?: Partial<ButtonValue>): ButtonValue {
+    } as Record<string, ButtonValueInitOption>,
+    getMenu(prop: string, targetOption?: Partial<ButtonValueInitOption>): ButtonValueInitOption {
       const data = this.menu[prop as keyof typeof config.modal.menu]
       if (data) {
         return {

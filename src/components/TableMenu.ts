@@ -1,10 +1,10 @@
 import { defineComponent, h, PropType } from "vue"
 import { camelToLine } from "complex-utils"
-import { PureButtonValue } from "complex-data/src/dictionary/DefaultEditButton"
+import { MenuValue } from "complex-data"
 import { tablePayload } from "../TableView"
 import { colorKeys } from "../../config"
 
-export interface tableButtonValue extends PureButtonValue<never, [tablePayload]> {
+export interface tableButtonValue extends MenuValue<never, [tablePayload]> {
   color?: | colorKeys
   hidden?: boolean | ((payload: tablePayload) => boolean)
   class?: string[] | ((payload: tablePayload) => string[])

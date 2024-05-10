@@ -82,7 +82,7 @@
 <template>
   <div class="complex-simple-table-content">
     <div class="complex-simple-table-content-column" v-for="column in columns" :class="'complex-simple-table-content-column-' + column.align || 'left'" :key="column.$prop" :style="rowWidth(column)" >
-      <div class="complex-simple-table-content-header">{{ column.$name.getValue(listProp) }}</div>
+      <div class="complex-simple-table-content-header">{{ column.$name }}</div>
       <div class="complex-simple-table-content-row" v-for="(val, key) in data" :key="key" >
         <AutoRender :render="parseRender(column, val, key)" />
       </div>
