@@ -71,36 +71,39 @@ export default defineComponent({
   },
   methods: {
     renderTable() {
-      const table = h(SimpleTableContent, {
-        columns: this.currentColumnList,
-        data: this.currentData,
-        listProp: this.listProp,
-        menu: this.menu,
-        id: this.listData.getDictionaryProp('id'),
-        index: {
-          prop: this.currentAuto.index.prop,
-          pagination: this.currentAuto.index.pagination ? this.currentPaginationData : undefined
-        },
-        onMenu(prop: string, payload: tablePayload) {
-          this.$emit('menu', prop, payload)
-        }
+      return h('div', { class: 'complex-table-content complex-simple-table-content' }, {
+        default: () => [
+          h(SimpleTableContent, {
+            columns: this.currentColumnList,
+            data: this.currentData,
+            listProp: this.listProp,
+            menu: this.menu,
+            id: this.listData.getDictionaryProp('id'),
+            index: {
+              prop: this.currentAuto.index.prop,
+              pagination: this.currentAuto.index.pagination ? this.currentPaginationData : undefined
+            },
+            onMenu(prop: string, payload: tablePayload) {
+              this.$emit('menu', prop, payload)
+            }
+          })
+        ]
       })
-      return table
     },
     renderFooter() {
-      const render = h('div', { class: 'complex-simple-table-footer' }, {
+      const render = h('div', { class: 'complex-table-footer complex-simple-table-footer' }, {
         default: () => [this.renderFooterLeft(), this.renderFooterRight()]
       })
       return render
     },
     renderFooterLeft() {
-      const render = h('div', { class: 'complex-simple-table-footer-left' }, {
+      const render = h('div', { class: 'complex-table-footer-left complex-simple-table-footer-left' }, {
         default: () => null
       })
       return render
     },
     renderFooterRight() {
-      const render = h('div', { class: 'complex-simple-table-footer-right' }, {
+      const render = h('div', { class: 'complex-table-footer-right complex-simple-table-footer-right' }, {
         default: () => [this.renderPagination()]
       })
       return render
@@ -157,7 +160,7 @@ export default defineComponent({
    * @returns {VNode}
    */
   render() {
-    const render = h('div', { class: 'complex-simple-table' }, {
+    const render = h('div', { class: 'complex-table complex-simple-table' }, {
       default: () => [this.renderTable(), this.renderFooter()]
     })
     return render

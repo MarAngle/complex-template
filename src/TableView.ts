@@ -247,10 +247,13 @@ export default defineComponent({
   },
   methods: {
     renderTable() {
-      const table = h(Table, {
-        ...this.currentTableProps
+      return h('div', { class: 'complex-table-content' }, {
+        default: () => [
+          h(Table, {
+            ...this.currentTableProps
+          })
+        ]
       })
-      return table
     },
     renderFooter() {
       const render = h('div', { class: 'complex-table-footer' }, {

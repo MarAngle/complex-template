@@ -2,12 +2,12 @@ import { defineComponent, h, PropType } from "vue"
 import { notice } from "complex-plugin"
 import { ComplexList } from "complex-data"
 import AutoSpin from "./components/AutoSpin.vue"
+import { FormItemPayloadType } from "./components/AutoFormItem"
 import SearchView, { SearchViewProps } from "./SearchView"
 import TableView, { tablePayload, TableViewProps } from "./TableView"
 import SimpleTableView from "./SimpleTableView"
 import ModalView, { ModalViewProps } from "./ModalView"
 import EditView, { EditViewProps } from "./EditView"
-import { FormItemPayloadType } from "./components/AutoFormItem"
 import config from "./../config"
 
 export interface ListModalViewProps extends ModalViewProps {

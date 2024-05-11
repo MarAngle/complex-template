@@ -12,17 +12,12 @@
   margin-left: 8px;
   cursor: pointer;
 }
-.complex-form .complex-form-item .ant-input-number {
-  width: 100%;
-}
 
-.complex-table .complex-table-footer {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
+.complex-table .complex-table-content {
+  width: 100%;
+  overflow: auto;
 }
-.complex-simple-table .complex-simple-table-footer {
+.complex-table .complex-table-footer {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -50,6 +45,9 @@
   width: 100%;
 }
 .complex-form-grid .complex-form-item .complex-form-item-date-range{
+  width: 100%;
+}
+.complex-form .complex-form-item .ant-input-number {
   width: 100%;
 }
 .complex-list{
