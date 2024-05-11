@@ -1,7 +1,7 @@
 import { defineComponent, h, PropType } from "vue"
-import { ButtonValue } from "complex-data"
+import { ButtonValue } from "complex-data/src/type"
 import { FileView } from "complex-component"
-import PureButton from "./components/PureButton"
+import MenuView from "./components/MenuView"
 
 export default defineComponent({
   name: 'ButtonView',
@@ -12,29 +12,29 @@ export default defineComponent({
     }
   },
   methods: {
-    renderFile() {
-      return h(FileView, {
-        class: 'complex-button-file',
-        ref: 'file',
-        ...this.data.fileOption,
-        onChange: (file: File) => {
-          (this.$refs.button as InstanceType<typeof PureButton>).operate = true
-          this.data.upload!(file).finally(() => {
-            (this.$refs.button as InstanceType<typeof PureButton>).operate = false
-          })
-        }
-      })
-    },
-    renderPureButton() {
-      return h(PureButton, {
+    renderMenu() {
+      return h(MenuView, {
         ...this.$attrs,
         data: this.data
       })
     },
-    renderUploadButton() {
-      return h(PureButton, {
+    renderFile() {
+      return h(FileView, {
+        class: 'complex-menu-file',
+        ref: 'file',
+        ...this.data.fileOption,
+        onChange: (file: File) => {
+          (this.$refs.menu as InstanceType<typeof MenuView>).operate = true
+          this.data.upload!(file).finally(() => {
+            (this.$refs.menu as InstanceType<typeof MenuView>).operate = false
+          })
+        }
+      })
+    },
+    renderUploadMenu() {
+      return h(MenuView, {
         ...this.$attrs,
-        ref: 'button',
+        ref: 'menu',
         data: this.data,
         onClick: () => {
           (this.$refs.file as InstanceType<typeof FileView>).$el.click()
@@ -44,9 +44,9 @@ export default defineComponent({
   },
   render() {
     if (!this.data.upload) {
-      return this.renderPureButton()
+      return this.renderMenu()
     } else {
-      return [this.renderFile(), this.renderUploadButton()]
+      return [this.renderFile(), this.renderUploadMenu()]
     }
   }
 })

@@ -2,14 +2,14 @@ import { defineComponent, h, PropType } from "vue"
 import { Button } from "ant-design-vue"
 import { ButtonType } from "ant-design-vue/es/button"
 import { isPromise } from "complex-utils"
-import { ButtonValue } from "complex-data"
+import { MenuValue } from "complex-data/src/type"
 import icon from "../../icon"
 
 export default defineComponent({
-  name: 'PureButton',
+  name: 'MenuView',
   props: {
     data: {
-      type: Object as PropType<ButtonValue<any>>,
+      type: Object as PropType<MenuValue<any>>,
       required: true
     }
   },
@@ -28,7 +28,7 @@ export default defineComponent({
         }
         const disabled = typeof this.data.disabled === 'function' ? this.data.disabled() : (this.data.disabled || false)
         const render = h(Button, {
-          class: 'complex-button',
+          class: 'complex-menu',
           loading: loading,
           type: type === 'danger' ? 'primary' : type as ButtonType,
           danger: type === 'danger',

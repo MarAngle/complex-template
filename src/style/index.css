@@ -1,7 +1,7 @@
 .complex-import .complex-import-file{
   display: none !important;
 }
-.complex-button-file{
+.complex-menu-file{
   display: none !important;
 }
 .complex-import .complex-import-content{
@@ -43,13 +43,13 @@
 .complex-form-inline .ant-form-item:not(.ant-form-item-with-help){
   margin-bottom: 24px;
 }
-.complex-form-horizontal .complex-form-item .complex-form-item-input-number{
+.complex-form-grid .complex-form-item .complex-form-item-input-number{
   width: 100%;
 }
-.complex-form-horizontal .complex-form-item .complex-form-item-date{
+.complex-form-grid .complex-form-item .complex-form-item-date{
   width: 100%;
 }
-.complex-form-horizontal .complex-form-item .complex-form-item-date-range{
+.complex-form-grid .complex-form-item .complex-form-item-date-range{
   width: 100%;
 }
 .complex-list{
