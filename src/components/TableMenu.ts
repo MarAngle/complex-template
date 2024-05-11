@@ -1,22 +1,22 @@
 import { defineComponent, h, PropType } from "vue"
 import { camelToLine } from "complex-utils"
-import { MenuValue } from "complex-data"
+import { MenuValue } from "complex-data/src/type"
 import { tablePayload } from "../TableView"
 import { colorKeys } from "../../config"
 
-export interface tableButtonValue extends MenuValue<never, [tablePayload]> {
+export interface TableMenuValue extends MenuValue<never, [tablePayload]> {
   color?: | colorKeys
   hidden?: boolean | ((payload: tablePayload) => boolean)
   class?: string[] | ((payload: tablePayload) => string[])
   option?: Record<string, unknown>
-  children?: tableButtonValue[]
+  children?: TableMenuValue[]
 }
 
 export default defineComponent({
   name: 'TableMenu',
   props: {
     list: {
-      type: Object as PropType<tableButtonValue[]>,
+      type: Object as PropType<TableMenuValue[]>,
       required: true
     },
     payload: {
@@ -25,7 +25,7 @@ export default defineComponent({
     }
   },
   methods: {
-    renderList(menuList: tableButtonValue[], payload: tablePayload) {
+    renderList(menuList: TableMenuValue[], payload: tablePayload) {
       const list: unknown[] = []
       for (let i = 0; i < menuList.length; i++) {
       const menuItem = menuList[i]

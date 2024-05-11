@@ -4,7 +4,7 @@ import { PluginLayout } from "complex-plugin"
 import { ChoiceData, PaginationData, AttrsValue, DictionaryData } from "complex-data"
 import DefaultList from 'complex-data/src/dictionary/DefaultList'
 import { GridValue } from "complex-data/src/lib/GridParse"
-import { ButtonValueInitOption } from "complex-data/src/lib/ButtonValue"
+import { MenuValue } from "complex-data/src/type"
 import { AutoIndex } from "complex-component"
 import componentConfig from "complex-component/config"
 import AutoText from "./src/AutoText.vue"
@@ -165,8 +165,8 @@ const config = {
         name: '确认',
         prop: 'submit'
       }
-    } as Record<string, ButtonValueInitOption>,
-    getMenu(prop: string, targetOption?: Partial<ButtonValueInitOption>): ButtonValueInitOption {
+    } as Record<string, MenuValue>,
+    getMenu(prop: string, targetOption?: Partial<MenuValue>): MenuValue {
       const data = this.menu[prop as keyof typeof config.modal.menu]
       if (data) {
         return {

@@ -1,8 +1,7 @@
 import { defineComponent, h, PropType } from "vue"
 import { Modal, ModalProps } from "ant-design-vue"
 import { deepCloneData, updateData } from "complex-utils"
-import { ButtonValue } from "complex-data"
-import { ButtonValueInitOption } from "complex-data/src/lib/ButtonValue"
+import { MenuValue } from "complex-data/src/type"
 import ButtonView from "./ButtonView"
 import config from "../config"
 
@@ -20,8 +19,8 @@ export interface ModalViewProps {
   width?: number
   title?: string
   layout?: Partial<modalLayoutOption>
-  menu?: (string | ButtonValue)[]
-  menuOption?: Record<string, ButtonValueInitOption>
+  menu?: (string | MenuValue)[] // 菜单列表，字符串则通过config.modal.getMenu实现
+  menuOption?: Record<string, Partial<MenuValue>> // 根据prop匹配菜单列表中的字符串数据获取的默认值，通过可选参数重写属性
   submit?: () => Promise<unknown>
   modalProps?: ModalProps
 }
@@ -76,7 +75,7 @@ export default defineComponent({
       return updateData(deepCloneData(config.modal.layout), this.layout)
     },
     menuList() {
-      let menuList: ButtonValue[]
+      let menuList: MenuValue[]
       const close = () => {
         this.hide('close')
       }

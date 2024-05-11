@@ -6,7 +6,7 @@ import { ComplexList, PaginationData } from "complex-data"
 import DefaultList from "complex-data/src/dictionary/DefaultList"
 import PaginationView from "./components/PaginationView"
 import ChoiceInfo from "./components/ChoiceInfo.vue"
-import TableMenu, { tableMenuType } from "./components/TableMenu"
+import TableMenu, { TableMenuValue } from "./components/TableMenu"
 import config, { LayoutLifeData } from "../config"
 
 type customRenderPayload = { text: unknown, record: Record<PropertyKey, unknown>, index: number }
@@ -42,7 +42,7 @@ export interface TableViewDefaultProps {
   columnList?: DefaultList[]
   data?: Record<PropertyKey, unknown>[]
   paginationData?: PaginationData
-  menu?: Record<string, tableMenuType[]>
+  menu?: Record<string, TableMenuValue[]>
   listProp?: string
   auto?: autoType
 }
