@@ -1,6 +1,7 @@
 import { Component, VNode, h } from 'vue';
-import { SearchOutlined, SettingOutlined, PlusOutlined, DeleteOutlined, ReloadOutlined, CloseOutlined, StopOutlined, DownloadOutlined, UploadOutlined, LinkOutlined } from '@ant-design/icons-vue';
-import { DefaultEditButtonOption } from 'complex-data/src/dictionary/DefaultEditButton';
+import { SearchOutlined, SettingOutlined, PlusOutlined, DeleteOutlined, ContainerOutlined, ReloadOutlined, CloseOutlined, StopOutlined, DownloadOutlined, UploadOutlined, LinkOutlined } from '@ant-design/icons-vue';
+import { MenuValue } from 'complex-data/src/type';
+
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const iconDict: Record<string, Component> = {
@@ -8,6 +9,7 @@ export const iconDict: Record<string, Component> = {
   setting: SettingOutlined,
   plus: PlusOutlined,
   delete: DeleteOutlined,
+  info: ContainerOutlined,
   refresh: ReloadOutlined,
   close: CloseOutlined,
   stop: StopOutlined,
@@ -17,7 +19,7 @@ export const iconDict: Record<string, Component> = {
 }
 
 const icon = {
-  parse(name: DefaultEditButtonOption['icon']) {
+  parse(name: MenuValue['icon']) {
     if (name) {
       if (typeof name === 'string') {
         if (iconDict[name]) {

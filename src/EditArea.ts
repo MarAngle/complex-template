@@ -3,15 +3,16 @@ import { DictionaryData, DictionaryValue, FormValue } from "complex-data"
 import ObserveList from "complex-data/src/dictionary/ObserveList"
 import EditView, { EditViewDefaultProps } from "./EditView"
 import { AutoItemPayloadType } from "./components/AutoItem"
+import { InfoAreaDefaultProps } from "./InfoArea"
+import config from "../config"
 
 type dataType = undefined | Record<PropertyKey, unknown>
 
-export interface EditAreaProps extends EditViewDefaultProps {
-  dictionary: DictionaryData
-  type?: string
-  observe?: boolean
+export interface EditAreaDefaultProps extends EditViewDefaultProps {
   form?: FormValue
-  inline?: boolean
+}
+export type EditAreaProps = EditViewDefaultProps & InfoAreaDefaultProps & {
+  form?: FormValue
 }
 
 export default defineComponent({
@@ -25,25 +26,34 @@ export default defineComponent({
       type: String,
       required: false
     },
-    menu: {
-      type: Object as PropType<EditAreaProps['menu']>,
-      required: false
-    },
     observe: {
       type: Boolean,
       required: false,
-      default: true
+      default: () => {
+        return config.edit.observe
+      }
+    },
+    inline: {
+      type: Boolean,
+      required: false,
+      default: () => {
+        return config.edit.inline
+      }
     },
     form: {
       type: Object as PropType<EditAreaProps['form']>,
       required: false
     },
-    labelAlign: { // label 标签的文本对齐方式
-      type: String as PropType<EditAreaProps['labelAlign']>,
+    formProps: { // form-model-view设置项
+      type: Object as PropType<EditAreaProps['formProps']>,
       required: false
     },
-    inline: {
-      type: Boolean,
+    menu: {
+      type: Object as PropType<EditAreaProps['menu']>,
+      required: false
+    },
+    labelAlign: { // label 标签的文本对齐方式
+      type: String as PropType<EditAreaProps['labelAlign']>,
       required: false
     },
     gridParse: {
@@ -52,10 +62,6 @@ export default defineComponent({
     },
     gridRowProps: { // form-model-view设置项
       type: Object as PropType<EditAreaProps['gridRowProps']>,
-      required: false
-    },
-    formProps: { // form-model-view设置项
-      type: Object as PropType<EditAreaProps['formProps']>,
       required: false
     },
     disabled: {

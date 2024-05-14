@@ -7,17 +7,20 @@ import GridParse from "complex-data/src/lib/GridParse"
 import AutoItem, { AutoItemProps } from "./components/AutoItem"
 import config from "../config"
 
-export interface InfoViewProps {
-  data: Record<PropertyKey, any>
-  list: ObserveList
+export interface InfoViewDefaultProps {
   menu?: DefaultInfo[]
-  type: string
   labelAlign?: 'middle' | 'right' | 'left'
   gridParse?: GridParse
   gridRowProps?: RowProps
-  infoAttrs?: AttrsValueInitOption
   disabled?: boolean
   loading?: boolean
+}
+
+export interface InfoViewProps extends InfoViewDefaultProps {
+  data: Record<PropertyKey, any>
+  list: ObserveList
+  type: string
+  infoAttrs?: AttrsValueInitOption
 }
 
 export default defineComponent({

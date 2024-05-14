@@ -64,6 +64,17 @@ const config = {
       secondaryText: 'rgba(0, 0, 0, 0.45)'
     }
   },
+  search: {
+    inline: false
+  },
+  edit: {
+    inline: false,
+    observe: false
+  },
+  info: {
+    inline: false,
+    observe: false
+  },
   table: {
     size: 'default',
     bordered: true,

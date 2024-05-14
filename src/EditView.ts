@@ -1,23 +1,16 @@
 import { defineComponent, h, PropType } from "vue"
 import { Col, Form, Row, FormProps, RowProps } from "ant-design-vue"
-import { FormLabelAlign } from "ant-design-vue/es/form/interface"
 import { mergeData } from "complex-utils"
 import { FormValue } from "complex-data"
 import ObserveList from "complex-data/src/dictionary/ObserveList"
 import DefaultInfo from "complex-data/src/dictionary/DefaultInfo"
-import GridParse from "complex-data/src/lib/GridParse"
 import AutoItem, { AutoItemProps } from "./components/AutoItem"
 import config from "../config"
+import { InfoViewDefaultProps } from "./InfoView"
 
-export interface EditViewDefaultProps {
-  menu?: DefaultInfo[]
-  labelAlign?: FormLabelAlign
-  gridParse?: GridParse
-  gridRowProps?: RowProps
+export interface EditViewDefaultProps extends InfoViewDefaultProps {
   formProps?: FormProps
   choice?: number
-  disabled?: boolean
-  loading?: boolean
 }
 
 export interface EditViewProps extends EditViewDefaultProps {

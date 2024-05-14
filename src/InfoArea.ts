@@ -1,15 +1,23 @@
 import { defineComponent, h, PropType } from "vue"
-import { DictionaryData, DictionaryValue, FormValue } from "complex-data"
+import { DictionaryData, DictionaryValue } from "complex-data"
 import ObserveList from "complex-data/src/dictionary/ObserveList"
-import InfoView, { InfoViewProps } from "./InfoView"
+import { AttrsValueInitOption } from "complex-data/src/lib/AttrsValue"
+import InfoView, { InfoViewDefaultProps } from "./InfoView"
 import { AutoItemPayloadType } from "./components/AutoItem"
+import config from "../config"
 
 type dataType = undefined | Record<PropertyKey, unknown>
 
-export interface InfoAreaProps extends InfoViewProps {
+export interface InfoAreaDefaultProps extends InfoViewDefaultProps {
   dictionary: DictionaryData
+  type?: string
   observe?: boolean
   inline?: boolean
+}
+
+export interface InfoAreaProps extends InfoAreaDefaultProps {
+  data?: Record<PropertyKey, any>
+  infoAttrs?: AttrsValueInitOption
 }
 
 export default defineComponent({
@@ -19,30 +27,35 @@ export default defineComponent({
       type: Object as PropType<InfoAreaProps['dictionary']>,
       required: true
     },
+    type: {
+      type: String,
+      required: false
+    },
     observe: {
       type: Boolean,
       required: false,
-      default: false
+      default: () => {
+        return config.info.observe
+      }
     },
     inline: {
       type: Boolean,
-      required: false
+      required: false,
+      default: () => {
+        return config.info.inline
+      }
     },
     data: {
       type: Object as PropType<InfoAreaProps['data']>,
-      required: true
+      required: false
     },
-    list: {
-      type: Object as PropType<InfoAreaProps['list']>,
-      required: true
+    infoAttrs: {
+      type: Object as PropType<InfoAreaProps['infoAttrs']>,
+      required: false
     },
     menu: {
       type: Object as PropType<InfoAreaProps['menu']>,
       required: false
-    },
-    type: {
-      type: String,
-      required: true
     },
     labelAlign: { // label 标签的文本对齐方式
       type: String as PropType<InfoAreaProps['labelAlign']>,
@@ -55,10 +68,6 @@ export default defineComponent({
     },
     gridRowProps: { // gridRowProps设置项
       type: Object as PropType<InfoAreaProps['gridRowProps']>,
-      required: false
-    },
-    infoAttrs: {
-      type: Object as PropType<InfoAreaProps['infoAttrs']>,
       required: false
     },
     disabled: {
@@ -104,7 +113,7 @@ export default defineComponent({
     renderInfo() {
       if (this.list) {
         const form = h(InfoView, {
-          data: this.currentData,
+          data: this.currentData!,
           list: this.list as ObserveList,
           menu: this.menu,
           type: this.currentType,

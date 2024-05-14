@@ -2,12 +2,13 @@ import { defineComponent, h, PropType } from "vue"
 import { notice } from "complex-plugin"
 import { ComplexList } from "complex-data"
 import AutoSpin from "./components/AutoSpin.vue"
-import { AutoItemPayloadType } from "./components/AutoItem"
-import SearchArea, { SearchAreaProps } from "./SearchArea"
 import TableView, { tablePayload, TableViewProps } from "./TableView"
 import SimpleTableView from "./SimpleTableView"
 import ModalView, { ModalViewProps } from "./ModalView"
+import SearchArea, { SearchAreaProps } from "./SearchArea"
 import EditArea, { EditAreaProps } from "./EditArea"
+import InfoArea, { InfoAreaProps } from "./InfoArea"
+import { AutoItemPayloadType } from "./components/AutoItem"
 import config from "./../config"
 
 export interface ListModalViewProps extends ModalViewProps {
@@ -20,7 +21,7 @@ export type componentsProps = {
   editModal?: Partial<ListModalViewProps>
   edit?: Partial<EditAreaProps>
   infoModal?: Partial<ListModalViewProps>
-  info?: Record<string, unknown>
+  info?: Partial<InfoAreaProps>
   childModal?: Partial<ListModalViewProps>
   child?: Partial<ListViewProps>
 }
@@ -105,10 +106,9 @@ export default defineComponent({
     renderSearch() {
       if (this.currentComponents.indexOf('search') > -1 && this.listData.$module.search) {
         return h(SearchArea, {
-          ref: 'search-view',
+          ref: 'search',
           search: this.listData.$module.search,
           choice: this.choiceSize,
-          inline: true,
           loading: this.operate === 'ing',
           onMenu: this.onSearchMenu,
           ...this.currentComponentsProps.search
@@ -128,6 +128,7 @@ export default defineComponent({
     renderTable() {
       if (this.currentComponents.indexOf('table') > -1) {
         const tableOption = {
+          ref: 'table',
           listData: this.listData,
           onMenu: (prop: string, payload: tablePayload) => {
             this.onTableMenu(prop, payload)
@@ -141,26 +142,51 @@ export default defineComponent({
         return null
       }
     },
+    renderInfo() {
+      if (this.currentComponents.indexOf('info') > -1) {
+        return h(
+          ModalView,
+          {
+            ref: 'info-modal',
+            menu: ['close'],
+            ...this.currentComponentsProps.infoModal
+          },
+          {
+            default: () => {
+              return h(InfoArea, {
+                ref: 'info',
+                dictionary: this.listData.$module.dictionary!,
+                loading: this.operate === 'ing',
+                ...this.currentComponentsProps.info
+              })
+            }
+          }
+        )
+      } else {
+        return null
+      }
+    },
     renderEdit() {
       if (this.currentComponents.indexOf('edit') > -1) {
-        const editModalOption = {
-          ref: 'edit-modal',
-          menu: ['cancel', 'submit'],
-          submit: this.editSubmit,
-          ...this.currentComponentsProps.editModal
-        }
-        const editModalSlot = {
-          default: () => {
-            const editFormOption = {
-              ref: 'edit-view',
-              dictionary: this.listData.$module.dictionary!,
-              loading: this.operate === 'ing',
-              ...this.currentComponentsProps.edit
+        return h(
+          ModalView,
+          {
+            ref: 'edit-modal',
+            menu: ['cancel', 'submit'],
+            submit: this.onEditSubmit,
+            ...this.currentComponentsProps.editModal
+          },
+          {
+            default: () => {
+              return h(EditArea, {
+                ref: 'edit',
+                dictionary: this.listData.$module.dictionary!,
+                loading: this.operate === 'ing',
+                ...this.currentComponentsProps.edit
+              })
             }
-            return h(EditArea, editFormOption)
           }
-        }
-        return h(ModalView, editModalOption, editModalSlot)
+        )
       } else {
         return null
       }
@@ -179,7 +205,9 @@ export default defineComponent({
       } else if (prop === '$reset') {
         this.listData.resetSearch()
       } else if (prop === '$build') {
-        this.onEdit()
+        this.openEdit()
+      } else if (prop === '$info') {
+        this.openInfo()
       } else if (prop === '$delete') {
         notice.confirm('确认进行删除操作吗？', '警告', (act: string) => {
           if (act === 'ok') {
@@ -193,7 +221,7 @@ export default defineComponent({
     onTableMenu(prop: string, payload?: tablePayload) {
       this.$emit('menu', 'table', prop, payload)
       if (prop === '$change') {
-        this.onEdit(payload!.targetData)
+        this.openEdit(payload!.targetData)
       } else if (prop === '$delete') {
         notice.confirm('确认进行删除操作吗？', '警告', (act: string) => {
           if (act === 'ok') {
@@ -202,7 +230,39 @@ export default defineComponent({
         })
       }
     },
-    onEdit(record?: Record<PropertyKey, unknown>) {
+    refreshData(record: Record<PropertyKey, any>) {
+      if (!this.listData.$refreshData) {
+        this.showInfo(record)
+      } else {
+        this.listData.triggerMethod('$refreshData', [record], true).then(() => {
+          this.showInfo(record)
+        }).catch((err: unknown) => {
+          console.error(err)
+        })
+      }
+    },
+    openInfo(record?: Record<PropertyKey, any>) {
+      this.currentChoice ? this.currentChoice.list : []
+      if (!record) {
+        if (this.currentChoice && this.currentChoice.list.length === 1) {
+          record = this.currentChoice.list[0]
+        } else {
+          notice.showMsg('详情界面需要先选择一条数据！', 'error')
+          return
+        }
+      }
+    },
+    showInfo(record: Record<PropertyKey, any>, type = 'info') {
+      let name = '详情'
+      if (this.currentComponentsProps.infoModal && this.currentComponentsProps.infoModal.formatName) {
+        name = this.currentComponentsProps.infoModal.formatName(name, type)
+      }
+      (this.$refs['info-modal'] as InstanceType<typeof ModalView>).show(name)
+      this.$nextTick(() => {
+        (this.$refs['info'] as InstanceType<typeof InfoArea>).show(type, record)
+      })
+    },
+    openEdit(record?: Record<PropertyKey, any>) {
       let type = 'build'
       let name = '新增'
       if (record) {
@@ -212,14 +272,17 @@ export default defineComponent({
       if (this.currentComponentsProps.editModal && this.currentComponentsProps.editModal.formatName) {
         name = this.currentComponentsProps.editModal.formatName(name, type)
       }
+      this.showEdit(name, type, record)
+    },
+    showEdit(name: string, type: string, record?: Record<PropertyKey, any>) {
       (this.$refs['edit-modal'] as InstanceType<typeof ModalView>).show(name)
       this.$nextTick(() => {
-        (this.$refs['edit-view'] as InstanceType<typeof EditArea>).show(type, record)
+        (this.$refs['edit'] as InstanceType<typeof EditArea>).show(type, record)
       })
     },
-    editSubmit() {
+    onEditSubmit() {
       return new Promise((resolve, reject) => {
-        (this.$refs['edit-view'] as InstanceType<typeof EditArea>).submit().then(res => {
+        (this.$refs['edit'] as InstanceType<typeof EditArea>).submit().then(res => {
           if (res.type === 'build') {
             this.listData.triggerMethod('$buildData', [res.targetData], true).then(() => {
               resolve(res)
@@ -249,7 +312,7 @@ export default defineComponent({
    */
   render() {
     const render = h('div', { class: 'complex-list', style: { position: 'relative' } }, {
-      default: () => [this.renderSpin(), this.renderSearch(), this.renderTop(), this.renderTable(), this.renderEdit(), this.renderChild()]
+      default: () => [this.renderSpin(), this.renderSearch(), this.renderTop(), this.renderTable(), this.renderEdit(), this.renderInfo(), this.renderChild()]
     })
     return render
   }

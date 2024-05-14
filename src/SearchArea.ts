@@ -1,8 +1,9 @@
 import { defineComponent, h, PropType } from "vue"
-import { SearchData } from "complex-data"
+import { DefaultInfo, SearchData } from "complex-data"
 import { DictionaryEditMod } from "complex-data/src/lib/DictionaryValue"
 import EditView, { EditViewDefaultProps } from "./EditView"
 import { AutoItemPayloadType } from "./components/AutoItem"
+import config from "../config"
 
 export interface SearchAreaProps extends EditViewDefaultProps {
   search: SearchData
@@ -21,6 +22,21 @@ export default defineComponent({
       type: Object as PropType<SearchAreaProps['searchMenu']>,
       required: false
     },
+    inline: {
+      type: Boolean,
+      required: false,
+      default: () => {
+        return config.search.inline
+      }
+    },
+    formProps: { // form-model-view设置项
+      type: Object as PropType<SearchAreaProps['formProps']>,
+      required: false
+    },
+    choice: {
+      type: Number,
+      required: false
+    },
     menu: {
       type: Object as PropType<SearchAreaProps['menu']>,
       required: false
@@ -29,24 +45,12 @@ export default defineComponent({
       type: String as PropType<SearchAreaProps['labelAlign']>,
       required: false
     },
-    inline: {
-      type: Boolean,
-      required: false
-    },
     gridParse: {
       type: Object as PropType<SearchAreaProps['gridParse']>,
       required: false
     },
     gridRowProps: { // form-model-view设置项
       type: Object as PropType<SearchAreaProps['gridRowProps']>,
-      required: false
-    },
-    formProps: { // form-model-view设置项
-      type: Object as PropType<SearchAreaProps['formProps']>,
-      required: false
-    },
-    choice: {
-      type: Number,
       required: false
     },
     disabled: {
@@ -66,11 +70,11 @@ export default defineComponent({
           menuOption = SearchData.$getMenu(menuOption)!
         }
         return menuOption
-      })
+      }) as DefaultInfo[]
     },
     currentMenu() {
       if (this.menu) {
-        return (this.currentSearchMenu as EditViewDefaultProps['menu'])!.concat(this.menu)
+        return this.currentSearchMenu!.concat(this.menu)
       } else {
         return this.currentSearchMenu
       }
