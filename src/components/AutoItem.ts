@@ -109,6 +109,9 @@ export default defineComponent({
         data: this.data,
         parent: this.parent,
       }
+    },
+    isEdit() {
+      return this.edit && ['button', 'buttonGroup', 'content'].indexOf((this.target as DictionaryEditMod).type) === -1
     }
   },
   methods: {
@@ -135,11 +138,12 @@ export default defineComponent({
       })
     },
     renderItem() {
-      if (this.edit) {
+      if (this.isEdit) {
         return h(AutoEditItem, {
           payload: this.payload as AutoItemPayloadType<true>
         })
       } else {
+        console.log(this.payload)
         return h(AutoInfoItem, {
           payload: this.payload as AutoItemPayloadType<false>
         })
@@ -152,10 +156,10 @@ export default defineComponent({
    * @returns {VNode}
    */
   render() {
-    const parentRender = config.component.parseData(this.target.$renders, 'parent')
-    if (!parentRender) {
-      if (this.edit && ['button', 'buttonGroup', 'content'].indexOf((this.target as DictionaryEditMod).type) === -1) {
-        const parentAttributes = new AttrsValue({
+    const mainRender = config.component.parseData(this.target.$renders, 'main')
+    if (!mainRender) {
+      if (this.isEdit) {
+        const mainAttributes = new AttrsValue({
           class: ['complex-auto-item'],
           props: {
             name: this.target.$prop,
@@ -166,24 +170,24 @@ export default defineComponent({
           }
         })
         if (this.gridParse) {
-          parentAttributes.props.labelCol = this.gridParse!.parseData(this.target.$grid, 'label', this.type)
-          parentAttributes.props.wrapperCol = this.gridParse!.parseData(this.target.$grid, 'content', this.type)
+          mainAttributes.props.labelCol = this.gridParse!.parseData(this.target.$grid, 'label', this.type)
+          mainAttributes.props.wrapperCol = this.gridParse!.parseData(this.target.$grid, 'content', this.type)
         }
-        parentAttributes.merge(config.component.parseData(this.target.$local, 'parent'))
-        return h(FormItem, config.component.parseAttrs(parentAttributes), { default: () => this.renderTip() })
+        mainAttributes.merge(config.component.parseData(this.target.$local, 'main'))
+        return h(FormItem, config.component.parseAttrs(mainAttributes), { default: () => this.renderTip() })
       } else {
-        const parentAttributes = new AttrsValue({
+        const mainAttributes = new AttrsValue({
           class: ['complex-auto-item']
         })
-        parentAttributes.merge(config.component.parseData(this.target.$local, 'parent'))
+        mainAttributes.merge(config.component.parseData(this.target.$local, 'main'))
         if (this.gridParse) {
-          return h(Row, config.component.parseAttrs(parentAttributes), { default: () => this.renderTip() })
+          return h(Row, config.component.parseAttrs(mainAttributes), { default: () => this.renderTip() })
         } else {
-          return h('div', config.component.parseAttrs(parentAttributes), { default: () => this.renderTip() })
+          return h('div', config.component.parseAttrs(mainAttributes), { default: () => this.renderTip() })
         }
       }
     } else {
-      return parentRender(this.payload)
+      return mainRender(this.payload)
     }
   }
 })

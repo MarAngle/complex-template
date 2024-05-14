@@ -1,7 +1,7 @@
 import { defineComponent, h, PropType } from "vue"
 import { Modal, ModalProps } from "ant-design-vue"
 import { deepCloneData, updateData } from "complex-utils"
-import { MenuValue } from "complex-data/src/type"
+import { MenuValue } from "complex-data/type"
 import ButtonView from "./ButtonView"
 import config from "../config"
 

@@ -117,7 +117,7 @@ export default defineComponent({
     submit(): Promise<{ targetData: Record<PropertyKey, unknown>, originData: dataType, type: string }> {
       return new Promise((resolve, reject) => {
         this.currentForm.validate().then(() => {
-          const postData = this.dictionary.createPostData(this.currentForm.getData(), this.dictionaryList as DictionaryValue[], this.currentType)
+          const postData = this.dictionary.createPostData(this.currentForm.getData(), this.dictionaryList as DictionaryValue[], this.currentType, this.observe ?( this.list as ObserveList) : undefined)
           resolve({ targetData: postData, originData: this.data, type: this.currentType })
         }).catch(err => {
           reject(err)

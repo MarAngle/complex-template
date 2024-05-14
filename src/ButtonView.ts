@@ -1,5 +1,5 @@
 import { defineComponent, h, PropType } from "vue"
-import { ButtonValue } from "complex-data/src/type"
+import { ButtonValue } from "complex-data/type"
 import { FileView } from "complex-component"
 import MenuView from "./components/MenuView"
 

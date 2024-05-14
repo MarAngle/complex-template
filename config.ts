@@ -4,7 +4,7 @@ import { PluginLayout } from "complex-plugin"
 import { ChoiceData, PaginationData, AttrsValue, DictionaryData } from "complex-data"
 import DefaultList from 'complex-data/src/dictionary/DefaultList'
 import { GridValue } from "complex-data/src/lib/GridParse"
-import { MenuValue } from "complex-data/src/type"
+import { MenuValue } from "complex-data/type"
 import { AutoIndex } from "complex-component"
 import componentConfig from "complex-component/config"
 import AutoText from "./src/AutoText.vue"

@@ -1,6 +1,6 @@
 import { Component, VNode, h } from 'vue';
 import { SearchOutlined, SettingOutlined, PlusOutlined, DeleteOutlined, ContainerOutlined, ReloadOutlined, CloseOutlined, StopOutlined, DownloadOutlined, UploadOutlined, LinkOutlined } from '@ant-design/icons-vue';
-import { MenuValue } from 'complex-data/src/type';
+import { MenuValue } from 'complex-data/type';
 
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

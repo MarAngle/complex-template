@@ -1,6 +1,6 @@
 import { defineComponent, h, PropType } from "vue"
 import { camelToLine } from "complex-utils"
-import { MenuValue } from "complex-data/src/type"
+import { MenuValue } from "complex-data/type"
 import { tablePayload } from "../TableView"
 import { colorKeys } from "../../config"
 

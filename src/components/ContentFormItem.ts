@@ -1,6 +1,6 @@
 import { defineComponent, h, PropType } from "vue"
 import { ButtonEdit } from "complex-data"
-import { ButtonValue } from "complex-data/src/type"
+import { ButtonValue } from "complex-data/type"
 import ButtonView from "../ButtonView"
 import config from "../../config"
 import { FormItemPayloadType } from "./AutoFormItem"

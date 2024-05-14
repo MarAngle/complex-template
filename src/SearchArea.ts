@@ -84,7 +84,7 @@ export default defineComponent({
     renderEdit() {
       const form = h(EditView, {
         form: this.search.$search.form,
-        list: this.search.$search.observe,
+        list: this.search.$search.list,
         type: this.search.$prop,
         menu: this.currentMenu,
         labelAlign: this.labelAlign,

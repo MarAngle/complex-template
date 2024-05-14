@@ -1,6 +1,6 @@
 import { defineComponent, h, PropType } from "vue"
 import { AttrsValue, ButtonEdit, ButtonGroupEdit, ContentEdit } from "complex-data"
-import { ButtonValue } from "complex-data/src/type"
+import { ButtonValue } from "complex-data/type"
 import { DictionaryEditMod } from "complex-data/src/lib/DictionaryValue"
 import ButtonView from "../ButtonView"
 import { AutoItemPayloadType } from "./AutoItem"
@@ -31,12 +31,14 @@ export default defineComponent({
   },
   methods: {
     renderLabel() {
+      console.log(this.payload.target.$name)
       const labelAttrs = config.component.parseData(this.payload.target.$local, 'label') || new AttrsValue()
       labelAttrs.pushClass('complex-auto-item-label')
       labelAttrs.pushClass(`complex-auto-item-${this.payload.parent.labelAlign }-label`)
       if (this.payload.target.colon) {
         labelAttrs.pushClass('complex-auto-item-colon-label')
       }
+      console.log(config.component.parseAttrs(labelAttrs))
       return h('div', config.component.parseAttrs(labelAttrs), {
         default: () => this.payload.target.$name
       })
@@ -49,6 +51,7 @@ export default defineComponent({
         })
       } else {
         const targetAttrs = config.component.parseData(this.payload.target.$local, 'target') || new AttrsValue()
+        console.log(this.payload.target instanceof ButtonEdit)
         if (this.payload.target instanceof ButtonEdit) {
           const option = {
             ...this.payload.target.$option
@@ -116,18 +119,17 @@ export default defineComponent({
    * @returns {VNode}
   */
   render() {
+    console.log(this.payload.parent.gridParse)
     // 布局/必选/禁用/：样式
-    if (this.payload.parent.gridParse) {
-      return [
-        h(Col, config.parseGrid(this.payload.parent.gridParse!.parseData(this.payload.target.$grid, 'label', this.payload.type)), {
-          default: () => this.renderLabel()
-        }),
-        h(Col, config.parseGrid(this.payload.parent.gridParse!.parseData(this.payload.target.$grid, 'content', this.payload.type)), {
-          default: () => this.renderContent()
-        }),
-      ]
-    } else {
-      return [this.renderLabel(), this.renderContent()]
-    }
+    const list = this.payload.parent.gridParse ? [
+      h(Col, config.parseGrid(this.payload.parent.gridParse!.parseData(this.payload.target.$grid, 'label', this.payload.type)), {
+        default: () => this.renderLabel()
+      }),
+      h(Col, config.parseGrid(this.payload.parent.gridParse!.parseData(this.payload.target.$grid, 'content', this.payload.type)), {
+        default: () => this.renderContent()
+      }),
+    ] : [this.renderLabel(), this.renderContent()]
+    console.log(list, this.payload)
+    return list
   }
 })
