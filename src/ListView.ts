@@ -81,10 +81,10 @@ export default defineComponent({
       return this.render || {}
     },
     currentChoice() {
-      return this.listData.$module.choice ? this.listData.$module.choice.getData() : undefined
+      return this.listData.getChoiceList()
     },
     choiceSize() {
-      return this.currentChoice ? this.currentChoice.id.length : undefined
+      return this.currentChoice ? this.currentChoice.length : undefined
     },
     currentSimpleTable() {
       if (this.simpleTable && this.currentChoice) {
@@ -209,13 +209,22 @@ export default defineComponent({
       } else if (prop === '$info') {
         this.openInfo()
       } else if (prop === '$delete') {
-        notice.confirm('确认进行删除操作吗？', '警告', (act: string) => {
-          if (act === 'ok') {
-            this.listData.triggerMethod('$multipleDeleteData', [this.currentChoice ? this.currentChoice.list : []], true)
-          }
-        })
+        this.deleteChoiceList()
       } else if (prop === '$export') {
         this.listData.triggerMethod('$exportData', [], true)
+      }
+    },
+    deleteChoiceList() {
+      if (this.choiceSize) {
+        notice.confirm('确认进行删除操作吗？', '警告', (act: string) => {
+          if (act === 'ok') {
+            this.listData.triggerMethod('$multipleDeleteData', [this.currentChoice], true).then(() => {
+              this.listData.resetChoice()
+            })
+          }
+        })
+      } else {
+        notice.showMsg('请先选择要删除的数据！', 'error')
       }
     },
     onTableMenu(prop: string, payload?: tablePayload) {
@@ -242,10 +251,9 @@ export default defineComponent({
       }
     },
     openInfo(record?: Record<PropertyKey, any>) {
-      this.currentChoice ? this.currentChoice.list : []
       if (!record) {
-        if (this.currentChoice && this.currentChoice.list.length === 1) {
-          record = this.currentChoice.list[0]
+        if (this.currentChoice && this.currentChoice.length === 1) {
+          record = this.currentChoice[0]
         } else {
           notice.showMsg('详情界面需要先选择一条数据！', 'error')
           return

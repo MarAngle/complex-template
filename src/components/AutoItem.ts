@@ -1,5 +1,5 @@
 import { defineComponent, h, PropType, VNode } from "vue"
-import { FormItem, Row, Tooltip } from "ant-design-vue"
+import { Col, FormItem, Row, Tooltip } from "ant-design-vue"
 import { AttrsValue, FormValue, DefaultInfo } from "complex-data"
 import ObserveList from "complex-data/src/dictionary/ObserveList"
 import DefaultEdit from "complex-data/src/dictionary/DefaultEdit"
@@ -9,7 +9,7 @@ import config from "../../config"
 import EditView from "../EditView"
 import InfoView from "../InfoView"
 import AutoEditItem from "./AutoEditItem"
-import AutoInfoItem from "./AutoInfoItem"
+import AutoInfoContent from "./AutoInfoContent"
 
 export interface AutoItemPayloadType<E = true> {
   prop: string
@@ -131,9 +131,13 @@ export default defineComponent({
       }
     },
     renderLabel() {
-      return h('div', {
-        class: ['complex-auto-item-label', this.target.colon ? 'complex-auto-item-colon-label' : '', `complex-auto-item-${this.parent.labelAlign }-label`]
-      }, {
+      const labelAttrs = config.component.parseData(this.target.$local, 'label') || new AttrsValue()
+      labelAttrs.pushClass('complex-auto-item-label')
+      labelAttrs.pushClass(`complex-auto-item-${this.parent.labelAlign }-label`)
+      if (this.target.colon) {
+        labelAttrs.pushClass('complex-auto-item-colon-label')
+      }
+      return h('div', config.component.parseAttrs(labelAttrs), {
         default: () => this.target.$name
       })
     },
@@ -143,8 +147,7 @@ export default defineComponent({
           payload: this.payload as AutoItemPayloadType<true>
         })
       } else {
-        console.log(this.payload)
-        return h(AutoInfoItem, {
+        return h(AutoInfoContent, {
           payload: this.payload as AutoItemPayloadType<false>
         })
       }
@@ -177,13 +180,25 @@ export default defineComponent({
         return h(FormItem, config.component.parseAttrs(mainAttributes), { default: () => this.renderTip() })
       } else {
         const mainAttributes = new AttrsValue({
-          class: ['complex-auto-item']
+          class: ['complex-auto-item', 'complex-auto-item-local']
         })
         mainAttributes.merge(config.component.parseData(this.target.$local, 'main'))
         if (this.gridParse) {
-          return h(Row, config.component.parseAttrs(mainAttributes), { default: () => this.renderTip() })
+          return h(Row, config.component.parseAttrs(mainAttributes), {
+            default: () => [
+              h(Col, config.parseGrid(this.payload.parent.gridParse!.parseData(this.payload.target.$grid, 'label', this.payload.type)), {
+                default: () => this.renderLabel()
+              }),
+              this.renderTip()
+            ]
+           })
         } else {
-          return h('div', config.component.parseAttrs(mainAttributes), { default: () => this.renderTip() })
+          return h('div', config.component.parseAttrs(mainAttributes), {
+            default: () => [
+              this.renderLabel(),
+              this.renderTip()
+            ]
+          })
         }
       }
     } else {

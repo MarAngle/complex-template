@@ -50,6 +50,13 @@
 .complex-edit .complex-edit-item .ant-input-number {
   width: 100%;
 }
+.complex-edit .complex-auto-item-local {
+  margin-bottom: 24px;
+}
+.complex-edit-inline .complex-auto-item-local {
+  margin-inline-end: 16px;
+}
+
 .complex-list{
   padding: 0 16px;
 }

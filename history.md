@@ -3,17 +3,18 @@
 - 通过antd实现基础主题色的设置:全局样式
 - EditView实现一键禁用?具体需求是实现Info?
 - table布局考虑计算准确性
-- 实现InfoView的展示，接收观察函数
-- 实现InfoItem/EditItem两个组件，form中不交互的值通过InfoItem实现
+- InfoItem的lable样式还原
 
 ### 
 
 ### 重要
 - SimpleTableView的插槽和菜单逻辑同步
 
-### 4.2.0-alpha
+### 4.2.1
 - 适配新版data
 - Table的滚动跟随列表而非检索和分页器
+- 实现InfoView的展示，接收观察函数
+- 实现InfoItem/EditItem两个组件，form中不交互的值通过InfoItem实现
 
 ### 4.1.4
 - Select的分页和插槽实现
