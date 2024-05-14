@@ -2,12 +2,12 @@ import { defineComponent, h, PropType } from "vue"
 import { notice } from "complex-plugin"
 import { ComplexList } from "complex-data"
 import AutoSpin from "./components/AutoSpin.vue"
-import { FormItemPayloadType } from "./components/AutoFormItem"
-import SearchView, { SearchViewProps } from "./SearchView"
+import { AutoItemPayloadType } from "./components/AutoItem"
+import SearchArea, { SearchAreaProps } from "./SearchArea"
 import TableView, { tablePayload, TableViewProps } from "./TableView"
 import SimpleTableView from "./SimpleTableView"
 import ModalView, { ModalViewProps } from "./ModalView"
-import EditView, { EditViewProps } from "./EditView"
+import EditArea, { EditAreaProps } from "./EditArea"
 import config from "./../config"
 
 export interface ListModalViewProps extends ModalViewProps {
@@ -15,10 +15,10 @@ export interface ListModalViewProps extends ModalViewProps {
 }
 
 export type componentsProps = {
-  search?: Partial<SearchViewProps>
+  search?: Partial<SearchAreaProps>
   table?: Partial<TableViewProps>
   editModal?: Partial<ListModalViewProps>
-  edit?: Partial<EditViewProps>
+  edit?: Partial<EditAreaProps>
   infoModal?: Partial<ListModalViewProps>
   info?: Record<string, unknown>
   childModal?: Partial<ListModalViewProps>
@@ -104,7 +104,7 @@ export default defineComponent({
     },
     renderSearch() {
       if (this.currentComponents.indexOf('search') > -1 && this.listData.$module.search) {
-        return h(SearchView, {
+        return h(SearchArea, {
           ref: 'search-view',
           search: this.listData.$module.search,
           choice: this.choiceSize,
@@ -157,7 +157,7 @@ export default defineComponent({
               loading: this.operate === 'ing',
               ...this.currentComponentsProps.edit
             }
-            return h(EditView, editFormOption)
+            return h(EditArea, editFormOption)
           }
         }
         return h(ModalView, editModalOption, editModalSlot)
@@ -172,7 +172,7 @@ export default defineComponent({
         return null
       }
     },
-    onSearchMenu(prop: string, payload: FormItemPayloadType) {
+    onSearchMenu(prop: string, payload: AutoItemPayloadType) {
       this.$emit('menu', 'search', prop, payload)
       if (prop === '$search') {
         this.listData.setSearch()
@@ -214,12 +214,12 @@ export default defineComponent({
       }
       (this.$refs['edit-modal'] as InstanceType<typeof ModalView>).show(name)
       this.$nextTick(() => {
-        (this.$refs['edit-view'] as InstanceType<typeof EditView>).show(type, record)
+        (this.$refs['edit-view'] as InstanceType<typeof EditArea>).show(type, record)
       })
     },
     editSubmit() {
       return new Promise((resolve, reject) => {
-        (this.$refs['edit-view'] as InstanceType<typeof EditView>).submit().then(res => {
+        (this.$refs['edit-view'] as InstanceType<typeof EditArea>).submit().then(res => {
           if (res.type === 'build') {
             this.listData.triggerMethod('$buildData', [res.targetData], true).then(() => {
               resolve(res)

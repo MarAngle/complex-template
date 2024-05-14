@@ -32,28 +32,28 @@
 .complex-pagination .complex-pagination-info{
   margin-right: 10px;
 }
-.complex-form-inline .ant-form-item.ant-form-item-with-help{
+.complex-edit-inline .ant-form-item.ant-form-item-with-help{
   margin-bottom: 0;
 }
-.complex-form-inline .ant-form-item:not(.ant-form-item-with-help){
+.complex-edit-inline .ant-form-item:not(.ant-form-item-with-help){
   margin-bottom: 24px;
 }
-.complex-form-grid .complex-form-item .complex-form-item-input-number{
+.complex-edit-grid .complex-edit-item .complex-edit-item-input-number{
   width: 100%;
 }
-.complex-form-grid .complex-form-item .complex-form-item-date{
+.complex-edit-grid .complex-edit-item .complex-edit-item-date{
   width: 100%;
 }
-.complex-form-grid .complex-form-item .complex-form-item-date-range{
+.complex-edit-grid .complex-edit-item .complex-edit-item-date-range{
   width: 100%;
 }
-.complex-form .complex-form-item .ant-input-number {
+.complex-edit .complex-edit-item .ant-input-number {
   width: 100%;
 }
 .complex-list{
   padding: 0 16px;
 }
-.complex-list .complex-search{
+.complex-list .complex-search-area{
   padding-top: 24px;
 }
 .complex-list-table-menu .complex-list-table-menu-item{

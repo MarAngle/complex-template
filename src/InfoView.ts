@@ -1,44 +1,38 @@
 import { defineComponent, h, PropType } from "vue"
-import { Col, Form, Row, FormProps, RowProps } from "ant-design-vue"
-import { FormLabelAlign } from "ant-design-vue/es/form/interface"
-import { mergeData } from "complex-utils"
-import { FormValue } from "complex-data"
+import { Col, Row, RowProps } from "ant-design-vue"
 import ObserveList from "complex-data/src/dictionary/ObserveList"
 import DefaultInfo from "complex-data/src/dictionary/DefaultInfo"
+import AttrsValue, { AttrsValueInitOption } from "complex-data/src/lib/AttrsValue"
 import GridParse from "complex-data/src/lib/GridParse"
 import AutoItem, { AutoItemProps } from "./components/AutoItem"
 import config from "../config"
 
-export interface EditViewDefaultProps {
+export interface InfoViewProps {
+  data: Record<PropertyKey, any>
+  list: ObserveList
   menu?: DefaultInfo[]
-  labelAlign?: FormLabelAlign
+  type: string
+  labelAlign?: 'middle' | 'right' | 'left'
   gridParse?: GridParse
   gridRowProps?: RowProps
-  formProps?: FormProps
-  choice?: number
+  infoAttrs?: AttrsValueInitOption
   disabled?: boolean
   loading?: boolean
 }
 
-export interface EditViewProps extends EditViewDefaultProps {
-  form: FormValue
-  list: ObserveList
-  type: string
-}
-
 export default defineComponent({
-  name: 'EditView',
+  name: 'InfoView',
   props: {
-    form: {
-      type: Object as PropType<EditViewProps['form']>,
+    data: {
+      type: Object as PropType<InfoViewProps['data']>,
       required: true
     },
     list: {
-      type: Object as PropType<EditViewProps['list']>,
+      type: Object as PropType<InfoViewProps['list']>,
       required: true
     },
     menu: {
-      type: Object as PropType<EditViewProps['menu']>,
+      type: Object as PropType<InfoViewProps['menu']>,
       required: false
     },
     type: {
@@ -46,24 +40,20 @@ export default defineComponent({
       required: true
     },
     labelAlign: { // label 标签的文本对齐方式
-      type: String as PropType<EditViewProps['labelAlign']>,
+      type: String as PropType<InfoViewProps['labelAlign']>,
       required: false,
       default: 'right'
     },
     gridParse: {
-      type: Object as PropType<EditViewProps['gridParse']>,
+      type: Object as PropType<InfoViewProps['gridParse']>,
       required: false
     },
-    gridRowProps: { // form-model-view设置项
-      type: Object as PropType<EditViewProps['gridRowProps']>,
+    gridRowProps: { // gridRowProps设置项
+      type: Object as PropType<InfoViewProps['gridRowProps']>,
       required: false
     },
-    formProps: { // form-model-view设置项
-      type: Object as PropType<EditViewProps['formProps']>,
-      required: false
-    },
-    choice: {
-      type: Number,
+    infoAttrs: {
+      type: Object as PropType<InfoViewProps['infoAttrs']>,
       required: false
     },
     disabled: {
@@ -76,14 +66,11 @@ export default defineComponent({
     }
   },
   computed: {
-    currentFormProps() {
-      const formProps = {
-        ref: 'form',
-        model: this.form.data,
-        layout: this.gridParse ? 'horizontal' : 'inline',
-        labelAlign: this.labelAlign
-      }
-      return mergeData(formProps, this.formProps!)
+    currentInfoAttrs() {
+      const layoutClass = `complex-info-${this.gridParse ? 'grid' : 'inline'}`
+      const currentInfoAttrs = new AttrsValue(this.infoAttrs)
+      currentInfoAttrs.pushClass(layoutClass)
+      return currentInfoAttrs
     },
     currentMenu() {
       if (this.menu) {
@@ -100,28 +87,24 @@ export default defineComponent({
       }
     }
   },
-  mounted () {
-    this.form.setRef(this.$refs[this.currentFormProps.ref])
-  },
   methods: {
     parseGrid(data: DefaultInfo) {
       return config.parseGrid(this.gridParse!.parseData(data.$grid, 'main', this.type))
     },
     getItemProps(data: DefaultInfo, index: number) {
       return {
-        edit: true,
+        edit: false,
         target: data,
         index: index,
         list: this.list,
         type: this.type,
-        choice: this.choice,
         gridParse: this.gridParse,
         disabled: this.disabled,
         loading: this.loading,
-        form: this.form,
-        data: undefined,
+        data: this.data,
+        form: undefined,
         parent: this
-      } as AutoItemProps<true>
+      } as AutoItemProps<false>
     },
     renderItem(item: DefaultInfo, index: number) {
       return h(AutoItem, this.getItemProps(item, index))
@@ -146,12 +129,8 @@ export default defineComponent({
    * @returns {VNode}
    */
   render() {
-    const layoutClass = `complex-edit-${this.gridParse ? 'grid' : 'inline'}`
     const list = this.renderList()
-    const render = h(Form, {
-      class: `complex-edit ${layoutClass}`,
-      ...this.currentFormProps
-    }, {
+    const render = h('div', config.component.parseAttrs(this.currentInfoAttrs), {
       default: () => {
         if (!this.gridParse) {
           return list

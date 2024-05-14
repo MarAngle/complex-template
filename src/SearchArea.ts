@@ -1,32 +1,32 @@
 import { defineComponent, h, PropType } from "vue"
 import { SearchData } from "complex-data"
 import { DictionaryEditMod } from "complex-data/src/lib/DictionaryValue"
-import FormView, { FormViewDefaultProps } from "./FormView"
-import { FormItemPayloadType } from "./components/AutoFormItem"
+import EditView, { EditViewDefaultProps } from "./EditView"
+import { AutoItemPayloadType } from "./components/AutoItem"
 
-export interface SearchViewProps extends FormViewDefaultProps {
+export interface SearchAreaProps extends EditViewDefaultProps {
   search: SearchData
   searchMenu?: (string | DictionaryEditMod)[]
   inline?: boolean
 }
 
 export default defineComponent({
-  name: 'SearchView',
+  name: 'SearchArea',
   props: {
     search: {
-      type: Object as PropType<SearchViewProps['search']>,
+      type: Object as PropType<SearchAreaProps['search']>,
       required: true
     },
     searchMenu: {
-      type: Object as PropType<SearchViewProps['searchMenu']>,
+      type: Object as PropType<SearchAreaProps['searchMenu']>,
       required: false
     },
     menu: {
-      type: Object as PropType<SearchViewProps['menu']>,
+      type: Object as PropType<SearchAreaProps['menu']>,
       required: false
     },
     labelAlign: { // label 标签的文本对齐方式
-      type: String as PropType<SearchViewProps['labelAlign']>,
+      type: String as PropType<SearchAreaProps['labelAlign']>,
       required: false
     },
     inline: {
@@ -34,15 +34,15 @@ export default defineComponent({
       required: false
     },
     gridParse: {
-      type: Object as PropType<SearchViewProps['gridParse']>,
+      type: Object as PropType<SearchAreaProps['gridParse']>,
       required: false
     },
     gridRowProps: { // form-model-view设置项
-      type: Object as PropType<SearchViewProps['gridRowProps']>,
+      type: Object as PropType<SearchAreaProps['gridRowProps']>,
       required: false
     },
     formProps: { // form-model-view设置项
-      type: Object as PropType<SearchViewProps['formProps']>,
+      type: Object as PropType<SearchAreaProps['formProps']>,
       required: false
     },
     choice: {
@@ -70,15 +70,15 @@ export default defineComponent({
     },
     currentMenu() {
       if (this.menu) {
-        return (this.currentSearchMenu as FormViewDefaultProps['menu'])!.concat(this.menu)
+        return (this.currentSearchMenu as EditViewDefaultProps['menu'])!.concat(this.menu)
       } else {
         return this.currentSearchMenu
       }
     },
   },
   methods: {
-    renderForm() {
-      const form = h(FormView, {
+    renderEdit() {
+      const form = h(EditView, {
         form: this.search.$search.form,
         list: this.search.$search.observe,
         type: this.search.$prop,
@@ -90,7 +90,7 @@ export default defineComponent({
         choice: this.choice,
         disabled: this.disabled,
         loading: this.loading,
-        onMenu: (prop: string, payload: FormItemPayloadType) => {
+        onMenu: (prop: string, payload: AutoItemPayloadType) => {
           this.$emit('menu', prop, payload)
         }
       })
@@ -98,6 +98,6 @@ export default defineComponent({
     }
   },
   render() {
-    return h('div', { class: 'complex-search' }, [this.renderForm()])
+    return h('div', { class: 'complex-search-area' }, [this.renderEdit()])
   }
 })

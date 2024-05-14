@@ -4,6 +4,7 @@
 - EditView实现一键禁用?具体需求是实现Info?
 - table布局考虑计算准确性
 - 实现InfoView的展示，接收观察函数
+- 实现InfoItem/EditItem两个组件，form中不交互的值通过InfoItem实现
 
 ### 
 

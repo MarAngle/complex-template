@@ -11,7 +11,7 @@ import DateEdit from "complex-data/src/dictionary/DateEdit"
 import DateRangeEdit from "complex-data/src/dictionary/DateRangeEdit"
 import FileEdit from "complex-data/src/dictionary/FileEdit"
 import CustomEdit from "complex-data/src/dictionary/CustomEdit"
-import { FormItemPayloadType } from './src/components/AutoFormItem'
+import { AutoItemPayloadType } from './src/components/AutoItem'
 
 const showLogs = {
   init: false,
@@ -56,10 +56,10 @@ interface dictItemType {
     change?: modelFuncDictType['change']
     select?: modelFuncDictType['select']
   },
-  format: (edit: DictionaryEditMod, payload: FormItemPayloadType) => AttrsValue
+  format: (edit: DictionaryEditMod, payload: AutoItemPayloadType) => AttrsValue
 }
 
-const bindEvent = function(dictItem: dictItemType, itemAttrs: AttrsValue, edit: DictionaryEditMod, payload: FormItemPayloadType) {
+const bindEvent = function(dictItem: dictItemType, itemAttrs: AttrsValue, edit: DictionaryEditMod, payload: AutoItemPayloadType) {
   const formData = payload.targetData
   const onData = dictItem.on
   if (dictItem.init) {
@@ -86,7 +86,7 @@ const dict = {
     on: {
       input: modelFuncDict.input
     },
-    format(edit: InputEdit, payload: FormItemPayloadType) {
+    format(edit: InputEdit, payload: AutoItemPayloadType) {
       const itemAttrs = new AttrsValue({
         props: {
           type: edit.$option.type,
@@ -105,7 +105,7 @@ const dict = {
     on: {
       change: modelFuncDict.change
     },
-    format(edit: InputNumberEdit, payload: FormItemPayloadType) {
+    format(edit: InputNumberEdit, payload: AutoItemPayloadType) {
       const itemAttrs = new AttrsValue({
         props: {
           min: edit.$option.min,
@@ -125,7 +125,7 @@ const dict = {
     on: {
       input: modelFuncDict.input
     },
-    format(edit: TextAreaEdit, payload: FormItemPayloadType) {
+    format(edit: TextAreaEdit, payload: AutoItemPayloadType) {
       const itemAttrs = new AttrsValue({
         props: {
           maxLength: edit.$option.size,
@@ -144,7 +144,7 @@ const dict = {
     on: {
       change: modelFuncDict.change
     },
-    format(edit: SwitchEdit, payload: FormItemPayloadType) {
+    format(edit: SwitchEdit, payload: AutoItemPayloadType) {
       const itemAttrs = new AttrsValue({
         props: {
           disabled: payload.disabled || edit.disabled
@@ -159,7 +159,7 @@ const dict = {
     on: {
       change: modelFuncDict.change
     },
-    format(edit: SelectEdit, payload: FormItemPayloadType) {
+    format(edit: SelectEdit, payload: AutoItemPayloadType) {
       const isLoading = edit.$load ? edit.$load.status === 'ing' : false
       const itemAttrs = new AttrsValue({
         props: {
@@ -184,7 +184,7 @@ const dict = {
     on: {
       change: modelFuncDict.change
     },
-    format(edit: SelectEdit<PropertyKey>, payload: FormItemPayloadType) {
+    format(edit: SelectEdit<PropertyKey>, payload: AutoItemPayloadType) {
       const isLoading = edit.$load ? edit.$load.status === 'ing' : false
       const itemAttrs = new AttrsValue({
         props: {
@@ -205,7 +205,7 @@ const dict = {
     on: {
       change: modelFuncDict.change
     },
-    format(edit: DateEdit, payload: FormItemPayloadType) {
+    format(edit: DateEdit, payload: AutoItemPayloadType) {
       const showTime = edit.$option.time ? {
         format: edit.$option.time.showFormat,
         defaultValue: dayjs(edit.$option.time.defaultValue, edit.$option.time.format)
@@ -230,7 +230,7 @@ const dict = {
     on: {
       change: modelFuncDict.change
     },
-    format(edit: DateRangeEdit, payload: FormItemPayloadType) {
+    format(edit: DateRangeEdit, payload: AutoItemPayloadType) {
       const showTime = edit.$option.time ? {
         format: edit.$option.time.showFormat,
         defaultValue: [dayjs(edit.$option.time!.defaultValue, edit.$option.time.format), dayjs(edit.$option.time!.defaultEndValue, edit.$option.time.format)]
@@ -255,10 +255,10 @@ const dict = {
     on: {
       select: modelFuncDict.select
     },
-    format(edit: FileEdit, payload: FormItemPayloadType) {
+    format(edit: FileEdit, payload: AutoItemPayloadType) {
       let layout = edit.$option.layout
       if (layout == 'auto') {
-        if (!payload.target.gridParse) {
+        if (!payload.parent.gridParse) {
           layout = 'end'
         } else {
           layout = 'bottom'
@@ -286,7 +286,7 @@ const dict = {
   $custom: {
     init: false,
     on: {},
-    format(edit: CustomEdit, payload: FormItemPayloadType) {
+    format(edit: CustomEdit, payload: AutoItemPayloadType) {
       const itemAttrs = new AttrsValue({
         props: {
           ...edit.$option,
@@ -299,7 +299,7 @@ const dict = {
   }
 }
 
-export const parseEditAttrs = function (edit: DictionaryEditMod, payload: FormItemPayloadType) {
+export const parseEditAttrs = function (edit: DictionaryEditMod, payload: AutoItemPayloadType) {
   if (edit.type === 'input') {
     return dict.$input.format(edit, payload)
   } else if (edit.type === 'inputNumber') {
