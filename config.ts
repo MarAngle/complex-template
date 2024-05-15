@@ -1,7 +1,7 @@
 import { h } from "vue"
 import { getType, camelToLine } from "complex-utils"
 import { PluginLayout } from "complex-plugin"
-import { ChoiceData, PaginationData, AttrsValue, DictionaryData } from "complex-data"
+import { ChoiceData, PaginationData, AttrsValue, DictionaryData, DictionaryValue } from "complex-data"
 import DefaultList from 'complex-data/src/dictionary/DefaultList'
 import { GridValue } from "complex-data/src/lib/GridParse"
 import { MenuValue } from "complex-data/type"
@@ -9,6 +9,7 @@ import { AutoIndex } from "complex-component"
 import componentConfig from "complex-component/config"
 import AutoText from "./src/AutoText.vue"
 import { modalLayoutOption } from "./src/ModalView"
+import { tablePayload } from "./src/TableView"
 
 export class LayoutLifeData {
   life: string
@@ -92,16 +93,15 @@ const config = {
         end: false
       }
     },
-    renderTableValue(text: unknown, payload: {
-      targetData: Record<PropertyKey, unknown>
-      type: string
-      index: number
-      payload: {
-        column: DefaultList
-      }
-    }) {
-      if (payload.payload.column.parse) {
-        text = payload.payload.column.parse(text, payload)
+    renderTableValue(text: unknown, payload: tablePayload) {
+      const target = payload.payload.target
+      if (target.parse) {
+        text = target.parse(text, payload)
+      } else {
+        const parent = target.$getParent() as DictionaryValue
+        if (parent && parent.parse) {
+          text = parent.parse(text, payload)
+        }
       }
       if (getType(text) === 'object') {
         text = JSON.stringify(text)

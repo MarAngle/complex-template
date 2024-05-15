@@ -9,9 +9,9 @@
   },
   "dependencies": {
     "ant-design-vue": "^4.2.1",
-    "complex-data": "4.2.13 - 4.2.99",
-    "complex-plugin": "4.2.2 - 4.2.99",
-    "complex-component": "4.2.0 - 4.2.99"
+    "complex-data": "4.2.14 - 4.2.99",
+    "complex-plugin": "4.2.3 - 4.2.99",
+    "complex-component": "4.2.1 - 4.2.99"
   },
   "devDependencies": {
     "typescript": "^5.2.2"

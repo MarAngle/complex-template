@@ -15,6 +15,7 @@
 - 实现InfoView的展示，接收观察函数
 - 实现InfoItem/EditItem两个组件，form中不交互的值通过InfoItem实现
 - InfoItem的lable样式还原
+- 简化Attrs调用
 
 ### 4.1.4
 - Select的分页和插槽实现

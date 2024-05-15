@@ -81,10 +81,10 @@
 
 <template>
   <div class="complex-simple-table-content">
-    <div class="complex-simple-table-content-column" v-for="column in columns" :class="'complex-simple-table-content-column-' + column.align || 'left'" :key="column.$prop" :style="rowWidth(column)" >
-      <div class="complex-simple-table-content-header">{{ column.$name }}</div>
+    <div class="complex-simple-table-content-column" v-for="target in columns" :class="'complex-simple-table-content-column-' + target.align || 'left'" :key="target.$prop" :style="rowWidth(target)" >
+      <div class="complex-simple-table-content-header">{{ target.$name }}</div>
       <div class="complex-simple-table-content-row" v-for="(val, key) in data" :key="key" >
-        <AutoRender :render="parseRender(column, val, key)" />
+        <AutoRender :render="parseRender(target, val, key)" />
       </div>
     </div>
   </div>
@@ -146,29 +146,29 @@ export default defineComponent({
     this.layoutLifeData.unbind(this.pluginLayout as PluginLayout)
   },
   methods: {
-    rowWidth(column: DefaultList) {
+    rowWidth(target: DefaultList) {
       const style: Record<string, string | number> = {}
-      if (column.$width !== undefined) {
-        if (typeof column.$width === 'number') {
-          style.width = config.component.data.formatPixel(column.$width)
+      if (target.$width !== undefined) {
+        if (typeof target.$width === 'number') {
+          style.width = config.component.data.formatPixel(target.$width)
         } else {
-          style.width = column.$width
+          style.width = target.$width
         }
       }
       return style
     },
-    parseRender(column: DefaultList, record: Record<PropertyKey, unknown>, index: number) {
+    parseRender(target: DefaultList, record: Record<PropertyKey, unknown>, index: number) {
       const payload: tablePayload = {
         targetData: record,
         type: this.listProp,
         index: index,
-        payload: { column: column }
+        payload: { target: target }
       }
-      const text = config.table.renderTableValue(record[column.$prop], payload)
-      const targetRender = config.component.parseData(column.$renders, 'target')
-      const pureRender = config.component.parseData(column.$renders, 'pure')
-      const menuOption = config.component.parseData(this.menu, column.$prop)
-      const attrs = config.component.parseData(column.$local, 'target')
+      const text = config.table.renderTableValue(record[target.$prop], payload)
+      const targetRender = config.component.parseData(target.$renders, 'target')
+      const pureRender = config.component.parseData(target.$renders, 'pure')
+      const menuOption = config.component.parseData(this.menu, target.$prop)
+      const attrs = config.component.parseData(target.$local, 'target')
       if (pureRender) {
         return () => {
           return pureRender({
@@ -193,14 +193,14 @@ export default defineComponent({
             }
           })
         }
-      } else if (this.index && column.$prop === this.index.prop) {
+      } else if (this.index && target.$prop === this.index.prop) {
         return () => {
           return config.table.renderIndex(record, index, this.index!.pagination)
         }
-      } else if (column.ellipsis && column.auto) {
+      } else if (target.ellipsis && target.auto) {
         // 自动省略切自动换行
         return () => {
-          return config.table.renderAutoText(text as string, column, this.layoutLifeData, attrs)
+          return config.table.renderAutoText(text as string, target, this.layoutLifeData, attrs)
         }
       } else {
         return () => {

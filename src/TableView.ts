@@ -33,7 +33,7 @@ export type tablePayload = {
   type: string
   index: number
   payload: {
-    column: DefaultList
+    target: DefaultList
   }
 }
 
@@ -122,23 +122,23 @@ export default defineComponent({
       const list = []
       const columnList = this.columnList || this.listData.getDictionaryPageList(this.listProp) as DefaultList[]
       for (let i = 0; i < columnList.length; i++) {
-        const column = columnList[i]
-        const currentProp = column.$prop
-        const targetRender = this.$slots[currentProp] || config.component.parseData(column.$renders, 'target')
-        const pureRender = config.component.parseData(column.$renders, 'pure')
+        const target = columnList[i]
+        const currentProp = target.$prop
+        const targetRender = this.$slots[currentProp] || config.component.parseData(target.$renders, 'target')
+        const pureRender = config.component.parseData(target.$renders, 'pure')
         const menuOption = config.component.parseData(this.menu, currentProp)
-        const attrs = config.component.parseData(column.$local, 'target')
-        const pitem: ColumnItemType = {
+        const attrs = config.component.parseData(target.$local, 'target')
+        const columnItem: ColumnItemType = {
           dataIndex: currentProp,
-          title: column.$name,
-          align: column.align,
-          width: column.$width,
-          ellipsis: column.ellipsis,
+          title: target.$name,
+          align: target.align,
+          width: target.$width,
+          ellipsis: target.ellipsis,
           ...config.component.parseAttrs(attrs)
         }
         if (!pureRender) {
           if (!menuOption || targetRender) {
-            pitem.customRender = ({ text, record, index }: customRenderPayload) => {
+            columnItem.customRender = ({ text, record, index }: customRenderPayload) => {
               if (currentProp === this.currentAuto.index.prop && !targetRender) {
                 // 自动index
                 return config.table.renderIndex(record, index, this.currentAuto.index.pagination ? this.currentPaginationData : undefined)
@@ -147,7 +147,7 @@ export default defineComponent({
                 targetData: record,
                 type: this.listProp,
                 index: index,
-                payload: { column: column }
+                payload: { target: target }
               }
               text = config.table.renderTableValue(text, payload)
               if (targetRender) {
@@ -157,19 +157,19 @@ export default defineComponent({
                   payload
                 })
               }
-              if (pitem.ellipsis && column.auto) {
+              if (columnItem.ellipsis && target.auto) {
                 // 自动省略切自动换行
-                return config.table.renderAutoText(text as string, column, this.layoutLifeData, attrs)
+                return config.table.renderAutoText(text as string, target, this.layoutLifeData, attrs)
               }
               return text
             }
           } else {
-            pitem.customRender = ({ record, index }: customRenderPayload) => {
+            columnItem.customRender = ({ record, index }: customRenderPayload) => {
               const payload: tablePayload = {
                 targetData: record,
                 type: this.listProp,
                 index: index,
-                payload: { column: column }
+                payload: { target: target }
               }
               return h(TableMenu, {
                 list: menuOption,
@@ -181,12 +181,12 @@ export default defineComponent({
             }
           }
         } else {
-          pitem.customRender = ({ text, record, index }: customRenderPayload) => {
+          columnItem.customRender = ({ text, record, index }: customRenderPayload) => {
             const payload: tablePayload = {
               targetData: record,
               type: this.listProp,
               index: index,
-              payload: { column: column }
+              payload: { target: target }
             }
             return pureRender({
               text: text,
@@ -194,7 +194,7 @@ export default defineComponent({
             })
           }
         }
-        list.push(pitem)
+        list.push(columnItem)
       }
       return list
     },

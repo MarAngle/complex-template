@@ -31,7 +31,7 @@ export default defineComponent({
         }
       })
     },
-    renderUploadMenu() {
+    renderFileMenu() {
       return h(MenuView, {
         ...this.$attrs,
         ref: 'menu',
@@ -46,7 +46,7 @@ export default defineComponent({
     if (!this.data.upload) {
       return this.renderMenu()
     } else {
-      return [this.renderFile(), this.renderUploadMenu()]
+      return [this.renderFile(), this.renderFileMenu()]
     }
   }
 })
