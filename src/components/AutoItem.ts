@@ -133,8 +133,8 @@ export default defineComponent({
     renderLabel() {
       const labelAttrs = config.component.parseData(this.target.$local, 'label') || new AttrsValue()
       labelAttrs.pushClass('complex-auto-item-label')
-      labelAttrs.pushClass(`complex-auto-item-${this.parent.labelAlign }-label`)
-      if (this.target.colon) {
+      labelAttrs.pushClass(`complex-auto-item-${this.parent.labelAlign}-label`)
+      if (this.target.colon && this.target.$name) {
         labelAttrs.pushClass('complex-auto-item-colon-label')
       }
       return h('div', config.component.parseAttrs(labelAttrs), {

@@ -9,7 +9,7 @@ import config from "../config"
 
 export interface InfoViewDefaultProps {
   menu?: DefaultInfo[]
-  labelAlign?: 'middle' | 'right' | 'left'
+  labelAlign?: 'center' | 'right' | 'left'
   gridParse?: GridParse
   gridRowProps?: RowProps
   disabled?: boolean
@@ -75,16 +75,9 @@ export default defineComponent({
       currentInfoAttrs.pushClass(layoutClass)
       return currentInfoAttrs
     },
-    currentMenu() {
-      if (this.menu) {
-        return this.menu
-      } else {
-        return null
-      }
-    },
     currentList() {
-      if (this.currentMenu && this.currentMenu.length > 0) {
-        return this.list.data.concat(this.currentMenu)
+      if (this.menu && this.menu.length > 0) {
+        return this.list.data.concat(this.menu)
       } else {
         return this.list.data
       }

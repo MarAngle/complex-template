@@ -6,8 +6,6 @@ import InfoView, { InfoViewDefaultProps } from "./InfoView"
 import { AutoItemPayloadType } from "./components/AutoItem"
 import config from "../config"
 
-type dataType = undefined | Record<PropertyKey, unknown>
-
 export interface InfoAreaDefaultProps extends InfoViewDefaultProps {
   dictionary: DictionaryData
   type?: string
@@ -82,52 +80,55 @@ export default defineComponent({
   data() {
     return {
       localType: undefined as undefined | string,
-      localData: undefined as dataType,
+      localData: undefined as undefined | Record<PropertyKey, any>,
       dictionaryList: [] as DictionaryValue[],
       list: undefined as undefined | ObserveList,
     }
   },
   computed: {
     currentType() {
-      return (this.localType || this.type) as string
+      return this.localType || this.type
     },
     currentData() {
       return this.localData || this.data
     },
   },
   mounted() {
-    if (this.type) {
+    if (this.currentType && this.currentData) {
       this.show()
     }
   },
   methods: {
-    show(type?: string, data?: dataType) {
+    show(type?: string, data?: Record<PropertyKey, any>) {
       this.localType = type
       this.localData = data || undefined
       this.init()
     },
     init() {
-      this.dictionaryList = this.dictionary.getList(this.currentType) 
-      this.list = this.dictionary.buildObserveList(this.currentType, this.dictionaryList as DictionaryValue[])
+      this.dictionaryList = this.dictionary.getList(this.currentType!) 
+      this.list = this.dictionary.buildObserveList(this.currentType!, this.dictionaryList as DictionaryValue[])
+      if (this.observe) {
+        this.list.startObserve(this.currentData!, this.currentType, false)
+      }
     },
     renderInfo() {
       if (this.list) {
-        const form = h(InfoView, {
+        const info = h(InfoView, {
           data: this.currentData!,
           list: this.list as ObserveList,
           menu: this.menu,
-          type: this.currentType,
+          type: this.currentType!,
           labelAlign: this.labelAlign,
-          gridParse: this.inline ? undefined : (this.gridParse || this.dictionary.$layout.grid.getValue(this.currentType)),
+          gridParse: this.inline ? undefined : (this.gridParse || this.dictionary.$layout.grid.getValue(this.currentType!)),
           gridRowProps: this.gridRowProps!,
           infoAttrs: this.infoAttrs,
           disabled: this.disabled,
           loading: this.loading,
-          onMenu: (prop: string, payload: AutoItemPayloadType<true>) => {
+          onMenu: (prop: string, payload: AutoItemPayloadType<false>) => {
             this.$emit('menu', prop, payload)
           }
         })
-        return form
+        return info
       } else {
         return null
       }

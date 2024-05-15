@@ -5,8 +5,8 @@ import { FormValue } from "complex-data"
 import ObserveList from "complex-data/src/dictionary/ObserveList"
 import DefaultInfo from "complex-data/src/dictionary/DefaultInfo"
 import AutoItem, { AutoItemProps } from "./components/AutoItem"
-import config from "../config"
 import { InfoViewDefaultProps } from "./InfoView"
+import config from "../config"
 
 export interface EditViewDefaultProps extends InfoViewDefaultProps {
   formProps?: FormProps
@@ -78,16 +78,9 @@ export default defineComponent({
       }
       return mergeData(formProps, this.formProps!)
     },
-    currentMenu() {
-      if (this.menu) {
-        return this.menu
-      } else {
-        return null
-      }
-    },
     currentList() {
-      if (this.currentMenu && this.currentMenu.length > 0) {
-        return this.list.data.concat(this.currentMenu)
+      if (this.menu && this.menu.length > 0) {
+        return this.list.data.concat(this.menu)
       } else {
         return this.list.data
       }

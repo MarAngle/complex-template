@@ -237,14 +237,16 @@ export default defineComponent({
             this.listData.triggerMethod('$deleteData', [payload!.targetData], true)
           }
         })
+      } else if (prop === '$info') {
+        this.openInfo(payload!.targetData)
       }
     },
-    refreshData(record: Record<PropertyKey, any>) {
+    refreshData(record: Record<PropertyKey, any>, next: (record: Record<PropertyKey, any>) => void) {
       if (!this.listData.$refreshData) {
-        this.showInfo(record)
+        next(record)
       } else {
         this.listData.triggerMethod('$refreshData', [record], true).then(() => {
-          this.showInfo(record)
+          next(record)
         }).catch((err: unknown) => {
           console.error(err)
         })
@@ -259,6 +261,9 @@ export default defineComponent({
           return
         }
       }
+      this.refreshData(record, (record) => {
+        this.showInfo(record)
+      })
     },
     showInfo(record: Record<PropertyKey, any>, type = 'info') {
       let name = '详情'
@@ -280,7 +285,13 @@ export default defineComponent({
       if (this.currentComponentsProps.editModal && this.currentComponentsProps.editModal.formatName) {
         name = this.currentComponentsProps.editModal.formatName(name, type)
       }
-      this.showEdit(name, type, record)
+      if (record) {
+        this.refreshData(record, (record) => {
+          this.showEdit(name, type, record)
+        })
+      } else {
+        this.showEdit(name, type, record)
+      }
     },
     showEdit(name: string, type: string, record?: Record<PropertyKey, any>) {
       (this.$refs['edit-modal'] as InstanceType<typeof ModalView>).show(name)

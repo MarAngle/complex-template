@@ -56,6 +56,31 @@
 .complex-edit-inline .complex-auto-item-local {
   margin-inline-end: 16px;
 }
+.complex-auto-item-label{
+  position: relative;
+  display: inline-flex;
+}
+.complex-auto-item-label{
+  position: relative;
+  display: inline-flex;
+}
+.complex-auto-item-left-label{
+  text-align: left;
+}
+.complex-auto-item-center-label{
+  text-align: center;
+}
+.complex-auto-item-right-label{
+  text-align: right;
+}
+.complex-auto-item-colon-label::after{
+  display: inline-block;
+  content: ":";
+  position: relative;
+  margin-block: 0;
+  margin-inline-start: 2px;
+  margin-inline-end: 8px;
+}
 
 .complex-list{
   padding: 0 16px;
