@@ -72,6 +72,7 @@ export default defineComponent({
     currentInfoAttrs() {
       const layoutClass = `complex-info-${this.gridParse ? 'grid' : 'inline'}`
       const currentInfoAttrs = new AttrsValue(this.infoAttrs)
+      currentInfoAttrs.pushClass('complex-info')
       currentInfoAttrs.pushClass(layoutClass)
       return currentInfoAttrs
     },
@@ -126,17 +127,10 @@ export default defineComponent({
    */
   render() {
     const list = this.renderList()
-    const render = h('div', config.component.parseAttrs(this.currentInfoAttrs), {
-      default: () => {
-        if (!this.gridParse) {
-          return list
-        } else {
-          return h(Row, { ...this.gridRowProps }, {
-            default: () => list
-          })
-        }
-      }
-    })
-    return render
+    return h('div', config.component.parseAttrs(this.currentInfoAttrs), this.gridParse ? [
+      h(Row, { ...this.gridRowProps }, {
+        default: () => list
+      })
+    ] : list)
   }
 })

@@ -50,12 +50,13 @@
 .complex-edit .complex-edit-item .ant-input-number {
   width: 100%;
 }
-.complex-edit .complex-auto-item-local {
+.complex-edit .complex-auto-item-local,.complex-info .complex-auto-item-local {
   margin-bottom: 24px;
 }
-.complex-edit-inline .complex-auto-item-local {
+.complex-edit-inline .complex-auto-item-local,.complex-info-inline .complex-auto-item-local {
   margin-inline-end: 16px;
 }
+
 .complex-auto-item-label{
   position: relative;
   display: inline-flex;
