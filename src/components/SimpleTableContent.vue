@@ -106,12 +106,7 @@ export default defineComponent({
   components: {
     AutoRender
   },
-  inject: ['pluginLayout'],
-  data () {
-    return {
-      layoutLifeData: new LayoutLifeData()
-    }
-  },
+  inject: ['providePluginLayout'],
   props: {
     columns: {
       type: Object as PropType<DefaultList[]>,
@@ -139,11 +134,21 @@ export default defineComponent({
       required: false
     }
   },
+  data () {
+    return {
+      layoutLifeData: new LayoutLifeData()
+    }
+  },
+  computed: {
+    injectPluginLayout() {
+      return this.providePluginLayout as PluginLayout
+    }
+  },
   mounted() {
-    this.layoutLifeData.bind(this.pluginLayout as PluginLayout)
+    this.layoutLifeData.bind(this.injectPluginLayout)
   },
   beforeMount() {
-    this.layoutLifeData.unbind(this.pluginLayout as PluginLayout)
+    this.layoutLifeData.unbind(this.injectPluginLayout)
   },
   methods: {
     rowWidth(target: DefaultList) {

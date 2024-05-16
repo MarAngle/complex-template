@@ -89,13 +89,16 @@ export default defineComponent({
       required: false
     }
   },
-  inject: ['pluginLayout'],
+  inject: ['providePluginLayout'],
   data () {
     return {
       layoutLifeData: new LayoutLifeData()
     }
   },
   computed: {
+    injectPluginLayout() {
+      return this.providePluginLayout as PluginLayout
+    },
     currentData () {
       if (this.data) {
         return this.data
@@ -240,10 +243,10 @@ export default defineComponent({
     },
   },
   mounted() {
-    this.layoutLifeData.bind(this.pluginLayout as PluginLayout)
+    this.layoutLifeData.bind(this.injectPluginLayout)
   },
   beforeMount() {
-    this.layoutLifeData.unbind(this.pluginLayout as PluginLayout)
+    this.layoutLifeData.unbind(this.injectPluginLayout)
   },
   methods: {
     renderTable() {
