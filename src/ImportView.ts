@@ -2,17 +2,18 @@ import { defineComponent, h, PropType, VNode } from "vue"
 import { Button } from "ant-design-vue"
 import { ButtonType } from "ant-design-vue/es/button"
 import { notice } from "complex-plugin"
-import { DefaultEditFileOption, uploadFileDataType } from "complex-data/src/dictionary/DefaultEditFile"
+import { FileEditOption } from "complex-data/src/dictionary/FileEdit"
 import { FileView } from "complex-component"
 import { FileProps } from "complex-component/src/type"
 import icon from "../icon"
+import { fileDataType } from "complex-data/type"
 
 export interface ImportProps extends FileProps{
-  name?: NonNullable<DefaultEditFileOption['button']>['name']
-  type?: NonNullable<DefaultEditFileOption['button']>['type']
-  icon?: NonNullable<DefaultEditFileOption['button']>['icon']
-  complex?: DefaultEditFileOption['complex']
-  upload?: DefaultEditFileOption['upload']
+  name?: NonNullable<FileEditOption['button']>['name']
+  type?: NonNullable<FileEditOption['button']>['type']
+  icon?: NonNullable<FileEditOption['button']>['icon']
+  complex?: FileEditOption['complex']
+  upload?: FileEditOption['upload']
   loading?: boolean
   render?: {
     menu?: () => (VNode | VNode[])
@@ -126,7 +127,7 @@ export default defineComponent({
         this.data = this.parseCurrentValue(this.currentValue)
       }
     },
-    setSingleUpload(file: uploadFileDataType, emit?: boolean) {
+    setSingleUpload(file: fileDataType, emit?: boolean) {
       if (this.currentValue !== file.data) {
         this.currentValue = file.data
         this.data = file
@@ -135,16 +136,16 @@ export default defineComponent({
         }
       }
     },
-    setMutipleUpload(file: uploadFileDataType[], emit?: boolean) {
+    setMutipleUpload(file: fileDataType[], emit?: boolean) {
       file.forEach(fileItem => {
         if ((this.currentValue as string[]).indexOf(fileItem.data) === -1) {
           (this.currentValue as string[]).push(fileItem.data);
-          (this.data as uploadFileDataType[]).push(fileItem)
+          (this.data as fileDataType[]).push(fileItem)
         }
       })
       if (this.max && (this.currentValue as string[]).length > this.max) {
         (this.currentValue as string[]).length = this.max;
-        (this.data as uploadFileDataType[]).length = this.max
+        (this.data as fileDataType[]).length = this.max
         notice.showMsg(`当前选择的文件数量超过限制值${this.max}，超过部分已被删除！`, 'error')
       }
       if (emit) {
@@ -193,7 +194,7 @@ export default defineComponent({
       } else {
         (this.currentValue as File[]).splice(index, 1)
         if (this.upload) {
-          (this.data as uploadFileDataType[]).splice(index, 1)
+          (this.data as fileDataType[]).splice(index, 1)
         }
       }
       this.emitData()
@@ -217,7 +218,7 @@ export default defineComponent({
           if (this.upload) {
             this.operate = true
             this.upload!(file).then(res => {
-              !this.multiple ? this.setSingleUpload(res.file as uploadFileDataType, true) : this.setMutipleUpload(res.file as uploadFileDataType[], true)
+              !this.multiple ? this.setSingleUpload(res.file as fileDataType, true) : this.setMutipleUpload(res.file as fileDataType[], true)
             }).catch((err: unknown) => {
               console.error(err)
             }).finally(() => {
@@ -254,7 +255,7 @@ export default defineComponent({
         default: () => this.name
       })
     },
-    renderList(list: File[] | uploadFileDataType[]) {
+    renderList(list: File[] | fileDataType[]) {
       return h('div', {
         class: 'complex-import-content-list'
       }, {
@@ -263,7 +264,7 @@ export default defineComponent({
         })
       })
     },
-    renderContent(file?: File | uploadFileDataType, index?: number) {
+    renderContent(file?: File | fileDataType, index?: number) {
       return file ? h('div', {
         class: 'complex-import-content'
       }, {
@@ -295,7 +296,7 @@ export default defineComponent({
         }
       })
     } else {
-      content = !this.multiple ? (this.upload ? this.renderContent(this.data as undefined | uploadFileDataType) : this.renderContent(this.currentValue as undefined | File)) : (this.upload ? this.renderList(this.data as uploadFileDataType[]) : this.renderList(this.currentValue as File[]))
+      content = !this.multiple ? (this.upload ? this.renderContent(this.data as undefined | fileDataType) : this.renderContent(this.currentValue as undefined | File)) : (this.upload ? this.renderList(this.data as fileDataType[]) : this.renderList(this.currentValue as File[]))
     }
     return h('div', {
       class: 'complex-import'

@@ -1,5 +1,5 @@
 import { defineComponent, h, PropType } from "vue"
-import { DictionaryData, DictionaryValue, FormValue } from "complex-data"
+import { DictionaryValue, FormValue } from "complex-data"
 import ObserveList from "complex-data/src/dictionary/ObserveList"
 import EditView, { EditViewDefaultProps } from "./EditView"
 import { AutoItemPayloadType } from "./components/AutoItem"

@@ -1,5 +1,5 @@
 import { defineComponent, h, PropType } from "vue"
-import { Col, Form, Row, FormProps, RowProps } from "ant-design-vue"
+import { Col, Form, Row, FormProps } from "ant-design-vue"
 import { mergeData } from "complex-utils"
 import { FormValue } from "complex-data"
 import ObserveList from "complex-data/src/dictionary/ObserveList"

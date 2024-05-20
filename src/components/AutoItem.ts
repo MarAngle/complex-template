@@ -1,4 +1,4 @@
-import { defineComponent, h, PropType, VNode } from "vue"
+import { defineComponent, h, PropType } from "vue"
 import { Col, FormItem, Row, Tooltip } from "ant-design-vue"
 import { AttrsValue, FormValue, DefaultInfo } from "complex-data"
 import ObserveList from "complex-data/src/dictionary/ObserveList"
