@@ -164,13 +164,12 @@ const dict = {
       const itemAttrs = new AttrsValue({
         props: {
           mode: edit.multiple ? 'multiple' : 'default',
-          options: edit.$option.list,
+          options: edit.$select.getList(),
           open: edit.$option.open,
           showSearch: false,
           showArrow: !edit.$option.hideArrow,
           allowClear: !edit.$option.hideClear,
           dropdownMatchSelectWidth: edit.$option.autoWidth,
-          fieldNames: { value: edit.$option.optionValue, label: edit.$option.optionLabel },
           disabled: payload.disabled || edit.disabled || isLoading,
           placeholder: edit.placeholder ? edit.placeholder : undefined
         }
@@ -188,10 +187,9 @@ const dict = {
       const isLoading = edit.$load ? edit.$load.status === 'ing' : false
       const itemAttrs = new AttrsValue({
         props: {
-          options: edit.$option.list,
+          options: edit.$select.getCascadeList(),
           showArrow: !edit.$option.hideArrow,
           allowClear: !edit.$option.hideClear,
-          fieldNames: { value: edit.$option.optionValue, label: edit.$option.optionLabel, children: edit.$option.cascader },
           disabled: payload.disabled || edit.disabled || isLoading,
           placeholder: edit.placeholder ? edit.placeholder : undefined
         }

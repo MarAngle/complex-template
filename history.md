@@ -10,6 +10,9 @@
 - SimpleTableView的插槽和菜单逻辑同步
 - ImportView的文件下载逻辑实现
 
+### 4.2.4
+- 升级data依赖,适配select
+
 ### 4.2.3
 - 升级依赖，修正错误引用
 
