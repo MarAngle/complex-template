@@ -1,6 +1,7 @@
 import { defineComponent, h, PropType } from "vue"
 import { notice } from "complex-plugin"
 import { ComplexList } from "complex-data"
+import { resetOptionType } from "complex-data/src/data/BaseData"
 import AutoSpin from "./components/AutoSpin.vue"
 import TableView, { tablePayload, TableViewProps } from "./TableView"
 import SimpleTableView from "./SimpleTableView"
@@ -41,6 +42,8 @@ export interface ListViewProps {
   components?: ('spin' | 'search' | 'table' | 'info' | 'edit' | 'child')[]
   componentsProps?: componentsProps
   render?: renderType
+  reset?: resetOptionType
+  destroy?: resetOptionType
 }
 
 export default defineComponent({
@@ -66,6 +69,14 @@ export default defineComponent({
       type: Object as PropType<ListViewProps['render']>,
       required: false
     },
+    reset: {
+      type: Object as PropType<ListViewProps['reset']>,
+      required: false
+    },
+    destroy: {
+      type: Object as PropType<ListViewProps['destroy']>,
+      required: false
+    }
   },
   computed: {
     operate() {
@@ -93,6 +104,13 @@ export default defineComponent({
       } else {
         return this.simpleTable
       }
+    }
+  },
+  beforeMount() {
+    if (this.destroy) {
+      this.listData.destroy(this.destroy)
+    } else if (this.reset) {
+      this.listData.reset(this.reset)
     }
   },
   methods: {
