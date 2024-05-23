@@ -25,7 +25,7 @@ export default defineComponent({
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let children: any = undefined
     const itemAttrs = parseEditAttrs(this.payload.target, this.payload)!
-    itemAttrs.pushClass('complex-edit-item-type')
+    itemAttrs.pushClass('complex-edit-item')
     itemAttrs.pushClass('complex-edit-item-' + camelToLine(this.payload.target.type, '-'))
     itemAttrs.merge(config.component.parseData(this.payload.target.$local, 'target'))
     let item = null

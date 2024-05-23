@@ -10,7 +10,7 @@
 - SimpleTableView的插槽和菜单逻辑同步
 - ImportView的文件下载逻辑实现
 
-### 4.2.6
+### 4.2.6/7
 - 修正class生成
 
 ### 4.2.5
