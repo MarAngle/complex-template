@@ -10,6 +10,9 @@
 - SimpleTableView的插槽和菜单逻辑同步
 - ImportView的文件下载逻辑实现
 
+### 4.2.6
+- 修正class生成
+
 ### 4.2.5
 - ListView添加reset/destory
 

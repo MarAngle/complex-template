@@ -26,7 +26,7 @@ export default defineComponent({
     let children: any = undefined
     const itemAttrs = parseEditAttrs(this.payload.target, this.payload)!
     itemAttrs.pushClass('complex-edit-item-type')
-    itemAttrs.pushClass('complex-edit-item-' + camelToLine(this.payload.target.type))
+    itemAttrs.pushClass('complex-edit-item-' + camelToLine(this.payload.target.type, '-'))
     itemAttrs.merge(config.component.parseData(this.payload.target.$local, 'target'))
     let item = null
     if (!this.payload.parent.gridParse) {
