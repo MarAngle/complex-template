@@ -10,6 +10,9 @@
 - SimpleTableView的插槽和菜单逻辑同步
 - ImportView的文件下载逻辑实现
 
+### 4.2.9
+- EditArea: data生成完成后再进行list赋值，避免list提前赋值导致的EditView提前加载导致的数据为空的加载
+
 ### 4.2.6/7/8
 - 升级data依赖
 - 修正class生成

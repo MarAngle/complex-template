@@ -106,9 +106,11 @@ export default defineComponent({
     },
     init() {
       this.dictionaryList = this.dictionary.getList(this.currentType) 
-      this.list = this.dictionary.buildObserveList(this.currentType, this.dictionaryList as DictionaryValue[])
+      const list = this.dictionary.buildObserveList(this.currentType, this.dictionaryList as DictionaryValue[])
       this.dictionary.createEditData(this.dictionaryList as DictionaryValue[], this.currentType, this.data).then(res => {
         this.currentForm.setData(res.data)
+        // data生成完成后再进行list赋值，避免list提前赋值导致的EditView提前加载导致的数据为空的加载
+        this.list = list
         if (this.observe) {
           this.list!.startObserve(this.currentForm.getData(), this.currentType)
         }
