@@ -107,6 +107,7 @@ export default defineComponent({
     init() {
       this.dictionaryList = this.dictionary.getList(this.currentType!) 
       this.list = this.dictionary.buildObserveList(this.currentType!, this.dictionaryList as DictionaryValue[])
+      // 因为数据固定为currentData。list不需要后赋值
       if (this.observe) {
         this.list.startObserve(this.currentData!, this.currentType, false)
       }
