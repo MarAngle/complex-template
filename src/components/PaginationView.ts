@@ -6,8 +6,12 @@ import config from "../../config"
 export default defineComponent({
   name: 'PaginationView',
   emits: {
-    page: (page: number, size: number) => undefined,
-    size: (page: number, size: number) => undefined,
+    page: (page: number, size: number) => {
+      return true
+    },
+    size: (page: number, size: number) => {
+      return true
+    },
   },
   props: {
     pagination: {

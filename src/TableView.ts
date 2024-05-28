@@ -54,8 +54,12 @@ export interface TableViewProps extends TableViewDefaultProps {
 export default defineComponent({
   name: 'TableView',
   emits: {
-    menu: (prop: string, payload: tablePayload) => undefined,
-    pagination: (prop: 'page' | 'size', page: number, size: number) => undefined,
+    menu: (prop: string, payload: tablePayload) => {
+      return typeof prop === 'string'
+    },
+    pagination: (prop: 'page' | 'size', page: number, size: number) => {
+      return prop === 'page' || prop === 'size'
+    },
   },
   props: {
     listData: {

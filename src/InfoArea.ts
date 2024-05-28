@@ -21,7 +21,9 @@ export interface InfoAreaProps extends InfoAreaDefaultProps {
 export default defineComponent({
   name: 'InfoArea',
   emits: {
-    menu: (prop: string, payload: AutoItemPayloadType<false>) => undefined
+    menu: (prop: string, payload: AutoItemPayloadType<false>)  => {
+      return typeof prop === 'string'
+    }
   },
   props: {
     dictionary: {

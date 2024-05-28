@@ -49,7 +49,9 @@ export interface QuickListProps {
 export default defineComponent({
   name: 'ListView',
   emits: {
-    menu: (from: 'search' | 'table', prop: string, payload?: AutoItemPayloadType | tablePayload) => undefined
+    menu: (from: 'search' | 'table', prop: string, payload?: AutoItemPayloadType | tablePayload)  => {
+      return from === 'search' || from === 'table'
+    }
   },
   props: {
     listData: {

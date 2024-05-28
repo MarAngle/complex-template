@@ -17,7 +17,9 @@ export interface QuickEditProps<T extends QuickEditType = 'edit'> {
 export default defineComponent({
   name: 'QuickEdit',
   emits: {
-    submit: (targetData: Record<string, any>, originData: undefined | Record<string, any>, type: string) => undefined
+    submit: (targetData: Record<string, any>, originData: undefined | Record<string, any>, type: string) => {
+      return true
+    }
   },
   props: {
     content: {

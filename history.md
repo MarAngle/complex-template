@@ -10,7 +10,7 @@
 - SimpleTableView的插槽和菜单逻辑同步
 - ImportView的文件下载逻辑实现
 
-### 4.2.10
+### 4.2.10/11
 - ListView => QuickList
 - 添加QuickPanel
 - 全局添加emits-持续优化中
