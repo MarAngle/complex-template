@@ -24,7 +24,7 @@ export type componentsProps = {
   infoModal?: Partial<ListModalViewProps>
   info?: Partial<InfoAreaProps>
   childModal?: Partial<ListModalViewProps>
-  child?: Partial<ListViewProps>
+  child?: Partial<QuickListProps>
 }
 
 export type renderType = {
@@ -36,7 +36,7 @@ export type renderType = {
   child?: Record<string, (...args: unknown[]) => unknown>
 }
 
-export interface ListViewProps {
+export interface QuickListProps {
   listData: ComplexList
   simpleTable?: boolean
   components?: ('spin' | 'search' | 'table' | 'info' | 'edit' | 'child')[]
@@ -48,9 +48,12 @@ export interface ListViewProps {
 
 export default defineComponent({
   name: 'ListView',
+  emits: {
+    menu: (from: 'search' | 'table', prop: string, payload?: AutoItemPayloadType | tablePayload) => undefined
+  },
   props: {
     listData: {
-      type: Object as PropType<ListViewProps['listData']>,
+      type: Object as PropType<QuickListProps['listData']>,
       required: true
     },
     simpleTable: {
@@ -58,23 +61,23 @@ export default defineComponent({
       required: false
     },
     components: {
-      type: Array as PropType<ListViewProps['components']>,
+      type: Array as PropType<QuickListProps['components']>,
       required: false
     },
     componentsProps: {
-      type: Object as PropType<ListViewProps['componentsProps']>,
+      type: Object as PropType<QuickListProps['componentsProps']>,
       required: false
     },
     render: {
-      type: Object as PropType<ListViewProps['render']>,
+      type: Object as PropType<QuickListProps['render']>,
       required: false
     },
     reset: {
-      type: Object as PropType<ListViewProps['reset']>,
+      type: Object as PropType<QuickListProps['reset']>,
       required: false
     },
     destroy: {
-      type: Object as PropType<ListViewProps['destroy']>,
+      type: Object as PropType<QuickListProps['destroy']>,
       required: false
     }
   },
@@ -348,7 +351,7 @@ export default defineComponent({
    * @returns {VNode}
    */
   render() {
-    const render = h('div', { class: 'complex-list', style: { position: 'relative' } }, {
+    const render = h('div', { class: 'complex-quick-list', style: { position: 'relative' } }, {
       default: () => [this.renderSpin(), this.renderSearch(), this.renderTop(), this.renderTable(), this.renderEdit(), this.renderInfo(), this.renderChild()]
     })
     return render

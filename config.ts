@@ -41,8 +41,7 @@ const config = {
     let innerHTML = ''
     for (const name in config.style.color) {
       const styleName = 'complex-color-' + camelToLine(name, '-')
-      const content = `\n.${styleName}{ color: ${config.style.color[name as colorKeys]}; }`
-      innerHTML += content
+      innerHTML += `\n.${styleName}{ color: ${config.style.color[name as colorKeys]}; }`
     }
     innerHTML += `\n.complex-auto-index{ color: ${config.style.color.primary}; }`
     // 设置样式规则

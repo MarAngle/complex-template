@@ -8,7 +8,8 @@ import InfoArea from "./src/InfoArea"
 import EditView from "./src/EditView"
 import EditArea from "./src/EditArea"
 import SearchArea from "./src/SearchArea"
-import ListView from "./src/ListView"
+import QuickList from "./src/QuickList"
+import QuickPanel from "./src/QuickPanel"
 import config from "./config"
 
 export const ComplexAutoText = AutoText
@@ -21,7 +22,8 @@ export const ComplexInfoArea = InfoArea
 export const ComplexEditView = EditView
 export const ComplexEditArea = EditArea
 export const ComplexSearchArea = SearchArea
-export const ComplexListView = ListView
+export const ComplexQuickList = QuickList
+export const ComplexQuickPanel = QuickPanel
 
 export const initStyle = function() {
   config.initStyle()

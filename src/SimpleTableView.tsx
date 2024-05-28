@@ -10,6 +10,10 @@ export type SimpleTableProps = TableViewDefaultProps
 
 export default defineComponent({
   name: 'SimpleTable',
+  emits: {
+    menu: (prop: string, payload: tablePayload) => undefined,
+    pagination: (prop: 'page' | 'size', page: number, size: number) => undefined,
+  },
   props: {
     listData: {
       type: Object as PropType<SimpleTableProps['listData']>,
@@ -115,7 +119,7 @@ export default defineComponent({
           style: {
             padding: '10px 0'
           },
-          onCurrent: (current: number) => {
+          onCurrent: (page: number, size: number) => {
             if (this.currentAuto.pagination.auto) {
               this.listData.reloadData({
                 data: true,
@@ -129,9 +133,9 @@ export default defineComponent({
                 }
               })
             }
-            this.$emit('pagination', 'current', current)
+            this.$emit('pagination', 'page', page, size)
           },
-          onSize: (size: number, current: number) => {
+          onSize: (page: number, size: number) => {
             if (this.currentAuto.pagination.auto) {
               this.listData.reloadData({
                 data: true,
@@ -145,7 +149,7 @@ export default defineComponent({
                 }
               })
             }
-            this.$emit('pagination', 'size', size, current)
+            this.$emit('pagination', 'size', page, size)
           }
         })
         return data

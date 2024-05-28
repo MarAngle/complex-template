@@ -53,6 +53,10 @@ export interface TableViewProps extends TableViewDefaultProps {
 
 export default defineComponent({
   name: 'TableView',
+  emits: {
+    menu: (prop: string, payload: tablePayload) => undefined,
+    pagination: (prop: 'page' | 'size', page: number, size: number) => undefined,
+  },
   props: {
     listData: {
       type: Object as PropType<TableViewProps['listData']>,
@@ -304,7 +308,7 @@ export default defineComponent({
           style: {
             padding: '10px 0'
           },
-          onPage: (page: number) => {
+          onPage: (page: number, size: number) => {
             if (this.currentAuto.pagination.auto) {
               this.listData.reloadData({
                 data: true,
@@ -318,9 +322,9 @@ export default defineComponent({
                 }
               })
             }
-            this.$emit('pagination', 'page', page)
+            this.$emit('pagination', 'page', page, size)
           },
-          onSize: (size: number, page: number) => {
+          onSize: (page: number, size: number) => {
             if (this.currentAuto.pagination.auto) {
               this.listData.reloadData({
                 data: true,
@@ -334,7 +338,7 @@ export default defineComponent({
                 }
               })
             }
-            this.$emit('pagination', 'size', size, page)
+            this.$emit('pagination', 'size', page, size)
           }
         })
         return data

@@ -1,0 +1,103 @@
+import { h, defineComponent, PropType, VNode } from 'vue'
+import ModalView, { ModalViewProps } from './ModalView'
+import EditArea, { EditAreaProps } from './EditArea'
+import InfoArea, { InfoAreaProps } from './InfoArea'
+
+export type QuickEditType = 'edit' | 'info'
+
+export interface QuickEditProps<T extends QuickEditType = 'edit'> {
+  content: string | (() => VNode | VNode[]),
+  value?: Record<PropertyKey, any>
+  type?: string
+  target?: T
+  targetProps: T extends 'edit' ? EditAreaProps : InfoAreaProps
+  modalProps?: ModalViewProps
+}
+
+export default defineComponent({
+  name: 'QuickEdit',
+  emits: {
+    submit: (targetData: Record<string, any>, originData: undefined | Record<string, any>, type: string) => undefined
+  },
+  props: {
+    content: {
+      type: [String, Function] as PropType<QuickEditProps<QuickEditType>['content']>,
+      required: true
+    },
+    value: {
+      type: Object as PropType<QuickEditProps<QuickEditType>['value']>
+    },
+    type: {
+      type: String as PropType<QuickEditProps<QuickEditType>['type']>
+    },
+    target: {
+      type: String as PropType<QuickEditProps<QuickEditType>['target']>
+    },
+    targetProps: {
+      type: Object as PropType<QuickEditProps<QuickEditType>['targetProps']>,
+      required: true
+    },
+    modalProps: {
+      type: Object as PropType<QuickEditProps<QuickEditType>['modalProps']>,
+      required: false
+    }
+  },
+  methods: {
+    renderContent() {
+      return h('span', {
+        class: 'complex-color-link',
+        onClick: () => {
+          (this.$refs.modal as InstanceType<typeof ModalView>).show()
+          this.$nextTick(() => {
+            (this.$refs.target as InstanceType<typeof EditArea | typeof InfoArea>).show(this.type, this.value)
+          })
+        }
+      }, typeof this.content === 'string' ? this.content : this.content())
+    },
+    renderPanel() {
+      if (this.target !== 'info') {
+        return h(ModalView, {
+          ref: 'modal',
+          width: 880,
+          menu: ['cancel', 'submit'],
+          submit: () => {
+            return new Promise((resolve, reject) => {
+              (this.$refs.target as InstanceType<typeof EditArea>).submit().then(res => {
+                this.$emit('submit', res.targetData, res.originData, res.type)
+                resolve(res)
+              }).catch(err => {
+                reject(err)
+              })
+            })
+          },
+          ...this.modalProps
+        }, {
+          default: () => h(EditArea, {
+            ref: 'target',
+            ...this.targetProps
+          })
+        })
+      } else {
+        return h(ModalView, {
+          ref: 'modal',
+          width: 880,
+          menu: ['close'],
+          ...this.modalProps
+        }, {
+          default: () => h(InfoArea, {
+            ref: 'target',
+            ...this.targetProps
+          })
+        })
+      }
+    },
+  },
+  render() {
+    return h('div', {
+      class: 'complex-quick-panel'
+    }, [
+      this.renderContent(),
+      this.renderPanel()
+    ])
+  }
+})

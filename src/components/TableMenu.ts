@@ -38,7 +38,7 @@ export default defineComponent({
             break
           }
         }
-        let classList = ['complex-list-table-menu-item']
+        let classList = ['complex-table-menu-item']
         if (menuItem.color) {
           classList.push('complex-color-' + camelToLine(menuItem.color, '-'))
         }
@@ -69,7 +69,7 @@ export default defineComponent({
    */
   render() {
     return h('span', {
-      class: 'complex-list-table-menu'
+      class: 'complex-table-menu'
     }, {
       default: () => {
         return this.renderList(this.list, this.payload)

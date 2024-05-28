@@ -10,6 +10,11 @@
 - SimpleTableView的插槽和菜单逻辑同步
 - ImportView的文件下载逻辑实现
 
+### 4.2.10
+- ListView => QuickList
+- 添加QuickPanel
+- 全局添加emits-持续优化中
+
 ### 4.2.9
 - EditArea: data生成完成后再进行list赋值，避免list提前赋值导致的EditView提前加载导致的数据为空的加载
 

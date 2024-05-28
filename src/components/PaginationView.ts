@@ -5,6 +5,10 @@ import config from "../../config"
 
 export default defineComponent({
   name: 'PaginationView',
+  emits: {
+    page: (page: number, size: number) => undefined,
+    size: (page: number, size: number) => undefined,
+  },
   props: {
     pagination: {
       type: Object as PropType<PaginationData>,
@@ -80,7 +84,7 @@ export default defineComponent({
               if (this.assign !== false) {
                 this.pagination.setPageAndSize({ page, size })
               }
-              this.$emit('size', size, page)
+              this.$emit('size', page, size)
             }
           }
         })

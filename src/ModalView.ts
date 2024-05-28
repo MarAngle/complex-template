@@ -27,6 +27,10 @@ export interface ModalViewProps {
 
 export default defineComponent({
   name: 'ModalView',
+  emits: {
+    hide: (from: string) => undefined,
+    menu: (from: string, self: any) => undefined
+  },
   props: {
     width: {
       type: Number,
