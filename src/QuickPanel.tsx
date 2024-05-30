@@ -3,9 +3,9 @@ import ModalView, { ModalViewProps } from './ModalView'
 import EditArea, { EditAreaProps } from './EditArea'
 import InfoArea, { InfoAreaProps } from './InfoArea'
 
-export type QuickEditType = 'edit' | 'info'
+export type QuickEditTarget = 'edit' | 'info'
 
-export interface QuickEditProps<T extends QuickEditType = 'edit'> {
+export interface QuickEditProps<T extends QuickEditTarget = 'edit'> {
   content: string | (() => VNode | VNode[])
   contentProps?: {
     id?: string
@@ -28,27 +28,27 @@ export default defineComponent({
   },
   props: {
     content: {
-      type: [String, Function] as PropType<QuickEditProps<QuickEditType>['content']>,
+      type: [String, Function] as PropType<QuickEditProps<QuickEditTarget>['content']>,
       required: true
     },
     contentProps: {
-      type: Object as PropType<QuickEditProps<QuickEditType>['contentProps']>
+      type: Object as PropType<QuickEditProps<QuickEditTarget>['contentProps']>
     },
     data: {
-      type: Object as PropType<QuickEditProps<QuickEditType>['data']>
+      type: Object as PropType<QuickEditProps<QuickEditTarget>['data']>
     },
     type: {
-      type: String as PropType<QuickEditProps<QuickEditType>['type']>
+      type: String as PropType<QuickEditProps<QuickEditTarget>['type']>
     },
     target: {
-      type: String as PropType<QuickEditProps<QuickEditType>['target']>
+      type: String as PropType<QuickEditProps<QuickEditTarget>['target']>
     },
     targetProps: {
-      type: Object as PropType<QuickEditProps<QuickEditType>['targetProps']>,
+      type: Object as PropType<QuickEditProps<QuickEditTarget>['targetProps']>,
       required: true
     },
     modalProps: {
-      type: Object as PropType<QuickEditProps<QuickEditType>['modalProps']>,
+      type: Object as PropType<QuickEditProps<QuickEditTarget>['modalProps']>,
       required: false
     }
   },

@@ -10,8 +10,9 @@
 - SimpleTableView的插槽和菜单逻辑同步
 - ImportView的文件下载逻辑实现
 
-### 4.3.1
+### 4.3.1/2
 - 适配4.3版本data
+- 删除无用输出
 
 ### 4.2.10/11
 - ListView => QuickList

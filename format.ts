@@ -14,40 +14,25 @@ import FileEdit from "complex-data/src/dictionary/FileEdit"
 import CustomEdit from "complex-data/src/dictionary/CustomEdit"
 import { AutoItemPayloadType } from './src/components/AutoItem'
 
-const showLogs = {
-  init: false,
-  model: false
-}
-
-if (getEnv('real') === 'production') {
-  // 生产环境隐藏log
-  showLogs.init = false
-  showLogs.model = false
-}
-
 const modelFuncDict = {
   valueInit: function (itemAttrs: AttrsValue, formData: Record<PropertyKey, unknown>, prop: PropertyKey) {
-    if (showLogs.init) { console.log('init', itemAttrs, formData, prop) }
     itemAttrs.props.value = formData[prop]
   },
   checkInit: function (itemAttrs: AttrsValue, formData: Record<PropertyKey, unknown>, prop: PropertyKey) {
-    if (showLogs.init) { console.log('init', itemAttrs, formData, prop) }
     itemAttrs.props.checked = formData[prop]
   },
   input: function (formdata: Record<PropertyKey, unknown>, prop: PropertyKey, args: unknown[]) {
-    if (showLogs.model) { console.log('input', formdata, prop, args) }
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     formdata[prop] = (args[0] as any).target.value
   },
   select: function (formdata: Record<PropertyKey, unknown>, prop: PropertyKey, args: unknown[]) {
-    if (showLogs.model) { console.log('select', formdata, prop, args) }
     formdata[prop] = args[0]
   },
   change: function (formdata: Record<PropertyKey, unknown>, prop: PropertyKey, args: unknown[]) {
-    if (showLogs.model) { console.log('change', formdata, prop, args) }
     formdata[prop] = args[0]
   }
 }
+
 type modelFuncDictType = typeof modelFuncDict
 
 interface dictItemType {
