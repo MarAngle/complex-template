@@ -6,8 +6,13 @@ import InfoArea, { InfoAreaProps } from './InfoArea'
 export type QuickEditType = 'edit' | 'info'
 
 export interface QuickEditProps<T extends QuickEditType = 'edit'> {
-  content: string | (() => VNode | VNode[]),
-  value?: Record<PropertyKey, any>
+  content: string | (() => VNode | VNode[])
+  contentProps?: {
+    id?: string
+    class?: string
+    style?: Record<string, any>
+  }
+  data?: Record<PropertyKey, any>
   type?: string
   target?: T
   targetProps: T extends 'edit' ? EditAreaProps : InfoAreaProps
@@ -26,8 +31,11 @@ export default defineComponent({
       type: [String, Function] as PropType<QuickEditProps<QuickEditType>['content']>,
       required: true
     },
-    value: {
-      type: Object as PropType<QuickEditProps<QuickEditType>['value']>
+    contentProps: {
+      type: Object as PropType<QuickEditProps<QuickEditType>['contentProps']>
+    },
+    data: {
+      type: Object as PropType<QuickEditProps<QuickEditType>['data']>
     },
     type: {
       type: String as PropType<QuickEditProps<QuickEditType>['type']>
@@ -51,9 +59,10 @@ export default defineComponent({
         onClick: () => {
           (this.$refs.modal as InstanceType<typeof ModalView>).show()
           this.$nextTick(() => {
-            (this.$refs.target as InstanceType<typeof EditArea | typeof InfoArea>).show(this.type, this.value)
+            (this.$refs.target as InstanceType<typeof EditArea | typeof InfoArea>).show(this.type, this.data)
           })
-        }
+        },
+        ...this.contentProps
       }, typeof this.content === 'string' ? this.content : this.content())
     },
     renderPanel() {
