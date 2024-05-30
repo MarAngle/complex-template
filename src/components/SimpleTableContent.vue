@@ -202,7 +202,7 @@ export default defineComponent({
         return () => {
           return config.table.renderIndex(record, index, this.index!.pagination)
         }
-      } else if (target.ellipsis && target.auto) {
+      } else if (target.ellipsis) {
         // 自动省略切自动换行
         return () => {
           return config.table.renderAutoText(text as string, target, this.layoutLifeData, attrs)

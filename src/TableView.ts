@@ -168,7 +168,7 @@ export default defineComponent({
                   payload
                 })
               }
-              if (columnItem.ellipsis && target.auto) {
+              if (columnItem.ellipsis) {
                 // 自动省略切自动换行
                 return config.table.renderAutoText(text as string, target, this.layoutLifeData, attrs)
               }

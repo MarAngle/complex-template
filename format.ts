@@ -1,6 +1,7 @@
 import dayjs from 'dayjs'
 import { getEnv } from "complex-utils"
 import { AttrsValue } from "complex-data"
+import { StatusValue } from 'complex-data/src/module/StatusData'
 import { DictionaryEditMod } from "complex-data/src/lib/DictionaryValue"
 import InputEdit from "complex-data/src/dictionary/InputEdit"
 import InputNumberEdit from "complex-data/src/dictionary/InputNumberEdit"
@@ -160,7 +161,7 @@ const dict = {
       change: modelFuncDict.change
     },
     format(edit: SelectEdit, payload: AutoItemPayloadType) {
-      const isLoading = edit.$load ? edit.$load.status === 'ing' : false
+      const isLoading = edit.$load ? edit.getLoad() === StatusValue.ing : false
       const itemAttrs = new AttrsValue({
         props: {
           mode: edit.multiple ? 'multiple' : 'default',
@@ -184,7 +185,7 @@ const dict = {
       change: modelFuncDict.change
     },
     format(edit: SelectEdit<PropertyKey>, payload: AutoItemPayloadType) {
-      const isLoading = edit.$load ? edit.$load.status === 'ing' : false
+      const isLoading = edit.$load ? edit.getLoad() === StatusValue.ing : false
       const itemAttrs = new AttrsValue({
         props: {
           options: edit.$select.getCascadeList(),

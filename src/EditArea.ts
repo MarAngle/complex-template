@@ -112,7 +112,9 @@ export default defineComponent({
     init() {
       this.dictionaryList = this.dictionary.getList(this.currentType) 
       const list = this.dictionary.buildObserveList(this.currentType, this.dictionaryList as DictionaryValue[])
-      this.dictionary.createEditData(this.dictionaryList as DictionaryValue[], this.currentType, this.data).then(res => {
+      console.log(list)
+      this.dictionary.parseData(this.dictionaryList as DictionaryValue[], this.currentType, this.data).then(res => {
+        console.log(res)
         this.currentForm.setData(res.data)
         // data生成完成后再进行list赋值，避免list提前赋值导致的EditView提前加载导致的数据为空的加载
         this.list = list
@@ -124,7 +126,7 @@ export default defineComponent({
     submit(): Promise<{ targetData: Record<PropertyKey, unknown>, originData: dataType, type: string }> {
       return new Promise((resolve, reject) => {
         this.currentForm.validate().then(() => {
-          const postData = this.dictionary.createPostData(this.currentForm.getData(), this.dictionaryList as DictionaryValue[], this.currentType, this.observe ?( this.list as ObserveList) : undefined)
+          const postData = this.dictionary.collectData(this.currentForm.getData(), this.dictionaryList as DictionaryValue[], this.currentType, this.observe ?( this.list as ObserveList) : undefined)
           resolve({ targetData: postData, originData: this.data, type: this.currentType })
         }).catch(err => {
           reject(err)

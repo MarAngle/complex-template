@@ -10,6 +10,9 @@
 - SimpleTableView的插槽和菜单逻辑同步
 - ImportView的文件下载逻辑实现
 
+### 4.3.1
+- 适配4.3版本data
+
 ### 4.2.10/11
 - ListView => QuickList
 - 添加QuickPanel
