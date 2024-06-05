@@ -9,7 +9,7 @@ import EditView from "./src/EditView"
 import EditArea from "./src/EditArea"
 import SearchArea from "./src/SearchArea"
 import QuickList from "./src/QuickList"
-import QuickPanel from "./src/QuickPanel"
+import QuickEdit from "./src/QuickEdit"
 import config from "./config"
 
 export const ComplexAutoText = AutoText
@@ -23,7 +23,7 @@ export const ComplexEditView = EditView
 export const ComplexEditArea = EditArea
 export const ComplexSearchArea = SearchArea
 export const ComplexQuickList = QuickList
-export const ComplexQuickPanel = QuickPanel
+export const ComplexQuickEdit = QuickEdit
 
 export const initStyle = function() {
   config.initStyle()

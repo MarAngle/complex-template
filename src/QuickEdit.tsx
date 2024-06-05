@@ -53,14 +53,17 @@ export default defineComponent({
     }
   },
   methods: {
+    showTarget() {
+      (this.$refs.modal as InstanceType<typeof ModalView>).show()
+      this.$nextTick(() => {
+        (this.$refs.target as InstanceType<typeof EditArea | typeof InfoArea>).show(this.type, this.data)
+      })
+    },
     renderContent() {
       return h('span', {
         class: 'complex-color-link',
         onClick: () => {
-          (this.$refs.modal as InstanceType<typeof ModalView>).show()
-          this.$nextTick(() => {
-            (this.$refs.target as InstanceType<typeof EditArea | typeof InfoArea>).show(this.type, this.data)
-          })
+          this.showTarget()
         },
         ...this.contentProps
       }, typeof this.content === 'string' ? this.content : this.content())
