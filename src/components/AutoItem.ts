@@ -180,7 +180,7 @@ export default defineComponent({
         return h(FormItem, config.component.parseAttrs(mainAttributes), { default: () => this.renderTip() })
       } else {
         const mainAttributes = new AttrsValue({
-          class: ['complex-auto-item', 'complex-auto-item-local']
+          class: ['complex-auto-item', 'complex-auto-item-info']
         })
         mainAttributes.merge(config.component.parseData(this.target.$local, 'main'))
         if (this.gridParse) {
@@ -189,7 +189,9 @@ export default defineComponent({
               h(Col, config.parseGrid(this.payload.parent.gridParse!.parseData(this.payload.target.$grid, 'label', this.payload.type)), {
                 default: () => this.renderLabel()
               }),
-              this.renderTip()
+              h(Col, config.parseGrid(this.payload.parent.gridParse!.parseData(this.payload.target.$grid, 'content', this.payload.type)), {
+                default: () => this.renderTip()
+              })
             ]
            })
         } else {

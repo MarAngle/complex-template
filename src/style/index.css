@@ -50,17 +50,13 @@
 .complex-edit .complex-edit-item .ant-input-number {
   width: 100%;
 }
-.complex-edit .complex-auto-item-local,.complex-info .complex-auto-item-local {
+.complex-edit .complex-auto-item-info,.complex-info .complex-auto-item-info {
   margin-bottom: 24px;
 }
-.complex-edit-inline .complex-auto-item-local,.complex-info-inline .complex-auto-item-local {
+.complex-edit-inline .complex-auto-item-info,.complex-info-inline .complex-auto-item-info {
   margin-inline-end: 16px;
 }
 
-.complex-auto-item-label{
-  position: relative;
-  display: inline-flex;
-}
 .complex-auto-item-label{
   position: relative;
   display: inline-flex;
@@ -81,6 +77,9 @@
   margin-block: 0;
   margin-inline-start: 2px;
   margin-inline-end: 8px;
+}
+.complex-auto-item.ant-form-item > .ant-row > .ant-col-0{
+  display: none;
 }
 
 .complex-quick-list{

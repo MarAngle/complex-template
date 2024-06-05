@@ -1,11 +1,12 @@
 import { defineComponent, h, PropType, VNode } from "vue"
 import { Input, InputNumber, Textarea, Switch, Select, Divider, Cascader, DatePicker, RangePicker } from "ant-design-vue"
 import { camelToLine } from "complex-utils"
-import { parseEditAttrs } from "../../format"
-import config from "../../config"
 import ImportView from "../ImportView"
 import PaginationView from "./PaginationView"
 import { AutoItemPayloadType } from "./AutoItem"
+import EditView from "../EditView"
+import { parseEditAttrs } from "../../format"
+import config from "../../config"
 
 export default defineComponent({
   name: 'AutoEditItem',
@@ -147,6 +148,8 @@ export default defineComponent({
       tag = ImportView
     } else if (this.payload.target.type === 'custom') {
       tag = this.payload.target.$custom
+    } else if (this.payload.target.type === 'form') {
+      tag = EditView
     }
     if (tag) {
       item = h(tag, option, children)

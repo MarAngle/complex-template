@@ -52,6 +52,13 @@ const config = {
   parseGrid(gridValue: GridValue) {
     return gridValue
   },
+  showValue(value: unknown): string | number | undefined {
+    if (getType(value) !== 'object') {
+      return value as string | number | undefined
+    } else {
+      return JSON.stringify(value)
+    }
+  },
   style: {
     color: {
       primary: '#1677ff',
@@ -102,10 +109,7 @@ const config = {
           text = parent.parse(text, payload)
         }
       }
-      if (getType(text) === 'object') {
-        text = JSON.stringify(text)
-      }
-      return text
+      return config.showValue(text)
     },
     renderAutoText(text: string, column: DefaultList, layoutLifeData: LayoutLifeData, attrs?: AttrsValue) {
       return h(AutoText, {

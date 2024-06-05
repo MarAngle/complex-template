@@ -1,5 +1,4 @@
 import dayjs from 'dayjs'
-import { getEnv } from "complex-utils"
 import { AttrsValue } from "complex-data"
 import { StatusValue } from 'complex-data/src/module/StatusData'
 import { DictionaryEditMod } from "complex-data/src/lib/DictionaryValue"
@@ -12,6 +11,7 @@ import DateEdit from "complex-data/src/dictionary/DateEdit"
 import DateRangeEdit from "complex-data/src/dictionary/DateRangeEdit"
 import FileEdit from "complex-data/src/dictionary/FileEdit"
 import CustomEdit from "complex-data/src/dictionary/CustomEdit"
+import FormEdit from 'complex-data/src/dictionary/FormEdit'
 import { AutoItemPayloadType } from './src/components/AutoItem'
 
 const modelFuncDict = {
@@ -280,6 +280,27 @@ const dict = {
       bindEvent(this as dictItemType, itemAttrs, edit, payload)
       return itemAttrs
     }
+  },
+  $form: {
+    init: false,
+    on: {},
+    format(edit: FormEdit, payload: AutoItemPayloadType) {
+      console.log({
+        ...edit.$run
+      })
+      const itemAttrs = new AttrsValue({
+        props: {
+          list: edit.$run.observeList,
+          form: edit.$run.form,
+          type: edit.$run.type,
+          gridParse: edit.$option.gridParse === false ? undefined : (edit.$option.gridParse || edit.$run.gridParse),
+          menu: edit.$option.menu,
+          disabled: payload.disabled || edit.disabled
+        }
+      })
+      bindEvent(this as dictItemType, itemAttrs, edit, payload)
+      return itemAttrs
+    }
   }
 }
 
@@ -304,6 +325,8 @@ export const parseEditAttrs = function (edit: DictionaryEditMod, payload: AutoIt
     return dict.$file.format(edit, payload)
   } else if (edit.type === 'custom') {
     return dict.$custom.format(edit, payload)
+  } else if (edit.type === 'form') {
+    return dict.$form.format(edit, payload)
   } else {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     console.error(`[${(edit as any).type}]:FormItem类型匹配失败，请检查代码`)

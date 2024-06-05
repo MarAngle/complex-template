@@ -131,7 +131,7 @@ export default defineComponent({
     },
     currentColumnList() {
       const list = []
-      const columnList = this.columnList || this.listData.getDictionaryPageList(this.listProp) as DefaultList[]
+      const columnList = this.columnList || this.listData.getDictionaryPageList(this.listProp, this.listData.getDictionaryList(this.listProp)) as DefaultList[]
       for (let i = 0; i < columnList.length; i++) {
         const target = columnList[i]
         const currentProp = target.$prop

@@ -1,10 +1,13 @@
 import { defineComponent, h, PropType } from "vue"
 import { AttrsValue, ButtonEdit, ButtonGroupEdit, ContentEdit } from "complex-data"
 import { DictionaryEditMod } from "complex-data/src/lib/DictionaryValue"
+import ObserveList from "complex-data/src/dictionary/ObserveList"
+import { ButtonEditOption } from "complex-data/src/dictionary/ButtonEdit"
+import FormEdit from "complex-data/src/dictionary/FormEdit"
 import ButtonView from "../ButtonView"
 import { AutoItemPayloadType } from "./AutoItem"
+import InfoView, { InfoViewProps } from "../InfoView"
 import config from "../../config"
-import { ButtonEditOption } from "complex-data/src/dictionary/ButtonEdit"
 
 export const bindButtonClick = function(prop: string, option: ButtonEdit['$option'], payload: AutoItemPayloadType<boolean>) {
   if (!option.upload) {
@@ -94,9 +97,22 @@ export default defineComponent({
         const $data = this.payload.target
         targetAttrs.pushStyle($data.$option.style)
         return h('div', config.component.parseAttrs(targetAttrs), [$data.$option.data])
+      } else if (this.payload.target instanceof FormEdit) {
+        // 额外则直接解析数据
+        targetAttrs.merge(new AttrsValue({
+          props: {
+            list: this.payload.target.$run.observeList as ObserveList,
+            data: this.payload.target.$run.form!.getData(),
+            type: this.payload.target.$run.type!,
+            gridParse: this.payload.target.$option.gridParse === false ? undefined : (this.payload.target.$option.gridParse || this.payload.target.$run.gridParse),
+            menu: this.payload.target.$option.menu,
+            disabled: this.payload.disabled || this.payload.target.disabled
+          } as InfoViewProps
+        }))
+        return h(InfoView, config.component.parseAttrs(targetAttrs) as unknown as InfoViewProps)
       } else {
         // 额外则直接解析数据
-        return h('div', config.component.parseAttrs(targetAttrs), [this.payload.target.parse ? this.payload.target.parse(this.payload.targetData, this.payload) : this.payload.targetData[this.payload.prop]])
+        return h('div', config.component.parseAttrs(targetAttrs), config.showValue(this.payload.targetData[this.payload.prop]))
       }
     }
   }

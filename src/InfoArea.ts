@@ -1,5 +1,5 @@
 import { defineComponent, h, PropType } from "vue"
-import { DictionaryData, DictionaryValue } from "complex-data"
+import { DictionaryData, DictionaryValue, FormValue } from "complex-data"
 import ObserveList from "complex-data/src/dictionary/ObserveList"
 import { AttrsValueInitOption } from "complex-data/src/lib/AttrsValue"
 import InfoView, { InfoViewDefaultProps } from "./InfoView"
@@ -86,8 +86,9 @@ export default defineComponent({
     return {
       localType: undefined as undefined | string,
       localData: undefined as undefined | Record<PropertyKey, any>,
+      form: new FormValue(),
       dictionaryList: [] as DictionaryValue[],
-      list: undefined as undefined | ObserveList,
+      observeList: undefined as undefined | ObserveList,
     }
   },
   computed: {
@@ -103,6 +104,12 @@ export default defineComponent({
       this.show()
     }
   },
+  beforeUnmount() {
+    if (this.observeList) {
+      this.observeList.reset()
+      this.observeList = undefined
+    }
+  },
   methods: {
     show(type?: string, data?: Record<PropertyKey, any>) {
       this.localType = type
@@ -111,17 +118,20 @@ export default defineComponent({
     },
     init() {
       this.dictionaryList = this.dictionary.getList(this.currentType!) 
-      this.list = this.dictionary.buildObserveList(this.currentType!, this.dictionaryList as DictionaryValue[])
-      // 因为数据固定为currentData。list不需要后赋值
-      if (this.observe) {
-        this.list.startObserve(this.currentData!, this.currentType, false)
-      }
+      const observeList = this.dictionary.getObserveList(this.currentType!, this.dictionaryList as DictionaryValue[], this.observe)
+      this.dictionary.parseData(this.dictionaryList as DictionaryValue[], this.form, this.currentType!, this.currentData, '$info').then(() => {
+        // data生成完成后再进行list赋值，避免list提前赋值导致的EditView提前加载导致的数据为空的加载
+        this.observeList = observeList
+        if (this.observe) {
+          this.observeList!.startObserve(this.form.getData(), this.currentType)
+        }
+      })
     },
     renderInfo() {
-      if (this.list) {
+      if (this.observeList) {
         const info = h(InfoView, {
-          data: this.currentData!,
-          list: this.list as ObserveList,
+          data: this.form.getData(),
+          list: this.observeList as ObserveList,
           menu: this.menu,
           type: this.currentType!,
           labelAlign: this.labelAlign,
