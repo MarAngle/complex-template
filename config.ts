@@ -103,11 +103,10 @@ const config = {
       const target = payload.payload.target
       if (target.parse) {
         text = target.parse(text, payload)
-      } else {
-        const parent = target.$getParent() as DictionaryValue
-        if (parent && parent.parse) {
-          text = parent.parse(text, payload)
-        }
+      }
+      const parent = target.$getParent() as DictionaryValue
+      if (parent && parent.parse) {
+        text = parent.parse(text, payload)
       }
       return config.showValue(text)
     },

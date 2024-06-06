@@ -1,6 +1,6 @@
 import { defineComponent, h, PropType } from "vue"
 import { AttrsValue, ButtonEdit, ButtonGroupEdit, ContentEdit } from "complex-data"
-import { DictionaryEditMod } from "complex-data/src/lib/DictionaryValue"
+import DictionaryValue, { DictionaryEditMod } from "complex-data/src/lib/DictionaryValue"
 import ObserveList from "complex-data/src/dictionary/ObserveList"
 import { ButtonEditOption } from "complex-data/src/dictionary/ButtonEdit"
 import FormEdit from "complex-data/src/dictionary/FormEdit"
@@ -112,7 +112,12 @@ export default defineComponent({
         return h(InfoView, config.component.parseAttrs(targetAttrs) as unknown as InfoViewProps)
       } else {
         // 额外则直接解析数据
-        return h('div', config.component.parseAttrs(targetAttrs), config.showValue(this.payload.targetData[this.payload.prop]))
+        let text = this.payload.targetData[this.payload.prop]
+        const parent = this.payload.target.$getParent() as DictionaryValue
+        if (parent && parent.parse) {
+          text = parent.parse(text, this.payload)
+        }
+        return h('div', config.component.parseAttrs(targetAttrs), config.showValue(text))
       }
     }
   }
