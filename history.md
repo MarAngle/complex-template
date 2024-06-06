@@ -1,13 +1,17 @@
+
+### Tips
+
 ### ToDo
 - ListView的TableMenu实现级联
 - 通过antd实现基础主题色的设置:全局样式
 - EditView实现一键禁用?具体需求是实现Info?
 - table布局考虑计算准确性
-
-### 
-
-### 重要
 - SimpleTableView的插槽和菜单逻辑同步
+
+### Doing
+
+### 4.3.5
+- 优化代码
 - ImportView的文件下载逻辑实现
 
 ### 4.3.1/2/3/4

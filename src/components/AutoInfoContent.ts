@@ -101,10 +101,10 @@ export default defineComponent({
         // 额外则直接解析数据
         targetAttrs.merge(new AttrsValue({
           props: {
-            list: this.payload.target.$run.observeList as ObserveList,
-            data: this.payload.target.$run.form!.getData(),
-            type: this.payload.target.$run.type!,
-            gridParse: this.payload.target.$option.gridParse === false ? undefined : (this.payload.target.$option.gridParse || this.payload.target.$run.gridParse),
+            list: this.payload.target.$runtime.observeList as ObserveList,
+            data: this.payload.target.$runtime.form!.getData(),
+            type: this.payload.target.$runtime.type!,
+            gridParse: this.payload.target.$option.gridParse === false ? undefined : (this.payload.target.$option.gridParse || this.payload.target.$runtime.gridParse),
             menu: this.payload.target.$option.menu,
             disabled: this.payload.disabled || this.payload.target.disabled
           } as InfoViewProps

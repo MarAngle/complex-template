@@ -285,15 +285,12 @@ const dict = {
     init: false,
     on: {},
     format(edit: FormEdit, payload: AutoItemPayloadType) {
-      console.log({
-        ...edit.$run
-      })
       const itemAttrs = new AttrsValue({
         props: {
-          list: edit.$run.observeList,
-          form: edit.$run.form,
-          type: edit.$run.type,
-          gridParse: edit.$option.gridParse === false ? undefined : (edit.$option.gridParse || edit.$run.gridParse),
+          list: edit.$runtime.observeList,
+          form: edit.$runtime.form,
+          type: edit.$runtime.type,
+          gridParse: edit.$option.gridParse === false ? undefined : (edit.$option.gridParse || edit.$runtime.gridParse),
           menu: edit.$option.menu,
           disabled: payload.disabled || edit.disabled
         }

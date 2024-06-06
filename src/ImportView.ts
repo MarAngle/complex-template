@@ -7,6 +7,7 @@ import { FileView } from "complex-component"
 import { FileProps } from "complex-component/src/type"
 import icon from "../icon"
 import { fileDataType } from "complex-data/type"
+import { downloadFile, isFile } from "complex-utils"
 
 export interface ImportProps extends FileProps{
   name?: NonNullable<FileEditOption['button']>['name']
@@ -265,12 +266,20 @@ export default defineComponent({
       })
     },
     renderContent(file?: File | fileDataType, index?: number) {
+      const isFileData = isFile(file)
+      const canDownload = !isFileData && file!.url
       return file ? h('div', {
         class: 'complex-import-content'
       }, {
         default: () => [
           h('span', {
-            class: 'complex-import-content-name'
+            class: canDownload ? 'complex-import-content-name complex-color-link' : 'complex-import-content-name',
+            onClick: () => {
+              if (canDownload) {
+                // 文件对象类型以及存在下载链接时，点击下载
+                downloadFile(file.url!, file.name)
+              }
+            }
           }, {
             default: () => file.name
           }),

@@ -23,8 +23,6 @@ export type componentsProps = {
   edit?: Partial<EditAreaProps>
   infoModal?: Partial<ListModalViewProps>
   info?: Partial<InfoAreaProps>
-  childModal?: Partial<ListModalViewProps>
-  child?: Partial<QuickListProps>
 }
 
 export type renderType = {
@@ -33,13 +31,12 @@ export type renderType = {
   table?: Record<string, (payload: tablePayload) => unknown>
   edit?: Record<string, (...args: unknown[]) => unknown>
   info?: Record<string, (...args: unknown[]) => unknown>
-  child?: Record<string, (...args: unknown[]) => unknown>
 }
 
 export interface QuickListProps {
   listData: ComplexList
   simpleTable?: boolean
-  components?: ('spin' | 'search' | 'table' | 'info' | 'edit' | 'child')[]
+  components?: ('spin' | 'search' | 'table' | 'info' | 'edit')[]
   componentsProps?: componentsProps
   render?: renderType
   reset?: resetOptionType
@@ -47,7 +44,7 @@ export interface QuickListProps {
 }
 
 export default defineComponent({
-  name: 'ListView',
+  name: 'QuickList',
   emits: {
     menu: (from: 'search' | 'table', prop: string, payload?: AutoItemPayloadType | tablePayload)  => {
       return from === 'search' || from === 'table'
@@ -140,6 +137,22 @@ export default defineComponent({
         return null
       }
     },
+    onSearchMenu(prop: string, payload: AutoItemPayloadType) {
+      this.$emit('menu', 'search', prop, payload)
+      if (prop === '$search') {
+        this.listData.setSearch()
+      } else if (prop === '$reset') {
+        this.listData.resetSearch()
+      } else if (prop === '$build') {
+        this.openEdit()
+      } else if (prop === '$info') {
+        this.openInfo()
+      } else if (prop === '$delete') {
+        this.deleteChoiceList()
+      } else if (prop === '$export') {
+        this.listData.triggerMethod('$exportData', [], true)
+      }
+    },
     renderTop() {
       const render = this.$slots.top || this.currentRender.top
       if (render) {
@@ -163,6 +176,20 @@ export default defineComponent({
         })
       } else {
         return null
+      }
+    },
+    onTableMenu(prop: string, payload?: tablePayload) {
+      this.$emit('menu', 'table', prop, payload)
+      if (prop === '$change') {
+        this.openEdit(payload!.targetData)
+      } else if (prop === '$delete') {
+        notice.confirm('确认进行删除操作吗？', '警告', (act: string) => {
+          if (act === 'ok') {
+            this.listData.triggerMethod('$deleteData', [payload!.targetData], true)
+          }
+        })
+      } else if (prop === '$info') {
+        this.openInfo(payload!.targetData)
       }
     },
     renderInfo() {
@@ -214,29 +241,6 @@ export default defineComponent({
         return null
       }
     },
-    renderChild() {
-      if (this.currentComponents.indexOf('child') > -1) {
-        //
-      } else {
-        return null
-      }
-    },
-    onSearchMenu(prop: string, payload: AutoItemPayloadType) {
-      this.$emit('menu', 'search', prop, payload)
-      if (prop === '$search') {
-        this.listData.setSearch()
-      } else if (prop === '$reset') {
-        this.listData.resetSearch()
-      } else if (prop === '$build') {
-        this.openEdit()
-      } else if (prop === '$info') {
-        this.openInfo()
-      } else if (prop === '$delete') {
-        this.deleteChoiceList()
-      } else if (prop === '$export') {
-        this.listData.triggerMethod('$exportData', [], true)
-      }
-    },
     deleteChoiceList() {
       if (this.choiceSize) {
         notice.confirm('确认进行删除操作吗？', '警告', (act: string) => {
@@ -248,20 +252,6 @@ export default defineComponent({
         })
       } else {
         notice.showMsg('请先选择要删除的数据！', 'error')
-      }
-    },
-    onTableMenu(prop: string, payload?: tablePayload) {
-      this.$emit('menu', 'table', prop, payload)
-      if (prop === '$change') {
-        this.openEdit(payload!.targetData)
-      } else if (prop === '$delete') {
-        notice.confirm('确认进行删除操作吗？', '警告', (act: string) => {
-          if (act === 'ok') {
-            this.listData.triggerMethod('$deleteData', [payload!.targetData], true)
-          }
-        })
-      } else if (prop === '$info') {
-        this.openInfo(payload!.targetData)
       }
     },
     refreshData(record: Record<PropertyKey, any>, next: (record: Record<PropertyKey, any>) => void) {
@@ -354,7 +344,7 @@ export default defineComponent({
    */
   render() {
     const render = h('div', { class: 'complex-quick-list', style: { position: 'relative' } }, {
-      default: () => [this.renderSpin(), this.renderSearch(), this.renderTop(), this.renderTable(), this.renderEdit(), this.renderInfo(), this.renderChild()]
+      default: () => [this.renderSpin(), this.renderSearch(), this.renderTop(), this.renderTable(), this.renderEdit(), this.renderInfo()]
     })
     return render
   }
