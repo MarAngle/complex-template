@@ -173,7 +173,7 @@ const dict = {
       const isLoading = edit.$load ? edit.getLoad() === StatusValue.ing : false
       const itemAttrs = new AttrsValue({
         props: {
-          options: edit.$select.getCascadeList(),
+          options: edit.$select.getCascaderList(),
           showArrow: !edit.$option.hideArrow,
           allowClear: !edit.$option.hideClear,
           disabled: payload.disabled || edit.disabled || isLoading,
