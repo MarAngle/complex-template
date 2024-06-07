@@ -1,5 +1,5 @@
 import { defineComponent, h, PropType } from "vue"
-import { camelToLine } from "complex-utils"
+import { camelToLine, debounce } from "complex-utils"
 import { MenuValue } from "complex-data/type"
 import { tablePayload } from "../TableView"
 import { colorKeys } from "../../config"
@@ -49,11 +49,12 @@ export default defineComponent({
             classList = classList.concat(menuItem.class)
           }
         }
+        const onClick = () => {
+          this.$emit('menu', menuItem.prop, payload)
+        }
         list.push(h('span', {
           class: classList.join(' '),
-          onClick: () => {
-            this.$emit('menu', menuItem.prop, payload)
-          },
+          onClick: menuItem.debounce ? debounce(onClick, menuItem.debounce, true) : onClick,
           ...menuItem.option
         }, {
           default: () => menuItem.name

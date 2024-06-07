@@ -40,8 +40,21 @@ export default defineComponent({
             if (isPromise(res)) {
               this.operate = true
               res.finally(() => {
-                this.operate = false
+                if (this.data.debounce) {
+                  setTimeout(() => {
+                    this.operate = false
+                  }, this.data.debounce)
+                } else {
+                  this.operate = false
+                }
               })
+            } else {
+              if (this.data.debounce) {
+                this.operate = true
+                setTimeout(() => {
+                  this.operate = false
+                }, this.data.debounce)
+              }
             }
           }
         },

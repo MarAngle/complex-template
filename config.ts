@@ -166,17 +166,20 @@ const config = {
       close: {
         type: 'default',
         name: '关闭',
-        prop: 'close'
+        prop: 'close',
+        debounce: 200
       },
       cancel: {
         type: 'default',
         name: '取消',
-        prop: 'close'
+        prop: 'close',
+        debounce: 200
       },
       submit: {
         type: 'primary',
         name: '确认',
-        prop: 'submit'
+        prop: 'submit',
+        debounce: 200
       }
     } as Record<string, MenuValue>,
     getMenu(prop: string, targetOption?: Partial<MenuValue>): MenuValue {
