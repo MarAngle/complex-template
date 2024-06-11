@@ -267,7 +267,7 @@ export default defineComponent({
     },
     renderContent(file?: File | fileDataType, index?: number) {
       const isFileData = isFile(file)
-      const canDownload = !isFileData && file!.url
+      const canDownload = !isFileData && file && file.url
       return file ? h('div', {
         class: 'complex-import-content'
       }, {
