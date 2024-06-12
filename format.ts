@@ -1,4 +1,4 @@
-import dayjs from 'dayjs'
+import dayjs, { Dayjs } from 'dayjs'
 import { AttrsValue } from "complex-data"
 import { StatusValue } from 'complex-data/src/module/StatusData'
 import { DictionaryEditMod } from "complex-data/src/lib/DictionaryValue"
@@ -13,6 +13,7 @@ import FileEdit from "complex-data/src/dictionary/FileEdit"
 import CustomEdit from "complex-data/src/dictionary/CustomEdit"
 import FormEdit from 'complex-data/src/dictionary/FormEdit'
 import { AutoItemPayloadType } from './src/components/AutoItem'
+import SimpleDateEdit from 'complex-data/src/dictionary/SimpleDateEdit'
 
 const modelFuncDict = {
   valueInit: function (itemAttrs: AttrsValue, formData: Record<PropertyKey, unknown>, prop: PropertyKey) {
@@ -231,6 +232,25 @@ const dict = {
         }
       })
       bindEvent(this as dictItemType, itemAttrs, edit, payload)
+      if (edit.$option.rangeLimit) {
+        itemAttrs.pushEvent('calendarChange', function(dates: [Dayjs, Dayjs] | [string, string], dateStrings: [string, string], info: { range: 'start' | 'end' }, payload: AutoItemPayloadType<boolean>) {
+          if (dates && dates[0] && dates[1]) {
+            // 获取结束时间距离开始时间的时间间隔，毫秒
+            const offset = SimpleDateEdit.$compareDate(dates[0], dates[1])
+            const rangeLimit = edit.$option.rangeLimit! * 1000
+            if (offset > rangeLimit) {
+              // 当大于限制值时
+              if (info.range === 'start') {
+                dates.splice(0, 1)
+                dateStrings.splice(0, 1)
+              } else if (info.range === 'end') {
+                dates.splice(1, 1)
+                dateStrings.splice(1, 1)
+              }
+            }
+          }
+        }, 'before')
+      }
       return itemAttrs
     }
   },

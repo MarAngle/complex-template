@@ -30,15 +30,9 @@ SimpleDateEdit.$parseDate = function(dateValue) {
 }
 
 SimpleDateEdit.$compareDate = function(target, other) {
-  const otherUnix = (other as Dayjs).unix()
-  const targetUnix = (target as Dayjs).unix()
-  if (otherUnix < targetUnix) {
-    return 'before'
-  } else if (otherUnix > targetUnix) {
-    return 'after'
-  } else {
-    return 'same'
-  }
+  const otherTime = (other as Dayjs).valueOf()
+  const targetTime = (target as Dayjs).valueOf()
+  return otherTime - targetTime
 }
 
 dayjs.extend(customParseFormat)
