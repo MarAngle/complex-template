@@ -14,7 +14,7 @@ export interface SearchAreaProps extends EditViewDefaultProps {
 export default defineComponent({
   name: 'SearchArea',
   emits: {
-    menu: (prop: string, payload: AutoItemPayloadType) => {
+    menu: (prop: string, payload: AutoItemPayloadType<true>) => {
       return typeof prop === 'string'
     }
   },
@@ -99,7 +99,7 @@ export default defineComponent({
         choice: this.choice,
         disabled: this.disabled,
         loading: this.loading,
-        onMenu: (prop: string, payload: AutoItemPayloadType) => {
+        onMenu: (prop: string, payload: AutoItemPayloadType<true>) => {
           this.$emit('menu', prop, payload)
         }
       })

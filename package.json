@@ -1,6 +1,6 @@
 {
   "name": "complex-component-antd",
-  "version": "4.3.10",
+  "version": "4.3.11-ing",
   "description": "a complex component by antd v4",
   "main": "index.ts",
   "repository": {
@@ -8,8 +8,8 @@
     "url": "https://github.com/MarAngle/complex-component-antd.git"
   },
   "dependencies": {
-    "ant-design-vue": "^4.2.1",
-    "complex-data": "4.3.15 - 4.3.99",
+    "ant-design-vue": "^4.2.3",
+    "complex-data": "4.3.16 - 4.3.99",
     "complex-plugin": "4.2.7 - 4.2.99",
     "complex-component": "4.3.2 - 4.3.99"
   },

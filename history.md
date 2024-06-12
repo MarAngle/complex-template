@@ -10,6 +10,10 @@
 
 ### Doing
 
+### 4.3.11-ing
+- QuickList的事件由menu拆分成search/table
+- 升级依赖，适配时间范围限制
+
 ### 4.3.8/9/10
 - 按钮适配防抖
 - Cascader名称统一
