@@ -10,6 +10,9 @@
 
 ### Doing
 
+### 4.3.12-ing
+- 优化上传组件
+
 ### 4.3.11
 - QuickList的事件由menu拆分成search/table
 - 升级依赖，适配时间范围限制

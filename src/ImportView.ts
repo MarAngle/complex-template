@@ -1,13 +1,13 @@
 import { defineComponent, h, PropType, VNode } from "vue"
 import { Button } from "ant-design-vue"
 import { ButtonType } from "ant-design-vue/es/button"
+import { downloadFile, isFile } from "complex-utils"
 import { notice } from "complex-plugin"
 import { FileEditOption } from "complex-data/src/dictionary/FileEdit"
+import { fileDataType } from "complex-data/type"
 import { FileView } from "complex-component"
 import { FileProps } from "complex-component/src/type"
 import icon from "../icon"
-import { fileDataType } from "complex-data/type"
-import { downloadFile, isFile } from "complex-utils"
 
 export interface ImportProps extends FileProps{
   name?: NonNullable<FileEditOption['button']>['name']
@@ -137,7 +137,7 @@ export default defineComponent({
         }
       }
     },
-    setMutipleUpload(file: fileDataType[], emit?: boolean) {
+    setMultipleUpload(file: fileDataType[], emit?: boolean) {
       file.forEach(fileItem => {
         if ((this.currentValue as string[]).indexOf(fileItem.data) === -1) {
           (this.currentValue as string[]).push(fileItem.data);
@@ -161,7 +161,7 @@ export default defineComponent({
         }
       }
     },
-    setMutipleData(file: undefined | File[], append?: boolean, emit?: boolean) {
+    setMultipleData(file: undefined | File[], append?: boolean, emit?: boolean) {
       if (this.currentValue !== file) {
         if (!append) {
           this.currentValue = file || []
@@ -203,6 +203,34 @@ export default defineComponent({
     emitData() {
       this.$emit('select', this.currentValue)
     },
+    onSingleSelect(file: File) {
+      if (this.upload) {
+        this.operate = true
+        this.upload(file).then(res => {
+          this.setSingleUpload(res.file as fileDataType, true)
+        }).catch((err: unknown) => {
+          console.error(err)
+        }).finally(() => {
+          this.operate = false
+        })
+      } else {
+        this.setSingleData(file, true)
+      }
+    },
+    onMultipleSelect(file: File[]) {
+      if (this.upload) {
+        this.operate = true
+        this.upload(file).then(res => {
+          this.setMultipleUpload(res.file as fileDataType[], true)
+        }).catch((err: unknown) => {
+          console.error(err)
+        }).finally(() => {
+          this.operate = false
+        })
+      } else {
+        this.setMultipleData(file, true, true)
+      }
+    },
     renderFile() {
       let disabled = this.disabled
       if (this.max && (this.currentValue as File[]).length >= this.max) {
@@ -215,20 +243,7 @@ export default defineComponent({
         multiple: this.multiple,
         disabled: disabled,
         size: this.size,
-        onSelect: (file: File | File[]) => {
-          if (this.upload) {
-            this.operate = true
-            this.upload!(file).then(res => {
-              !this.multiple ? this.setSingleUpload(res.file as fileDataType, true) : this.setMutipleUpload(res.file as fileDataType[], true)
-            }).catch((err: unknown) => {
-              console.error(err)
-            }).finally(() => {
-              this.operate = false
-            })
-          } else {
-            !this.multiple ? this.setSingleData(file as File, true) : this.setMutipleData(file as File[], true, true)
-          }
-        }
+        onSelect: this.multiple ? this.onMultipleSelect : this.onSingleSelect
       })
     },
     renderMenu() {
