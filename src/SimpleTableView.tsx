@@ -74,7 +74,7 @@ export default defineComponent({
       }
     },
     currentColumnList() {
-      return this.columnList || this.listData.getDictionaryPageList(this.listProp) as DefaultList[]
+      return this.columnList || this.listData.getDictionaryPageList(this.listProp, this.listData.getDictionaryList(this.listProp)) as DefaultList[]
     }
   },
   methods: {

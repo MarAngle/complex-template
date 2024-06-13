@@ -5,11 +5,11 @@ import ObserveList from "complex-data/src/dictionary/ObserveList"
 import DefaultEdit from "complex-data/src/dictionary/DefaultEdit"
 import GridParse from "complex-data/src/lib/GridParse"
 import { DictionaryEditMod } from "complex-data/src/lib/DictionaryValue"
-import config from "../../config"
 import EditView from "../EditView"
 import InfoView from "../InfoView"
 import AutoEditItem from "./AutoEditItem"
 import AutoInfoContent from "./AutoInfoContent"
+import config from "../../config"
 
 export interface AutoItemPayloadType<E = true> {
   prop: string

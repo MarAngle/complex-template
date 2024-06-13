@@ -3,7 +3,7 @@ import { DictionaryData, DictionaryValue, FormValue } from "complex-data"
 import ObserveList from "complex-data/src/dictionary/ObserveList"
 import { AttrsValueInitOption } from "complex-data/src/lib/AttrsValue"
 import InfoView, { InfoViewDefaultProps } from "./InfoView"
-import { AutoItemPayloadType } from "./components/AutoItem"
+import { AutoItemPayloadType } from "./dictionary/AutoItem"
 import config from "../config"
 
 export interface InfoAreaDefaultProps extends InfoViewDefaultProps {

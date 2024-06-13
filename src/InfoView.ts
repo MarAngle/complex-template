@@ -4,7 +4,7 @@ import ObserveList from "complex-data/src/dictionary/ObserveList"
 import DefaultInfo from "complex-data/src/dictionary/DefaultInfo"
 import AttrsValue, { AttrsValueInitOption } from "complex-data/src/lib/AttrsValue"
 import GridParse from "complex-data/src/lib/GridParse"
-import AutoItem, { AutoItemProps } from "./components/AutoItem"
+import AutoItem, { AutoItemProps } from "./dictionary/AutoItem"
 import config from "../config"
 
 export interface InfoViewDefaultProps {

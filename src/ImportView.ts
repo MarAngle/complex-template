@@ -9,12 +9,13 @@ import { FileView } from "complex-component"
 import { FileProps } from "complex-component/src/type"
 import icon from "../icon"
 
-export interface ImportProps extends FileProps{
-  name?: NonNullable<FileEditOption['button']>['name']
-  type?: NonNullable<FileEditOption['button']>['type']
-  icon?: NonNullable<FileEditOption['button']>['icon']
-  complex?: FileEditOption['complex']
-  upload?: FileEditOption['upload']
+export interface ImportProps<M extends boolean = false> extends FileProps{
+  value?: any
+  name?: NonNullable<FileEditOption<M>['button']>['name']
+  type?: NonNullable<FileEditOption<M>['button']>['type']
+  icon?: NonNullable<FileEditOption<M>['button']>['icon']
+  complex?: FileEditOption<M>['complex']
+  upload?: FileEditOption<M>['upload']
   loading?: boolean
   render?: {
     menu?: () => (VNode | VNode[])
@@ -27,7 +28,7 @@ export default defineComponent({
   name: 'ImportView',
   props: {
     value: {
-      type: [String, Object, Array] as PropType<any | any[]>
+      type: [String, Object, Array] as PropType<ImportProps<boolean>['value']>
     },
     name: {
       type: String,
@@ -48,11 +49,11 @@ export default defineComponent({
       required: false
     },
     upload: {
-      type: Function as PropType<ImportProps['upload']>,
+      type: Function as PropType<ImportProps<boolean>['upload']>,
       required: false
     },
     render: {
-      type: Object as PropType<ImportProps['render']>,
+      type: Object as PropType<ImportProps<boolean>['render']>,
       required: false
     },
     loading: {
@@ -68,7 +69,7 @@ export default defineComponent({
       required: false
     },
     multiple: {
-      type: Object as PropType<ImportProps['multiple']>,
+      type: Object as PropType<ImportProps<boolean>['multiple']>,
       required: false
     },
     disabled: {
@@ -252,7 +253,7 @@ export default defineComponent({
         loading: this.loading || this.operate,
         type: this.type === 'danger' ? 'primary' : this.type as ButtonType,
         danger: this.type === 'danger',
-        icon: icon.parse(this.icon as ImportProps['icon']),
+        icon: icon.parse(this.icon as ImportProps<boolean>['icon']),
         disabled: this.disabled,
         onClick: () => {
           (this.$refs.file as InstanceType<typeof FileView>).$el.click()

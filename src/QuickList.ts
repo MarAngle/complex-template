@@ -9,7 +9,7 @@ import ModalView, { ModalViewProps } from "./ModalView"
 import SearchArea, { SearchAreaProps } from "./SearchArea"
 import EditArea, { EditAreaProps } from "./EditArea"
 import InfoArea, { InfoAreaProps } from "./InfoArea"
-import { AutoItemPayloadType } from "./components/AutoItem"
+import { AutoItemPayloadType } from "./dictionary/AutoItem"
 import config from "./../config"
 
 export interface ListModalViewProps extends ModalViewProps {

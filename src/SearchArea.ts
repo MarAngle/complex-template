@@ -2,7 +2,7 @@ import { defineComponent, h, PropType } from "vue"
 import { DefaultInfo, SearchData } from "complex-data"
 import { DictionaryEditMod } from "complex-data/src/lib/DictionaryValue"
 import EditView, { EditViewDefaultProps } from "./EditView"
-import { AutoItemPayloadType } from "./components/AutoItem"
+import { AutoItemPayloadType } from "./dictionary/AutoItem"
 import config from "../config"
 
 export interface SearchAreaProps extends EditViewDefaultProps {

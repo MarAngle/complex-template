@@ -4,7 +4,7 @@ import { mergeData } from "complex-utils"
 import { FormValue } from "complex-data"
 import ObserveList from "complex-data/src/dictionary/ObserveList"
 import DefaultInfo from "complex-data/src/dictionary/DefaultInfo"
-import AutoItem, { AutoItemProps } from "./components/AutoItem"
+import AutoItem, { AutoItemProps } from "./dictionary/AutoItem"
 import { InfoViewDefaultProps } from "./InfoView"
 import config from "../config"
 
