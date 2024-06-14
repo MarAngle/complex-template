@@ -119,20 +119,16 @@ export default defineComponent({
       return value || (!this.multiple ? undefined : [])
     },
     parseCurrentValue(currentValue: any) {
-      if (this.upload) {
-        if (!this.multiple) {
-          return currentValue ? { data: currentValue as string, name: currentValue as string, url: undefined } : undefined
-        } else {
-          return (currentValue as string[]).map(item => {
-            return {
-              data: item,
-              name: item,
-              url: undefined
-            }
-          })
-        }
+      if (!this.multiple) {
+        return currentValue ? { data: currentValue as string, name: currentValue as string, url: undefined } : undefined
       } else {
-        return currentValue
+        return (currentValue as string[]).map(item => {
+          return {
+            data: item,
+            name: item,
+            url: undefined
+          }
+        })
       }
     },
     syncData() {
@@ -150,11 +146,11 @@ export default defineComponent({
         }
       }
     },
-    setMultipleUpload(file: fileDataType[], emit?: boolean) {
-      file.forEach(fileItem => {
-        if ((this.currentValue as string[]).indexOf(fileItem.data) === -1) {
-          (this.currentValue as string[]).push(fileItem.data);
-          (this.data as fileDataType[]).push(fileItem)
+    setMultipleUpload(fileList: fileDataType[], emit?: boolean) {
+      fileList.forEach(file => {
+        if ((this.currentValue as any[]).indexOf(file.data) === -1) {
+          (this.currentValue as any[]).push(file.data);
+          (this.data as fileDataType[]).push(file)
         }
       })
       if (this.max && (this.currentValue as string[]).length > this.max) {
@@ -172,14 +168,10 @@ export default defineComponent({
       }
       if (index === undefined) {
         this.currentValue = undefined
-        if (this.upload) {
-          this.data = undefined
-        }
+        this.data = undefined
       } else {
-        (this.currentValue as File[]).splice(index, 1)
-        if (this.upload) {
-          (this.data as fileDataType[]).splice(index, 1)
-        }
+        (this.currentValue as File[]).splice(index, 1);
+        (this.data as fileDataType[]).splice(index, 1)
       }
       this.emitData()
     },
@@ -187,9 +179,9 @@ export default defineComponent({
       this.$emit('select', this.currentValue)
     },
     onSingleSelect(file: File) {
-      this.operate = true
-      this.currentUpload(file).then(res => {
-        this.setSingleUpload(res.file as fileDataType, true)
+      this.operate = true;
+      (this.currentUpload as NonNullable<ImportProps<false>['upload']>)(file).then(res => {
+        this.setSingleUpload(res.file, true)
       }).catch((err: unknown) => {
         console.error(err)
       }).finally(() => {
@@ -197,9 +189,9 @@ export default defineComponent({
       })
     },
     onMultipleSelect(file: File[]) {
-      this.operate = true
-      this.currentUpload(file).then(res => {
-        this.setMultipleUpload(res.file as fileDataType[], true)
+      this.operate = true;
+      (this.currentUpload as NonNullable<ImportProps<true>['upload']>)(file).then(res => {
+        this.setMultipleUpload(res.file, true)
       }).catch((err: unknown) => {
         console.error(err)
       }).finally(() => {
