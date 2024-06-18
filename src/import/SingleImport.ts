@@ -5,10 +5,10 @@ import { downloadFile, isFile } from "complex-utils"
 import { notice } from "complex-plugin"
 import { fileDataType } from "complex-data/type"
 import { FileEditOption } from "complex-data/src/dictionary/FileEdit"
-import { FileMutipleValue, FileValue, fileValueType } from "complex-data/src/lib/FileValue"
+import { FileMultipleValue, FileValue, fileValueType } from "complex-data/src/lib/FileValue"
 import { FileView } from "complex-component"
 import { FileProps } from "complex-component/type"
-import icon from "../icon"
+import icon from "../../icon"
 
 export const defaultUpload = function(file: File) {
   return Promise.resolve({ file: { value: file, name: file.name } })
@@ -34,7 +34,7 @@ export interface ImportProps<M extends boolean = false> extends FileProps{
 // 考虑单选为限制情况的多选
 // 考虑添加complex，接收一个复杂对象实现，具体的名称和URL解析考虑单独参数或者额外包装
 export default defineComponent({
-  name: 'ImportView',
+  name: 'SingleImport',
   props: {
     value: {
       type: [String, Object, Array] as PropType<ImportProps<boolean>['value']>
@@ -111,7 +111,7 @@ export default defineComponent({
     return {
       operate: false,
       currentValue: this.value,
-      data: this.parseValue(this.value) as FileValue | FileMutipleValue
+      data: this.parseValue(this.value) as FileValue | FileMultipleValue
     }
   },
   methods: {
@@ -126,7 +126,7 @@ export default defineComponent({
       if (!this.multiple) {
         return new FileValue(value as fileValueType)
       } else {
-        return new FileMutipleValue((value as fileValueType[] || []).map(valueItem => new FileValue(valueItem)))
+        return new FileMultipleValue((value as fileValueType[] || []).map(valueItem => new FileValue(valueItem)))
       }
     },
     syncData() {
@@ -136,10 +136,10 @@ export default defineComponent({
       } else {
         // 多选模式下，value可能存在splice的改变或者是splice后重新赋值，此时需要将额外数据删除
         if (this.value) {
-          const currentList = this.parseValue(this.value) as FileMutipleValue
-          (this.data as FileMutipleValue).assign(currentList)
+          const currentList = this.parseValue(this.value) as FileMultipleValue
+          (this.data as FileMultipleValue).assign(currentList)
         } else {
-          (this.data as FileMutipleValue).reset()
+          (this.data as FileMultipleValue).reset()
         } 
       }
     },
@@ -176,12 +176,12 @@ export default defineComponent({
       fileList.forEach(file => {
         if ((this.currentValue as any[]).indexOf(file.value) === -1) {
           (this.currentValue as any[]).push(file.value);
-          (this.data as FileMutipleValue).push(new FileValue(file))
+          (this.data as FileMultipleValue).push(new FileValue(file))
         }
       })
       if (this.max && (this.currentValue as string[]).length > this.max) {
         (this.currentValue as string[]).length = this.max;
-        (this.data as FileMutipleValue).truncation(this.max)
+        (this.data as FileMultipleValue).truncation(this.max)
         notice.showMsg(`当前选择的文件数量超过限制值${this.max}，超过部分已被删除！`, 'error')
       }
       if (emit) {
@@ -231,7 +231,7 @@ export default defineComponent({
         default: () => this.name
       })
     },
-    renderList(list: FileMutipleValue) {
+    renderList(list: FileMultipleValue) {
       return h('div', {
         class: 'complex-import-content-list'
       }, {
@@ -249,7 +249,7 @@ export default defineComponent({
         this.data.reset()
       } else {
         (this.currentValue as File[]).splice(index, 1);
-        (this.data as FileMutipleValue).delete(key)
+        (this.data as FileMultipleValue).delete(key)
       }
       this.emitData()
     },
@@ -293,7 +293,7 @@ export default defineComponent({
         }
       })
     } else {
-      content = !this.multiple ? this.renderContent(this.data as undefined | FileValue) : this.renderList(this.data as FileMutipleValue)
+      content = !this.multiple ? this.renderContent(this.data as undefined | FileValue) : this.renderList(this.data as FileMultipleValue)
     }
     return h('div', {
       class: 'complex-import'

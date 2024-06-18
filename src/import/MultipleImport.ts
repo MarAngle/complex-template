@@ -3,17 +3,38 @@ import { Button } from "ant-design-vue"
 import { ButtonType } from "ant-design-vue/es/button"
 import { downloadFile, isFile } from "complex-utils"
 import { notice } from "complex-plugin"
-import { FileEditOption } from "complex-data/src/dictionary/FileEdit"
 import { fileDataType } from "complex-data/type"
+import { FileEditOption } from "complex-data/src/dictionary/FileEdit"
+import { FileMultipleValue, FileValue, fileValueType } from "complex-data/src/lib/FileValue"
 import { FileView } from "complex-component"
 import { FileProps } from "complex-component/type"
 import icon from "../../icon"
 
-export type SingleFile = {}
+export const defaultUpload = function(file: File) {
+  return Promise.resolve({ file: { value: file, name: file.name } })
+} as NonNullable<FileEditOption<false>['upload']>
+
+export const defaultMultipleUpload = function(fileList: File[]) {
+  return Promise.resolve({ file: fileList.map(file => { return { value: file, name: file.name} } ) })
+} as NonNullable<FileEditOption<true>['upload']>
+
+export interface ImportProps<M extends boolean = false> extends FileProps{
+  value?: fileValueType | fileValueType[]
+  name?: NonNullable<FileEditOption<M>['button']>['name']
+  type?: NonNullable<FileEditOption<M>['button']>['type']
+  icon?: NonNullable<FileEditOption<M>['button']>['icon']
+  complex?: FileEditOption<M>['complex']
+  upload?: FileEditOption<M>['upload']
+  loading?: boolean
+  render?: {
+    menu?: () => (VNode | VNode[])
+    content?: () => (VNode | VNode[])
+  }
+}
 // 考虑单选为限制情况的多选
 // 考虑添加complex，接收一个复杂对象实现，具体的名称和URL解析考虑单独参数或者额外包装
 export default defineComponent({
-  name: 'ImportView',
+  name: 'MultipleImport',
   props: {
     value: {
       type: [String, Object, Array] as PropType<ImportProps<boolean>['value']>
@@ -67,7 +88,7 @@ export default defineComponent({
   },
   watch: {
     value: function() {
-      this.syncData()
+      this.syncValue()
     }
   },
   computed: {
@@ -77,152 +98,102 @@ export default defineComponent({
       } else {
         return 0
       }
+    },
+    currentUpload() {
+      if (!this.upload) {
+        return !this.multiple ? defaultUpload : defaultMultipleUpload
+      } else {
+        return this.upload
+      }
     }
   },
   data() {
-    const currentValue = this.parseValue(this.value)
     return {
       operate: false,
-      currentValue: currentValue,
-      data: this.parseCurrentValue(currentValue)
+      currentValue: this.value,
+      data: this.parseValue(this.value) as FileValue | FileMultipleValue
     }
   },
   methods: {
-    parseValue(value: any) {
-      return value || (!this.multiple ? undefined : [])
+    syncValue() {
+      // 此处基于外部数据整合内部数据
+      if (this.value !== this.currentValue) {
+        this.currentValue = this.value
+      }
+      this.syncData()
     },
-    parseCurrentValue(currentValue: any) {
-      // if (this.complex) {
-      //   return currentValue
-      // }
-      if (this.upload) {
-        if (!this.multiple) {
-          return currentValue ? { data: currentValue as string, name: currentValue as string, url: undefined } : undefined
-        } else {
-          return (currentValue as string[]).map(item => {
-            return {
-              data: item,
-              name: item,
-              url: undefined
-            }
-          })
-        }
+    parseValue(value?: fileValueType | fileValueType[]) {
+      if (!this.multiple) {
+        return new FileValue(value as fileValueType)
       } else {
-        return currentValue
+        return new FileMultipleValue((value as fileValueType[] || []).map(valueItem => new FileValue(valueItem)))
       }
     },
     syncData() {
-      if (this.currentValue !== this.value) {
-        this.currentValue = this.parseValue(this.value)
-        this.data = this.parseCurrentValue(this.currentValue)
+      // 校准data
+      if (!this.multiple) {
+        this.data = this.parseValue(this.value)
+      } else {
+        // 多选模式下，value可能存在splice的改变或者是splice后重新赋值，此时需要将额外数据删除
+        if (this.value) {
+          const currentList = this.parseValue(this.value) as FileMultipleValue
+          (this.data as FileMultipleValue).assign(currentList)
+        } else {
+          (this.data as FileMultipleValue).reset()
+        } 
       }
     },
+    onSingleSelect(file: File) {
+      this.operate = true;
+      (this.currentUpload as NonNullable<ImportProps<false>['upload']>)(file).then(res => {
+        this.setSingleUpload(res.file, true)
+      }).catch((err: unknown) => {
+        console.error(err)
+      }).finally(() => {
+        this.operate = false
+      })
+    },
+    onMultipleSelect(file: File[]) {
+      this.operate = true;
+      (this.currentUpload as NonNullable<ImportProps<true>['upload']>)(file).then(res => {
+        this.setMultipleUpload(res.file, true)
+      }).catch((err: unknown) => {
+        console.error(err)
+      }).finally(() => {
+        this.operate = false
+      })
+    },
     setSingleUpload(file: fileDataType, emit?: boolean) {
-      if (this.currentValue !== file.data) {
-        this.currentValue = file.data
-        this.data = file
+      if (this.currentValue !== file.value) {
+        this.currentValue = file.value
+        this.data = new FileValue(file)
         if (emit) {
           this.emitData()
         }
       }
     },
-    setMultipleUpload(file: fileDataType[], emit?: boolean) {
-      file.forEach(fileItem => {
-        if ((this.currentValue as string[]).indexOf(fileItem.data) === -1) {
-          (this.currentValue as string[]).push(fileItem.data);
-          (this.data as fileDataType[]).push(fileItem)
+    setMultipleUpload(fileList: fileDataType[], emit?: boolean) {
+      fileList.forEach(file => {
+        if ((this.currentValue as any[]).indexOf(file.value) === -1) {
+          (this.currentValue as any[]).push(file.value);
+          (this.data as FileMultipleValue).push(new FileValue(file))
         }
       })
       if (this.max && (this.currentValue as string[]).length > this.max) {
         (this.currentValue as string[]).length = this.max;
-        (this.data as fileDataType[]).length = this.max
+        (this.data as FileMultipleValue).truncation(this.max)
         notice.showMsg(`当前选择的文件数量超过限制值${this.max}，超过部分已被删除！`, 'error')
       }
       if (emit) {
         this.emitData()
       }
     },
-    setSingleData(file?: File, emit?: boolean) {
-      if (this.currentValue !== file) {
-        (this.currentValue as undefined | File) = file
-        if (emit) {
-          this.emitData()
-        }
-      }
-    },
-    setMultipleData(file: undefined | File[], append?: boolean, emit?: boolean) {
-      if (this.currentValue !== file) {
-        if (!append) {
-          this.currentValue = file || []
-        } else if (!file) {
-          // append模式下file无值不做操作
-        } else {
-          file.forEach(fileItem => {
-            if ((this.currentValue as File[]).indexOf(fileItem) === -1) {
-              (this.currentValue as File[]).push(fileItem)
-            }
-          })
-          if (this.max && (this.currentValue as File[]).length > this.max) {
-            (this.currentValue as File[]).length = this.max
-            notice.showMsg(`当前选择的文件数量超过限制值${this.max}，超过部分已被删除！`, 'error')
-          }
-        }
-        if (emit) {
-          this.emitData()
-        }
-      }
-    },
-    removeData(index?: number) {
-      if (this.disabled || this.loading) {
-        return
-      }
-      if (index === undefined) {
-        this.currentValue = undefined
-        if (this.upload) {
-          this.data = undefined
-        }
-      } else {
-        (this.currentValue as File[]).splice(index, 1)
-        if (this.upload) {
-          (this.data as fileDataType[]).splice(index, 1)
-        }
-      }
-      this.emitData()
-    },
     emitData() {
       this.$emit('select', this.currentValue)
     },
-    onSingleSelect(file: File) {
-      if (this.upload) {
-        this.operate = true
-        this.upload(file).then(res => {
-          this.setSingleUpload(res.file as fileDataType, true)
-        }).catch((err: unknown) => {
-          console.error(err)
-        }).finally(() => {
-          this.operate = false
-        })
-      } else {
-        this.setSingleData(file, true)
-      }
-    },
-    onMultipleSelect(file: File[]) {
-      if (this.upload) {
-        this.operate = true
-        this.upload(file).then(res => {
-          this.setMultipleUpload(res.file as fileDataType[], true)
-        }).catch((err: unknown) => {
-          console.error(err)
-        }).finally(() => {
-          this.operate = false
-        })
-      } else {
-        this.setMultipleData(file, true, true)
-      }
-    },
     renderFile() {
       let disabled = this.disabled
-      if (this.max && (this.currentValue as File[]).length >= this.max) {
+      if (this.max && (this.currentValue as fileValueType[]).length >= this.max) {
         disabled = true
       }
       return h(FileView, {
@@ -260,18 +231,31 @@ export default defineComponent({
         default: () => this.name
       })
     },
-    renderList(list: File[] | fileDataType[]) {
+    renderList(list: FileMultipleValue) {
       return h('div', {
         class: 'complex-import-content-list'
       }, {
-        default: () => list.map((file, index) => {
+        default: () => list.value.map((file, index) => {
           return this.renderContent(file, index)
         })
       })
     },
-    renderContent(file?: File | fileDataType, index?: number) {
-      const isFileData = isFile(file)
-      const canDownload = !isFileData && file && file.url
+    removeData(key: any, index?: number) {
+      if (this.disabled || this.loading) {
+        return
+      }
+      if (!index) {
+        this.currentValue = undefined
+        this.data.reset()
+      } else {
+        (this.currentValue as File[]).splice(index, 1);
+        (this.data as FileMultipleValue).delete(key)
+      }
+      this.emitData()
+    },
+    renderContent(file?: FileValue, index?: number) {
+      const isFileValue = isFile(file)
+      const canDownload = !isFileValue && file && file.url
       return file ? h('div', {
         class: 'complex-import-content'
       }, {
@@ -290,7 +274,7 @@ export default defineComponent({
           h('span', {
             class: 'complex-import-content-delete complex-color-danger',
             onClick: () => {
-              this.removeData(index)
+              this.removeData(file.value!, index)
             }
           }, this.disabled ? [] : [icon.parse('close')]),
         ]
@@ -309,7 +293,7 @@ export default defineComponent({
         }
       })
     } else {
-      content = !this.multiple ? (this.upload ? this.renderContent(this.data as undefined | fileDataType) : this.renderContent(this.currentValue as undefined | File)) : (this.upload ? this.renderList(this.data as fileDataType[]) : this.renderList(this.currentValue as File[]))
+      content = !this.multiple ? this.renderContent(this.data as undefined | FileValue) : this.renderList(this.data as FileMultipleValue)
     }
     return h('div', {
       class: 'complex-import'
