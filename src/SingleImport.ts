@@ -8,23 +8,19 @@ import { FileEditOption } from "complex-data/src/dictionary/FileEdit"
 import { FileMultipleValue, FileValue, fileValueType } from "complex-data/src/lib/FileValue"
 import { FileView } from "complex-component"
 import { FileProps } from "complex-component/type"
-import icon from "../../icon"
+import icon from "../icon"
 
 export const defaultUpload = function(file: File) {
   return Promise.resolve({ file: { value: file, name: file.name } })
 } as NonNullable<FileEditOption<false>['upload']>
 
-export const defaultMultipleUpload = function(fileList: File[]) {
-  return Promise.resolve({ file: fileList.map(file => { return { value: file, name: file.name} } ) })
-} as NonNullable<FileEditOption<true>['upload']>
-
-export interface ImportProps<M extends boolean = false> extends FileProps{
-  value?: fileValueType | fileValueType[]
-  name?: NonNullable<FileEditOption<M>['button']>['name']
-  type?: NonNullable<FileEditOption<M>['button']>['type']
-  icon?: NonNullable<FileEditOption<M>['button']>['icon']
-  complex?: FileEditOption<M>['complex']
-  upload?: FileEditOption<M>['upload']
+export interface SingleImportProps extends FileProps<false>{
+  value?: fileValueType
+  name?: NonNullable<FileEditOption<false>['button']>['name']
+  type?: NonNullable<FileEditOption<false>['button']>['type']
+  icon?: NonNullable<FileEditOption<false>['button']>['icon']
+  complex?: FileEditOption<false>['complex']
+  upload?: FileEditOption<false>['upload']
   loading?: boolean
   render?: {
     menu?: () => (VNode | VNode[])
@@ -37,7 +33,7 @@ export default defineComponent({
   name: 'SingleImport',
   props: {
     value: {
-      type: [String, Object, Array] as PropType<ImportProps<boolean>['value']>
+      type: [String, Object] as PropType<SingleImportProps['value']>
     },
     name: {
       type: String,
@@ -58,11 +54,11 @@ export default defineComponent({
       required: false
     },
     upload: {
-      type: Function as PropType<ImportProps<boolean>['upload']>,
+      type: Function as PropType<SingleImportProps['upload']>,
       required: false
     },
     render: {
-      type: Object as PropType<ImportProps<boolean>['render']>,
+      type: Object as PropType<SingleImportProps['render']>,
       required: false
     },
     loading: {
@@ -77,10 +73,6 @@ export default defineComponent({
       type: Number,
       required: false
     },
-    multiple: {
-      type: Object as PropType<ImportProps<boolean>['multiple']>,
-      required: false
-    },
     disabled: {
       type: Boolean,
       required: false
@@ -92,26 +84,15 @@ export default defineComponent({
     }
   },
   computed: {
-    max() {
-      if (this.multiple) {
-        return this.multiple.max || 0
-      } else {
-        return 0
-      }
-    },
     currentUpload() {
-      if (!this.upload) {
-        return !this.multiple ? defaultUpload : defaultMultipleUpload
-      } else {
-        return this.upload
-      }
+      return this.upload || defaultUpload
     }
   },
   data() {
     return {
       operate: false,
       currentValue: this.value,
-      data: this.parseValue(this.value) as FileValue | FileMultipleValue
+      data: this.parseValue(this.value) as undefined | FileValue
     }
   },
   methods: {
@@ -122,41 +103,17 @@ export default defineComponent({
       }
       this.syncData()
     },
-    parseValue(value?: fileValueType | fileValueType[]) {
-      if (!this.multiple) {
-        return new FileValue(value as fileValueType)
-      } else {
-        return new FileMultipleValue((value as fileValueType[] || []).map(valueItem => new FileValue(valueItem)))
-      }
+    parseValue(value?: fileValueType) {
+      return value ? new FileValue(value as fileValueType) : undefined
     },
     syncData() {
       // 校准data
-      if (!this.multiple) {
-        this.data = this.parseValue(this.value)
-      } else {
-        // 多选模式下，value可能存在splice的改变或者是splice后重新赋值，此时需要将额外数据删除
-        if (this.value) {
-          const currentList = this.parseValue(this.value) as FileMultipleValue
-          (this.data as FileMultipleValue).assign(currentList)
-        } else {
-          (this.data as FileMultipleValue).reset()
-        } 
-      }
+      this.data = this.parseValue(this.value)
     },
     onSingleSelect(file: File) {
       this.operate = true;
-      (this.currentUpload as NonNullable<ImportProps<false>['upload']>)(file).then(res => {
+      this.currentUpload(file).then(res => {
         this.setSingleUpload(res.file, true)
-      }).catch((err: unknown) => {
-        console.error(err)
-      }).finally(() => {
-        this.operate = false
-      })
-    },
-    onMultipleSelect(file: File[]) {
-      this.operate = true;
-      (this.currentUpload as NonNullable<ImportProps<true>['upload']>)(file).then(res => {
-        this.setMultipleUpload(res.file, true)
       }).catch((err: unknown) => {
         console.error(err)
       }).finally(() => {
@@ -172,38 +129,18 @@ export default defineComponent({
         }
       }
     },
-    setMultipleUpload(fileList: fileDataType[], emit?: boolean) {
-      fileList.forEach(file => {
-        if ((this.currentValue as any[]).indexOf(file.value) === -1) {
-          (this.currentValue as any[]).push(file.value);
-          (this.data as FileMultipleValue).push(new FileValue(file))
-        }
-      })
-      if (this.max && (this.currentValue as string[]).length > this.max) {
-        (this.currentValue as string[]).length = this.max;
-        (this.data as FileMultipleValue).truncation(this.max)
-        notice.showMsg(`当前选择的文件数量超过限制值${this.max}，超过部分已被删除！`, 'error')
-      }
-      if (emit) {
-        this.emitData()
-      }
-    },
     emitData() {
       this.$emit('select', this.currentValue)
     },
     renderFile() {
       let disabled = this.disabled
-      if (this.max && (this.currentValue as fileValueType[]).length >= this.max) {
-        disabled = true
-      }
       return h(FileView, {
         class: 'complex-import-file',
         ref: 'file',
         accept: this.accept,
-        multiple: this.multiple,
         disabled: disabled,
         size: this.size,
-        onSelect: this.multiple ? this.onMultipleSelect : this.onSingleSelect
+        onSelect: this.onSingleSelect
       })
     },
     renderMenu() {
@@ -212,7 +149,7 @@ export default defineComponent({
         loading: this.loading || this.operate,
         type: this.type === 'danger' ? 'primary' : this.type as ButtonType,
         danger: this.type === 'danger',
-        icon: icon.parse(this.icon as ImportProps<boolean>['icon']),
+        icon: icon.parse(this.icon as SingleImportProps['icon']),
         disabled: this.disabled,
         onClick: () => {
           (this.$refs.file as InstanceType<typeof FileView>).$el.click()
@@ -240,17 +177,12 @@ export default defineComponent({
         })
       })
     },
-    removeData(key: any, index?: number) {
+    removeData() {
       if (this.disabled || this.loading) {
         return
       }
-      if (!index) {
-        this.currentValue = undefined
-        this.data.reset()
-      } else {
-        (this.currentValue as File[]).splice(index, 1);
-        (this.data as FileMultipleValue).delete(key)
-      }
+      this.currentValue = undefined
+      this.data = undefined
       this.emitData()
     },
     renderContent(file?: FileValue, index?: number) {
@@ -274,7 +206,7 @@ export default defineComponent({
           h('span', {
             class: 'complex-import-content-delete complex-color-danger',
             onClick: () => {
-              this.removeData(file.value!, index)
+              this.removeData()
             }
           }, this.disabled ? [] : [icon.parse('close')]),
         ]
@@ -286,14 +218,13 @@ export default defineComponent({
     if (this.$slots.content || (this.render && this.render.content)) {
       content = (this.$slots.content || this.render!.content)!({
         props: {
-          multiple: this.multiple,
           upload: this.upload,
           value: this.currentValue,
           data: this.data
         }
       })
     } else {
-      content = !this.multiple ? this.renderContent(this.data as undefined | FileValue) : this.renderList(this.data as FileMultipleValue)
+      content = this.renderContent(this.data as undefined | FileValue)
     }
     return h('div', {
       class: 'complex-import'

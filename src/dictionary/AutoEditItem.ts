@@ -1,10 +1,11 @@
 import { defineComponent, h, PropType, VNode } from "vue"
 import { Input, InputNumber, Textarea, Switch, Select, Divider, Cascader, DatePicker, RangePicker } from "ant-design-vue"
 import { camelToLine } from "complex-utils"
-import ImportView from "../ImportView"
 import PaginationView from "./../components/PaginationView"
 import { AutoItemPayloadType } from "./AutoItem"
 import EditView from "../EditView"
+import SingleImport from "../SingleImport"
+import MultipleImport from "../MultipleImport"
 import { parseEditAttrs } from "../../format"
 import config from "../../config"
 
@@ -25,18 +26,19 @@ export default defineComponent({
     let tag: any
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let children: any = undefined
-    const itemAttrs = parseEditAttrs(this.payload.target, this.payload)!
+    const target = this.payload.target
+    const itemAttrs = parseEditAttrs(target, this.payload)!
     itemAttrs.pushClass('complex-edit-item')
-    itemAttrs.pushClass('complex-edit-item-' + camelToLine(this.payload.target.type, '-'))
-    itemAttrs.merge(config.component.parseData(this.payload.target.$local, 'target'))
+    itemAttrs.pushClass('complex-edit-item-' + camelToLine(target.type, '-'))
+    itemAttrs.merge(config.component.parseData(target.$local, 'target'))
     let item = null
     if (!this.payload.parent.gridParse) {
-      const width = this.payload.target.$width
+      const width = target.$width
       if (width) {
         itemAttrs.style.width = width
       }
     }
-    const targetRender = config.component.parseData(this.payload.target.$renders, 'target')
+    const targetRender = config.component.parseData(target.$renders, 'target')
     const option = config.component.parseAttrs(itemAttrs)
     // 考虑一个默认的值，inline模式下和其他模式下的默认值，避免出现问题
     if (targetRender) {
@@ -44,26 +46,26 @@ export default defineComponent({
         ...this.payload,
         option: option
       })
-    } else if (this.payload.target.type === 'input') {
+    } else if (target.type === 'input') {
       tag = Input
-    } else if (this.payload.target.type === 'inputNumber') {
+    } else if (target.type === 'inputNumber') {
       tag = InputNumber
-    } else if (this.payload.target.type === 'textArea') {
+    } else if (target.type === 'textArea') {
       tag = Textarea
-    } else if (this.payload.target.type === 'switch') {
+    } else if (target.type === 'switch') {
       tag = Switch
-    } else if (this.payload.target.type === 'select') {
+    } else if (target.type === 'select') {
       tag = Select
-      const $data = this.payload.target
+      const $data = target
       children = {}
-      const dropdownRender = config.component.parseData(this.payload.target.$renders, 'dropdown')
-      const optionRender = config.component.parseData(this.payload.target.$renders, 'option')
-      const tagRender = config.component.parseData(this.payload.target.$renders, 'tag')
+      const dropdownRender = config.component.parseData(target.$renders, 'dropdown')
+      const optionRender = config.component.parseData(target.$renders, 'option')
+      const tagRender = config.component.parseData(target.$renders, 'tag')
       if (dropdownRender) {
         children.dropdownRender = dropdownRender
       } else {
-        const dropdownTopRender = config.component.parseData(this.payload.target.$renders, 'dropdownTop')
-        const dropdownBottomRender = config.component.parseData(this.payload.target.$renders, 'dropdownBottom')
+        const dropdownTopRender = config.component.parseData(target.$renders, 'dropdownTop')
+        const dropdownBottomRender = config.component.parseData(target.$renders, 'dropdownBottom')
         if (dropdownTopRender || $data.$pagination || dropdownBottomRender) {
           children.dropdownRender = (payload: { menuNode: VNode }) => {
             const vNodes = [payload.menuNode]
@@ -116,7 +118,7 @@ export default defineComponent({
                   e.preventDefault()
                 }
               }))
-              const dropdownPaginationBottomRender = config.component.parseData(this.payload.target.$renders, 'dropdownPaginationBottom')
+              const dropdownPaginationBottomRender = config.component.parseData(target.$renders, 'dropdownPaginationBottom')
               if (dropdownPaginationBottomRender) {
                 vNodes.push(h(Divider, {
                   style: {
@@ -138,17 +140,21 @@ export default defineComponent({
       if (tagRender) {
         children.tagRender = tagRender
       }
-    } else if (this.payload.target.type === 'cascader') {
+    } else if (target.type === 'cascader') {
       tag = Cascader
-    } else if (this.payload.target.type === 'date') {
+    } else if (target.type === 'date') {
       tag = DatePicker
-    } else if (this.payload.target.type === 'dateRange') {
+    } else if (target.type === 'dateRange') {
       tag = RangePicker
-    } else if (this.payload.target.type === 'file') {
-      tag = ImportView
-    } else if (this.payload.target.type === 'custom') {
-      tag = this.payload.target.$custom
-    } else if (this.payload.target.type === 'form') {
+    } else if (target.type === 'file') {
+      if (!target.multiple) {
+        tag = SingleImport
+      } else {
+        tag = MultipleImport
+      }
+    } else if (target.type === 'custom') {
+      tag = target.$custom
+    } else if (target.type === 'form') {
       tag = EditView
     }
     if (tag) {
