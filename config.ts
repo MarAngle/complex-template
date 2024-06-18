@@ -6,12 +6,16 @@ import DefaultList from 'complex-data/src/dictionary/DefaultList'
 import { GridValue } from "complex-data/src/lib/GridParse"
 import { FileValue } from "complex-data/src/lib/FileValue"
 import { MenuValue } from "complex-data/type"
-import { AutoIndex } from "complex-component"
+import { AutoIndex, FileView } from "complex-component"
 import componentConfig from "complex-component/config"
 import AutoText from "./src/AutoText.vue"
 import { modalLayoutOption } from "./src/ModalView"
 import { tablePayload } from "./src/TableView"
 import icon from "./icon"
+import MultipleImport from "./src/MultipleImport"
+import SingleImport from "./src/SingleImport"
+import { Button } from "ant-design-vue"
+import { ButtonType } from "ant-design-vue/es/button"
 
 export class LayoutLifeData {
   life: string
@@ -206,7 +210,33 @@ const config = {
     components: ['spin', 'search', 'table', 'edit'] as ('spin' | 'search' | 'table' | 'info' | 'edit' | 'child')[]
   },
   import: {
-    createContent(file: FileValue, disabled: boolean, onDelete: (file: FileValue) => void) {
+    renderMenu(target: (InstanceType<typeof MultipleImport> | InstanceType<typeof SingleImport>)) {
+      const props = {
+        class: 'complex-import-menu',
+        loading: target.loading || target.operate,
+        type: target.type === 'danger' ? 'primary' : target.type as ButtonType,
+        danger: target.type === 'danger',
+        icon: icon.parse(target.icon),
+        disabled: target.disabled,
+        onClick: () => {
+          (target.$refs.file as InstanceType<typeof FileView>).$el.click()
+        }
+      }
+      const menuRender = target.$slots.menu || (target.render && target.render.menu)
+      if (menuRender) {
+        return menuRender({
+          props,
+          name: target.name,
+          payload: {
+            value: target.currentValue
+          }
+        })
+      }
+      return h(Button, props, {
+        default: () => target.name
+      })
+    },
+    renderContent(file: FileValue, disabled: boolean, onDelete: (file: FileValue) => void) {
       return h('div', {
         class: 'complex-import-content'
       }, {

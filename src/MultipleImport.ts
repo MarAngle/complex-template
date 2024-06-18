@@ -178,30 +178,7 @@ export default defineComponent({
       })
     },
     renderMenu() {
-      const props = {
-        class: 'complex-import-menu',
-        loading: this.loading || this.operate,
-        type: this.type === 'danger' ? 'primary' : this.type as ButtonType,
-        danger: this.type === 'danger',
-        icon: icon.parse(this.icon),
-        disabled: this.disabled,
-        onClick: () => {
-          (this.$refs.file as InstanceType<typeof FileView>).$el.click()
-        }
-      }
-      const menuRender = this.$slots.menu || (this.render && this.render.menu)
-      if (menuRender) {
-        return menuRender({
-          props,
-          name: this.name,
-          payload: {
-            value: this.currentValue
-          }
-        })
-      }
-      return h(Button, props, {
-        default: () => this.name
-      })
+      return config.import.renderMenu(this)
     },
     renderList(list: FileMultipleValue) {
       return h('div', {
@@ -221,7 +198,7 @@ export default defineComponent({
       this.emitData()
     },
     renderContent(file: FileValue, index: number) {
-      return config.import.createContent(file, this.disabled, () => {
+      return config.import.renderContent(file, this.disabled, () => {
         this.deleteData(file.value, index)
       })
     }

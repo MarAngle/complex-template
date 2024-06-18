@@ -12,8 +12,8 @@ import DateRangeEdit from "complex-data/src/dictionary/DateRangeEdit"
 import FileEdit from "complex-data/src/dictionary/FileEdit"
 import CustomEdit from "complex-data/src/dictionary/CustomEdit"
 import FormEdit from 'complex-data/src/dictionary/FormEdit'
-import { AutoItemPayloadType } from './src/components/AutoItem'
 import SimpleDateEdit from 'complex-data/src/dictionary/SimpleDateEdit'
+import { AutoItemPayloadType } from './src/dictionary/AutoItem'
 
 const modelFuncDict = {
   valueInit: function (itemAttrs: AttrsValue, formData: Record<PropertyKey, unknown>, prop: PropertyKey) {
@@ -259,7 +259,7 @@ const dict = {
     on: {
       select: modelFuncDict.select
     },
-    format(edit: FileEdit, payload: AutoItemPayloadType<boolean>) {
+    format(edit: FileEdit<boolean>, payload: AutoItemPayloadType<boolean>) {
       let layout = edit.$option.layout
       if (layout == 'auto') {
         if (!payload.parent.gridParse) {
@@ -269,7 +269,6 @@ const dict = {
         }
       }
       const buttonOption = edit.$option.button || {}
-      const multiple = edit.multiple ? (edit.$option.multiple || {}) : undefined
       const itemAttrs = new AttrsValue({
         props: {
           accept: edit.$option.accept,
@@ -277,7 +276,7 @@ const dict = {
           name: buttonOption.name || edit.$name,
           type: buttonOption.type,
           icon: buttonOption.icon,
-          multiple: multiple,
+          multiple: (edit as FileEdit<true>).$option.multiple,
           upload: edit.$option.upload,
           layout: layout,
           disabled: payload.disabled || edit.disabled
