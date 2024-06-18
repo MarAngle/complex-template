@@ -9,10 +9,7 @@ import { FileMultipleValue, FileValue, fileValueType } from "complex-data/src/li
 import { FileView } from "complex-component"
 import { FileProps } from "complex-component/type"
 import icon from "../icon"
-
-export const defaultUpload = function(file: File) {
-  return Promise.resolve({ file: { value: file, name: file.name } })
-} as NonNullable<FileEditOption<false>['upload']>
+import config from "../config"
 
 export interface SingleImportProps extends FileProps<false>{
   value?: fileValueType
@@ -27,8 +24,12 @@ export interface SingleImportProps extends FileProps<false>{
     content?: () => (VNode | VNode[])
   }
 }
-// 考虑单选为限制情况的多选
-// 考虑添加complex，接收一个复杂对象实现，具体的名称和URL解析考虑单独参数或者额外包装
+
+export const defaultUpload = function(file: File) {
+  return Promise.resolve({ file: { value: file, name: file.name } })
+} as NonNullable<SingleImportProps['upload']>
+
+
 export default defineComponent({
   name: 'SingleImport',
   props: {
@@ -45,7 +46,7 @@ export default defineComponent({
       required: false
     },
     icon: {
-      type: [String, Function],
+      type: [String, Function] as PropType<SingleImportProps['icon']>,
       required: false,
       default: 'upload'
     },
@@ -104,23 +105,23 @@ export default defineComponent({
       this.syncData()
     },
     parseValue(value?: fileValueType) {
-      return value ? new FileValue(value as fileValueType) : undefined
+      return value ? new FileValue(value) : undefined
     },
     syncData() {
       // 校准data
       this.data = this.parseValue(this.value)
     },
-    onSingleSelect(file: File) {
+    onSelect(file: File) {
       this.operate = true;
       this.currentUpload(file).then(res => {
-        this.setSingleUpload(res.file, true)
+        this.onUpload(res.file, true)
       }).catch((err: unknown) => {
         console.error(err)
       }).finally(() => {
         this.operate = false
       })
     },
-    setSingleUpload(file: fileDataType, emit?: boolean) {
+    onUpload(file: fileDataType, emit?: boolean) {
       if (this.currentValue !== file.value) {
         this.currentValue = file.value
         this.data = new FileValue(file)
@@ -133,14 +134,13 @@ export default defineComponent({
       this.$emit('select', this.currentValue)
     },
     renderFile() {
-      let disabled = this.disabled
       return h(FileView, {
         class: 'complex-import-file',
         ref: 'file',
         accept: this.accept,
-        disabled: disabled,
+        disabled: this.disabled,
         size: this.size,
-        onSelect: this.onSingleSelect
+        onSelect: this.onSelect
       })
     },
     renderMenu() {
@@ -149,14 +149,15 @@ export default defineComponent({
         loading: this.loading || this.operate,
         type: this.type === 'danger' ? 'primary' : this.type as ButtonType,
         danger: this.type === 'danger',
-        icon: icon.parse(this.icon as SingleImportProps['icon']),
+        icon: icon.parse(this.icon),
         disabled: this.disabled,
         onClick: () => {
           (this.$refs.file as InstanceType<typeof FileView>).$el.click()
         }
       }
-      if (this.$slots.menu || (this.render && this.render.menu)) {
-        return (this.$slots.menu || this.render!.menu)!({
+      const menuRender = this.$slots.menu || (this.render && this.render.menu)
+      if (menuRender) {
+        return menuRender({
           props,
           name: this.name,
           payload: {
@@ -172,12 +173,12 @@ export default defineComponent({
       return h('div', {
         class: 'complex-import-content-list'
       }, {
-        default: () => list.value.map((file, index) => {
-          return this.renderContent(file, index)
+        default: () => list.value.map((file) => {
+          return this.renderContent(file)
         })
       })
     },
-    removeData() {
+    deleteData() {
       if (this.disabled || this.loading) {
         return
       }
@@ -185,31 +186,9 @@ export default defineComponent({
       this.data = undefined
       this.emitData()
     },
-    renderContent(file?: FileValue, index?: number) {
-      const isFileValue = isFile(file)
-      const canDownload = !isFileValue && file && file.url
-      return file ? h('div', {
-        class: 'complex-import-content'
-      }, {
-        default: () => [
-          h('span', {
-            class: canDownload ? 'complex-import-content-name complex-color-link' : 'complex-import-content-name',
-            onClick: () => {
-              if (canDownload) {
-                // 文件对象类型以及存在下载链接时，点击下载
-                downloadFile(file.url!, file.name)
-              }
-            }
-          }, {
-            default: () => file.name
-          }),
-          h('span', {
-            class: 'complex-import-content-delete complex-color-danger',
-            onClick: () => {
-              this.removeData()
-            }
-          }, this.disabled ? [] : [icon.parse('close')]),
-        ]
+    renderContent(file?: FileValue) {
+      return file ? config.import.createContent(file, this.disabled, () => {
+        this.deleteData()
       }) : null
     }
   },
@@ -224,7 +203,7 @@ export default defineComponent({
         }
       })
     } else {
-      content = this.renderContent(this.data as undefined | FileValue)
+      content = this.renderContent(this.data)
     }
     return h('div', {
       class: 'complex-import'

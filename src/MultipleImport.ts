@@ -1,7 +1,6 @@
 import { defineComponent, h, PropType, VNode } from "vue"
 import { Button } from "ant-design-vue"
 import { ButtonType } from "ant-design-vue/es/button"
-import { downloadFile, isFile } from "complex-utils"
 import { notice } from "complex-plugin"
 import { fileDataType } from "complex-data/type"
 import { FileEditOption } from "complex-data/src/dictionary/FileEdit"
@@ -9,10 +8,8 @@ import { FileMultipleValue, FileValue, fileValueType } from "complex-data/src/li
 import { FileView } from "complex-component"
 import { FileProps } from "complex-component/type"
 import icon from "../icon"
+import config from "../config"
 
-export const defaultMultipleUpload = function(fileList: File[]) {
-  return Promise.resolve({ file: fileList.map(file => { return { value: file, name: file.name} } ) })
-} as NonNullable<FileEditOption<true>['upload']>
 
 export interface MultipleImportProps extends FileProps<true>{
   value?: fileValueType[]
@@ -27,8 +24,11 @@ export interface MultipleImportProps extends FileProps<true>{
     content?: () => (VNode | VNode[])
   }
 }
-// 考虑单选为限制情况的多选
-// 考虑添加complex，接收一个复杂对象实现，具体的名称和URL解析考虑单独参数或者额外包装
+
+export const defaultMultipleUpload = function(fileList: File[]) {
+  return Promise.resolve({ file: fileList.map(file => { return { value: file, name: file.name} } ) })
+} as NonNullable<MultipleImportProps['upload']>
+
 export default defineComponent({
   name: 'MultipleImport',
   props: {
@@ -45,7 +45,7 @@ export default defineComponent({
       required: false
     },
     icon: {
-      type: [String, Function],
+      type: [String, Function] as PropType<MultipleImportProps['icon']>,
       required: false,
       default: 'upload'
     },
@@ -115,7 +115,7 @@ export default defineComponent({
       this.syncData()
     },
     parseValue(value?: fileValueType[]) {
-      return new FileMultipleValue((value as fileValueType[] || []).map(valueItem => new FileValue(valueItem)))
+      return new FileMultipleValue((value || []).map(valueItem => new FileValue(valueItem)))
     },
     syncData() {
       // 多选模式下，value可能存在splice的改变或者是splice后重新赋值，此时需要将额外数据删除
@@ -125,25 +125,33 @@ export default defineComponent({
         this.data.reset()
       }
     },
-    onMultipleSelect(file: File[]) {
+    onSelect(file: File[]) {
       this.operate = true
       this.currentUpload(file).then(res => {
-        this.setMultipleUpload(res.file, true)
+        this.onUpload(res.file, true)
       }).catch((err: unknown) => {
         console.error(err)
       }).finally(() => {
         this.operate = false
       })
     },
-    setMultipleUpload(fileList: fileDataType[], emit?: boolean) {
-      fileList.forEach(file => {
-        if ((this.currentValue as any[]).indexOf(file.value) === -1) {
-          (this.currentValue as any[]).push(file.value);
+    onUpload(fileList: fileDataType[], emit?: boolean) {
+      if (this.currentValue) {
+        fileList.forEach(file => {
+          if (this.currentValue!.indexOf(file.value) === -1) {
+            this.currentValue!.push(file.value)
+            this.data.push(new FileValue(file))
+          }
+        })
+      } else {
+        this.currentValue = []
+        fileList.forEach(file => {
+          this.currentValue!.push(file.value)
           this.data.push(new FileValue(file))
-        }
-      })
-      if (this.max && (this.currentValue as string[]).length > this.max) {
-        (this.currentValue as string[]).length = this.max;
+        })
+      }
+      if (this.max && this.currentValue.length > this.max) {
+        this.currentValue.length = this.max
         this.data.truncation(this.max)
         notice.showMsg(`当前选择的文件数量超过限制值${this.max}，超过部分已被删除！`, 'error')
       }
@@ -156,7 +164,7 @@ export default defineComponent({
     },
     renderFile() {
       let disabled = this.disabled
-      if (this.max && (this.currentValue as fileValueType[]).length >= this.max) {
+      if (this.max && this.currentValue && this.currentValue.length >= this.max) {
         disabled = true
       }
       return h(FileView, {
@@ -166,7 +174,7 @@ export default defineComponent({
         multiple: this.multiple,
         disabled: disabled,
         size: this.size,
-        onSelect: this.onMultipleSelect
+        onSelect: this.onSelect
       })
     },
     renderMenu() {
@@ -175,14 +183,15 @@ export default defineComponent({
         loading: this.loading || this.operate,
         type: this.type === 'danger' ? 'primary' : this.type as ButtonType,
         danger: this.type === 'danger',
-        icon: icon.parse(this.icon as MultipleImportProps['icon']),
+        icon: icon.parse(this.icon),
         disabled: this.disabled,
         onClick: () => {
           (this.$refs.file as InstanceType<typeof FileView>).$el.click()
         }
       }
-      if (this.$slots.menu || (this.render && this.render.menu)) {
-        return (this.$slots.menu || this.render!.menu)!({
+      const menuRender = this.$slots.menu || (this.render && this.render.menu)
+      if (menuRender) {
+        return menuRender({
           props,
           name: this.name,
           payload: {
@@ -203,45 +212,18 @@ export default defineComponent({
         })
       })
     },
-    removeData(key: any, index?: number) {
+    deleteData(key: any, index: number) {
       if (this.disabled || this.loading) {
         return
       }
-      if (!index) {
-        this.currentValue = undefined
-        this.data.reset()
-      } else {
-        (this.currentValue as File[]).splice(index, 1);
-        this.data.delete(key)
-      }
+      this.currentValue!.splice(index, 1)
+      this.data.delete(key)
       this.emitData()
     },
-    renderContent(file?: FileValue, index?: number) {
-      const isFileValue = isFile(file)
-      const canDownload = !isFileValue && file && file.url
-      return file ? h('div', {
-        class: 'complex-import-content'
-      }, {
-        default: () => [
-          h('span', {
-            class: canDownload ? 'complex-import-content-name complex-color-link' : 'complex-import-content-name',
-            onClick: () => {
-              if (canDownload) {
-                // 文件对象类型以及存在下载链接时，点击下载
-                downloadFile(file.url!, file.name)
-              }
-            }
-          }, {
-            default: () => file.name
-          }),
-          h('span', {
-            class: 'complex-import-content-delete complex-color-danger',
-            onClick: () => {
-              this.removeData(file.value!, index)
-            }
-          }, this.disabled ? [] : [icon.parse('close')]),
-        ]
-      }) : null
+    renderContent(file: FileValue, index: number) {
+      return config.import.createContent(file, this.disabled, () => {
+        this.deleteData(file.value, index)
+      })
     }
   },
   render() {

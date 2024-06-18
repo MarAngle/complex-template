@@ -7,11 +7,11 @@
 - EditView实现一键禁用?具体需求是实现Info?
 - table布局考虑计算准确性
 - SimpleTableView的插槽和菜单逻辑同步
-
+- Import的complex属性适配，接收一个复杂对象实现，具体的名称和URL解析考虑单独参数或者额外包装
 ### Doing
 
 ### 4.3.12-ing
-- 优化上传组件
+- 拆分上传组件
 
 ### 4.3.11
 - QuickList的事件由menu拆分成search/table

@@ -1,15 +1,17 @@
 import { h } from "vue"
-import { getType, camelToLine } from "complex-utils"
+import { getType, camelToLine, isFile, downloadFile } from "complex-utils"
 import { PluginLayout } from "complex-plugin"
 import { ChoiceData, PaginationData, AttrsValue, DictionaryData, DictionaryValue } from "complex-data"
 import DefaultList from 'complex-data/src/dictionary/DefaultList'
 import { GridValue } from "complex-data/src/lib/GridParse"
+import { FileValue } from "complex-data/src/lib/FileValue"
 import { MenuValue } from "complex-data/type"
 import { AutoIndex } from "complex-component"
 import componentConfig from "complex-component/config"
 import AutoText from "./src/AutoText.vue"
 import { modalLayoutOption } from "./src/ModalView"
 import { tablePayload } from "./src/TableView"
+import icon from "./icon"
 
 export class LayoutLifeData {
   life: string
@@ -202,6 +204,33 @@ const config = {
   },
   list: {
     components: ['spin', 'search', 'table', 'edit'] as ('spin' | 'search' | 'table' | 'info' | 'edit' | 'child')[]
+  },
+  import: {
+    createContent(file: FileValue, disabled: boolean, onDelete: (file: FileValue) => void) {
+      return h('div', {
+        class: 'complex-import-content'
+      }, {
+        default: () => [
+          h('span', {
+            class: file.url ? 'complex-import-content-name complex-color-link' : 'complex-import-content-name',
+            onClick: () => {
+              if (file.url) {
+                // 文件对象类型以及存在下载链接时，点击下载
+                downloadFile(file.url, file.name)
+              }
+            }
+          }, {
+            default: () => file.name
+          }),
+          h('span', {
+            class: 'complex-import-content-delete complex-color-danger',
+            onClick () {
+              onDelete(file)
+            }
+          }, disabled ? [] : [icon.parse('close')]),
+        ]
+      })
+    }
   }
 }
 
