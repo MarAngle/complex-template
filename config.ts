@@ -11,7 +11,7 @@ import componentConfig from "complex-component/config"
 import AutoText from "./src/AutoText.vue"
 import { modalLayoutOption } from "./src/ModalView"
 import { tablePayload } from "./src/TableView"
-import icon from "./icon"
+import $icon from "./icon"
 import MultipleImport from "./src/MultipleImport"
 import SingleImport from "./src/SingleImport"
 import { Button } from "ant-design-vue"
@@ -211,12 +211,13 @@ const config = {
   },
   import: {
     renderMenu(target: (InstanceType<typeof MultipleImport> | InstanceType<typeof SingleImport>)) {
+      const { icon = 'upload', type = 'default', name = '上传' } = target.button || {}
       const props = {
         class: 'complex-import-menu',
         loading: target.loading || target.operate,
-        type: target.type === 'danger' ? 'primary' : target.type as ButtonType,
-        danger: target.type === 'danger',
-        icon: icon.parse(target.icon),
+        type: type === 'danger' ? 'primary' : type as ButtonType,
+        danger: type === 'danger',
+        icon: $icon.parse(icon),
         disabled: target.disabled,
         onClick: () => {
           (target.$refs.file as InstanceType<typeof FileView>).$el.click()
@@ -226,14 +227,14 @@ const config = {
       if (menuRender) {
         return menuRender({
           props,
-          name: target.name,
+          name: name,
           payload: {
             value: target.currentValue
           }
         })
       }
       return h(Button, props, {
-        default: () => target.name
+        default: () => name
       })
     },
     renderContent(file: FileValue, disabled: boolean, onDelete: (file: FileValue) => void) {
@@ -257,7 +258,7 @@ const config = {
             onClick () {
               onDelete(file)
             }
-          }, disabled ? [] : [icon.parse('close')]),
+          }, disabled ? [] : [$icon.parse('close')]),
         ]
       })
     }

@@ -268,14 +268,15 @@ const dict = {
           layout = 'bottom'
         }
       }
-      const buttonOption = edit.$option.button || {}
+      const buttonOption = { ...edit.$option.button } || {}
+      if (buttonOption.name === undefined) {
+        buttonOption.name = edit.$name
+      }
       const itemAttrs = new AttrsValue({
         props: {
           accept: edit.$option.accept,
           maxSize: edit.$option.size,
-          name: buttonOption.name || edit.$name,
-          type: buttonOption.type,
-          icon: buttonOption.icon,
+          button: buttonOption,
           multiple: (edit as FileEdit<true>).$option.multiple,
           upload: edit.$option.upload,
           layout: layout,

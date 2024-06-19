@@ -1,28 +1,16 @@
 import { defineComponent, h, PropType, VNode } from "vue"
-import { Button } from "ant-design-vue"
-import { ButtonType } from "ant-design-vue/es/button"
 import { notice } from "complex-plugin"
 import { fileDataType } from "complex-data/type"
 import { FileEditOption } from "complex-data/src/dictionary/FileEdit"
 import { FileMultipleValue, FileValue, fileValueType } from "complex-data/src/lib/FileValue"
 import { FileView } from "complex-component"
-import { FileProps } from "complex-component/type"
-import icon from "../icon"
+import { FileProps, MultipleFileProps } from "complex-component/type"
+import { DefaultImportProps } from "./SingleImport"
 import config from "../config"
 
-
-export interface MultipleImportProps extends FileProps<true>{
+export interface MultipleImportProps extends FileProps, MultipleFileProps, DefaultImportProps{
   value?: fileValueType[]
-  name?: NonNullable<FileEditOption<true>['button']>['name']
-  type?: NonNullable<FileEditOption<true>['button']>['type']
-  icon?: NonNullable<FileEditOption<true>['button']>['icon']
-  complex?: FileEditOption<true>['complex']
   upload?: FileEditOption<true>['upload']
-  loading?: boolean
-  render?: {
-    menu?: () => (VNode | VNode[])
-    content?: () => (VNode | VNode[])
-  }
 }
 
 export const defaultMultipleUpload = function(fileList: File[]) {
@@ -35,19 +23,9 @@ export default defineComponent({
     value: {
       type: Array as PropType<MultipleImportProps['value']>
     },
-    name: {
-      type: String,
-      required: false,
-      default: '上传'
-    },
-    type: {
-      type: String,
+    button: {
+      type: Object as PropType<MultipleImportProps['button']>,
       required: false
-    },
-    icon: {
-      type: [String, Function] as PropType<MultipleImportProps['icon']>,
-      required: false,
-      default: 'upload'
     },
     complex: {
       type: Boolean,

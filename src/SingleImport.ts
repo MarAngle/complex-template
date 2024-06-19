@@ -1,21 +1,14 @@
 import { defineComponent, h, PropType, VNode } from "vue"
-import { Button } from "ant-design-vue"
-import { ButtonType } from "ant-design-vue/es/button"
-import { fileDataType } from "complex-data/type"
+import { defaultFileOption, fileDataType } from "complex-data/type"
 import { FileEditOption } from "complex-data/src/dictionary/FileEdit"
 import { FileMultipleValue, FileValue, fileValueType } from "complex-data/src/lib/FileValue"
 import { FileView } from "complex-component"
 import { FileProps } from "complex-component/type"
-import icon from "../icon"
 import config from "../config"
 
-export interface SingleImportProps extends FileProps<false>{
-  value?: fileValueType
-  name?: NonNullable<FileEditOption<false>['button']>['name']
-  type?: NonNullable<FileEditOption<false>['button']>['type']
-  icon?: NonNullable<FileEditOption<false>['button']>['icon']
-  complex?: FileEditOption<false>['complex']
-  upload?: FileEditOption<false>['upload']
+export interface DefaultImportProps {
+  button?: defaultFileOption['button']
+  complex?: defaultFileOption['complex']
   loading?: boolean
   render?: {
     menu?: () => (VNode | VNode[])
@@ -23,10 +16,14 @@ export interface SingleImportProps extends FileProps<false>{
   }
 }
 
+export interface SingleImportProps extends FileProps, DefaultImportProps {
+  value?: fileValueType
+  upload?: FileEditOption<false>['upload']
+}
+
 export const defaultUpload = function(file: File) {
   return Promise.resolve({ file: { value: file, name: file.name } })
 } as NonNullable<SingleImportProps['upload']>
-
 
 export default defineComponent({
   name: 'SingleImport',
@@ -34,19 +31,9 @@ export default defineComponent({
     value: {
       type: [String, Object] as PropType<SingleImportProps['value']>
     },
-    name: {
-      type: String,
-      required: false,
-      default: '上传'
-    },
-    type: {
-      type: String,
+    button: {
+      type: Object as PropType<SingleImportProps['button']>,
       required: false
-    },
-    icon: {
-      type: [String, Function] as PropType<SingleImportProps['icon']>,
-      required: false,
-      default: 'upload'
     },
     complex: {
       type: Boolean,
