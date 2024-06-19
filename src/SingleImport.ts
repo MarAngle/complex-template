@@ -107,8 +107,8 @@ export default defineComponent({
       })
     },
     onUpload(file: fileDataType, emit?: boolean) {
-      if (this.currentValue !== file.value) {
-        this.currentValue = file.value
+      if (!this.data || this.data.value !== file.value) {
+        this.currentValue = !this.complex ? file.value : file
         this.data = new FileValue(file)
         if (emit) {
           this.emitData()

@@ -116,15 +116,16 @@ export default defineComponent({
     onUpload(fileList: fileDataType[], emit?: boolean) {
       if (this.currentValue) {
         fileList.forEach(file => {
-          if (this.currentValue!.indexOf(file.value) === -1) {
-            this.currentValue!.push(file.value)
+          // 通过data判断，避免complex模式下的判断错误
+          if (!this.data.has(file.value)) {
+            this.currentValue!.push(!this.complex ? file.value : file)
             this.data.push(new FileValue(file))
           }
         })
       } else {
         this.currentValue = []
         fileList.forEach(file => {
-          this.currentValue!.push(file.value)
+          this.currentValue!.push(!this.complex ? file.value : file)
           this.data.push(new FileValue(file))
         })
       }
