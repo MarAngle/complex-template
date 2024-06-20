@@ -23,7 +23,7 @@ export default defineComponent({
         class: 'complex-menu-file',
         ref: 'file',
         ...this.data.fileOption,
-        onChange: (file: File) => {
+        onSelect: (file: File) => {
           (this.$refs.menu as InstanceType<typeof MenuView>).operate = true
           this.data.upload!(file).finally(() => {
             (this.$refs.menu as InstanceType<typeof MenuView>).operate = false
