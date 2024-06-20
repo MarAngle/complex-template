@@ -153,7 +153,7 @@ export default defineComponent({
   methods: {
     rowWidth(target: DefaultList) {
       const style: Record<string, string | number> = {}
-      if (target.$width !== undefined) {
+      if (target.$width != undefined) {
         if (typeof target.$width === 'number') {
           style.width = config.component.data.formatPixel(target.$width)
         } else {

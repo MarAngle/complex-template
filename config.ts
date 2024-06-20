@@ -129,7 +129,7 @@ const config = {
       let buildPagination = !!pagination
       if (pagination) {
         const depth = record[DictionaryData.$depth]
-        if (depth !== undefined && depth !== 0) {
+        if (depth != undefined && depth !== 0) {
           buildPagination = false
         }
       }

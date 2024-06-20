@@ -53,7 +53,7 @@ export default defineComponent({
             placement: this.tip || 'top'
           }
         }
-        if (option.title === undefined) {
+        if (option.title == undefined) {
           option.title = this.text
         }
       } else {

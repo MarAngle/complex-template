@@ -38,9 +38,9 @@ SimpleDateEdit.$compareDate = function(target, other) {
 dayjs.extend(customParseFormat)
 
 SimpleDateEdit.$parse = function(value, format) {
-  return value !== undefined ? dayjs(value, format) : value
+  return value != undefined ? dayjs(value, format) : value
 }
 
 SimpleDateEdit.$collect = function(value, format) {
-  return value !== undefined ? (value as Dayjs).format(format) : value
+  return value != undefined ? (value as Dayjs).format(format) : value
 }

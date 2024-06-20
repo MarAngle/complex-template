@@ -269,7 +269,7 @@ const dict = {
         }
       }
       const buttonOption = { ...edit.$option.button } || {}
-      if (buttonOption.name === undefined) {
+      if (buttonOption.name == undefined) {
         buttonOption.name = edit.$name
       }
       const itemAttrs = new AttrsValue({

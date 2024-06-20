@@ -220,7 +220,7 @@ export default defineComponent({
       if (!currentTableProps.rowKey) {
         currentTableProps.rowKey = this.listData.getDictionaryProp('id')
       }
-      if (currentTableProps.pagination === undefined) {
+      if (currentTableProps.pagination == undefined) {
         currentTableProps.pagination = false
       }
       const choice = this.listData.$module.choice
