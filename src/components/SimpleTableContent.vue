@@ -204,7 +204,7 @@ export default defineComponent({
       } else if (target.ellipsis) {
         // 自动省略切自动换行
         return () => {
-          return config.table.renderAutoText(text as string, target, this.layoutLifeData, config.component.parseData(target.$local, 'autoText'))
+          return config.table.renderAutoText(text as string, target, this.layoutLifeData, payload, config.component.parseData(target.$local, 'autoText'))
         }
       } else {
         return () => {

@@ -116,13 +116,13 @@ const config = {
       }
       return config.showValue(text)
     },
-    renderAutoText(text: string, column: DefaultList, layoutLifeData: LayoutLifeData, attrs?: AttrsValue) {
+    renderAutoText(text: string, column: DefaultList, layoutLifeData: LayoutLifeData, payload: tablePayload, attrs?: AttrsValue) {
       return h(AutoText, {
         text: text,
         auto: true,
         recount: layoutLifeData.data,
         tip: column.$tip,
-        ...componentConfig.parseAttrs(attrs)
+        ...componentConfig.parseAttrs(attrs, payload)
       })
     },
     renderIndex(record: Record<PropertyKey, unknown>, index: number, pagination?: PaginationData) {
