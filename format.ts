@@ -15,13 +15,19 @@ import FormEdit from 'complex-data/src/dictionary/FormEdit'
 import SimpleDateEdit from 'complex-data/src/dictionary/SimpleDateEdit'
 import { AutoItemPayloadType } from './src/dictionary/AutoItem'
 
+const init = function (itemAttrs: AttrsValue, targetProp: PropertyKey, formData: Record<PropertyKey, unknown>, prop: PropertyKey) {
+  itemAttrs.props[targetProp] = formData[prop]
+}
+
+const createInit = function(targetProp: PropertyKey) {
+  return function (itemAttrs: AttrsValue, formData: Record<PropertyKey, unknown>, prop: PropertyKey) {
+    init(itemAttrs, targetProp, formData, prop)
+  }
+}
+
 const modelFuncDict = {
-  valueInit: function (itemAttrs: AttrsValue, formData: Record<PropertyKey, unknown>, prop: PropertyKey) {
-    itemAttrs.props.value = formData[prop]
-  },
-  checkInit: function (itemAttrs: AttrsValue, formData: Record<PropertyKey, unknown>, prop: PropertyKey) {
-    itemAttrs.props.checked = formData[prop]
-  },
+  valueInit: createInit('value'),
+  checkInit: createInit('checked'),
   input: function (formdata: Record<PropertyKey, unknown>, prop: PropertyKey, args: unknown[]) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     formdata[prop] = (args[0] as any).target.value
@@ -298,7 +304,23 @@ const dict = {
           disabled: payload.disabled || edit.disabled
         }
       })
-      bindEvent(this as dictItemType, itemAttrs, edit, payload)
+      const self = {
+        init: false,
+        on: {}
+      } as dictItemType
+      if (edit.$model.init) {
+        self.init = createInit(edit.$model.init)
+      }
+      if (edit.$model.change) {
+        if (edit.$model.change === 'input') {
+          self.on!.input = modelFuncDict.input
+        } else if (edit.$model.change === 'select') {
+          self.on!.select = modelFuncDict.select
+        } else if (edit.$model.change === 'change') {
+          self.on!.change = modelFuncDict.change
+        }
+      }
+      bindEvent(self as dictItemType, itemAttrs, edit, payload)
       return itemAttrs
     }
   },
