@@ -173,7 +173,6 @@ export default defineComponent({
       const targetRender = config.component.parseData(target.$renders, 'target')
       const pureRender = config.component.parseData(target.$renders, 'pure')
       const menuOption = config.component.parseData(this.menu, target.$prop)
-      const attrs = config.component.parseData(target.$local, 'target')
       if (pureRender) {
         return () => {
           return pureRender({
@@ -205,11 +204,11 @@ export default defineComponent({
       } else if (target.ellipsis) {
         // 自动省略切自动换行
         return () => {
-          return config.table.renderAutoText(text as string, target, this.layoutLifeData, attrs)
+          return config.table.renderAutoText(text as string, target, this.layoutLifeData, config.component.parseData(target.$local, 'autoText'))
         }
       } else {
         return () => {
-          return h('p', config.component.parseAttrs(attrs), {
+          return h('p', config.component.parseAttrs(config.component.parseData(target.$local, 'target')), {
             default: () => text
           })
         }

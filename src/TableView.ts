@@ -170,7 +170,7 @@ export default defineComponent({
               }
               if (columnItem.ellipsis) {
                 // 自动省略切自动换行
-                return config.table.renderAutoText(text as string, target, this.layoutLifeData, attrs)
+                return config.table.renderAutoText(text as string, target, this.layoutLifeData, config.component.parseData(target.$local, 'autoText'))
               }
               return text
             }
