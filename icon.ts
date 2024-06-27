@@ -1,16 +1,15 @@
 import { Component, VNode, h } from 'vue';
-import { SearchOutlined, SettingOutlined, PlusOutlined, DeleteOutlined, ContainerOutlined, ReloadOutlined, CloseOutlined, StopOutlined, DownloadOutlined, UploadOutlined, LinkOutlined } from '@ant-design/icons-vue';
+import { SearchOutlined, SettingOutlined, PlusOutlined, DeleteOutlined, ContainerOutlined, ReloadOutlined, SyncOutlined, CloseOutlined, StopOutlined, DownloadOutlined, UploadOutlined, LinkOutlined } from '@ant-design/icons-vue';
 import { MenuValue } from 'complex-data/type';
 
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const iconDict: Record<string, Component> = {
   search: SearchOutlined,
   setting: SettingOutlined,
   plus: PlusOutlined,
   delete: DeleteOutlined,
   info: ContainerOutlined,
-  refresh: ReloadOutlined,
+  reset: ReloadOutlined,
+  refresh: SyncOutlined,
   close: CloseOutlined,
   stop: StopOutlined,
   download: DownloadOutlined,
