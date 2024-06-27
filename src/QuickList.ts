@@ -146,6 +146,14 @@ export default defineComponent({
         this.listData.setSearch()
       } else if (prop === '$reset') {
         this.listData.resetSearch()
+      } else if (prop === '$refresh') {
+        this.listData.reloadData({
+          data: true,
+          sync: true,
+          module: {
+            choice: 'reload'
+          }
+        })
       } else if (prop === '$build') {
         this.openEdit()
       } else if (prop === '$info') {
