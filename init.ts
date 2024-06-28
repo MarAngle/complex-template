@@ -2,6 +2,7 @@ import { FormInstance } from 'ant-design-vue'
 import dayjs, { Dayjs } from 'dayjs'
 import { date } from 'complex-plugin'
 import { FormValue } from "complex-data"
+import DefaultEdit, { ruleOption } from 'complex-data/src/dictionary/DefaultEdit'
 import SimpleDateEdit from "complex-data/src/dictionary/SimpleDateEdit"
 import customParseFormat from "dayjs/plugin/customParseFormat"
 import './src/style/index.css'
@@ -17,6 +18,16 @@ FormValue.validate = function(formValue, ...args: Parameters<FormInstance['valid
   } else {
     return Promise.reject({ status: 'fail', code: 'no ref' })
   }
+}
+
+DefaultEdit.$parseRule = function(ruleValue: ruleOption, form: Record<PropertyKey, any>) {
+  const currentRuleValue = { ...ruleValue } as any
+  if (currentRuleValue.validator) {
+    currentRuleValue.validator = function(rule: any, value: any, callback: any) {
+      return ruleValue.validator!(value, form, callback, rule)
+    }
+  }
+  return currentRuleValue
 }
 
 date.pushParse('dayjs', value => dayjs(value))

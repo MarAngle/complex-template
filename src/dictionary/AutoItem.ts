@@ -169,7 +169,7 @@ export default defineComponent({
             label: this.target.$name,
             colon: this.target.colon,
             required: (this.target as DictionaryEditMod).required,
-            rules: this.target instanceof DefaultEdit ? this.target.$rules : undefined
+            rules: this.target instanceof DefaultEdit ? this.target.getRuleList(this.payload.targetData) : undefined
           }
         })
         if (this.gridParse) {
