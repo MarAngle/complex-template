@@ -24,7 +24,12 @@ DefaultEdit.$parseRule = function(ruleValue: ruleOption, form: Record<PropertyKe
   const currentRuleValue = { ...ruleValue } as any
   if (currentRuleValue.validator) {
     currentRuleValue.validator = function(rule: any, value: any, callback: any) {
-      return ruleValue.validator!(value, form, callback, rule)
+      const res = ruleValue.validator!(value, form, rule, callback)
+      if (typeof res === 'boolean') {
+        return res ? Promise.resolve() : Promise.reject()
+      } else {
+        return res
+      }
     }
   }
   return currentRuleValue
