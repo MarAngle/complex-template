@@ -203,6 +203,15 @@ export default defineComponent({
         this.openInfo(payload!.targetData)
       }
     },
+    renderList() {
+      const content = [this.renderSpin(), this.renderSearch(), this.renderTop(), this.renderTable()]
+      if (content.some(item => item != null)) {
+        return h('div', { class: 'complex-quick-list', style: { position: 'relative' } }, {
+          default: () => content
+        })
+      }
+      return null
+    },
     renderInfo() {
       if (this.currentComponents.indexOf('info') > -1) {
         return h(
@@ -327,7 +336,7 @@ export default defineComponent({
       return new Promise((resolve, reject) => {
         (this.$refs['edit'] as InstanceType<typeof EditArea>).submit().then(res => {
           if (res.type === 'build') {
-            this.listData.triggerMethod('$buildData', [res.targetData], true).then(() => {
+            this.listData.triggerMethod('$buildData', [res.targetData, res.type], true).then(() => {
               resolve(res)
             }).catch((err: unknown) => {
               reject(err)
@@ -339,8 +348,11 @@ export default defineComponent({
               reject(err)
             })
           } else {
-            console.error(`${res.type}对应的submit函数未定义，请单独定义ListView.option.editModal.submit的函数逻辑`)
-            reject({})
+            this.listData.triggerMethod('$editData', [res.targetData, res.originData, res.type], true).then(() => {
+              resolve(res)
+            }).catch((err: unknown) => {
+              reject(err)
+            })
           }
         }).catch((err: unknown) => {
           reject(err)
@@ -354,9 +366,6 @@ export default defineComponent({
    * @returns {VNode}
    */
   render() {
-    const render = h('div', { class: 'complex-quick-list', style: { position: 'relative' } }, {
-      default: () => [this.renderSpin(), this.renderSearch(), this.renderTop(), this.renderTable(), this.renderEdit(), this.renderInfo()]
-    })
-    return render
+    return [this.renderList(), this.renderEdit(), this.renderInfo()]
   }
 })
