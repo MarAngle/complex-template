@@ -22,7 +22,7 @@ export interface QuickEditProps<T extends QuickEditTarget = 'edit'> {
 export default defineComponent({
   name: 'QuickEdit',
   emits: {
-    submit: (targetData: Record<string, any>, originData: undefined | Record<string, any>, type: string) => {
+    submit: (_targetData: Record<string, any>, _originData: undefined | Record<string, any>, _type: string) => {
       return true
     }
   },

@@ -31,7 +31,7 @@ export default defineComponent({
     hide: (from: string) => {
       return typeof from === 'string'
     },
-    menu: (prop: string, self: any) => {
+    menu: (prop: string, _self: any) => {
       return typeof prop === 'string'
     }
   },

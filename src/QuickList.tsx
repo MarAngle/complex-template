@@ -46,10 +46,10 @@ export interface QuickListProps {
 export default defineComponent({
   name: 'QuickList',
   emits: {
-    search: (prop: string, payload: AutoItemPayloadType<true>)  => {
+    search: (prop: string, _payload: AutoItemPayloadType<true>)  => {
       return !!prop
     },
-    table: (prop: string, payload: tablePayload)  => {
+    table: (prop: string, _payload: tablePayload)  => {
       return !!prop
     }
   },

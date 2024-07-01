@@ -239,7 +239,7 @@ const dict = {
       })
       bindEvent(this as dictItemType, itemAttrs, edit, payload)
       if (edit.$option.rangeLimit) {
-        itemAttrs.pushEvent('calendarChange', function(dates: [Dayjs, Dayjs] | [string, string], dateStrings: [string, string], info: { range: 'start' | 'end' }, payload: AutoItemPayloadType<boolean>) {
+        itemAttrs.pushEvent('calendarChange', function(dates: [Dayjs, Dayjs] | [string, string], dateStrings: [string, string], info: { range: 'start' | 'end' }, _payload: AutoItemPayloadType<boolean>) {
           if (dates && dates[0] && dates[1]) {
             // 获取结束时间距离开始时间的时间间隔，毫秒
             const offset = SimpleDateEdit.$compareDate(dates[0], dates[1])

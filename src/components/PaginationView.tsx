@@ -6,10 +6,10 @@ import config from "../../config"
 export default defineComponent({
   name: 'PaginationView',
   emits: {
-    page: (page: number, size: number) => {
+    page: (_page: number, _size: number) => {
       return true
     },
-    size: (page: number, size: number) => {
+    size: (_page: number, _size: number) => {
       return true
     },
   },

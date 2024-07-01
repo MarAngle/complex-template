@@ -11,10 +11,10 @@ export type SimpleTableProps = TableViewDefaultProps
 export default defineComponent({
   name: 'SimpleTable',
   emits: {
-    menu: (prop: string, payload: tablePayload) => {
+    menu: (prop: string, _payload: tablePayload) => {
       return typeof prop === 'string'
     },
-    pagination: (prop: 'page' | 'size', page: number, size: number) => {
+    pagination: (prop: 'page' | 'size', _page: number, _size: number) => {
       return prop === 'page' || prop === 'size'
     },
   },

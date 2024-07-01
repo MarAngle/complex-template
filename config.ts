@@ -1,5 +1,5 @@
 import { h } from "vue"
-import { getType, camelToLine, isFile, downloadFile } from "complex-utils"
+import { getType, camelToLine, downloadFile } from "complex-utils"
 import { PluginLayout } from "complex-plugin"
 import { ChoiceData, PaginationData, AttrsValue, DictionaryData, DictionaryValue } from "complex-data"
 import DefaultList from 'complex-data/src/dictionary/DefaultList'

@@ -18,7 +18,7 @@ export type EditAreaProps = EditViewDefaultProps & InfoAreaDefaultProps & {
 export default defineComponent({
   name: 'EditArea',
   emits: {
-    menu: (prop: string, payload: AutoItemPayloadType<true>)  => {
+    menu: (prop: string, _payload: AutoItemPayloadType<true>)  => {
       return typeof prop === 'string'
     }
   },
