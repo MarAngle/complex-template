@@ -134,11 +134,16 @@ export default defineComponent({
           choice: this.choiceSize,
           loading: this.operate === 'ing',
           onMenu: this.onSearchMenu,
+          onEnter: this.onSearchEnter,
           ...this.currentComponentsProps.search
         })
       } else {
         return null
       }
+    },
+    onSearchEnter(_prop: string, _payload: AutoItemPayloadType<true>) {
+      // 回车自动检索
+      this.listData.setSearch()
     },
     onSearchMenu(prop: string, payload: AutoItemPayloadType<true>) {
       this.$emit('search', prop, payload)

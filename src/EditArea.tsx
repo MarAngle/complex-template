@@ -19,7 +19,10 @@ export default defineComponent({
   name: 'EditArea',
   emits: {
     menu: (prop: string, _payload: AutoItemPayloadType<true>)  => {
-      return typeof prop === 'string'
+      return !!prop
+    },
+    enter: (prop: string, _payload: AutoItemPayloadType<true>)  => {
+      return !!prop
     }
   },
   props: {
@@ -67,6 +70,10 @@ export default defineComponent({
     },
     gridRowProps: { // form-model-view设置项
       type: Object as PropType<EditAreaProps['gridRowProps']>,
+      required: false
+    },
+    enter: {
+      type: Boolean,
       required: false
     },
     disabled: {
@@ -147,10 +154,14 @@ export default defineComponent({
           gridParse: this.inline ? undefined : (this.gridParse || this.dictionary.$layout.grid.getValue(this.currentType)),
           gridRowProps: this.gridRowProps!,
           formProps: this.formProps,
+          enter: this.enter,
           disabled: this.disabled,
           loading: this.loading,
           onMenu: (prop: string, payload: AutoItemPayloadType<true>) => {
             this.$emit('menu', prop, payload)
+          },
+          onEnter: (prop: string, payload: AutoItemPayloadType<true>) => {
+            this.$emit('enter', prop, payload)
           }
         })
         return form

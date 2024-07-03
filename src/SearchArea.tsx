@@ -15,7 +15,10 @@ export default defineComponent({
   name: 'SearchArea',
   emits: {
     menu: (prop: string, _payload: AutoItemPayloadType<true>) => {
-      return typeof prop === 'string'
+      return !!prop
+    },
+    enter: (prop: string, _payload: AutoItemPayloadType<true>) => {
+      return !!prop
     }
   },
   props: {
@@ -58,6 +61,11 @@ export default defineComponent({
       type: Object as PropType<SearchAreaProps['gridRowProps']>,
       required: false
     },
+    enter: {
+      type: Boolean,
+      required: false,
+      default: true
+    },
     disabled: {
       type: Boolean,
       required: false
@@ -97,10 +105,14 @@ export default defineComponent({
         gridRowProps: this.gridRowProps!,
         formProps: this.formProps,
         choice: this.choice,
+        enter: this.enter,
         disabled: this.disabled,
         loading: this.loading,
         onMenu: (prop: string, payload: AutoItemPayloadType<true>) => {
           this.$emit('menu', prop, payload)
+        },
+        onEnter: (prop: string, payload: AutoItemPayloadType<true>) => {
+          this.$emit('enter', prop, payload)
         }
       })
       return form

@@ -4,13 +4,14 @@ import { mergeData } from "complex-utils"
 import { FormValue } from "complex-data"
 import ObserveList from "complex-data/src/dictionary/ObserveList"
 import DefaultInfo from "complex-data/src/dictionary/DefaultInfo"
-import AutoItem, { AutoItemProps } from "./dictionary/AutoItem"
+import AutoItem, { AutoItemPayloadType, AutoItemProps } from "./dictionary/AutoItem"
 import { InfoViewDefaultProps } from "./InfoView"
 import config from "../config"
 
 export interface EditViewDefaultProps extends InfoViewDefaultProps {
   formProps?: FormProps
   choice?: number
+  enter?: boolean
 }
 
 export interface EditViewProps extends EditViewDefaultProps {
@@ -21,6 +22,11 @@ export interface EditViewProps extends EditViewDefaultProps {
 
 export default defineComponent({
   name: 'EditView',
+  emits: {
+    enter: (prop: string, _payload: AutoItemPayloadType<boolean>)  => {
+      return !!prop
+    }
+  },
   props: {
     form: {
       type: Object as PropType<EditViewProps['form']>,
@@ -59,6 +65,10 @@ export default defineComponent({
       type: Number,
       required: false
     },
+    enter: {
+      type: Boolean,
+      required: false
+    },
     disabled: {
       type: Boolean,
       required: false
@@ -90,6 +100,11 @@ export default defineComponent({
     this.form.setRef(this.$refs[this.currentFormProps.ref])
   },
   methods: {
+    triggerEnter(prop: string, payload: AutoItemPayloadType<boolean>) {
+      if (this.enter) {
+        this.$emit('enter', prop, payload)
+      }
+    },
     parseGrid(data: DefaultInfo) {
       return config.parseGrid(this.gridParse!.parseData(data.$grid, 'main', this.type))
     },
