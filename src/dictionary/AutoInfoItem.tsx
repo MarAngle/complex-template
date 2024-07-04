@@ -12,7 +12,7 @@ import config from "../../config"
 export const bindButtonClick = function(prop: string, option: ButtonEdit['$option'], payload: AutoItemPayloadType<boolean>) {
   if (!option.upload) {
     return function() {
-      payload.parent.$emit('menu', prop, payload)
+      (payload as AutoItemPayloadType<true>).parent.$emit('menu', prop, payload)
       if(option.click) {
         return option.click(payload)
       }
@@ -23,7 +23,7 @@ export const bindButtonClick = function(prop: string, option: ButtonEdit['$optio
 }
 
 export default defineComponent({
-  name: 'AutoInfoContent',
+  name: 'AutoInfoItem',
   props: {
     payload: {
       type: Object as PropType<AutoItemPayloadType<boolean>>,
@@ -43,6 +43,12 @@ export default defineComponent({
       })
     } else {
       const targetAttrs = config.component.parseData(this.payload.target.$local, 'target') || new AttrsValue()
+      if (!this.payload.parent.gridParse) {
+        const width = this.payload.target.$width
+        if (width) {
+          targetAttrs.style.width = typeof width === 'number' ? width + 'px' : width
+        }
+      }
       if (this.payload.target instanceof ButtonEdit) {
         const option = {
           ...this.payload.target.$option

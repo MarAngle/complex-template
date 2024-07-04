@@ -27,19 +27,19 @@ export default defineComponent({
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let children: any = undefined
     const target = this.payload.target
-    const itemAttrs = parseEditAttrs(target, this.payload)!
-    itemAttrs.pushClass('complex-edit-item')
-    itemAttrs.pushClass('complex-edit-item-' + camelToLine(target.type, '-'))
-    itemAttrs.merge(config.component.parseData(target.$local, 'target'))
+    const targetAttrs = parseEditAttrs(target, this.payload)!
+    targetAttrs.pushClass('complex-edit-item')
+    targetAttrs.pushClass('complex-edit-item-' + camelToLine(target.type, '-'))
+    targetAttrs.merge(config.component.parseData(target.$local, 'target'))
     let item = null
     if (!this.payload.parent.gridParse) {
       const width = target.$width
       if (width) {
-        itemAttrs.style.width = width
+        targetAttrs.style.width = typeof width === 'number' ? width + 'px' : width
       }
     }
     const targetRender = config.component.parseData(target.$renders, 'target')
-    const option = config.component.parseAttrs(itemAttrs)
+    const option = config.component.parseAttrs(targetAttrs)
     // 考虑一个默认的值，inline模式下和其他模式下的默认值，避免出现问题
     if (targetRender) {
       item = targetRender({

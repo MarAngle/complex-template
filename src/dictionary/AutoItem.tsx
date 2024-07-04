@@ -8,7 +8,7 @@ import { DictionaryEditMod } from "complex-data/src/lib/DictionaryValue"
 import EditView from "../EditView"
 import InfoView from "../InfoView"
 import AutoEditItem from "./AutoEditItem"
-import AutoInfoContent from "./AutoInfoContent"
+import AutoInfoItem from "./AutoInfoItem"
 import config from "../../config"
 
 export interface AutoItemPayloadType<E = true> {
@@ -147,7 +147,7 @@ export default defineComponent({
           payload: this.payload as AutoItemPayloadType<true>
         })
       } else {
-        return h(AutoInfoContent, {
+        return h(AutoInfoItem, {
           payload: this.payload as AutoItemPayloadType<false>
         })
       }

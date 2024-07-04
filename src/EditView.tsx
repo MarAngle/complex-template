@@ -23,7 +23,10 @@ export interface EditViewProps extends EditViewDefaultProps {
 export default defineComponent({
   name: 'EditView',
   emits: {
-    enter: (prop: string, _payload: AutoItemPayloadType<boolean>)  => {
+    menu: (prop: string, _payload: AutoItemPayloadType<true>)  => {
+      return !!prop
+    },
+    enter: (prop: string, _payload: AutoItemPayloadType<true>)  => {
       return !!prop
     }
   },
