@@ -1,3 +1,4 @@
+import { AttrsValueInitOption } from 'complex-data/src/lib/AttrsValue';
 import dayjs, { Dayjs } from 'dayjs'
 import { AttrsValue } from "complex-data"
 import { StatusValue } from 'complex-data/src/module/StatusData'
@@ -14,6 +15,7 @@ import CustomEdit from "complex-data/src/dictionary/CustomEdit"
 import FormEdit from 'complex-data/src/dictionary/FormEdit'
 import SimpleDateEdit from 'complex-data/src/dictionary/SimpleDateEdit'
 import { AutoItemPayloadType } from './src/dictionary/AutoItem'
+import { debounce } from 'complex-utils';
 
 const init = function (itemAttrs: AttrsValue, targetProp: PropertyKey, formData: Record<PropertyKey, unknown>, prop: PropertyKey) {
   itemAttrs.props[targetProp] = formData[prop]
@@ -163,19 +165,43 @@ const dict = {
       change: modelFuncDict.change
     },
     format(edit: SelectEdit, payload: AutoItemPayloadType<true>) {
-      const isLoading = edit.$load ? edit.getLoad() === StatusValue.ing : false
+      let isLoading = edit.$load ? edit.getLoad() === StatusValue.ing : false
+      const search = edit.$search
+      const on: AttrsValueInitOption['on'] = {}
+      if (search) {
+        if (isLoading && search.operate) {
+          isLoading = false
+        }
+        on.search = function(value: string) {
+          edit.$searchData(value)
+        }
+        // 关闭会自动触发search value = ''事件，因此reload=false不进行实现
+        // if (search.reload) {
+        //   on.dropdownVisibleChange = function(open: boolean) {
+        //     // reload模式下打开自动清空
+        //     if (open) {
+        //       search!.value = undefined
+        //       edit.$clearData()
+        //     }
+        //   }
+        // }
+      }
       const itemAttrs = new AttrsValue({
         props: {
           mode: edit.multiple ? 'multiple' : 'default',
           options: edit.$select.getList(),
-          open: edit.$option.open,
-          showSearch: false,
+          open: (edit.$option as any).open,
+          showSearch: !!search,
+          searchValue: search?.value,
           showArrow: !edit.$option.hideArrow,
+          notFoundContent: edit.$option.notFoundContent,
+          filterOption: false,
           allowClear: !edit.$option.hideClear,
           dropdownMatchSelectWidth: edit.$option.autoWidth,
           disabled: payload.disabled || edit.disabled || isLoading,
           placeholder: edit.placeholder ? edit.placeholder : undefined
-        }
+        },
+        on: on
       })
       bindEvent(this as dictItemType, itemAttrs, edit, payload)
       return itemAttrs

@@ -99,19 +99,19 @@ export default defineComponent({
                 pagination: $data.$pagination,
                 simple: true,
                 onPage() {
-                  $data.$option.open = true
+                  ($data.$option as any).open = true
                   $data.loadData(true).then(() => {
-                    $data.$option.open = undefined
+                    ($data.$option as any).open = undefined
                   }, () => {
-                    $data.$option.open = undefined
+                    ($data.$option as any).open = undefined
                   })
                 },
                 onSize() {
-                  $data.$option.open = true
+                  ($data.$option as any).open = true
                   $data.loadData(true).then(() => {
-                    $data.$option.open = undefined
+                    ($data.$option as any).open = undefined
                   }, () => {
-                    $data.$option.open = undefined
+                    ($data.$option as any).open = undefined
                   })
                 },
                 onClick(e: Event) {

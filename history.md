@@ -10,6 +10,9 @@
 - Import的complex属性适配，接收一个复杂对象实现，具体的名称和URL解析考虑单独参数或者额外包装
 ### Doing
 
+### 4.3.27
+- 适配SelectEdit的search配置项
+
 ### 4.3.26
 - SearchArea/EditArea/EditView添加enter属性，检索默认为真，为真则监控子组件input的回车事件，触发后QuickList检索默认触发，简化操作
 
