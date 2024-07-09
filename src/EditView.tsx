@@ -72,6 +72,10 @@ export default defineComponent({
       type: Boolean,
       required: false
     },
+    collapse: {
+      type: Object as PropType<EditViewProps['collapse']>,
+      required: false
+    },
     disabled: {
       type: Boolean,
       required: false
@@ -120,6 +124,7 @@ export default defineComponent({
         type: this.type,
         choice: this.choice,
         gridParse: this.gridParse,
+        collapse: this.collapse,
         disabled: this.disabled,
         loading: this.loading,
         form: this.form,

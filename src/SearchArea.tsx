@@ -66,6 +66,10 @@ export default defineComponent({
       required: false,
       default: true
     },
+    collapse: {
+      type: Object as PropType<SearchAreaProps['collapse']>,
+      required: false
+    },
     disabled: {
       type: Boolean,
       required: false
@@ -106,6 +110,7 @@ export default defineComponent({
         formProps: this.formProps,
         choice: this.choice,
         enter: this.enter,
+        collapse: this.search.$collapse,
         disabled: this.disabled,
         loading: this.loading,
         onMenu: (prop: string, payload: AutoItemPayloadType<true>) => {

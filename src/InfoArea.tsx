@@ -97,7 +97,7 @@ export default defineComponent({
     },
     currentData() {
       return this.localData || this.data
-    },
+    }
   },
   mounted() {
     if (this.currentType && this.currentData) {
@@ -138,6 +138,7 @@ export default defineComponent({
           gridParse: this.inline ? undefined : (this.gridParse || this.dictionary.$layout.grid.getValue(this.currentType!)),
           gridRowProps: this.gridRowProps!,
           infoAttrs: this.infoAttrs,
+          collapse: this.dictionary.$collapse,
           disabled: this.disabled,
           loading: this.loading,
           onMenu: (prop: string, payload: AutoItemPayloadType<false>) => {

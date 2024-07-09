@@ -5,6 +5,7 @@ import ObserveList from "complex-data/src/dictionary/ObserveList"
 import DefaultEdit from "complex-data/src/dictionary/DefaultEdit"
 import GridParse from "complex-data/src/lib/GridParse"
 import { DictionaryEditMod } from "complex-data/src/lib/DictionaryValue"
+import { collapseType } from "complex-data/src/module/DictionaryData"
 import EditView from "../EditView"
 import InfoView from "../InfoView"
 import AutoEditItem from "./AutoEditItem"
@@ -34,6 +35,7 @@ export interface AutoItemProps<E = true> {
   type: string
   gridParse?: GridParse
   choice?: number
+  collapse?: collapseType
   disabled?: boolean
   loading?: boolean
   form: E extends true ? FormValue : undefined
@@ -70,6 +72,10 @@ export default defineComponent({
     },
     choice: {
       type: Number,
+      required: false
+    },
+    collapse: {
+      type: Object as PropType<AutoItemProps['collapse']>,
       required: false
     },
     disabled: {
@@ -159,52 +165,56 @@ export default defineComponent({
    * @returns {VNode}
    */
   render() {
-    const mainRender = config.component.parseData(this.target.$renders, 'main')
-    if (!mainRender) {
-      if (this.isEdit) {
-        const mainAttributes = new AttrsValue({
-          class: ['complex-auto-item'],
-          props: {
-            name: this.target.$prop,
-            label: this.target.$name,
-            colon: this.target.colon,
-            required: (this.target as DictionaryEditMod).required,
-            rules: this.target instanceof DefaultEdit ? this.target.getRuleList(this.payload.targetData) : undefined
-          }
-        })
-        if (this.gridParse) {
-          mainAttributes.props.labelCol = this.gridParse!.parseData(this.target.$grid, 'label', this.type)
-          mainAttributes.props.wrapperCol = this.gridParse!.parseData(this.target.$grid, 'content', this.type)
-        }
-        mainAttributes.merge(config.component.parseData(this.target.$local, 'main'))
-        return h(FormItem, config.component.parseAttrs(mainAttributes), { default: () => this.renderTip() })
-      } else {
-        const mainAttributes = new AttrsValue({
-          class: ['complex-auto-item', 'complex-auto-item-info']
-        })
-        mainAttributes.merge(config.component.parseData(this.target.$local, 'main'))
-        if (this.gridParse) {
-          return h(Row, config.component.parseAttrs(mainAttributes), {
-            default: () => [
-              h(Col, config.parseGrid(this.payload.parent.gridParse!.parseData(this.payload.target.$grid, 'label', this.payload.type)), {
-                default: () => this.renderLabel()
-              }),
-              h(Col, config.parseGrid(this.payload.parent.gridParse!.parseData(this.payload.target.$grid, 'content', this.payload.type)), {
-                default: () => this.renderTip()
-              })
-            ]
-           })
-        } else {
-          return h('div', config.component.parseAttrs(mainAttributes), {
-            default: () => [
-              this.renderLabel(),
-              this.renderTip()
-            ]
+    if (config.parseCollapse(this.collapse, this.target.$collapse)) {
+      const mainRender = config.component.parseData(this.target.$renders, 'main')
+      if (!mainRender) {
+        if (this.isEdit) {
+          const mainAttributes = new AttrsValue({
+            class: ['complex-auto-item'],
+            props: {
+              name: this.target.$prop,
+              label: this.target.$name,
+              colon: this.target.colon,
+              required: (this.target as DictionaryEditMod).required,
+              rules: this.target instanceof DefaultEdit ? this.target.getRuleList(this.payload.targetData) : undefined
+            }
           })
+          if (this.gridParse) {
+            mainAttributes.props.labelCol = this.gridParse!.parseData(this.target.$grid, 'label', this.type)
+            mainAttributes.props.wrapperCol = this.gridParse!.parseData(this.target.$grid, 'content', this.type)
+          }
+          mainAttributes.merge(config.component.parseData(this.target.$local, 'main'))
+          return h(FormItem, config.component.parseAttrs(mainAttributes), { default: () => this.renderTip() })
+        } else {
+          const mainAttributes = new AttrsValue({
+            class: ['complex-auto-item', 'complex-auto-item-info']
+          })
+          mainAttributes.merge(config.component.parseData(this.target.$local, 'main'))
+          if (this.gridParse) {
+            return h(Row, config.component.parseAttrs(mainAttributes), {
+              default: () => [
+                h(Col, config.parseGrid(this.payload.parent.gridParse!.parseData(this.payload.target.$grid, 'label', this.payload.type)), {
+                  default: () => this.renderLabel()
+                }),
+                h(Col, config.parseGrid(this.payload.parent.gridParse!.parseData(this.payload.target.$grid, 'content', this.payload.type)), {
+                  default: () => this.renderTip()
+                })
+              ]
+            })
+          } else {
+            return h('div', config.component.parseAttrs(mainAttributes), {
+              default: () => [
+                this.renderLabel(),
+                this.renderTip()
+              ]
+            })
+          }
         }
+      } else {
+        return mainRender(this.payload)
       }
     } else {
-      return mainRender(this.payload)
+      return null
     }
   }
 })

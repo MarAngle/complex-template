@@ -10,6 +10,9 @@
 - Import的complex属性适配，接收一个复杂对象实现，具体的名称和URL解析考虑单独参数或者额外包装
 ### Doing
 
+### 4.3.29-ing
+- 适配DictionaryData/DefaultMod的collapse折叠判断值
+
 ### 4.3.27/28
 - 适配SelectEdit的search配置项
 

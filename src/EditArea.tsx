@@ -155,6 +155,7 @@ export default defineComponent({
           gridRowProps: this.gridRowProps!,
           formProps: this.formProps,
           enter: this.enter,
+          collapse: this.dictionary.$collapse,
           disabled: this.disabled,
           loading: this.loading,
           onMenu: (prop: string, payload: AutoItemPayloadType<true>) => {

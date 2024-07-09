@@ -3,6 +3,7 @@ import { Col, Row, RowProps } from "ant-design-vue"
 import ObserveList from "complex-data/src/dictionary/ObserveList"
 import DefaultInfo from "complex-data/src/dictionary/DefaultInfo"
 import AttrsValue, { AttrsValueInitOption } from "complex-data/src/lib/AttrsValue"
+import { collapseType } from "complex-data/src/module/DictionaryData"
 import GridParse from "complex-data/src/lib/GridParse"
 import AutoItem, { AutoItemPayloadType, AutoItemProps } from "./dictionary/AutoItem"
 import config from "../config"
@@ -12,6 +13,7 @@ export interface InfoViewDefaultProps {
   labelAlign?: 'center' | 'right' | 'left'
   gridParse?: GridParse
   gridRowProps?: RowProps
+  collapse?: collapseType
   disabled?: boolean
   loading?: boolean
 }
@@ -64,6 +66,10 @@ export default defineComponent({
       type: Object as PropType<InfoViewProps['infoAttrs']>,
       required: false
     },
+    collapse: {
+      type: Object as PropType<InfoViewProps['collapse']>,
+      required: false
+    },
     disabled: {
       type: Boolean,
       required: false
@@ -101,6 +107,7 @@ export default defineComponent({
         list: this.list,
         type: this.type,
         gridParse: this.gridParse,
+        collapse: this.collapse,
         disabled: this.disabled,
         loading: this.loading,
         data: this.data,

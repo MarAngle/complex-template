@@ -16,6 +16,7 @@ import MultipleImport from "./src/MultipleImport"
 import SingleImport from "./src/SingleImport"
 import { Button } from "ant-design-vue"
 import { ButtonType } from "ant-design-vue/es/button"
+import { collapseType } from "complex-data/src/module/DictionaryData"
 
 export class LayoutLifeData {
   life: string
@@ -42,6 +43,9 @@ export type colorKeys = keyof typeof config.style.color
 
 const config = {
   component: componentConfig,
+  parseCollapse(areaCollapse: collapseType, dictionaryCollapse: collapseType) {
+    return (dictionaryCollapse || 0) >= (areaCollapse || 0)
+  },
   initStyle() {
     const style = document.createElement('style')
     let innerHTML = ''
