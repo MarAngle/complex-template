@@ -1,22 +1,23 @@
 import { h } from "vue"
+import { Button } from "ant-design-vue"
+import { ButtonType } from "ant-design-vue/es/button"
 import { getType, camelToLine, downloadFile } from "complex-utils"
 import { PluginLayout } from "complex-plugin"
 import { ChoiceData, PaginationData, AttrsValue, DictionaryData, DictionaryValue } from "complex-data"
 import DefaultList from 'complex-data/src/dictionary/DefaultList'
 import { GridValue } from "complex-data/src/lib/GridParse"
 import { FileValue } from "complex-data/src/lib/FileValue"
+import { collapseType } from "complex-data/src/dictionary/DefaultMod"
 import { MenuValue } from "complex-data/type"
 import { AutoIndex, FileView } from "complex-component"
 import componentConfig from "complex-component/config"
 import AutoText from "./src/AutoText.vue"
 import { modalLayoutOption } from "./src/ModalView"
 import { tablePayload } from "./src/TableView"
-import $icon from "./icon"
 import MultipleImport from "./src/MultipleImport"
 import SingleImport from "./src/SingleImport"
-import { Button } from "ant-design-vue"
-import { ButtonType } from "ant-design-vue/es/button"
-import { collapseType } from "complex-data/src/module/DictionaryData"
+import $icon from "./icon"
+import MenuView from "./src/components/MenuView"
 
 export class LayoutLifeData {
   life: string
@@ -43,8 +44,37 @@ export type colorKeys = keyof typeof config.style.color
 
 const config = {
   component: componentConfig,
-  parseCollapse(areaCollapse: collapseType, dictionaryCollapse: collapseType) {
-    return (dictionaryCollapse || 0) >= (areaCollapse || 0)
+  parseCollapse(collapse: boolean, dictionaryCollapse?: collapseType) {
+    if (collapse) {
+      return true
+    } else {
+      return !!dictionaryCollapse
+    }
+  },
+  collapseRender(collapse: boolean, dictionary: DictionaryData) {
+    if (collapse) {
+      return h(MenuView, {
+        data: {
+          icon: 'up',
+          type: 'primary',
+          name: '折叠'
+        },
+        onClick() {
+          dictionary.$collapse = false
+        }
+      })
+    } else {
+      return h(MenuView, {
+        data: {
+          icon: 'down',
+          type: 'primary',
+          name: '展开'
+        },
+        onClick() {
+          dictionary.$collapse = true
+        }
+      })
+    }
   },
   initStyle() {
     const style = document.createElement('style')

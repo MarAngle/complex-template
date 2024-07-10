@@ -1,4 +1,4 @@
-import { defineComponent, h, PropType } from "vue"
+import { defineComponent, h, PropType, VNode } from "vue"
 import { DefaultInfo, SearchData } from "complex-data"
 import { DictionaryEditMod } from "complex-data/src/lib/DictionaryValue"
 import EditView, { EditViewDefaultProps } from "./EditView"
@@ -9,6 +9,7 @@ export interface SearchAreaProps extends EditViewDefaultProps {
   search: SearchData
   searchMenu?: (string | DictionaryEditMod)[]
   inline?: boolean
+  collapseRender?: (collapse: boolean) => null | VNode | VNode[]
 }
 
 export default defineComponent({
@@ -66,8 +67,8 @@ export default defineComponent({
       required: false,
       default: true
     },
-    collapse: {
-      type: Object as PropType<SearchAreaProps['collapse']>,
+    collapseRender: {
+      type: Object as PropType<SearchAreaProps['collapseRender']>,
       required: false
     },
     disabled: {
@@ -121,9 +122,32 @@ export default defineComponent({
         }
       })
       return form
+    },
+    renderCollapse() {
+      if (this.search.$collapse !== undefined) {
+        // 存在值时则进行展示
+        return h('div',
+          {
+            class: 'complex-search-area-collapse'
+          },
+          [
+            !this.collapseRender ? config.collapseRender(this.search.$collapse, this.search) : this.collapseRender(this.search.$collapse)
+          ]
+        )
+      } else {
+        return null
+      }
     }
   },
   render() {
-    return h('div', { class: 'complex-search-area' }, [this.renderEdit()])
+    return h('div',
+      {
+        class: 'complex-search-area'
+      },
+      [
+        this.renderEdit(),
+        this.renderCollapse()
+      ]
+    )
   }
 })

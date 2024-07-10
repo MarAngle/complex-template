@@ -73,7 +73,7 @@ export default defineComponent({
       required: false
     },
     collapse: {
-      type: Object as PropType<EditViewProps['collapse']>,
+      type: Boolean,
       required: false
     },
     disabled: {

@@ -5,7 +5,6 @@ import ObserveList from "complex-data/src/dictionary/ObserveList"
 import DefaultEdit from "complex-data/src/dictionary/DefaultEdit"
 import GridParse from "complex-data/src/lib/GridParse"
 import { DictionaryEditMod } from "complex-data/src/lib/DictionaryValue"
-import { collapseType } from "complex-data/src/module/DictionaryData"
 import EditView from "../EditView"
 import InfoView from "../InfoView"
 import AutoEditItem from "./AutoEditItem"
@@ -35,7 +34,7 @@ export interface AutoItemProps<E = true> {
   type: string
   gridParse?: GridParse
   choice?: number
-  collapse?: collapseType
+  collapse?: boolean
   disabled?: boolean
   loading?: boolean
   form: E extends true ? FormValue : undefined
@@ -75,7 +74,7 @@ export default defineComponent({
       required: false
     },
     collapse: {
-      type: Object as PropType<AutoItemProps['collapse']>,
+      type: Boolean,
       required: false
     },
     disabled: {

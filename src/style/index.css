@@ -83,6 +83,22 @@
   display: none;
 }
 
+.complex-search-area{
+  display: flex;
+  flex-direction: row;
+  justify-content: stretch;
+  align-items: flex-start;
+}
+.complex-search-area .complex-edit{
+  flex: auto;
+  width: 100%;
+}
+.complex-search-area .complex-search-area-collapse{
+  flex: none;
+  width: auto;
+  padding-left: 16px;
+}
+
 .complex-quick-list{
   padding: 0 16px;
 }

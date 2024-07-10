@@ -1,5 +1,5 @@
 import { Component, VNode, h } from 'vue';
-import { SearchOutlined, SettingOutlined, PlusOutlined, DeleteOutlined, ContainerOutlined, ReloadOutlined, SyncOutlined, CloseOutlined, StopOutlined, DownloadOutlined, UploadOutlined, LinkOutlined } from '@ant-design/icons-vue';
+import { SearchOutlined, SettingOutlined, PlusOutlined, DeleteOutlined, ContainerOutlined, ReloadOutlined, SyncOutlined, CloseOutlined, StopOutlined, DownloadOutlined, UploadOutlined, LinkOutlined, DownOutlined, UpOutlined } from '@ant-design/icons-vue';
 import { MenuValue } from 'complex-data/type';
 
 export const iconDict: Record<string, Component> = {
@@ -14,7 +14,9 @@ export const iconDict: Record<string, Component> = {
   stop: StopOutlined,
   download: DownloadOutlined,
   upload: UploadOutlined,
-  link: LinkOutlined
+  link: LinkOutlined,
+  down: DownOutlined,
+  up: UpOutlined
 }
 
 const icon = {
