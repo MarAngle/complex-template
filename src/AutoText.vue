@@ -56,28 +56,20 @@ export default defineComponent({
     const mainRef = ref<HTMLElement>()
     const sizeRef = ref<HTMLElement>()
     const tipOption = computed(() => {
-      let option
       if (isEllipsis.value && props.tip !== false) {
-        if (typeof props.tip === 'object') {
-          option = {
-            title: props.tip.getData ? props.tip.getData(props.text) : props.tip.data,
-            placement: props.tip.location,
-            ...props.tip.localOption
-          }
-        } else {
-          option = {
-            placement: props.tip || 'top'
-          }
-        }
-        if (option.title == undefined) {
-          option.title = props.text
+        return typeof props.tip === 'object' ? {
+          title: props.tip.getData ? props.tip.getData(props.text) : (props.tip.data || props.text),
+          placement: props.tip.location,
+          ...props.tip.localOption
+        } : {
+          placement: props.tip || 'top',
+          title: props.text
         }
       } else {
-        option = {}
+        return {}
       }
-      return option
     })
-    const resizeObserver = pluginLayout ? reactive(new LocalResizeObserver(pluginLayout)) : undefined
+    const resizeObserver = reactive(new LocalResizeObserver(pluginLayout))
     const triggerObserve = function(entry?: ResizeObserverEntry) {
       nextTick(() => {
         if (mainRef.value && sizeRef.value) {
@@ -91,34 +83,26 @@ export default defineComponent({
         }
       })
     }
-    if (!window.ResizeObserver) {
-      watch(() => props.text, () => {
-        triggerObserve()
-      })
-    }
     onMounted(() => {
-      if (!window.ResizeObserver) {
-        triggerObserve()
-      }
-      if (resizeObserver) {
-        nextTick(() => {
-          resizeObserver.init(mainRef.value!, (entry) => {
-            triggerObserve(entry)
+      nextTick(() => {
+        resizeObserver.init(mainRef.value!, function(entry) {
+          triggerObserve(entry)
+        }, function() {
+          triggerObserve()
+          watch(() => props.text, function() {
+            triggerObserve()
           })
         })
-      }
+      })
     })
     onBeforeMount(() => {
-      if (resizeObserver) {
-        resizeObserver.destroy()
-      }
+      resizeObserver.destroy()
     })
     return {
       mainRef,
       sizeRef,
       isEllipsis: isEllipsis,
-      tipOption: tipOption,
-      triggerObserve: triggerObserve
+      tipOption: tipOption
     }
   }
 })
