@@ -25,8 +25,10 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, nextTick, onMounted, ref, watch } from "vue"
+import { computed, defineComponent, inject, nextTick, onBeforeMount, onMounted, reactive, ref, watch } from "vue"
 import { Tooltip } from "ant-design-vue"
+import LocalResizeObserver from "../LocalResizeObserver"
+import config from "../config"
 
 export default defineComponent({
   name: 'ComplexAutoText',
@@ -49,6 +51,7 @@ export default defineComponent({
     }
   },
   setup (props) {
+    const pluginLayout = inject(config.pluginLayoutKey)
     const isEllipsis = ref(false)
     const mainRef = ref<HTMLElement>()
     const sizeRef = ref<HTMLElement>()
@@ -74,10 +77,11 @@ export default defineComponent({
       }
       return option
     })
-    const triggerObserve = function() {
+    const resizeObserver = pluginLayout ? reactive(new LocalResizeObserver(pluginLayout)) : undefined
+    const triggerObserve = function(entry?: ResizeObserverEntry) {
       nextTick(() => {
         if (mainRef.value && sizeRef.value) {
-          const mainWidth = mainRef.value.getBoundingClientRect().width
+          const mainWidth = (entry && entry.borderBoxSize && entry.borderBoxSize[0]) ? entry.borderBoxSize[0].inlineSize : mainRef.value.getBoundingClientRect().width
           const sizeWidth = sizeRef.value.getBoundingClientRect().width
           if (mainWidth < sizeWidth) {
             isEllipsis.value = true
@@ -87,11 +91,27 @@ export default defineComponent({
         }
       })
     }
-    watch(() => props.text, () => {
-      triggerObserve()
-    })
+    if (!window.ResizeObserver) {
+      watch(() => props.text, () => {
+        triggerObserve()
+      })
+    }
     onMounted(() => {
-      triggerObserve()
+      if (!window.ResizeObserver) {
+        triggerObserve()
+      }
+      if (resizeObserver) {
+        nextTick(() => {
+          resizeObserver.init(mainRef.value!, (entry) => {
+            triggerObserve(entry)
+          })
+        })
+      }
+    })
+    onBeforeMount(() => {
+      if (resizeObserver) {
+        resizeObserver.destroy()
+      }
     })
     return {
       mainRef,

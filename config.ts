@@ -1,4 +1,4 @@
-import { h } from "vue"
+import { h, InjectionKey } from "vue"
 import { Button } from "ant-design-vue"
 import { ButtonType } from "ant-design-vue/es/button"
 import { getType, camelToLine, downloadFile } from "complex-utils"
@@ -43,6 +43,7 @@ export class LayoutLifeData {
 export type colorKeys = keyof typeof config.style.color
 
 const config = {
+  pluginLayoutKey: Symbol() as InjectionKey<PluginLayout>,
   component: componentConfig,
   parseCollapse(collapse: boolean, dictionaryCollapse?: collapseType) {
     if (collapse) {

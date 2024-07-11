@@ -14,7 +14,8 @@ const mainResizeControl = {
   }
 }
 
-class LocalResizeObserve {
+
+class LocalResizeObserver {
   observe?: ResizeObserver
   life?: string
   constructor(pluginLayout: PluginLayout) {
@@ -53,4 +54,4 @@ class LocalResizeObserve {
   }
 }
 
-export default LocalResizeObserve
+export default LocalResizeObserver
