@@ -8,6 +8,8 @@
 - table布局考虑计算准确性
 - SimpleTableView的插槽和菜单逻辑同步
 - Import的complex属性适配，接收一个复杂对象实现，具体的名称和URL解析考虑单独参数或者额外包装
+- 统一的布局切换逻辑实现方案
+
 ### Doing
 
 ### 4.3.29-ing

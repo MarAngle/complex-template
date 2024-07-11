@@ -106,7 +106,6 @@ export default defineComponent({
   components: {
     AutoRender
   },
-  inject: ['providePluginLayout'],
   props: {
     columns: {
       type: Object as PropType<DefaultList[]>,
@@ -135,20 +134,7 @@ export default defineComponent({
     }
   },
   data () {
-    return {
-      layoutLifeData: new LayoutLifeData()
-    }
-  },
-  computed: {
-    injectPluginLayout() {
-      return this.providePluginLayout as PluginLayout
-    }
-  },
-  mounted() {
-    this.layoutLifeData.bind(this.injectPluginLayout)
-  },
-  beforeMount() {
-    this.layoutLifeData.unbind(this.injectPluginLayout)
+    return {}
   },
   methods: {
     rowWidth(target: DefaultList) {
@@ -204,7 +190,7 @@ export default defineComponent({
       } else if (target.ellipsis) {
         // 自动省略切自动换行
         return () => {
-          return config.table.renderAutoText(text as string, target, this.layoutLifeData, payload, config.component.parseData(target.$local, 'autoText'))
+          return config.table.renderAutoText(text as string, target, payload, config.component.parseData(target.$local, 'autoText'))
         }
       } else {
         return () => {

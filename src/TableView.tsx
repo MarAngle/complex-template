@@ -97,16 +97,10 @@ export default defineComponent({
       required: false
     }
   },
-  inject: ['providePluginLayout'],
   data () {
-    return {
-      layoutLifeData: new LayoutLifeData()
-    }
+    return {}
   },
   computed: {
-    injectPluginLayout() {
-      return this.providePluginLayout as PluginLayout
-    },
     currentData () {
       if (this.data) {
         return this.data
@@ -170,7 +164,7 @@ export default defineComponent({
               }
               if (columnItem.ellipsis) {
                 // 自动省略切自动换行
-                return config.table.renderAutoText(text as string, target, this.layoutLifeData, payload, config.component.parseData(target.$local, 'autoText'))
+                return config.table.renderAutoText(text as string, target, payload, config.component.parseData(target.$local, 'autoText'))
               }
               return text
             }
@@ -249,12 +243,6 @@ export default defineComponent({
       }
       return currentTableProps
     },
-  },
-  mounted() {
-    this.layoutLifeData.bind(this.injectPluginLayout)
-  },
-  beforeMount() {
-    this.layoutLifeData.unbind(this.injectPluginLayout)
   },
   methods: {
     renderTable() {

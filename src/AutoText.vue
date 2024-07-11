@@ -18,49 +18,20 @@
 </style>
 <template>
   <Tooltip v-bind="tipOption" >
-    <p ref="main" class="complex-auto-text" :class="{ 'complex-auto-text-auto': auto, 'complex-auto-text-is-auto': isEllipsis }" >
-      <span ref="size" >{{ text }}</span>
+    <p ref="mainRef" class="complex-auto-text" :class="{ 'complex-auto-text-auto': auto, 'complex-auto-text-is-auto': isEllipsis }" >
+      <span ref="sizeRef" >{{ text }}</span>
     </p>
   </Tooltip>
 </template>
 
 <script lang="ts">
+import { computed, defineComponent, nextTick, onMounted, ref, watch } from "vue"
 import { Tooltip } from "ant-design-vue"
-import { defineComponent } from "vue"
 
 export default defineComponent({
   name: 'ComplexAutoText',
   components: {
     Tooltip
-  },
-  data () {
-    return {
-      isEllipsis: false
-    }
-  },
-  computed: {
-    tipOption () {
-      let option
-      if (this.isEllipsis && this.tip !== false) {
-        if (typeof this.tip === 'object') {
-          option = {
-            title: this.tip.getData ? this.tip.getData(this.text) : this.tip.data,
-            placement: this.tip.location,
-            ...this.tip.localOption
-          }
-        } else {
-          option = {
-            placement: this.tip || 'top'
-          }
-        }
-        if (option.title == undefined) {
-          option.title = this.text
-        }
-      } else {
-        option = {}
-      }
-      return option
-    }
   },
   props: {
     text: {
@@ -72,39 +43,62 @@ export default defineComponent({
       required: false,
       default: true
     },
-    recount: {
-      required: false,
-      default: 0
-    },
     tip: {
       type: [String, Boolean, Object],
       required: false
     }
   },
-  watch: {
-    text: function() {
-      this.autoWidth()
-    },
-    recount: function() {
-      this.autoWidth()
-    }
-  },
-  mounted () {
-    this.autoWidth()
-  },
-  methods: {
-    autoWidth() {
-      this.$nextTick(() => {
-        const mainDom = this.$refs.main as HTMLElement
-        const sizeDom = this.$refs.size as HTMLElement
-        const mainWidth = mainDom.getBoundingClientRect().width
-        const sizeWidth = sizeDom.getBoundingClientRect().width
-        if (mainWidth < sizeWidth) {
-          this.isEllipsis = true
+  setup (props) {
+    const isEllipsis = ref(false)
+    const mainRef = ref<HTMLElement>()
+    const sizeRef = ref<HTMLElement>()
+    const tipOption = computed(() => {
+      let option
+      if (isEllipsis.value && props.tip !== false) {
+        if (typeof props.tip === 'object') {
+          option = {
+            title: props.tip.getData ? props.tip.getData(props.text) : props.tip.data,
+            placement: props.tip.location,
+            ...props.tip.localOption
+          }
         } else {
-          this.isEllipsis = false
+          option = {
+            placement: props.tip || 'top'
+          }
+        }
+        if (option.title == undefined) {
+          option.title = props.text
+        }
+      } else {
+        option = {}
+      }
+      return option
+    })
+    const triggerObserve = function() {
+      nextTick(() => {
+        if (mainRef.value && sizeRef.value) {
+          const mainWidth = mainRef.value.getBoundingClientRect().width
+          const sizeWidth = sizeRef.value.getBoundingClientRect().width
+          if (mainWidth < sizeWidth) {
+            isEllipsis.value = true
+          } else {
+            isEllipsis.value = false
+          }
         }
       })
+    }
+    watch(() => props.text, () => {
+      triggerObserve()
+    })
+    onMounted(() => {
+      triggerObserve()
+    })
+    return {
+      mainRef,
+      sizeRef,
+      isEllipsis: isEllipsis,
+      tipOption: tipOption,
+      triggerObserve: triggerObserve
     }
   }
 })

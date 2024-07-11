@@ -16,8 +16,8 @@ import { modalLayoutOption } from "./src/ModalView"
 import { tablePayload } from "./src/TableView"
 import MultipleImport from "./src/MultipleImport"
 import SingleImport from "./src/SingleImport"
-import $icon from "./icon"
 import MenuView from "./src/components/MenuView"
+import $icon from "./icon"
 
 export class LayoutLifeData {
   life: string
@@ -27,14 +27,14 @@ export class LayoutLifeData {
     this.data = 0
   }
   bind(layout: PluginLayout) {
-    this.life = layout.onLife('recount', {
+    this.life = layout.onLife('resize', {
       data: () => {
         this.data++
       }
     })!
   }
   unbind(layout: PluginLayout) {
-    layout.offLife('recount', this.life)
+    layout.offLife('resize', this.life)
     this.data = 0
     this.life = ''
   }
@@ -150,11 +150,10 @@ const config = {
       }
       return config.showValue(text)
     },
-    renderAutoText(text: string, column: DefaultList, layoutLifeData: LayoutLifeData, payload: tablePayload, attrs?: AttrsValue) {
+    renderAutoText(text: string, column: DefaultList, payload: tablePayload, attrs?: AttrsValue) {
       return h(AutoText, {
         text: text,
         auto: true,
-        recount: layoutLifeData.data,
         tip: column.$tip,
         ...componentConfig.parseAttrs(attrs, payload)
       })
