@@ -69,7 +69,7 @@ export default defineComponent({
         return {}
       }
     })
-    const resizeObserver = reactive(new LocalResizeObserver(pluginLayout))
+    const resizeObserver = new LocalResizeObserver(pluginLayout)
     const onResize = function(entry?: ResizeObserverEntry) {
       nextTick(() => {
         if (mainRef.value && sizeRef.value) {
