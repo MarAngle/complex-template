@@ -47,18 +47,18 @@ const config = {
   component: componentConfig,
   parseCollapse(collapse: boolean, dictionaryCollapse?: collapseType) {
     if (collapse) {
-      return true
-    } else {
       return !!dictionaryCollapse
+    } else {
+      return true
     }
   },
   collapseRender(collapse: boolean, dictionary: DictionaryData) {
     if (collapse) {
       return h(MenuView, {
         data: {
-          icon: 'up',
+          icon: 'down',
           type: 'primary',
-          name: '折叠'
+          name: '展开'
         },
         onClick() {
           dictionary.$collapse = false
@@ -67,9 +67,9 @@ const config = {
     } else {
       return h(MenuView, {
         data: {
-          icon: 'down',
+          icon: 'up',
           type: 'primary',
-          name: '展开'
+          name: '折叠'
         },
         onClick() {
           dictionary.$collapse = true
