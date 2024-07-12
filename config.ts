@@ -113,7 +113,8 @@ const config = {
     }
   },
   search: {
-    inline: false
+    inline: false,
+    collapse: true // 是否进行折叠判定
   },
   edit: {
     inline: false,

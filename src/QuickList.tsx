@@ -130,7 +130,7 @@ export default defineComponent({
       if (this.currentComponents.indexOf('search') > -1 && this.listData.$module.search) {
         return h(SearchArea, {
           ref: 'search',
-          search: this.listData.$module.search,
+          search: this.listData.$module.search!,
           choice: this.choiceSize,
           loading: this.operate === 'ing',
           onMenu: this.onSearchMenu,

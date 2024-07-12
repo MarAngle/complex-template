@@ -14,6 +14,7 @@
 
 ### 4.3.29-ing
 - 适配DictionaryData/DefaultMod的collapse折叠判断值
+- 优化PluginLayout的全局引用逻辑
 
 ### 4.3.27/28
 - 适配SelectEdit的search配置项

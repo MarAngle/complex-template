@@ -71,6 +71,13 @@ export default defineComponent({
       type: Object as PropType<SearchAreaProps['collapseRender']>,
       required: false
     },
+    collapse: {
+      type: Boolean,
+      required: false,
+      default: () => {
+        return config.search.collapse
+      }
+    },
     disabled: {
       type: Boolean,
       required: false
@@ -78,7 +85,7 @@ export default defineComponent({
     loading: {
       type: Boolean,
       required: false
-    },
+    }
   },
   computed: {
     currentSearchMenu() {
@@ -96,7 +103,7 @@ export default defineComponent({
       } else {
         return this.currentSearchMenu
       }
-    },
+    }
   },
   methods: {
     renderEdit() {

@@ -70,7 +70,7 @@ export default defineComponent({
       }
     })
     const resizeObserver = reactive(new LocalResizeObserver(pluginLayout))
-    const triggerObserve = function(entry?: ResizeObserverEntry) {
+    const onResize = function(entry?: ResizeObserverEntry) {
       nextTick(() => {
         if (mainRef.value && sizeRef.value) {
           const mainWidth = (entry && entry.borderBoxSize && entry.borderBoxSize[0]) ? entry.borderBoxSize[0].inlineSize : mainRef.value.getBoundingClientRect().width
@@ -86,11 +86,11 @@ export default defineComponent({
     onMounted(() => {
       nextTick(() => {
         resizeObserver.init(mainRef.value!, function(entry) {
-          triggerObserve(entry)
+          onResize(entry)
         }, function() {
-          triggerObserve()
+          onResize()
           watch(() => props.text, function() {
-            triggerObserve()
+            onResize()
           })
         })
       })
@@ -99,10 +99,11 @@ export default defineComponent({
       resizeObserver.destroy()
     })
     return {
+      onResize,
       mainRef,
       sizeRef,
       isEllipsis: isEllipsis,
-      tipOption: tipOption
+      tipOption: tipOption,
     }
   }
 })
