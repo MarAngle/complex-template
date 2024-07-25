@@ -1,12 +1,12 @@
 import { Life } from "complex-utils"
 import { PluginLayout } from "complex-plugin"
 
-const mainResizeControl = {
+export const mainResizeControl = {
   layout: null as null | PluginLayout,
   life: new Life(),
   setLayout(layout: PluginLayout) {
     this.layout = layout
-    layout.onLife('resize', {
+    layout.onLife('main', {
       data: () => {
         this.life.trigger('resize')
       }
@@ -22,7 +22,7 @@ class LocalResizeObserver {
   constructor(pluginLayout?: PluginLayout) {
     if (!window.ResizeObserver && pluginLayout) {
       if (!mainResizeControl.layout) {
-        mainResizeControl.layout = pluginLayout
+        mainResizeControl.setLayout(pluginLayout)
       }
     }
   }
@@ -39,6 +39,7 @@ class LocalResizeObserver {
       this.observe.observe(target)
     } else {
       this.life = mainResizeControl.life.on('resize', {
+        immediate: true, // 模拟ResizeObserver立即触发回调操作
         data() {
           cb()
         }
