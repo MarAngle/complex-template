@@ -96,7 +96,11 @@
   flex: auto;
   width: 100%;
 }
-.complex-search-area .complex-search-area-collapse{
+.complex-search-area .complex-collapse-area{
+  flex: auto;
+  width: 100%;
+}
+.complex-search-area .complex-search-area-collapse-menu{
   flex: none;
   width: auto;
   padding-left: 16px;

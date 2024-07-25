@@ -52,7 +52,7 @@ const config = {
       return true
     }
   },
-  collapseRender(collapse: boolean, dictionary: DictionaryData) {
+  collapseMenuRender(collapse: boolean, dictionary: DictionaryData) {
     if (collapse) {
       return h(MenuView, {
         data: {

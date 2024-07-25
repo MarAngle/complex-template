@@ -1,6 +1,8 @@
 
 ### Tips
 
+不传递searchCollapse则不展示collapse
+
 ### ToDo
 - ListView的TableMenu实现级联
 - 通过antd实现基础主题色的设置:全局样式
@@ -12,9 +14,10 @@
 
 ### Doing
 
-### 4.3.29-ing
+### 4.3.29
 - 适配DictionaryData/DefaultMod的collapse折叠判断值
 - 优化PluginLayout的全局引用逻辑
+- layout升级
 
 ### 4.3.27/28
 - 适配SelectEdit的search配置项

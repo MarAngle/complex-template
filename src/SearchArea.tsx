@@ -9,8 +9,12 @@ export interface SearchAreaProps extends EditViewDefaultProps {
   search: SearchData
   searchMenu?: (string | DictionaryEditMod)[]
   inline?: boolean
-  collapseRender?: (collapse: boolean) => null | VNode | VNode[]
+  collapseMenuRender?: (collapse: boolean) => null | VNode | VNode[]
 }
+
+// 首先先进行非折叠的加载，完成后如长度超出预期，则展示折叠按钮区域，否则不展示折叠按钮区域
+// 默认不进行自动判断，存在折叠逻辑直接进行折叠的展示，可通过适配参数实现自动判断
+// 自动判断在特殊的hide，frozen等逻辑时可能会出现问题，谨慎使用
 
 export default defineComponent({
   name: 'SearchArea',
@@ -67,16 +71,13 @@ export default defineComponent({
       required: false,
       default: true
     },
-    collapseRender: {
-      type: Object as PropType<SearchAreaProps['collapseRender']>,
+    collapseMenuRender: {
+      type: Object as PropType<SearchAreaProps['collapseMenuRender']>,
       required: false
     },
     collapse: {
       type: Boolean,
-      required: false,
-      default: () => {
-        return config.search.collapse
-      }
+      required: false
     },
     disabled: {
       type: Boolean,
@@ -107,7 +108,7 @@ export default defineComponent({
   },
   methods: {
     renderEdit() {
-      const form = h(EditView, {
+      return h(EditView, {
         form: this.search.$runtime.form,
         list: this.search.$runtime.list,
         type: this.search.$prop,
@@ -128,17 +129,16 @@ export default defineComponent({
           this.$emit('enter', prop, payload)
         }
       })
-      return form
     },
-    renderCollapse() {
-      if (this.search.$collapse !== undefined) {
+    renderCollapseMenu() {
+      if (this.collapse && this.search.$collapse !== undefined) {
         // 存在值时则进行展示
         return h('div',
           {
-            class: 'complex-search-area-collapse'
+            class: 'complex-search-area-collapse-menu'
           },
           [
-            !this.collapseRender ? config.collapseRender(this.search.$collapse, this.search) : this.collapseRender(this.search.$collapse)
+            !this.collapseMenuRender ? config.collapseMenuRender(this.search.$collapse, this.search) : this.collapseMenuRender(this.search.$collapse)
           ]
         )
       } else {
@@ -153,7 +153,7 @@ export default defineComponent({
       },
       [
         this.renderEdit(),
-        this.renderCollapse()
+        this.renderCollapseMenu()
       ]
     )
   }
