@@ -114,7 +114,7 @@ const config = {
   },
   search: {
     inline: false,
-    collapse: true // 是否进行折叠判定
+    collapse: true // 是否展示折叠
   },
   edit: {
     inline: false,

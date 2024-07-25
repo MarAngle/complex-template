@@ -1,4 +1,4 @@
-import { defineComponent, h, inject, nextTick, onBeforeMount, onMounted, PropType, reactive, ref, VNode } from "vue"
+import { defineComponent, h, inject, nextTick, onBeforeMount, onMounted, PropType, ref, VNode } from "vue"
 import LocalResizeObserver from "../LocalResizeObserver"
 import config from "../config"
 

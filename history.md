@@ -1,12 +1,9 @@
 
 ### Tips
 
-不传递searchCollapse则不展示collapse
-
 ### ToDo
 - ListView的TableMenu实现级联
 - 通过antd实现基础主题色的设置:全局样式
-- EditView实现一键禁用?具体需求是实现Info?
 - table布局考虑计算准确性
 - SimpleTableView的插槽和菜单逻辑同步
 - Import的complex属性适配，接收一个复杂对象实现，具体的名称和URL解析考虑单独参数或者额外包装

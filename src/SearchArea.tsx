@@ -12,10 +12,6 @@ export interface SearchAreaProps extends EditViewDefaultProps {
   collapseMenuRender?: (collapse: boolean) => null | VNode | VNode[]
 }
 
-// 首先先进行非折叠的加载，完成后如长度超出预期，则展示折叠按钮区域，否则不展示折叠按钮区域
-// 默认不进行自动判断，存在折叠逻辑直接进行折叠的展示，可通过适配参数实现自动判断
-// 自动判断在特殊的hide，frozen等逻辑时可能会出现问题，谨慎使用
-
 export default defineComponent({
   name: 'SearchArea',
   emits: {
@@ -77,7 +73,10 @@ export default defineComponent({
     },
     collapse: {
       type: Boolean,
-      required: false
+      required: false,
+      default: () => {
+        return config.search.collapse
+      }
     },
     disabled: {
       type: Boolean,
