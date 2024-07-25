@@ -114,7 +114,8 @@ const config = {
   },
   search: {
     inline: false,
-    collapse: true // 是否展示折叠
+    collapse: true, // 是否展示折叠
+    lineHeight: 81
   },
   edit: {
     inline: false,

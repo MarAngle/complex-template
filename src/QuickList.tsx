@@ -9,6 +9,7 @@ import ModalView, { ModalViewProps } from "./ModalView"
 import SearchArea, { SearchAreaProps } from "./SearchArea"
 import EditArea, { EditAreaProps } from "./EditArea"
 import InfoArea, { InfoAreaProps } from "./InfoArea"
+// import CollapseArea, { CollapseAreaProps } from "./CollapseArea"
 import { AutoItemPayloadType } from "./dictionary/AutoItem"
 import config from "./../config"
 
@@ -18,6 +19,7 @@ export interface ListModalViewProps extends ModalViewProps {
 
 export type componentsProps = {
   search?: Partial<SearchAreaProps>
+  // searchCollapse?: Partial<CollapseAreaProps>
   table?: Partial<TableViewProps>
   editModal?: Partial<ListModalViewProps>
   edit?: Partial<EditAreaProps>
@@ -128,7 +130,7 @@ export default defineComponent({
     },
     renderSearch() {
       if (this.currentComponents.indexOf('search') > -1 && this.listData.$module.search) {
-        return h(SearchArea, {
+        const searchArea = h(SearchArea, {
           ref: 'search',
           search: this.listData.$module.search!,
           choice: this.choiceSize,
@@ -137,6 +139,18 @@ export default defineComponent({
           onEnter: this.onSearchEnter,
           ...this.currentComponentsProps.search
         })
+        return searchArea
+        // if (this.currentComponentsProps.searchCollapse) {
+        //   return h(CollapseArea, {
+        //     ref: 'collapse',
+        //     height: config.search.lineHeight,
+        //     ...this.currentComponentsProps.searchCollapse
+        //   }, {
+        //     default: () => searchArea
+        //   })
+        // } else {
+        //   return searchArea
+        // }
       } else {
         return null
       }
