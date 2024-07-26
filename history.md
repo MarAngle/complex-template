@@ -11,7 +11,7 @@
 
 ### Doing
 
-### 4.3.29/30
+### 4.3.29/30/31
 - 适配DictionaryData/DefaultMod的collapse折叠判断值
 - 优化PluginLayout的全局引用逻辑
 - layout升级

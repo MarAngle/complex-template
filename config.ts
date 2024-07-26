@@ -43,8 +43,8 @@ export class LayoutLifeData {
 export type colorKeys = keyof typeof config.style.color
 
 const config = {
-  pluginLayoutKey: Symbol() as InjectionKey<PluginLayout>,
   component: componentConfig,
+  pluginLayoutKey: Symbol('pluginLayout') as InjectionKey<PluginLayout>,
   parseCollapse(collapse: boolean, dictionaryCollapse?: collapseType) {
     if (collapse) {
       return !!dictionaryCollapse
