@@ -44,7 +44,7 @@ export type colorKeys = keyof typeof config.style.color
 
 const config = {
   component: componentConfig,
-  pluginLayoutKey: Symbol('pluginLayout') as InjectionKey<PluginLayout>,
+  pluginLayout: null as null | PluginLayout,
   parseCollapse(collapse: boolean, dictionaryCollapse?: collapseType) {
     if (collapse) {
       return !!dictionaryCollapse

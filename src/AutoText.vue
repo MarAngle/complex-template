@@ -25,7 +25,7 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, inject, nextTick, onBeforeMount, onMounted, reactive, ref, watch } from "vue"
+import { computed, defineComponent, inject, nextTick, onBeforeMount, onMounted, ref, watch } from "vue"
 import { Tooltip } from "ant-design-vue"
 import LocalResizeObserver from "../LocalResizeObserver"
 import config from "../config"
@@ -51,7 +51,6 @@ export default defineComponent({
     }
   },
   setup (props) {
-    const pluginLayout = inject(config.pluginLayoutKey)
     const isEllipsis = ref(false)
     const mainRef = ref<HTMLElement>()
     const sizeRef = ref<HTMLElement>()
@@ -69,7 +68,7 @@ export default defineComponent({
         return {}
       }
     })
-    const resizeObserver = new LocalResizeObserver(pluginLayout)
+    const resizeObserver = new LocalResizeObserver()
     const onResize = function(entry?: ResizeObserverEntry) {
       nextTick(() => {
         if (mainRef.value && sizeRef.value) {

@@ -10,7 +10,7 @@ import EditArea from "./src/EditArea"
 import SearchArea from "./src/SearchArea"
 import QuickList from "./src/QuickList"
 import QuickEdit from "./src/QuickEdit"
-import config from "./config"
+import plugin from "./plugin"
 
 export const ComplexAutoText = AutoText
 export const ComplexButtonView = ButtonView
@@ -25,6 +25,4 @@ export const ComplexSearchArea = SearchArea
 export const ComplexQuickList = QuickList
 export const ComplexQuickEdit = QuickEdit
 
-export const initStyle = function() {
-  config.initStyle()
-}
+export default plugin

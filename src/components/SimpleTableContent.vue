@@ -92,11 +92,10 @@
 
 <script lang="ts">
 import { defineComponent, PropType, h } from 'vue'
-import { PluginLayout } from "complex-plugin"
 import { PaginationData } from 'complex-data'
 import DefaultList from 'complex-data/src/dictionary/DefaultList'
 import AutoRender from './AutoRender'
-import config, { LayoutLifeData } from '../../config'
+import config from '../../config'
 import { tablePayload } from '../TableView'
 import { SimpleTableProps } from '../SimpleTableView'
 import TableMenu from './TableMenu'

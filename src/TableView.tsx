@@ -1,13 +1,12 @@
 import { defineComponent, h, PropType } from "vue"
 import { Table, TableColumnType, TableProps } from 'ant-design-vue'
 import { deepCloneData, updateData } from "complex-utils"
-import { PluginLayout } from "complex-plugin"
 import { ComplexList, PaginationData } from "complex-data"
 import DefaultList from "complex-data/src/dictionary/DefaultList"
 import PaginationView from "./components/PaginationView"
 import ChoiceInfo from "./components/ChoiceInfo.vue"
 import TableMenu, { TableMenuValue } from "./components/TableMenu"
-import config, { LayoutLifeData } from "../config"
+import config from "../config"
 
 type customRenderPayload = { text: unknown, record: Record<PropertyKey, unknown>, index: number }
 

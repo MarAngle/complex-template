@@ -25,10 +25,9 @@ export default defineComponent({
     }
   },
   setup(props) {
-    const pluginLayout = inject(config.pluginLayoutKey)
     const contentRef = ref<Element>()
     const needCollapse = ref(false)
-    const resizeObserver = new LocalResizeObserver(pluginLayout)
+    const resizeObserver = new LocalResizeObserver()
     const onResize = function(entry?: ResizeObserverEntry) {
       nextTick(() => {
         if (contentRef.value) {
