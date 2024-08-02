@@ -18,6 +18,7 @@ import MultipleImport from "./src/MultipleImport"
 import SingleImport from "./src/SingleImport"
 import MenuView from "./src/components/MenuView"
 import $icon from "./icon"
+import { QuickListProps } from "./src/QuickList"
 
 export class LayoutLifeData {
   life: string
@@ -243,7 +244,11 @@ const config = {
     }
   },
   list: {
-    components: ['spin', 'search', 'table', 'edit'] as ('spin' | 'search' | 'table' | 'info' | 'edit' | 'child')[]
+    components: ['spin', 'search', 'table', 'edit'] as ('spin' | 'search' | 'table' | 'info' | 'edit' | 'child')[],
+    editThrottle: {
+      value: 200,
+      start: true
+    } as QuickListProps['editThrottle']
   },
   import: {
     renderMenu(target: (InstanceType<typeof MultipleImport> | InstanceType<typeof SingleImport>)) {

@@ -11,6 +11,9 @@
 
 ### Doing
 
+### 4.3.34
+- 升级data插件适配triggerMethod的节流参数，QuickList的节流参数默认值添加
+
 ### 4.3.33
 - 升级data插件适配可能存在的depth数据
 

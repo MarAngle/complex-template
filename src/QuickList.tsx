@@ -1,7 +1,7 @@
 import { defineComponent, h, PropType } from "vue"
 import { notice } from "complex-plugin"
 import { ComplexList } from "complex-data"
-import { resetOptionType } from "complex-data/src/data/BaseData"
+import { resetOptionType, triggerMethodOption } from "complex-data/src/data/BaseData"
 import AutoSpin from "./components/AutoSpin.vue"
 import TableView, { tablePayload, TableViewProps } from "./TableView"
 import SimpleTableView from "./SimpleTableView"
@@ -40,6 +40,7 @@ export interface QuickListProps {
   simpleTable?: boolean
   components?: ('spin' | 'search' | 'table' | 'info' | 'edit')[]
   componentsProps?: componentsProps
+  editThrottle?: triggerMethodOption['throttle']
   render?: renderType
   reset?: resetOptionType
   destroy?: resetOptionType
@@ -71,6 +72,13 @@ export default defineComponent({
     componentsProps: {
       type: Object as PropType<QuickListProps['componentsProps']>,
       required: false
+    },
+    editThrottle: {
+      type: Object as PropType<QuickListProps['editThrottle']>,
+      required: false,
+      default: () => {
+        return config.list.editThrottle
+      }
     },
     render: {
       type: Object as PropType<QuickListProps['render']>,
@@ -180,7 +188,9 @@ export default defineComponent({
       } else if (prop === '$delete') {
         this.deleteChoiceList()
       } else if (prop === '$export') {
-        this.listData.triggerMethod('$exportData', [], true)
+        this.listData.triggerMethod('$exportData', [], {
+          strict: true
+        })
       }
     },
     renderTop() {
@@ -215,7 +225,10 @@ export default defineComponent({
       } else if (prop === '$delete') {
         notice.confirm('确认进行删除操作吗？', '警告', (act: string) => {
           if (act === 'ok') {
-            this.listData.triggerMethod('$deleteData', [payload!.targetData], true)
+            this.listData.triggerMethod('$deleteData', [payload!.targetData], {
+              strict: true,
+              throttle: this.editThrottle
+            })
           }
         })
       } else if (prop === '$info') {
@@ -284,7 +297,10 @@ export default defineComponent({
       if (this.choiceSize) {
         notice.confirm('确认进行删除操作吗？', '警告', (act: string) => {
           if (act === 'ok') {
-            this.listData.triggerMethod('$multipleDeleteData', [this.currentChoice], true).then(() => {
+            this.listData.triggerMethod('$multipleDeleteData', [this.currentChoice], {
+              strict: true,
+              throttle: this.editThrottle
+            }).then(() => {
               this.listData.resetChoice()
             })
           }
@@ -297,7 +313,9 @@ export default defineComponent({
       if (!this.listData.$refreshData) {
         next(record)
       } else {
-        this.listData.triggerMethod('$refreshData', [record], true).then(() => {
+        this.listData.triggerMethod('$refreshData', [record], {
+          strict: true
+        }).then(() => {
           next(record)
         }).catch((err: unknown) => {
           console.error(err)
@@ -355,19 +373,28 @@ export default defineComponent({
       return new Promise((resolve, reject) => {
         (this.$refs['edit'] as InstanceType<typeof EditArea>).submit().then(res => {
           if (res.type === 'build') {
-            this.listData.triggerMethod('$buildData', [res.targetData, res.type], true).then(() => {
+            this.listData.triggerMethod('$buildData', [res.targetData, res.type], {
+              strict: true,
+              throttle: this.editThrottle
+            }).then(() => {
               resolve(res)
             }).catch((err: unknown) => {
               reject(err)
             })
           } else if (res.type === 'change') {
-            this.listData.triggerMethod('$changeData', [res.targetData, res.originData, res.type], true).then(() => {
+            this.listData.triggerMethod('$changeData', [res.targetData, res.originData, res.type], {
+              strict: true,
+              throttle: this.editThrottle
+            }).then(() => {
               resolve(res)
             }).catch((err: unknown) => {
               reject(err)
             })
           } else {
-            this.listData.triggerMethod('$editData', [res.targetData, res.originData, res.type], true).then(() => {
+            this.listData.triggerMethod('$editData', [res.targetData, res.originData, res.type], {
+              strict: true,
+              throttle: this.editThrottle
+            }).then(() => {
               resolve(res)
             }).catch((err: unknown) => {
               reject(err)
