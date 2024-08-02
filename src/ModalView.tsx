@@ -25,6 +25,12 @@ export interface ModalViewProps {
   modalProps?: ModalProps
 }
 
+export interface ModalViewSlotProps {
+  width: number
+  height: number
+  modal: any
+}
+
 export default defineComponent({
   name: 'ModalView',
   emits: {

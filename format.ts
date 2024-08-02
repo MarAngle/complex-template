@@ -15,7 +15,6 @@ import CustomEdit from "complex-data/src/dictionary/CustomEdit"
 import FormEdit from 'complex-data/src/dictionary/FormEdit'
 import SimpleDateEdit from 'complex-data/src/dictionary/SimpleDateEdit'
 import { AutoItemPayloadType } from './src/dictionary/AutoItem'
-import { debounce } from 'complex-utils';
 
 const init = function (itemAttrs: AttrsValue, targetProp: PropertyKey, formData: Record<PropertyKey, unknown>, prop: PropertyKey) {
   itemAttrs.props[targetProp] = formData[prop]

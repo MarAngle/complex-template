@@ -2,16 +2,17 @@ import { defineComponent, h, PropType } from "vue"
 import { notice } from "complex-plugin"
 import { ComplexList } from "complex-data"
 import { resetOptionType, triggerMethodOption } from "complex-data/src/data/BaseData"
-import AutoSpin from "./components/AutoSpin.vue"
-import TableView, { tablePayload, TableViewProps } from "./TableView"
-import SimpleTableView from "./SimpleTableView"
-import ModalView, { ModalViewProps } from "./ModalView"
-import SearchArea, { SearchAreaProps } from "./SearchArea"
-import EditArea, { EditAreaProps } from "./EditArea"
-import InfoArea, { InfoAreaProps } from "./InfoArea"
-// import CollapseArea, { CollapseAreaProps } from "./CollapseArea"
-import { AutoItemPayloadType } from "./dictionary/AutoItem"
+import AutoSpin from "./../src/components/AutoSpin.vue"
+import TableView, { tablePayload, TableViewProps } from "./../src/TableView"
+import SimpleTableView from "./../src/SimpleTableView"
+import ModalView, { ModalViewProps } from "./../src/ModalView"
+import SearchArea, { SearchAreaProps } from "./../src/SearchArea"
+import EditArea, { EditAreaProps } from "./../src/EditArea"
+import InfoArea, { InfoAreaProps } from "./../src/InfoArea"
+// import CollapseArea, { CollapseAreaProps } from "./../src/CollapseArea"
+import { AutoItemPayloadType } from "./../src/dictionary/AutoItem"
 import config from "./../config"
+import FloatData from "./data/FloatData"
 
 export interface ListModalViewProps extends ModalViewProps {
   formatName?: (name: string, payload?: unknown) => string
@@ -41,6 +42,7 @@ export interface QuickListProps {
   components?: ('spin' | 'search' | 'table' | 'info' | 'edit')[]
   componentsProps?: componentsProps
   editThrottle?: triggerMethodOption['throttle']
+  float?: FloatData
   render?: renderType
   reset?: resetOptionType
   destroy?: resetOptionType
@@ -79,6 +81,10 @@ export default defineComponent({
       default: () => {
         return config.list.editThrottle
       }
+    },
+    float: {
+      type: Object as PropType<QuickListProps['float']>,
+      required: false
     },
     render: {
       type: Object as PropType<QuickListProps['render']>,
@@ -245,7 +251,7 @@ export default defineComponent({
       return null
     },
     renderInfo() {
-      if (this.currentComponents.indexOf('info') > -1) {
+      if (this.currentComponents.indexOf('info') > -1 && !this.float) {
         return h(
           ModalView,
           {
@@ -269,7 +275,7 @@ export default defineComponent({
       }
     },
     renderEdit() {
-      if (this.currentComponents.indexOf('edit') > -1) {
+      if (this.currentComponents.indexOf('edit') > -1 && !this.float) {
         return h(
           ModalView,
           {
@@ -342,7 +348,7 @@ export default defineComponent({
       }
       (this.$refs['info-modal'] as InstanceType<typeof ModalView>).show(name)
       this.$nextTick(() => {
-        (this.$refs['info'] as InstanceType<typeof InfoArea>).show(type, record)
+        (this.$refs['info'] as InstanceType<typeof InfoArea>).$show(type, record)
       })
     },
     openEdit(record?: Record<PropertyKey, any>) {
@@ -364,14 +370,32 @@ export default defineComponent({
       }
     },
     showEdit(name: string, type: string, record?: Record<PropertyKey, any>) {
-      (this.$refs['edit-modal'] as InstanceType<typeof ModalView>).show(name)
-      this.$nextTick(() => {
-        (this.$refs['edit'] as InstanceType<typeof EditArea>).show(type, record)
-      })
+      if (!this.float) {
+        (this.$refs['edit-modal'] as InstanceType<typeof ModalView>).show(name)
+        this.$nextTick(() => {
+          (this.$refs['edit'] as InstanceType<typeof EditArea>).$show(type, record)
+        })
+      } else {
+        this.float.push({
+          type: 'edit',
+          name: name,
+          modalProps: {
+            menu: ['cancel', 'submit'],
+            submit: this.onEditSubmit,
+            ...this.currentComponentsProps.editModal
+          },
+          component: {
+            data: EditArea,
+            show: [type, record]
+          },
+          props: this.currentComponentsProps.edit
+        })
+        console.log(this.float)
+      }
     },
     onEditSubmit() {
       return new Promise((resolve, reject) => {
-        (this.$refs['edit'] as InstanceType<typeof EditArea>).submit().then(res => {
+        (this.$refs['edit'] as InstanceType<typeof EditArea>).$submit().then(res => {
           if (res.type === 'build') {
             this.listData.triggerMethod('$buildData', [res.targetData, res.type], {
               strict: true,

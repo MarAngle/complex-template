@@ -101,7 +101,7 @@ export default defineComponent({
   },
   mounted() {
     if (this.currentType && this.currentData) {
-      this.show()
+      this.$show()
     }
   },
   beforeUnmount() {
@@ -111,7 +111,7 @@ export default defineComponent({
     }
   },
   methods: {
-    show(type?: string, data?: Record<PropertyKey, any>) {
+    $show(type?: string, data?: Record<PropertyKey, any>) {
       this.localType = type
       this.localData = data || undefined
       this.init()

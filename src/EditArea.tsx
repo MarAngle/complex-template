@@ -104,7 +104,7 @@ export default defineComponent({
   },
   mounted() {
     if (this.type) {
-      this.show()
+      this.$show()
     }
   },
   beforeUnmount() {
@@ -114,7 +114,7 @@ export default defineComponent({
     }
   },
   methods: {
-    show(type?: string, data?: dataType) {
+    $show(type?: string, data?: dataType) {
       this.localType = type
       this.data = data || undefined
       this.init()
@@ -133,7 +133,7 @@ export default defineComponent({
         })
       })
     },
-    submit(): Promise<{ targetData: Record<PropertyKey, unknown>, originData: dataType, type: string }> {
+    $submit(): Promise<{ targetData: Record<PropertyKey, unknown>, originData: dataType, type: string }> {
       return new Promise((resolve, reject) => {
         this.currentForm.validate().then(() => {
           const postData = this.dictionary.collectData(this.currentForm.getData(), this.dictionaryList as DictionaryValue[], this.currentType, this.observe ? (this.observeList as ObserveList) : undefined)

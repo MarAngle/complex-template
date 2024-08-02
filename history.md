@@ -11,6 +11,9 @@
 
 ### Doing
 
+### 4.3.35-ing
+- 优化quick相关路径
+
 ### 4.3.34
 - 升级data插件适配triggerMethod的节流参数，QuickList的节流参数默认值添加
 

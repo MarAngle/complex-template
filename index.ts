@@ -8,8 +8,8 @@ import InfoArea from "./src/InfoArea"
 import EditView from "./src/EditView"
 import EditArea from "./src/EditArea"
 import SearchArea from "./src/SearchArea"
-import QuickList from "./src/QuickList"
-import QuickEdit from "./src/QuickEdit"
+import QuickList from "./quick/QuickList"
+import QuickEdit from "./quick/QuickEdit"
 import plugin from "./plugin"
 
 export const ComplexAutoText = AutoText
