@@ -388,7 +388,10 @@ export default defineComponent({
             data: EditArea,
             show: [type, record]
           },
-          props: this.currentComponentsProps.edit
+          props: {
+            dictionary: this.listData.$module.dictionary!,
+            ...this.currentComponentsProps.edit
+          }
         })
         console.log(this.float)
       }

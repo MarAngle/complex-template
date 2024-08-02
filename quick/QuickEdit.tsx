@@ -56,7 +56,7 @@ export default defineComponent({
     showTarget() {
       (this.$refs.modal as InstanceType<typeof ModalView>).show()
       this.$nextTick(() => {
-        (this.$refs.target as InstanceType<typeof EditArea | typeof InfoArea>).show(this.type, this.data)
+        (this.$refs.target as InstanceType<typeof EditArea | typeof InfoArea>).$show(this.type, this.data)
       })
     },
     renderContent() {
@@ -76,7 +76,7 @@ export default defineComponent({
           menu: ['cancel', 'submit'],
           submit: () => {
             return new Promise((resolve, reject) => {
-              (this.$refs.target as InstanceType<typeof EditArea>).submit().then(res => {
+              (this.$refs.target as InstanceType<typeof EditArea>).$submit().then(res => {
                 this.$emit('submit', res.targetData, res.originData, res.type)
                 resolve(res)
               }).catch(err => {

@@ -223,7 +223,13 @@ const config = {
         name: '确认',
         prop: 'submit',
         debounce: 200
-      }
+      },
+      hidden: {
+        type: 'default',
+        name: '最小化',
+        prop: 'hidden',
+        debounce: 200
+      },
     } as Record<string, MenuValue>,
     getMenu(prop: string, targetOption?: Partial<MenuValue>): MenuValue {
       const data = this.menu[prop as keyof typeof config.modal.menu]

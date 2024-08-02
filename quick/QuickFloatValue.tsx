@@ -3,7 +3,7 @@ import { FloatValue } from "./data/FloatData"
 import ModalView, { ModalViewSlotProps } from "./../src/ModalView"
 
 export default defineComponent({
-  name: 'QuickFloat',
+  name: 'QuickFloatValue',
   props: {
     floatValue: {
       type: Object as PropType<FloatValue>,
@@ -33,6 +33,7 @@ export default defineComponent({
       (this.$refs.modal as InstanceType<typeof ModalView>).show()
       this.$nextTick(() => {
         if (typeof (this.$refs.content as any).$show === 'function') {
+          console.log(this.floatValue.component.show);
           (this.$refs.content as any).$show(...(this.floatValue.component.show || []))
         }
       })
@@ -54,7 +55,7 @@ export default defineComponent({
         next({})
       }
     },
-    renderValueContent() {
+    renderContent() {
       if (!this.floatValue.init && !this.floatValue.show) {
         // 未加载未展示直接不进行构建
         return null
@@ -75,7 +76,7 @@ export default defineComponent({
         }
       })
     },
-    renderValueName() {
+    renderName() {
       return h('div', {
         class: 'complex-quick-float-item-name',
         onClick: () => {
@@ -90,6 +91,6 @@ export default defineComponent({
     },
   },
   render() {
-    return h('div', { class: ['complex-quick-float-item', this.floatValue.show ? 'choice ' : ''] }, [ this.renderValueContent(), this.renderValueName() ])
+    return h('div', { class: ['complex-quick-float-item', this.floatValue.show ? 'choice ' : ''] }, [ this.renderContent(), this.renderName() ])
   }
 })

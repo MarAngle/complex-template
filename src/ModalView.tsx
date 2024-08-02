@@ -91,13 +91,16 @@ export default defineComponent({
     menuList() {
       let menuList: MenuValue[]
       const close = () => {
-        this.hide('close')
+        this.close('close')
+      }
+      const hidden = () => {
+        this.hide('hidden')
       }
       const submit = () => {
         if (this.submit) {
           return new Promise((resolve, reject) => {
             this.submit!().then(() => {
-              this.hide('submit')
+              this.close('submit')
               resolve({ status: 'success' })
             }).catch(err => {
               reject(err)
@@ -126,6 +129,11 @@ export default defineComponent({
               return config.modal.getMenu(menu, {
                 ...menuOption,
                 click: submit
+              })
+            } else if (menu === 'hidden') {
+              return config.modal.getMenu(menu, {
+                ...menuOption,
+                click: hidden
               })
             } else {
               return config.modal.getMenu(menu, {
@@ -164,11 +172,14 @@ export default defineComponent({
       this.localModalProps = option
       this.open = true
     },
+    close(from: string) {
+      this.hide(from)
+      this.localTitle = undefined
+      this.localModalProps = undefined
+    },
     hide(from: string) {
       this.open = false
       this.$emit('hide', from)
-      this.localTitle = undefined
-      this.localModalProps = undefined
     },
     renderContent() {
       return this.$slots.default!({
@@ -224,13 +235,13 @@ export default defineComponent({
       ...this.localModalProps,
       onCancel: (e: MouseEvent | KeyboardEvent) => {
         if (e instanceof KeyboardEvent) {
-          this.hide('escape')
+          this.close('escape')
         } else {
           const target = e.target as HTMLDivElement
           if (target.classList.contains('ant-modal-wrap')) {
-            this.hide('mask')
+            this.close('mask')
           } else {
-            this.hide('modal')
+            this.close('modal')
           }
         }
       }

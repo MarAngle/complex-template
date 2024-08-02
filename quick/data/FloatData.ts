@@ -16,6 +16,7 @@ export interface FloatValueInitOption<P extends Record<PropertyKey, unknown> = R
 }
 
 export class FloatValue<P extends Record<PropertyKey, unknown> = Record<PropertyKey, unknown>> extends Data {
+  static $formatConfig = { name: 'FloatValue', level: 80, recommend: true } // 不通过通用格式化函数格式化实例判断值
   id: number
   type: string
   name: string
@@ -44,6 +45,7 @@ export class FloatValue<P extends Record<PropertyKey, unknown> = Record<Property
 }
 
 class FloatData extends Data {
+  static $formatConfig = { name: 'FloatData', level: 80, recommend: true } // 不通过通用格式化函数格式化实例判断值
   list: FloatValue[]
   constructor() {
     super()
