@@ -1,4 +1,4 @@
-import { Life } from "complex-utils"
+import { isArray, Life } from "complex-utils"
 import { PluginLayout } from "complex-plugin"
 
 export const resizeControl = {
@@ -17,17 +17,31 @@ export const resizeControl = {
 class LocalResizeObserver {
   observe?: ResizeObserver
   life?: string
-  init(target: Element, cb: (entry?: ResizeObserverEntry) => void, otherObserver?: () => void) {
+  init(target: Element | Element[], cb: (entry?: ResizeObserverEntry) => void, otherObserver?: () => void) {
     if (window.ResizeObserver) {
-      this.observe = new ResizeObserver((entries) => {
-        for (const entry of entries) {
-          if (entry.target === target) {
-            cb(entry)
-            break
+      if (!isArray(target)) {
+        this.observe = new ResizeObserver((entries) => {
+          for (const entry of entries) {
+            if (entry.target === target) {
+              cb(entry)
+              break
+            }
           }
-        }
-      })
-      this.observe.observe(target)
+        })
+        this.observe.observe(target)
+      } else {
+        this.observe = new ResizeObserver((entries) => {
+          for (const entry of entries) {
+            if (target.indexOf(entry.target) > -1) {
+              cb(entry)
+              break
+            }
+          }
+        })
+        target.forEach((item) => {
+          this.observe!.observe(item)
+        })
+      }
     } else {
       this.life = resizeControl.life.on('resize', {
         immediate: true, // 模拟ResizeObserver立即触发回调操作

@@ -25,10 +25,9 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, inject, nextTick, onBeforeMount, onMounted, ref, watch } from "vue"
+import { computed, defineComponent, nextTick, onBeforeMount, onMounted, ref, watch } from "vue"
 import { Tooltip } from "ant-design-vue"
 import LocalResizeObserver from "../LocalResizeObserver"
-import config from "../config"
 
 export default defineComponent({
   name: 'ComplexAutoText',
@@ -84,13 +83,11 @@ export default defineComponent({
     }
     onMounted(() => {
       nextTick(() => {
-        resizeObserver.init(mainRef.value!, function(entry) {
+        resizeObserver.init([mainRef.value!, sizeRef.value!], function(entry) {
           onResize(entry)
-        }, function() {
+        })
+        watch(() => props.text, function() {
           onResize()
-          watch(() => props.text, function() {
-            onResize()
-          })
         })
       })
     })
