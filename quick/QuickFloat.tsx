@@ -14,8 +14,8 @@ export default defineComponent({
     renderValue(floatValue: FloatValue) {
       return h(QuickFloatValue, {
         floatValue,
-        onRemove: (floatValue: FloatValue) => {
-          this.onRemove(floatValue)
+        onClose: (floatValue: FloatValue, from: string) => {
+          this.float.close(floatValue, from)
         }
       })
     },
@@ -23,11 +23,7 @@ export default defineComponent({
       return this.float.list.map(floatValue => {
         return this.renderValue(floatValue)
       })
-    },
-    onRemove(floatValue: FloatValue) {
-      floatValue.destroy()
-      this.float.remove(floatValue)
-    },
+    }
   },
   render() {
     return h('div', { class: 'complex-quick-float' }, [ this.renderList() ])

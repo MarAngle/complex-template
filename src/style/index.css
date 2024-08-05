@@ -142,18 +142,18 @@
   flex-direction: row;
   justify-content: center;
   align-items: center;
+  padding-left: 8px;
+  display: none;
 }
-.complex-quick-float .complex-quick-float-item{
+
+.complex-quick-float .complex-quick-float-item .complex-quick-float-item-name{
   box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.1);
   padding: 8px 8px;
   margin-right: 8px;
-  color: #fff;
   border-radius: 4px;
   cursor: pointer;
 }
-.complex-quick-float .complex-quick-float-item.choice{
-  background-color: #fff;
-}
+
 .complex-quick-float .complex-quick-float-item:last-child{
   margin-right: 0px;
 }

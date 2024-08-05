@@ -401,9 +401,33 @@ export default defineComponent({
             show: [type, record]
           }
         })
-        // 如何将数据与模板进行绑定，进行submit的相关逻辑
-        console.log(this.float)
       }
+    },
+    onEditSubmit() {
+      return new Promise((resolve, reject) => {
+        if (!this.float) {
+          const edit = this.$refs['edit'] as InstanceType<typeof EditArea>
+          edit.$submit().then(res => {
+            this.$onEditSubmit(res).then(() => {
+              resolve(res)
+            }).catch((err: unknown) => {
+              reject(err)
+            })
+          }).catch((err: unknown) => {
+            reject(err)
+          })
+        } else {
+          this.floatValue!.ref!.submit().then(res => {
+            this.$onEditSubmit(res).then(() => {
+              resolve(res)
+            }).catch((err: unknown) => {
+              reject(err)
+            })
+          }).catch((err: unknown) => {
+            reject(err)
+          })
+        }
+      })
     },
     $onEditSubmit(res: EditAreaSubmitOption) {
       return new Promise((resolve, reject) => {
@@ -437,32 +461,6 @@ export default defineComponent({
         }
       })
     },
-    onEditSubmit() {
-      return new Promise((resolve, reject) => {
-        if (!this.float) {
-          const edit = this.$refs['edit'] as InstanceType<typeof EditArea>
-          edit.$submit().then(res => {
-            this.$onEditSubmit(res).then(() => {
-              resolve(res)
-            }).catch((err: unknown) => {
-              reject(err)
-            })
-          }).catch((err: unknown) => {
-            reject(err)
-          })
-        } else {
-          this.floatValue!.ref!.submit().then(res => {
-            this.$onEditSubmit(res).then(() => {
-              resolve(res)
-            }).catch((err: unknown) => {
-              reject(err)
-            })
-          }).catch((err: unknown) => {
-            reject(err)
-          })
-        }
-      })
-    }
   },
   /**
    * 主要模板

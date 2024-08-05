@@ -4,6 +4,12 @@ import ModalView, { ModalViewSlotProps } from "./../src/ModalView"
 
 export default defineComponent({
   name: 'QuickFloatValue',
+  emits: {
+    // 关闭
+    close: (floatValue: FloatValue, _from: string) => {
+      return !!floatValue
+    }
+  },
   props: {
     floatValue: {
       type: Object as PropType<FloatValue>,
@@ -18,12 +24,9 @@ export default defineComponent({
       immediate: true,
       handler: function (value) {
         if (value) {
-          if (!this.floatValue.init) {
-            this.floatValue.init = true
-            this.$nextTick(() => {
-              this.show()
-            })
-          }
+          this.$nextTick(() => {
+            this.show()
+          })
         }
       }
     }
@@ -37,19 +40,17 @@ export default defineComponent({
   methods: {
     show() {
       (this.$refs.modal as InstanceType<typeof ModalView>).show()
-      this.$nextTick(() => {
-        if (typeof (this.$refs.content as any).$show === 'function') {
-          (this.$refs.content as any).$show(...(this.floatValue.component.show || []))
-        }
-      })
+      if (!this.floatValue.init) {
+        this.floatValue.init = true
+        this.$nextTick(() => {
+          if (typeof (this.$refs.content as any).$show === 'function') {
+            (this.$refs.content as any).$show(...(this.floatValue.component.show || []))
+          }
+        })
+      }
     },
-    close() {
-      (this.$refs.modal as InstanceType<typeof ModalView>).hide('float')
-      this.$emit('remove', this.floatValue)
-    },
-    hide() {
-      this.floatValue.show = false;
-      (this.$refs.modal as InstanceType<typeof ModalView>).hide('float')
+    close(from = 'float') {
+      (this.$refs.modal as InstanceType<typeof ModalView>).close(from)
     },
     submit(...args: any[]): Promise<any> {
       if ((this.$refs.content as any).$submit) {
@@ -66,6 +67,9 @@ export default defineComponent({
       return h(ModalView, {
         class: 'complex-quick-float-item-modal',
         ref: 'modal',
+        onClose: (from: string) => {
+          this.$emit('close', this.floatValue, from)
+        },
         ...this.floatValue.modal.props
       }, {
         default: (modalSlotProps: ModalViewSlotProps) => {
@@ -84,8 +88,7 @@ export default defineComponent({
         class: 'complex-quick-float-item-name',
         onClick: () => {
           if (!this.floatValue.show) {
-            this.floatValue.show = true;
-            (this.$refs.modal as any).$show()
+            this.floatValue.show = true
           }
         }
       }, {
@@ -94,6 +97,6 @@ export default defineComponent({
     },
   },
   render() {
-    return h('div', { class: ['complex-quick-float-item', this.floatValue.show ? 'choice ' : ''] }, [ this.renderContent(), this.renderName() ])
+    return h('div', { class: ['complex-quick-float-item', this.floatValue.show ? 'complex-quick-float-item-active' : ''] }, [ this.renderContent(), this.renderName() ])
   }
 })

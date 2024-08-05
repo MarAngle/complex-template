@@ -65,8 +65,9 @@ class FloatData extends Data {
     this.list.push(floatValue)
     return floatValue
   }
-  remove(floatValue: FloatValue) {
+  close(floatValue: FloatValue, _from: string) {
     const index = this.list.indexOf(floatValue)
+    floatValue.destroy()
     this.list.splice(index, 1)
     return index
   }

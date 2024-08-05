@@ -34,9 +34,11 @@ export interface ModalViewSlotProps {
 export default defineComponent({
   name: 'ModalView',
   emits: {
-    hide: (from: string) => {
+    // 关闭
+    close: (from: string) => {
       return typeof from === 'string'
     },
+    // 菜单
     menu: (prop: string, _self: any) => {
       return typeof prop === 'string'
     }
@@ -76,7 +78,7 @@ export default defineComponent({
   },
   data() {
     return {
-      open: false,
+      $open: false,
       localTitle: undefined as undefined | string,
       localModalProps: undefined as undefined | ModalProps
     }
@@ -92,9 +94,6 @@ export default defineComponent({
       let menuList: MenuValue[]
       const close = () => {
         this.close('close')
-      }
-      const minimize = () => {
-        this.hide('minimize')
       }
       const submit = () => {
         if (this.submit) {
@@ -129,11 +128,6 @@ export default defineComponent({
               return config.modal.getMenu(menu, {
                 ...menuOption,
                 click: submit
-              })
-            } else if (menu === 'minimize') {
-              return config.modal.getMenu(menu, {
-                ...menuOption,
-                click: minimize
               })
             } else {
               return config.modal.getMenu(menu, {
@@ -170,16 +164,13 @@ export default defineComponent({
     show(title?: string, option?: ModalProps) {
       this.localTitle = title
       this.localModalProps = option
-      this.open = true
+      this.$data.$open = true
     },
     close(from: string) {
-      this.hide(from)
+      this.$data.$open = false
       this.localTitle = undefined
       this.localModalProps = undefined
-    },
-    hide(from: string) {
-      this.open = false
-      this.$emit('hide', from)
+      this.$emit('close', from)
     },
     renderContent() {
       return this.$slots.default!({
@@ -228,7 +219,7 @@ export default defineComponent({
     }
     const props: ModalPropsWithClass = {
       class: 'complex-modal',
-      open: this.open,
+      open: this.$data.$open,
       width: this.currentWidth,
       title: this.currentTitle,
       ...this.modalProps,
