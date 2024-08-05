@@ -33,7 +33,6 @@ export default defineComponent({
       (this.$refs.modal as InstanceType<typeof ModalView>).show()
       this.$nextTick(() => {
         if (typeof (this.$refs.content as any).$show === 'function') {
-          console.log(this.floatValue.component.show);
           (this.$refs.content as any).$show(...(this.floatValue.component.show || []))
         }
       })
@@ -63,7 +62,7 @@ export default defineComponent({
       return h(ModalView, {
         class: 'complex-quick-float-item-modal',
         ref: 'modal',
-        ...this.floatValue.modalProps
+        ...this.floatValue.modal.props
       }, {
         default: (modalSlotProps: ModalViewSlotProps) => {
           return h(this.floatValue.component.data, {
@@ -71,7 +70,7 @@ export default defineComponent({
             ref: 'content',
             modalSlotProps: modalSlotProps,
             floatValue: this.floatValue,
-            ...this.floatValue.props
+            ...this.floatValue.component.props
           })
         }
       })

@@ -224,10 +224,10 @@ const config = {
         prop: 'submit',
         debounce: 200
       },
-      hidden: {
+      minimize: {
         type: 'default',
         name: '最小化',
-        prop: 'hidden',
+        prop: 'minimize',
         debounce: 200
       },
     } as Record<string, MenuValue>,

@@ -93,8 +93,8 @@ export default defineComponent({
       const close = () => {
         this.close('close')
       }
-      const hidden = () => {
-        this.hide('hidden')
+      const minimize = () => {
+        this.hide('minimize')
       }
       const submit = () => {
         if (this.submit) {
@@ -130,10 +130,10 @@ export default defineComponent({
                 ...menuOption,
                 click: submit
               })
-            } else if (menu === 'hidden') {
+            } else if (menu === 'minimize') {
               return config.modal.getMenu(menu, {
                 ...menuOption,
-                click: hidden
+                click: minimize
               })
             } else {
               return config.modal.getMenu(menu, {

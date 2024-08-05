@@ -379,25 +379,30 @@ export default defineComponent({
         this.float.push({
           type: 'edit',
           name: name,
-          modalProps: {
-            menu: ['cancel', 'submit'],
-            submit: this.onEditSubmit,
-            ...this.currentComponentsProps.editModal
+          modal: {
+            props: {
+              title: name,
+              menu: ['cancel', 'submit'],
+              submit: this.onEditSubmit,
+              ...this.currentComponentsProps.editModal
+            }
           },
           component: {
             data: EditArea,
+            props: {
+              dictionary: this.listData.$module.dictionary!,
+              ...this.currentComponentsProps.edit
+            },
             show: [type, record]
-          },
-          props: {
-            dictionary: this.listData.$module.dictionary!,
-            ...this.currentComponentsProps.edit
           }
         })
+        // 如何将数据与模板进行绑定，进行submit的相关逻辑
         console.log(this.float)
       }
     },
     onEditSubmit() {
       return new Promise((resolve, reject) => {
+        const edit = !this.float ? (this.$refs['edit'] as InstanceType<typeof EditArea>) : 
         (this.$refs['edit'] as InstanceType<typeof EditArea>).$submit().then(res => {
           if (res.type === 'build') {
             this.listData.triggerMethod('$buildData', [res.targetData, res.type], {

@@ -1,40 +1,43 @@
 import { Component } from "vue"
 import { Data } from "complex-data"
-import { ModalViewProps } from "../../src/ModalView"
+import ModalView, { ModalViewProps } from "../../src/ModalView"
 
 let id = 1
 
-export interface FloatValueInitOption<P extends Record<PropertyKey, unknown> = Record<PropertyKey, unknown>> {
+export interface FloatValueInitOption {
   type: string
   name: string
-  modalProps: ModalViewProps
+  modal: {
+    props: ModalViewProps
+  }
   component: {
     data: Component
+    props?: Record<PropertyKey, unknown>
     show?: any[]
   }
-  props?: P
 }
 
-export class FloatValue<P extends Record<PropertyKey, unknown> = Record<PropertyKey, unknown>> extends Data {
+export class FloatValue extends Data {
   static $formatConfig = { name: 'FloatValue', level: 80, recommend: true } // 不通过通用格式化函数格式化实例判断值
   id: number
   type: string
   name: string
-  modalProps: ModalViewProps
+  modal: {
+    props: ModalViewProps
+  }
   component: {
     data: Component
+    props?: Record<PropertyKey, unknown>
     show?: any[]
   }
-  props?: P
   show: boolean
   init: boolean
-  constructor(initOption: FloatValueInitOption<P>, show = true) {
+  constructor(initOption: FloatValueInitOption, show = true) {
     super()
     this.id = id++
     this.type = initOption.type
     this.name = initOption.name
-    this.modalProps = initOption.modalProps
-    this.props = initOption.props
+    this.modal = initOption.modal
     this.component = initOption.component
     this.show = show
     this.init = false
@@ -52,7 +55,9 @@ class FloatData extends Data {
     this.list = []
   }
   push(floatValueInitOption: FloatValueInitOption, show?: boolean) {
-    this.list.push(new FloatValue(floatValueInitOption, show))
+    const floatValue = new FloatValue(floatValueInitOption, show)
+    this.list.push(floatValue)
+    return floatValue
   }
   remove(floatValue: FloatValue) {
     const index = this.list.indexOf(floatValue)
