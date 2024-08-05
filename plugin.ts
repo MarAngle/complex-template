@@ -6,7 +6,7 @@ import { date, PluginLayout } from 'complex-plugin'
 import { Data, FormValue } from "complex-data"
 import DefaultEdit, { ruleOption } from 'complex-data/src/dictionary/DefaultEdit'
 import SimpleDateEdit from "complex-data/src/dictionary/SimpleDateEdit"
-import LayoutResizeObserve from "./LayoutResizeObserve"
+import LayoutResizeObserver from "./LayoutResizeObserver"
 import './src/style/index.css'
 import config from "./config"
 
@@ -17,7 +17,7 @@ export type ComplexComponentAntdOptions = {
 }
 
 const plugin = {
-  install: function(app: App, options: ComplexComponentAntdOptions = {}) {
+  install: function(_app: App, options: ComplexComponentAntdOptions = {}) {
     if (options.reactive !== false) {
       Data.$format = function(data, formatConfig) {
         if (formatConfig && formatConfig.recommend) {
@@ -32,7 +32,7 @@ const plugin = {
     }
     if (options && options.pluginLayout) {
       config.pluginLayout = options.pluginLayout
-      LayoutResizeObserve.init(options.pluginLayout)
+      LayoutResizeObserver.init(options.pluginLayout)
     }
     FormValue.clearValidate = function(formValue, ...args: Parameters<FormInstance['clearValidate']>) {
       if (formValue.ref) {

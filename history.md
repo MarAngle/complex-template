@@ -8,11 +8,10 @@
 - SimpleTableView的插槽和菜单逻辑同步
 - Import的complex属性适配，接收一个复杂对象实现，具体的名称和URL解析考虑单独参数或者额外包装
 - 统一的布局切换逻辑实现方案
-- 数据更改后的AutoText未适应
 
 ### Doing
 
-### 4.3.35-ing
+### 4.3.35
 - 优化quick相关路径
 - 实现基础的Float布局
 - 修正AutoText在文本变化时未重新计算宽度的BUG

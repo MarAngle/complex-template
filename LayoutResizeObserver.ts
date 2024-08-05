@@ -1,14 +1,19 @@
 import { Life } from "complex-utils"
 import { PluginLayout } from "complex-plugin"
 
-// ResizeObserver 在开始观察一个元素时，确实会立即触发回调一次，即使在观察开始时元素的尺寸没有发生变化。这个立即触发的回调提供了元素的初始尺寸信息。
+export type LayoutResizeObserverType = (entries: ResizeObserverEntry[], observer: LayoutResizeObserver) => void
 
+export interface LayoutResizeObserverSupplement {
+  unCount?: boolean // 不计算entry
+}
+
+// ResizeObserver 在开始观察一个元素时，确实会立即触发回调一次，即使在观察开始时元素的尺寸没有发生变化。这个立即触发的回调提供了元素的初始尺寸信息。
 class LayoutResizeObserver {
   static life = new Life()
   static init(layout: PluginLayout) {
     layout.onLife('main', {
       data: () => {
-        this.life.trigger('resize')
+        LayoutResizeObserver.life.trigger('mainChange', 'main')
       }
     })
   }
@@ -38,17 +43,17 @@ class LayoutResizeObserver {
       devicePixelContentBoxSize: [contentBoxSize]
     }
   }
-
-  private observer: (entries: ResizeObserverEntry[], observer: LayoutResizeObserver) => void
+  private observer: LayoutResizeObserverType
+  private supplement: LayoutResizeObserverSupplement
   private targetElements: Map<Element, DOMRect>
-  private lifeEvent: string
-
-  constructor(observer: (entries: ResizeObserverEntry[], observer: LayoutResizeObserver) => void) {
+  private lifeId: string
+  constructor(observer: LayoutResizeObserverType, supplement?: LayoutResizeObserverSupplement) {
     this.observer = observer
+    this.supplement = supplement || {}
     this.targetElements = new Map()
-    this.lifeEvent = LayoutResizeObserver.life.on('resize', {
+    this.lifeId = LayoutResizeObserver.life.on('mainChange', {
       data: () => {
-        this.checkResize()
+        this.check()
       }
     })!
   }
@@ -56,7 +61,7 @@ class LayoutResizeObserver {
   observe(target: Element) {
     // 初始化目标元素的尺寸缓存
     this.targetElements.set(target, target.getBoundingClientRect())
-    this.checkResize()
+    this.check()
   }
 
   unobserve(target: Element) {
@@ -65,18 +70,28 @@ class LayoutResizeObserver {
 
   disconnect() {
     this.targetElements.clear()
-    LayoutResizeObserver.life.off('resize', this.lifeEvent)
-    this.lifeEvent = ''
+    LayoutResizeObserver.life.off('resize', this.lifeId)
+    this.lifeId = ''
   }
 
-  private checkResize() {
+  private check() {
     const entries: ResizeObserverEntry[] = []
     this.targetElements.forEach((lastRect, target) => {
       const rect = target.getBoundingClientRect()
       if (rect.width !== lastRect.width || rect.height !== lastRect.height) {
         // 尺寸变化，更新缓存并收集变更条目
-        this.targetElements.set(target, rect)
-        entries.push(LayoutResizeObserver.createResizeObserverEntry(target, rect))
+        if (!this.supplement.unCount) {
+          this.targetElements.set(target, rect)
+          entries.push(LayoutResizeObserver.createResizeObserverEntry(target, rect))
+        } else {
+          entries.push({
+            target: target,
+            contentRect: rect,
+            borderBoxSize: [],
+            contentBoxSize: [],
+            devicePixelContentBoxSize: []
+          } as ResizeObserverEntry)
+        }
       }
     })
 

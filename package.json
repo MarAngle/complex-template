@@ -1,6 +1,6 @@
 {
   "name": "complex-component-antd",
-  "version": "4.3.35-ing",
+  "version": "4.3.35",
   "description": "a complex component by antd v4",
   "main": "index.ts",
   "repository": {

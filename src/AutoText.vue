@@ -78,7 +78,9 @@ export default defineComponent({
         }
       }
     }
-    const resizeObserver = new LocalResizeObserver(onResize)
+    const resizeObserver = new LocalResizeObserver(onResize, {
+      unCount: true
+    })
     onMounted(() => {
       nextTick(() => {
         resizeObserver.observe(mainRef.value!)

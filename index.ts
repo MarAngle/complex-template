@@ -10,6 +10,7 @@ import EditArea from "./src/EditArea"
 import SearchArea from "./src/SearchArea"
 import QuickList from "./quick/QuickList"
 import QuickEdit from "./quick/QuickEdit"
+import QuickFloat from "./quick/QuickFloat"
 import plugin from "./plugin"
 
 export const ComplexAutoText = AutoText
@@ -24,5 +25,6 @@ export const ComplexEditArea = EditArea
 export const ComplexSearchArea = SearchArea
 export const ComplexQuickList = QuickList
 export const ComplexQuickEdit = QuickEdit
+export const ComplexQuickFloat = QuickFloat
 
 export default plugin
