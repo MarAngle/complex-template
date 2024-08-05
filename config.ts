@@ -17,8 +17,8 @@ import { tablePayload } from "./src/TableView"
 import MultipleImport from "./src/MultipleImport"
 import SingleImport from "./src/SingleImport"
 import MenuView from "./src/components/MenuView"
-import $icon from "./icon"
 import { QuickListProps } from "./quick/QuickList"
+import $icon from "./icon"
 
 export class LayoutLifeData {
   life: string

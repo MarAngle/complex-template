@@ -6,7 +6,7 @@ import { date, PluginLayout } from 'complex-plugin'
 import { Data, FormValue } from "complex-data"
 import DefaultEdit, { ruleOption } from 'complex-data/src/dictionary/DefaultEdit'
 import SimpleDateEdit from "complex-data/src/dictionary/SimpleDateEdit"
-import { resizeControl } from "./LocalResizeObserver"
+import LayoutResizeObserve from "./LayoutResizeObserve"
 import './src/style/index.css'
 import config from "./config"
 
@@ -32,7 +32,7 @@ const plugin = {
     }
     if (options && options.pluginLayout) {
       config.pluginLayout = options.pluginLayout
-      resizeControl.init(options.pluginLayout)
+      LayoutResizeObserve.init(options.pluginLayout)
     }
     FormValue.clearValidate = function(formValue, ...args: Parameters<FormInstance['clearValidate']>) {
       if (formValue.ref) {

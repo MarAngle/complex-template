@@ -27,28 +27,24 @@ export default defineComponent({
   setup(props) {
     const contentRef = ref<Element>()
     const needCollapse = ref(false)
-    const resizeObserver = new LocalResizeObserver()
-    const onResize = function(entry?: ResizeObserverEntry) {
-      nextTick(() => {
-        if (contentRef.value) {
-          const contentHeight = (entry && entry.borderBoxSize && entry.borderBoxSize[0]) ? entry.borderBoxSize[0].blockSize : contentRef.value.getBoundingClientRect().height
-          if (contentHeight <= props.height) {
-            needCollapse.value = false
-          } else {
-            needCollapse.value = true
-          }
+    const onResize = function(entry: ResizeObserverEntry) {
+      if (contentRef.value) {
+        const contentHeight = entry.borderBoxSize[0].blockSize
+        if (contentHeight <= props.height) {
+          needCollapse.value = false
+        } else {
+          needCollapse.value = true
         }
-      })
+      }
     }
+    const resizeObserver = new LocalResizeObserver(onResize)
     onMounted(() => {
       nextTick(() => {
-        resizeObserver.init(contentRef.value!, function(entry) {
-          onResize(entry)
-        })
+        resizeObserver.observe(contentRef.value!)
       })
     })
     onBeforeMount(() => {
-      resizeObserver.destroy()
+      resizeObserver.disconnect()
     })
     return {
       contentRef,

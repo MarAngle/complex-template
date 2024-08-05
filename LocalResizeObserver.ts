@@ -1,67 +1,38 @@
-import { isArray, Life } from "complex-utils"
-import { PluginLayout } from "complex-plugin"
+import LayoutResizeObserver from "./LayoutResizeObserver"
 
-export const resizeControl = {
-  life: new Life(),
-  init(layout: PluginLayout) {
-    layout.onLife('main', {
-      data: () => {
-        this.life.trigger('resize')
-      }
-    })!
-  }
-}
 
-// ResizeObserver 在开始观察一个元素时，确实会立即触发回调一次，即使在观察开始时元素的尺寸没有发生变化。这个立即触发的回调提供了元素的初始尺寸信息。
+export type LocalResizeObserverType = (entry: ResizeObserverEntry) => void
 
 class LocalResizeObserver {
-  observe?: ResizeObserver
-  life?: string
-  init(target: Element | Element[], cb: (entry?: ResizeObserverEntry) => void, otherObserver?: () => void) {
-    if (window.ResizeObserver) {
-      if (!isArray(target)) {
-        this.observe = new ResizeObserver((entries) => {
-          for (const entry of entries) {
-            if (entry.target === target) {
-              cb(entry)
-              break
-            }
-          }
-        })
-        this.observe.observe(target)
-      } else {
-        this.observe = new ResizeObserver((entries) => {
-          for (const entry of entries) {
-            if (target.indexOf(entry.target) > -1) {
-              cb(entry)
-              break
-            }
-          }
-        })
-        target.forEach((item) => {
-          this.observe!.observe(item)
-        })
-      }
-    } else {
-      this.life = resizeControl.life.on('resize', {
-        immediate: true, // 模拟ResizeObserver立即触发回调操作
-        data() {
-          cb()
-        }
+  observer: ResizeObserver | LayoutResizeObserver
+  $observer: LocalResizeObserverType
+  list: Element[]
+  constructor(observer: LocalResizeObserverType) {
+    this.$observer = observer
+    this.observer = new (window.ResizeObserver ? ResizeObserver : LayoutResizeObserver)(entries => {
+      entries.forEach(entry => {
+        this.trigger(entry)
       })
-      if (otherObserver) {
-        otherObserver()
-      }
+    })
+    this.list = []
+  }
+  trigger(entry: ResizeObserverEntry) {
+    if (this.list.indexOf(entry.target) > -1) {
+      this.$observer(entry)
     }
   }
-  destroy() {
-    if (this.observe) {
-      this.observe.disconnect()
-      this.observe = undefined
-    } else if (this.life !== undefined) {
-      resizeControl.life.off('resize', this.life)
-      this.life = undefined
-    }
+  observe(target: Element) {
+    this.observer.observe(target)
+    this.list.push(target)
+  }
+  unobserve(target: Element) {
+    this.observer.unobserve(target)
+    const index = this.list.indexOf(target)
+    this.list.splice(index, 1)
+  }
+  disconnect() {
+    this.observer.disconnect()
+    this.list = []
   }
 }
 

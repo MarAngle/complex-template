@@ -67,32 +67,28 @@ export default defineComponent({
         return {}
       }
     })
-    const resizeObserver = new LocalResizeObserver()
-    const onResize = function(entry?: ResizeObserverEntry) {
-      nextTick(() => {
-        if (mainRef.value && sizeRef.value) {
-          const mainWidth = (entry && entry.borderBoxSize && entry.borderBoxSize[0]) ? entry.borderBoxSize[0].inlineSize : mainRef.value.getBoundingClientRect().width
-          const sizeWidth = sizeRef.value.getBoundingClientRect().width
-          if (mainWidth < sizeWidth) {
-            isEllipsis.value = true
-          } else {
-            isEllipsis.value = false
-          }
+    const onResize = function() {
+      if (mainRef.value && sizeRef.value) {
+        const mainWidth = mainRef.value.getBoundingClientRect().width
+        const sizeWidth = sizeRef.value.getBoundingClientRect().width
+        if (mainWidth < sizeWidth) {
+          isEllipsis.value = true
+        } else {
+          isEllipsis.value = false
         }
-      })
+      }
     }
+    const resizeObserver = new LocalResizeObserver(onResize)
     onMounted(() => {
       nextTick(() => {
-        resizeObserver.init([mainRef.value!, sizeRef.value!], function(entry) {
-          onResize(entry)
-        })
+        resizeObserver.observe(mainRef.value!)
         watch(() => props.text, function() {
           onResize()
         })
       })
     })
     onBeforeMount(() => {
-      resizeObserver.destroy()
+      resizeObserver.disconnect()
     })
     return {
       onResize,

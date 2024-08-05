@@ -15,7 +15,8 @@
 ### 4.3.35-ing
 - 优化quick相关路径
 - 实现基础的Float布局
-- 初步修正AutoText在文本变化时未重新计算宽度的BUG
+- 修正AutoText在文本变化时未重新计算宽度的BUG
+- 添加LayoutResizeObserver类，基于PluginLayout初步兼容ResizeObserver
 
 ### 4.3.34
 - 升级data插件适配triggerMethod的节流参数，QuickList的节流参数默认值添加
