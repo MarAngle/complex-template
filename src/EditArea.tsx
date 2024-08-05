@@ -6,7 +6,13 @@ import { AutoItemPayloadType } from "./dictionary/AutoItem"
 import { InfoAreaDefaultProps } from "./InfoArea"
 import config from "../config"
 
-type dataType = undefined | Record<PropertyKey, unknown>
+export type EditAreaDataType = undefined | Record<PropertyKey, unknown>
+
+export interface EditAreaSubmitOption {
+  targetData: Record<PropertyKey, unknown>
+  originData: EditAreaDataType
+  type: string
+}
 
 export interface EditAreaDefaultProps extends EditViewDefaultProps {
   form?: FormValue
@@ -89,7 +95,7 @@ export default defineComponent({
     return {
       localType: undefined as undefined | string,
       localForm: new FormValue(),
-      data: undefined as dataType,
+      data: undefined as EditAreaDataType,
       dictionaryList: [] as DictionaryValue[],
       observeList: undefined as undefined | ObserveList,
     }
@@ -114,7 +120,7 @@ export default defineComponent({
     }
   },
   methods: {
-    $show(type?: string, data?: dataType) {
+    $show(type?: string, data?: EditAreaDataType) {
       this.localType = type
       this.data = data || undefined
       this.init()
@@ -133,7 +139,7 @@ export default defineComponent({
         })
       })
     },
-    $submit(): Promise<{ targetData: Record<PropertyKey, unknown>, originData: dataType, type: string }> {
+    $submit(): Promise<EditAreaSubmitOption> {
       return new Promise((resolve, reject) => {
         this.currentForm.validate().then(() => {
           const postData = this.dictionary.collectData(this.currentForm.getData(), this.dictionaryList as DictionaryValue[], this.currentType, this.observe ? (this.observeList as ObserveList) : undefined)

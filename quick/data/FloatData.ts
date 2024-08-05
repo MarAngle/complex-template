@@ -1,6 +1,7 @@
-import { Component } from "vue"
+import { Component, markRaw } from "vue"
 import { Data } from "complex-data"
-import ModalView, { ModalViewProps } from "../../src/ModalView"
+import { ModalViewProps } from "../../src/ModalView"
+import QuickFloatValue from "../QuickFloatValue"
 
 let id = 1
 
@@ -22,6 +23,7 @@ export class FloatValue extends Data {
   id: number
   type: string
   name: string
+  ref?: InstanceType<typeof QuickFloatValue>
   modal: {
     props: ModalViewProps
   }
@@ -38,7 +40,11 @@ export class FloatValue extends Data {
     this.type = initOption.type
     this.name = initOption.name
     this.modal = initOption.modal
-    this.component = initOption.component
+    this.component = {
+      data: markRaw(initOption.component.data),
+      props: initOption.component.props,
+      show: initOption.component.show
+    }
     this.show = show
     this.init = false
   }

@@ -1,4 +1,4 @@
-import { defineComponent, h, PropType } from "vue"
+import { defineComponent, h, PropType, markRaw } from "vue"
 import { FloatValue } from "./data/FloatData"
 import ModalView, { ModalViewSlotProps } from "./../src/ModalView"
 
@@ -28,6 +28,12 @@ export default defineComponent({
       }
     }
   },
+  mounted() {
+    this.floatValue.ref = markRaw(this)
+  },
+  beforeUnmount() {
+    this.floatValue.ref = undefined
+  },
   methods: {
     show() {
       (this.$refs.modal as InstanceType<typeof ModalView>).show()
@@ -45,13 +51,11 @@ export default defineComponent({
       this.floatValue.show = false;
       (this.$refs.modal as InstanceType<typeof ModalView>).hide('float')
     },
-    handle(next: (payload: any) => void) {
+    submit(...args: any[]): Promise<any> {
       if ((this.$refs.content as any).$submit) {
-        (this.$refs.content as any).$submit((payload: any) => {
-          next(payload)
-        })
+        return (this.$refs.content as any).$submit(...args)
       } else {
-        next({})
+        return Promise.resolve({})
       }
     },
     renderContent() {

@@ -7,12 +7,12 @@ import TableView, { tablePayload, TableViewProps } from "./../src/TableView"
 import SimpleTableView from "./../src/SimpleTableView"
 import ModalView, { ModalViewProps } from "./../src/ModalView"
 import SearchArea, { SearchAreaProps } from "./../src/SearchArea"
-import EditArea, { EditAreaProps } from "./../src/EditArea"
+import EditArea, { EditAreaProps, EditAreaSubmitOption } from "./../src/EditArea"
 import InfoArea, { InfoAreaProps } from "./../src/InfoArea"
 // import CollapseArea, { CollapseAreaProps } from "./../src/CollapseArea"
 import { AutoItemPayloadType } from "./../src/dictionary/AutoItem"
 import config from "./../config"
-import FloatData from "./data/FloatData"
+import FloatData, { FloatValue } from "./data/FloatData"
 
 export interface ListModalViewProps extends ModalViewProps {
   formatName?: (name: string, payload?: unknown) => string
@@ -56,6 +56,11 @@ export default defineComponent({
     },
     table: (prop: string, _payload: tablePayload)  => {
       return !!prop
+    }
+  },
+  data() {
+    return {
+      floatValue: undefined as undefined | FloatValue
     }
   },
   props: {
@@ -376,7 +381,7 @@ export default defineComponent({
           (this.$refs['edit'] as InstanceType<typeof EditArea>).$show(type, record)
         })
       } else {
-        this.float.push({
+        this.floatValue = this.float.push({
           type: 'edit',
           name: name,
           modal: {
@@ -400,41 +405,62 @@ export default defineComponent({
         console.log(this.float)
       }
     },
+    $onEditSubmit(res: EditAreaSubmitOption) {
+      return new Promise((resolve, reject) => {
+        if (res.type === 'build') {
+          this.listData.triggerMethod('$buildData', [res.targetData, res.type], {
+            strict: true,
+            throttle: this.editThrottle
+          }).then(() => {
+            resolve(res)
+          }).catch((err: unknown) => {
+            reject(err)
+          })
+        } else if (res.type === 'change') {
+          this.listData.triggerMethod('$changeData', [res.targetData, res.originData, res.type], {
+            strict: true,
+            throttle: this.editThrottle
+          }).then(() => {
+            resolve(res)
+          }).catch((err: unknown) => {
+            reject(err)
+          })
+        } else {
+          this.listData.triggerMethod('$editData', [res.targetData, res.originData, res.type], {
+            strict: true,
+            throttle: this.editThrottle
+          }).then(() => {
+            resolve(res)
+          }).catch((err: unknown) => {
+            reject(err)
+          })
+        }
+      })
+    },
     onEditSubmit() {
       return new Promise((resolve, reject) => {
-        const edit = !this.float ? (this.$refs['edit'] as InstanceType<typeof EditArea>) : 
-        (this.$refs['edit'] as InstanceType<typeof EditArea>).$submit().then(res => {
-          if (res.type === 'build') {
-            this.listData.triggerMethod('$buildData', [res.targetData, res.type], {
-              strict: true,
-              throttle: this.editThrottle
-            }).then(() => {
+        if (!this.float) {
+          const edit = this.$refs['edit'] as InstanceType<typeof EditArea>
+          edit.$submit().then(res => {
+            this.$onEditSubmit(res).then(() => {
               resolve(res)
             }).catch((err: unknown) => {
               reject(err)
             })
-          } else if (res.type === 'change') {
-            this.listData.triggerMethod('$changeData', [res.targetData, res.originData, res.type], {
-              strict: true,
-              throttle: this.editThrottle
-            }).then(() => {
+          }).catch((err: unknown) => {
+            reject(err)
+          })
+        } else {
+          this.floatValue!.ref!.submit().then(res => {
+            this.$onEditSubmit(res).then(() => {
               resolve(res)
             }).catch((err: unknown) => {
               reject(err)
             })
-          } else {
-            this.listData.triggerMethod('$editData', [res.targetData, res.originData, res.type], {
-              strict: true,
-              throttle: this.editThrottle
-            }).then(() => {
-              resolve(res)
-            }).catch((err: unknown) => {
-              reject(err)
-            })
-          }
-        }).catch((err: unknown) => {
-          reject(err)
-        })
+          }).catch((err: unknown) => {
+            reject(err)
+          })
+        }
       })
     }
   },
