@@ -29,7 +29,7 @@ export class LayoutLifeData {
   }
   bind(layout: PluginLayout) {
     this.life = layout.onLife('resize', {
-      data: () => {
+      handler: () => {
         this.data++
       }
     })!

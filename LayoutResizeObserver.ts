@@ -12,7 +12,7 @@ class LayoutResizeObserver {
   static life = new Life()
   static init(layout: PluginLayout) {
     layout.onLife('main', {
-      data: () => {
+      handler: () => {
         LayoutResizeObserver.life.trigger('mainChange', 'main')
       }
     })
@@ -52,7 +52,7 @@ class LayoutResizeObserver {
     this.supplement = supplement || {}
     this.targetElements = new Map()
     this.lifeId = LayoutResizeObserver.life.on('mainChange', {
-      data: () => {
+      handler: () => {
         this.check()
       }
     })!
