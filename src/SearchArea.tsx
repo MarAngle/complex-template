@@ -106,10 +106,10 @@ export default defineComponent({
     }
   },
   methods: {
-    renderEdit() {
+    renderEdit(runtime: NonNullable<SearchData['$runtime']>) {
       return h(EditView, {
-        form: this.search.$runtime.form,
-        list: this.search.$runtime.list,
+        form: runtime.form,
+        list: runtime.list,
         type: this.search.$prop,
         menu: this.currentMenu,
         labelAlign: this.labelAlign,
@@ -146,14 +146,18 @@ export default defineComponent({
     }
   },
   render() {
-    return h('div',
-      {
-        class: 'complex-search-area'
-      },
-      [
-        this.renderEdit(),
-        this.renderCollapseMenu()
-      ]
-    )
+    if (this.search.$runtime) {
+      return h('div',
+        {
+          class: 'complex-search-area'
+        },
+        [
+          this.renderEdit(this.search.$runtime),
+          this.renderCollapseMenu()
+        ]
+      )
+    } else {
+      return null
+    }
   }
 })
