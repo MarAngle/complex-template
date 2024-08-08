@@ -11,8 +11,8 @@ import EditArea, { EditAreaProps, EditAreaSubmitOption } from "./../src/EditArea
 import InfoArea, { InfoAreaProps } from "./../src/InfoArea"
 // import CollapseArea, { CollapseAreaProps } from "./../src/CollapseArea"
 import { AutoItemPayloadType } from "./../src/dictionary/AutoItem"
-import config from "./../config"
 import FloatData, { FloatValue } from "./data/FloatData"
+import config from "./../config"
 
 export interface ListModalViewProps extends ModalViewProps {
   formatName?: (name: string, payload?: unknown) => string

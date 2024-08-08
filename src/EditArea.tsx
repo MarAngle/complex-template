@@ -2,8 +2,8 @@ import { defineComponent, h, PropType } from "vue"
 import { DictionaryValue, FormValue } from "complex-data"
 import ObserveList from "complex-data/src/dictionary/ObserveList"
 import EditView, { EditViewDefaultProps } from "./EditView"
-import { AutoItemPayloadType } from "./dictionary/AutoItem"
 import { InfoAreaDefaultProps } from "./InfoArea"
+import { AutoItemPayloadType } from "./dictionary/AutoItem"
 import config from "../config"
 
 export type EditAreaDataType = undefined | Record<PropertyKey, unknown>

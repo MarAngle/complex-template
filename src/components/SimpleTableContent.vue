@@ -95,10 +95,10 @@ import { defineComponent, PropType, h } from 'vue'
 import { PaginationData } from 'complex-data'
 import DefaultList from 'complex-data/src/dictionary/DefaultList'
 import AutoRender from './AutoRender'
-import config from '../../config'
 import { tablePayload } from '../TableView'
 import { SimpleTableProps } from '../SimpleTableView'
 import TableMenu from './TableMenu'
+import config from '../../config'
 
 export default defineComponent({
   name: 'SimpleTableContent',

@@ -1,6 +1,6 @@
-import { Component, VNode, h } from 'vue';
-import { SearchOutlined, SettingOutlined, PlusOutlined, DeleteOutlined, ContainerOutlined, ReloadOutlined, SyncOutlined, CloseOutlined, StopOutlined, DownloadOutlined, UploadOutlined, LinkOutlined, DownOutlined, UpOutlined } from '@ant-design/icons-vue';
-import { MenuValue } from 'complex-data/type';
+import { Component, VNode, h } from 'vue'
+import { SearchOutlined, SettingOutlined, PlusOutlined, DeleteOutlined, ContainerOutlined, ReloadOutlined, SyncOutlined, CloseOutlined, StopOutlined, DownloadOutlined, UploadOutlined, LinkOutlined, DownOutlined, UpOutlined } from '@ant-design/icons-vue'
+import { MenuValue } from 'complex-data/type'
 
 export const iconDict: Record<string, Component> = {
   search: SearchOutlined,
