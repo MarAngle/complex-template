@@ -15,6 +15,8 @@ export interface QuickTrackInitOption {
   speed: number
 }
 
+// 需要检测在前进后退时的connect是否正确
+
 abstract class QuickTrack<
   VALUE extends any = Record<PropertyKey, any>,
   MAP extends Record<PropertyKey, any> = Record<PropertyKey, any>,
@@ -144,9 +146,9 @@ abstract class QuickTrack<
   abstract createPoint(prop: trackPointProp, map: MAP, icon: ICON, lnglat: LNGLAT): POINT
   abstract createLine(prop: trackLineProp, map: MAP, lnglat: LNGLAT[]): LINE
   abstract createConnect(option: { start: LNGLAT, startIndex: number, end: LNGLAT, endIndex: number }): CONNECT
-  abstract movePoint(point: POINT, option: { lastIndex: number, index: number, lnglat: LNGLAT, nextIndex: number, nextLnglat: LNGLAT, angle?: number }): void
-  abstract moveLine(option: { direction: directionProp, line: LINE, list: LNGLAT[] }): void
-  abstract moveConnect(option: { direction: directionProp, connect: CONNECT }): void
+  abstract movePoint(point: POINT, lnglat: LNGLAT, angle: undefined | number, option: { lastIndex: number, index: number, nextIndex: number, nextLnglat: LNGLAT }): void
+  abstract moveLine(direction: directionProp, line: LINE, list: LNGLAT[]): void
+  abstract moveConnect(direction: directionProp, connect: CONNECT): void
   setMap(map: MAP, unCreate?: boolean) {
     this.$map = map
     if (!unCreate) {
@@ -421,62 +423,41 @@ abstract class QuickTrack<
       this.$index.next.data = currentIndex + 1
       this.$index.next.line = this._getLineIndex(this.$index.next.data)
     }
+    this.$onIndexChange(currentIndex, lastIndex, lastLineIndex)
+  }
+  protected $onIndexChange(currentIndex: number, lastIndex: number, lastLineIndex: number) {
     if (this.$marker.point.current && this.$marker.line.current.length > 0) {
       const direction = currentIndex > lastIndex ? 'forward' : 'backward'
       const currentLnglat = this.data.lnglat[currentIndex]
       const nextLnglat = this.data.lnglat[this.$index.next.data]
       const angle = QuickTrack.parseAngle(this.parseLnglat(currentLnglat), this.parseLnglat(nextLnglat))
-      this.movePoint(this.$marker.point.current, {
+      this.movePoint(this.$marker.point.current, currentLnglat, angle, {
         lastIndex: lastIndex,
         index: currentIndex,
-        lnglat: currentLnglat,
         nextIndex: this.$index.next.data,
-        nextLnglat: nextLnglat,
-        angle: angle
+        nextLnglat: nextLnglat
       })
       if (direction == 'forward') {
         // 从上一个点的路线开始绘制
         for (let i = lastLineIndex; i <= this.$index.current.line; i++) {
           if (i == this.$index.current.line) {
-            this.moveLine({
-              direction: direction,
-              line: this.$marker.line.current[i],
-              list: this.getLineList(i, currentIndex)
-            })
+            this.moveLine(direction, this.$marker.line.current[i], this.getLineList(i, currentIndex))
           } else {
-            this.moveLine({
-              direction: direction,
-              line: this.$marker.line.current[i],
-              list: this.getLineList(i)
-            })
+            this.moveLine(direction, this.$marker.line.current[i], this.getLineList(i))
             // 前进操作，对连接点进行操作
-            this.moveConnect({
-              direction: direction,
-              connect: this.$marker.connect[i]
-            })
+            this.moveConnect(direction, this.$marker.connect[i])
           }  
         }
       } else {
         for (let i = this.$index.current.line; i <= lastLineIndex; i++) {
           if (i == this.$index.current.line) {
-            this.moveLine({
-              direction: direction,
-              line: this.$marker.line.current[i],
-              list: this.getLineList(i, currentIndex)
-            })
+            this.moveLine(direction, this.$marker.line.current[i], this.getLineList(i, currentIndex))
           } else {
-            this.moveLine({
-              direction: direction,
-              line: this.$marker.line.current[i],
-              list: []
-            })
+            this.moveLine(direction, this.$marker.line.current[i], [])
           }
           if (i != lastLineIndex) {
             // 后退操作，对连接点进行操作
-            this.moveConnect({
-              direction: direction,
-              connect: this.$marker.connect[i]
-            })
+            this.moveConnect(direction, this.$marker.connect[i])
           }        
         }
       }
