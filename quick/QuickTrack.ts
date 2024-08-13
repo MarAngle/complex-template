@@ -5,13 +5,14 @@ import { Data } from "complex-data"
 export type trackStatus = 'stop' | 'pause' | 'moving'
 export type trackPointProp = 'start' | 'current' | 'end'
 export type trackLineProp = 'total' | 'current'
+export type directionProp = 'forward' | 'backward'
 export type lnglatType = {
   lng: number
   lat: number
 }
 
 abstract class QuickTrack<
-  VALUE extends Record<PropertyKey, any> = Record<PropertyKey, any>,
+  VALUE extends any = Record<PropertyKey, any>,
   MAP extends Record<PropertyKey, any> = Record<PropertyKey, any>,
   LNGLAT extends Record<PropertyKey, any> = Record<PropertyKey, any>,
   ICON extends any = any,
@@ -21,16 +22,16 @@ abstract class QuickTrack<
 > extends Data {
   static $name = 'QuickTrack'
   static $formatConfig = { name: 'QuickTrack', level: 50, recommend: true }
-  static getAngle (currentLnglat: lnglatType, nextLnglat: lnglatType) {
+  static parseAngle (currentLnglat: lnglatType, nextLnglat: lnglatType) {
     if (currentLnglat && nextLnglat) {
-      let rad = Math.PI / 180
-      let lat1 = currentLnglat.lat * rad
-      let lat2 = nextLnglat.lat * rad
-      let lng1 = currentLnglat.lng * rad
-      let lng2 = nextLnglat.lng * rad
-      let x = Math.sin(lng2 - lng1) * Math.cos(lat2)
-      let y = Math.cos(lat1) * Math.sin(lat2) - Math.sin(lat1) * Math.cos(lat2) * Math.cos(lng2 - lng1)
-      let radians = Math.atan2(x, y)
+      const rad = Math.PI / 180
+      const lat1 = currentLnglat.lat * rad
+      const lat2 = nextLnglat.lat * rad
+      const lng1 = currentLnglat.lng * rad
+      const lng2 = nextLnglat.lng * rad
+      const x = Math.sin(lng2 - lng1) * Math.cos(lat2)
+      const y = Math.cos(lat1) * Math.sin(lat2) - Math.sin(lat1) * Math.cos(lat2) * Math.cos(lng2 - lng1)
+      const radians = Math.atan2(x, y)
       let angle = radians % (2 * Math.PI)
       angle = (180 * radians) / Math.PI
       return angle
@@ -38,12 +39,22 @@ abstract class QuickTrack<
       return undefined
     }
   }
-  $map?: MAP
   status: {
     init: boolean
+    data: boolean
+    drag: boolean
     last: '' | trackStatus
     current: trackStatus
-    drag: boolean
+  }
+  $map?: MAP
+  $marker: {
+    line: {
+      data: LINE[]
+      current: LINE[]
+    }
+    connect: CONNECT[]
+    icon: Record<trackPointProp, undefined | ICON>
+    point: Record<trackPointProp, undefined | POINT>
   }
   $index: {
     current: {
@@ -61,26 +72,19 @@ abstract class QuickTrack<
     current: number
   }
   nextTimer?: number
-  $line: {
-    total: LINE[]
-    current: LINE[]
-    connect: CONNECT[]
-  }
-  $icon: Record<trackPointProp, undefined | ICON>
-  $point: Record<trackPointProp, undefined | POINT>
   percent: number
   data: {
-    init: boolean
     dict: number[]
     list: VALUE[]
     lnglat: LNGLAT[]
-    maxIndex: number
+    size: number
   }
 
   constructor() {
     super()
     this.status = {
       init: false,
+      data: false,
       last: '',
       current: 'stop',
       drag: false
@@ -100,28 +104,29 @@ abstract class QuickTrack<
       rate: 1,
       current: 200
     }
-    this.$line = {
-      total: [],
-      current: [],
-      connect: []
-    }
-    this.$icon = {
-      start: undefined,
-      end: undefined,
-      current: undefined
-    }
-    this.$point = {
-      start: undefined,
-      end: undefined,
-      current: undefined
+    this.$marker = {
+      icon: {
+        start: undefined,
+        end: undefined,
+        current: undefined
+      },
+      point: {
+        start: undefined,
+        end: undefined,
+        current: undefined
+      },
+      line: {
+        data: [],
+        current: []
+      },
+      connect: [],
     }
     this.percent = 0
     this.data = {
-      init: false,
       dict: [],
       list: [],
       lnglat: [],
-      maxIndex: -1
+      size: -1
     }
   }
   abstract checkData(value: VALUE): boolean
@@ -135,12 +140,12 @@ abstract class QuickTrack<
   abstract buildLine(prop: trackLineProp, map: MAP, lnglat: LNGLAT[]): LINE
   abstract buildConnect(option: { start: LNGLAT, startIndex: number, end: LNGLAT, endIndex: number }): CONNECT
   abstract movePoint(point: POINT, option: { lastIndex: number, index: number, lnglat: LNGLAT, nextIndex: number, nextLnglat: LNGLAT, angle?: number }): void
-  abstract moveLine(option: { direction: 'forward' | 'backward', line: LINE, list: LNGLAT[] }): void
-  abstract moveConnect(option: { direction: 'forward' | 'backward', connect: CONNECT }): void
+  abstract moveLine(option: { direction: directionProp, line: LINE, list: LNGLAT[] }): void
+  abstract moveConnect(option: { direction: directionProp, connect: CONNECT }): void
   $initMap(map: MAP, next?: boolean) {
     this.$map = map
     if (next) {
-      this.$initRoad()
+      this.$initLine()
     }
   }
   $resetMap() {
@@ -149,7 +154,7 @@ abstract class QuickTrack<
     }
     this.$map = undefined
   }
-  initData(originList: any[], next?: boolean) {
+  initData(originList: any[], line?: boolean) {
     this.resetData()
     let list: any[] = []
     let size = 0
@@ -170,18 +175,18 @@ abstract class QuickTrack<
       }
     }
     this.data.list = list
-    this.data.maxIndex = list.length - 1
-    this.data.init = true
-    if (next) {
-      this.$initRoad()
+    this.data.size = list.length - 1
+    this.status.data = true
+    if (line) {
+      this.$initLine()
     }
   }
   resetData() {
-    this.data.init = false
+    this.status.data = false
     this.data.dict = []
     this.data.list = []
     this.data.lnglat = []
-    this.data.maxIndex = -1
+    this.data.size = -1
   }
   $getRoadIndex(index: number) {
     for (let i = 0; i < this.data.dict.length; i++) {
@@ -201,48 +206,48 @@ abstract class QuickTrack<
   }
   $initIcon(force?: boolean) {
     if (force) {
-      this.$icon.start = this.buildIcon('start')
-      this.$icon.end = this.buildIcon('end')
-      this.$icon.current = this.buildIcon('current')
+      this.$marker.icon.start = this.buildIcon('start')
+      this.$marker.icon.end = this.buildIcon('end')
+      this.$marker.icon.current = this.buildIcon('current')
     } else {
-      if (!this.$icon.start) {
-        this.$icon.start = this.buildIcon('start')
+      if (!this.$marker.icon.start) {
+        this.$marker.icon.start = this.buildIcon('start')
       }
-      if (!this.$icon.end) {
-        this.$icon.end = this.buildIcon('end')
+      if (!this.$marker.icon.end) {
+        this.$marker.icon.end = this.buildIcon('end')
       }
-      if (!this.$icon.current) {
-        this.$icon.current = this.buildIcon('current')
+      if (!this.$marker.icon.current) {
+        this.$marker.icon.current = this.buildIcon('current')
       }
     }
   }
-  $initRoad(force?: boolean) {
-    if (this.$map && this.data.init) {
+  $initLine(force?: boolean) {
+    if (this.$map && this.status.data) {
       this.$reset()
-      if (this.data.maxIndex > 0) {
+      if (this.data.size > 0) {
         this.$initIcon(force)
         this.data.lnglat = this.data.list.map(lineValue => {
           return this.buildLnglat(lineValue)
         })
         const startLnglat = this.data.lnglat[0]
-        const endLnglat = this.data.lnglat[this.data.maxIndex]
-        this.$point.end = this.buildPoint('end', this.$map, this.$icon.end!, endLnglat)
-        this.$point.start = this.buildPoint('start', this.$map, this.$icon.start!, startLnglat)
-        this.$point.current = this.buildPoint('current', this.$map, this.$icon.current!, startLnglat)
+        const endLnglat = this.data.lnglat[this.data.size]
+        this.$marker.point.end = this.buildPoint('end', this.$map, this.$marker.icon.end!, endLnglat)
+        this.$marker.point.start = this.buildPoint('start', this.$map, this.$marker.icon.start!, startLnglat)
+        this.$marker.point.current = this.buildPoint('current', this.$map, this.$marker.icon.current!, startLnglat)
         let startIndex = 0
         for (let i = 0; i < this.data.dict.length; i++) {
           const currentIndex = this.data.dict[i]
           const lineList = this.$getRoadList(i, currentIndex)
           const line = this.buildLine('total', this.$map, lineList)
-          this.$line.total.push(line)
+          this.$marker.line.data.push(line)
           const currentRoad = this.buildLine('current', this.$map, [])
-          this.$line.current.push(currentRoad)
+          this.$marker.line.current.push(currentRoad)
           if (i != 0) {
             // 开始轨迹中间的连接操作
             const endIndex = startIndex - 1
             const endPoint = this.data.lnglat[endIndex]
             const startPoint = this.data.lnglat[startIndex]
-            this.$line.connect.push(this.buildConnect({
+            this.$marker.connect.push(this.buildConnect({
               end: endPoint,
               start: startPoint,
               endIndex: endIndex,
@@ -254,41 +259,41 @@ abstract class QuickTrack<
         this.setInitStatus(true)
         this.autoView(this.$map, this.data.lnglat)
       } else {
-        this.showShortMsg(this.data.maxIndex + 1)
+        this.showShortMsg(this.data.size + 1)
       }
     }
   }
   $clearOverlay() {
     if (this.$map) {
-      if (this.$line.total.length > 0) {
-        for (let i = 0; i < this.$line.total.length; i++) {
-          const line = this.$line.total[i];
+      if (this.$marker.line.data.length > 0) {
+        for (let i = 0; i < this.$marker.line.data.length; i++) {
+          const line = this.$marker.line.data[i];
           this.clearOverlay(this.$map, line, 'line')
         }
-        this.$line.total = []
+        this.$marker.line.data = []
       }
-      if (this.$line.current.length > 0) {
-        for (let i = 0; i < this.$line.current.length; i++) {
-          const line = this.$line.current[i];
+      if (this.$marker.line.current.length > 0) {
+        for (let i = 0; i < this.$marker.line.current.length; i++) {
+          const line = this.$marker.line.current[i];
           this.clearOverlay(this.$map, line, 'line')
         }
-        this.$line.current = []
+        this.$marker.line.current = []
       }
-      if (this.$line.connect.length > 0) {
-        for (let i = 0; i < this.$line.connect.length; i++) {
-          const connect = this.$line.connect[i];
+      if (this.$marker.connect.length > 0) {
+        for (let i = 0; i < this.$marker.connect.length; i++) {
+          const connect = this.$marker.connect[i];
           this.clearOverlay(this.$map, connect, 'connect')
         }
-        this.$line.connect = []
+        this.$marker.connect = []
       }
-      if (this.$point.start) {
-        this.clearOverlay(this.$map, this.$point.start, 'point')
+      if (this.$marker.point.start) {
+        this.clearOverlay(this.$map, this.$marker.point.start, 'point')
       }
-      if (this.$point.end) {
-        this.clearOverlay(this.$map, this.$point.end, 'point')
+      if (this.$marker.point.end) {
+        this.clearOverlay(this.$map, this.$marker.point.end, 'point')
       }
-      if (this.$point.current) {
-        this.clearOverlay(this.$map, this.$point.current, 'point')
+      if (this.$marker.point.current) {
+        this.clearOverlay(this.$map, this.$marker.point.current, 'point')
       }
     }
   }
@@ -352,7 +357,7 @@ abstract class QuickTrack<
     }
     this.$start()
   }
-  countCurrent (act: 'backward' | 'forward', num: number) {
+  countCurrent (act: directionProp, num: number) {
     if (act == 'backward') {
       let index = this.$index.current.data - num
       if (index < 0) {
@@ -361,8 +366,8 @@ abstract class QuickTrack<
       this.setIndexAndPercent(index)
     } else if (act == 'forward') {
       let index = this.$index.current.data + num
-      if (index > this.$maxIndex()) {
-        index = this.$maxIndex()
+      if (index > this.data.size) {
+        index = this.data.size
       }
       this.setIndexAndPercent(index)
     }
@@ -382,7 +387,7 @@ abstract class QuickTrack<
     }
   }
   $check() {
-    if (this.$isEnd()) {
+    if (this.$isEnd(this.$index.current.data)) {
       this.setCurrentStatus('stop')
     }
     return this.getCurrentStatus() == 'moving' && !this.getDragStatus()
@@ -408,9 +413,9 @@ abstract class QuickTrack<
       this.$index.next.data = this.$index.current.data + 1
       this.$index.next.line = this.$getRoadIndex(this.$index.next.data)
       currentIndex = this.$index.current.data
-    } else if (this.$checkEnd(currentIndex)) {
+    } else if (this.$isEnd(currentIndex)) {
       // 当前index值超过或为结束值时，直接进行结束赋值操作
-      currentIndex = this.$maxIndex()
+      currentIndex = this.data.size
       this.$index.current.data = currentIndex
       this.$index.current.line = this.$getRoadIndex(currentIndex)
       // 结束后的下一个点同最后点避免BUG
@@ -423,12 +428,12 @@ abstract class QuickTrack<
       this.$index.next.data = currentIndex + 1
       this.$index.next.line = this.$getRoadIndex(this.$index.next.data)
     }
-    if (this.$point.current && this.$line.current.length > 0) {
+    if (this.$marker.point.current && this.$marker.line.current.length > 0) {
       const direction = currentIndex > lastIndex ? 'forward' : 'backward'
       const currentLnglat = this.data.lnglat[currentIndex]
       const nextLnglat = this.data.lnglat[this.$index.next.data]
-      const angle = QuickTrack.getAngle(this.parseLnglat(currentLnglat), this.parseLnglat(nextLnglat))
-      this.movePoint(this.$point.current, {
+      const angle = QuickTrack.parseAngle(this.parseLnglat(currentLnglat), this.parseLnglat(nextLnglat))
+      this.movePoint(this.$marker.point.current, {
         lastIndex: lastIndex,
         index: currentIndex,
         lnglat: currentLnglat,
@@ -442,19 +447,19 @@ abstract class QuickTrack<
           if (i == this.$index.current.line) {
             this.moveLine({
               direction: direction,
-              line: this.$line.current[i],
+              line: this.$marker.line.current[i],
               list: this.$getRoadList(i, currentIndex)
             })
           } else {
             this.moveLine({
               direction: direction,
-              line: this.$line.current[i],
+              line: this.$marker.line.current[i],
               list: this.$getRoadList(i)
             })
             // 前进操作，对连接点进行操作
             this.moveConnect({
               direction: direction,
-              connect: this.$line.connect[i]
+              connect: this.$marker.connect[i]
             })
           }  
         }
@@ -463,13 +468,13 @@ abstract class QuickTrack<
           if (i == this.$index.current.line) {
             this.moveLine({
               direction: direction,
-              line: this.$line.current[i],
+              line: this.$marker.line.current[i],
               list: this.$getRoadList(i, currentIndex)
             })
           } else {
             this.moveLine({
               direction: direction,
-              line: this.$line.current[i],
+              line: this.$marker.line.current[i],
               list: []
             })
           }
@@ -477,7 +482,7 @@ abstract class QuickTrack<
             // 后退操作，对连接点进行操作
             this.moveConnect({
               direction: direction,
-              connect: this.$line.connect[i]
+              connect: this.$marker.connect[i]
             })
           }        
         }
@@ -494,11 +499,11 @@ abstract class QuickTrack<
     this.$index.next.line = 0
   }
   countPercent() {
-    this.percent = getNum(this.$index.current.data * 100 / ( this.$maxIndex()), 'round', 0)
+    this.percent = getNum(this.$index.current.data * 100 / ( this.data.size), 'round', 0)
   }
   setPercent(data: number) {
     this.percent = data
-    let index = getNum(this.percent / 100 * ( this.$maxIndex()), 'round', 0)
+    let index = getNum(this.percent / 100 * ( this.data.size), 'round', 0)
     this.setIndex(index)
   }
   resetPercent() {
@@ -529,14 +534,8 @@ abstract class QuickTrack<
     this.setSpeed(1)
   }
 
-  $maxIndex() {
-    return this.data.maxIndex
-  }
-  $checkEnd(index: number) {
-    return index >= this.$maxIndex()
-  }
-  $isEnd() {
-    return this.$index.current.data >= this.$maxIndex()
+  $isEnd(index: number) {
+    return index >= this.data.size
   }
   $reset() {
     // 清除地图覆盖物,重置index,percent,speed,status，终止计时
