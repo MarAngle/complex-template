@@ -317,7 +317,7 @@ export default defineComponent({
           }
         })
       } else {
-        notice.showMsg('请先选择要删除的数据！', 'error')
+        notice.message('请先选择要删除的数据！', 'error')
       }
     },
     refreshData(record: Record<PropertyKey, any>, next: (record: Record<PropertyKey, any>) => void) {
@@ -338,7 +338,7 @@ export default defineComponent({
         if (this.currentChoice && this.currentChoice.length === 1) {
           record = this.currentChoice[0]
         } else {
-          notice.showMsg('详情界面需要先选择一条数据！', 'error')
+          notice.message('详情界面需要先选择一条数据！', 'error')
           return
         }
       }

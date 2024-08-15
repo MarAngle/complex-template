@@ -132,7 +132,7 @@ export default defineComponent({
       if (this.max && this.currentValue.length > this.max) {
         this.currentValue.length = this.max
         this.data.truncation(this.max)
-        notice.showMsg(`当前选择的文件数量超过限制值${this.max}，超过部分已被删除！`, 'error')
+        notice.message(`当前选择的文件数量超过限制值${this.max}，超过部分已被删除！`, 'error')
       }
       if (emit) {
         this.emitData()

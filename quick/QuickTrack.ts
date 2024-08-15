@@ -304,9 +304,9 @@ abstract class QuickTrack<
   }
   shortMsg(size: number, minSize: number) {
     if (size === 0) {
-      notice.showMsg(`当前无轨迹点，无法生成轨迹！`, 'error')
+      notice.message(`当前无轨迹点，无法生成轨迹！`, 'error')
     } else {
-      notice.showMsg(`轨迹生成至少需要${minSize}个点，当前轨迹点仅为${size}个，无法生成轨迹！`, 'error')
+      notice.message(`轨迹生成至少需要${minSize}个点，当前轨迹点仅为${size}个，无法生成轨迹！`, 'error')
     }
   }
   setStatus(status: trackStatus) {
