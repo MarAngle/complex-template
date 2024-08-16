@@ -11,6 +11,7 @@ export interface InfoAreaDefaultProps extends InfoViewDefaultProps {
   type?: string
   observe?: boolean
   inline?: boolean
+  onInit?: (observeList: ObserveList, form: FormValue, type: string, editArea: any) => void
 }
 
 export interface InfoAreaProps extends InfoAreaDefaultProps {
@@ -73,6 +74,10 @@ export default defineComponent({
       type: Object as PropType<InfoAreaProps['gridRowProps']>,
       required: false
     },
+    onInit: {
+      type: Function as PropType<InfoAreaProps['onInit']>,
+      required: false
+    },
     disabled: {
       type: Boolean,
       required: false
@@ -121,6 +126,9 @@ export default defineComponent({
       const observeList = this.dictionary.getObserveList(this.currentType!, this.dictionaryList as DictionaryValue[], this.observe)
       this.dictionary.parseData(this.dictionaryList as DictionaryValue[], this.form, this.currentType!, this.currentData, '$info').then(() => {
         // data生成完成后再进行list赋值，避免list提前赋值导致的EditView提前加载导致的数据为空的加载
+        if (this.onInit) {
+          this.onInit(observeList, this.form, this.currentType!, this)
+        }
         this.observeList = observeList
         if (this.observe) {
           this.observeList!.startObserve(this.form.getData(), this.currentType)

@@ -14,9 +14,6 @@ export interface EditAreaSubmitOption {
   type: string
 }
 
-export interface EditAreaDefaultProps extends EditViewDefaultProps {
-  form?: FormValue
-}
 export type EditAreaProps = EditViewDefaultProps & InfoAreaDefaultProps & {
   form?: FormValue
 }
@@ -78,6 +75,10 @@ export default defineComponent({
       type: Object as PropType<EditAreaProps['gridRowProps']>,
       required: false
     },
+    onInit: {
+      type: Function as PropType<EditAreaProps['onInit']>,
+      required: false
+    },
     enter: {
       type: Boolean,
       required: false
@@ -102,7 +103,7 @@ export default defineComponent({
   },
   computed: {
     currentType() {
-      return (this.localType || this.type) as string
+      return this.localType || this.type
     },
     currentForm() {
       return this.form || this.localForm
@@ -126,13 +127,16 @@ export default defineComponent({
       this.init()
     },
     init() {
-      this.dictionaryList = this.dictionary.getList(this.currentType) 
-      const observeList = this.dictionary.getObserveList(this.currentType, this.dictionaryList as DictionaryValue[], this.observe)
-      this.dictionary.parseData(this.dictionaryList as DictionaryValue[], this.currentForm, this.currentType, this.data, '$edit').then(() => {
+      this.dictionaryList = this.dictionary.getList(this.currentType!) 
+      const observeList = this.dictionary.getObserveList(this.currentType!, this.dictionaryList as DictionaryValue[], this.observe)
+      this.dictionary.parseData(this.dictionaryList as DictionaryValue[], this.currentForm, this.currentType!, this.data, '$edit').then(() => {
         // data生成完成后再进行list赋值，避免list提前赋值导致的EditView提前加载导致的数据为空的加载
+        if (this.onInit) {
+          this.onInit(observeList, this.currentForm, this.currentType!, this)
+        }
         this.observeList = observeList
         if (this.observe) {
-          this.observeList!.startObserve(this.currentForm.getData(), this.currentType)
+          this.observeList!.startObserve(this.currentForm.getData(), this.currentType!)
         }
         this.$nextTick(() => {
           this.currentForm.clearValidate()
@@ -142,8 +146,8 @@ export default defineComponent({
     $submit(): Promise<EditAreaSubmitOption> {
       return new Promise((resolve, reject) => {
         this.currentForm.validate().then(() => {
-          const postData = this.dictionary.collectData(this.currentForm.getData(), this.dictionaryList as DictionaryValue[], this.currentType, this.observe ? (this.observeList as ObserveList) : undefined)
-          resolve({ targetData: postData, originData: this.data, type: this.currentType })
+          const postData = this.dictionary.collectData(this.currentForm.getData(), this.dictionaryList as DictionaryValue[], this.currentType!, this.observe ? (this.observeList as ObserveList) : undefined)
+          resolve({ targetData: postData, originData: this.data, type: this.currentType! })
         }).catch(err => {
           reject(err)
         })
@@ -155,7 +159,7 @@ export default defineComponent({
           form: this.currentForm!,
           list: this.observeList as ObserveList,
           menu: this.menu,
-          type: this.currentType,
+          type: this.currentType!,
           labelAlign: this.labelAlign!,
           gridParse: this.inline ? undefined : (this.gridParse || this.dictionary.$layout.grid.getValue(this.currentType)),
           gridRowProps: this.gridRowProps!,
