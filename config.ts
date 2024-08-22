@@ -2,7 +2,7 @@ import { h } from "vue"
 import { Button } from "ant-design-vue"
 import { ButtonType } from "ant-design-vue/es/button"
 import { getType, camelToLine, downloadFile } from "complex-utils"
-import { PluginLayout } from "complex-plugin"
+import { notice, PluginLayout } from "complex-plugin"
 import { ChoiceData, PaginationData, AttrsValue, DictionaryData, DictionaryValue } from "complex-data"
 import DefaultList from 'complex-data/src/dictionary/DefaultList'
 import { GridValue } from "complex-data/src/lib/GridParse"
@@ -46,6 +46,18 @@ export type colorKeys = keyof typeof config.style.color
 const config = {
   component: componentConfig,
   pluginLayout: null as null | PluginLayout,
+  parseMenuConfirm(confirm: MenuValue['confirm'], next: () => void) {
+    if (!confirm) {
+      next()
+    } else {
+      const confirmOption = typeof confirm === 'string' ? { content: confirm } : confirm
+      notice.confirm(confirmOption.content, confirmOption.title, (act => {
+        if (act === 'ok') {
+          next()
+        }
+      }), confirmOption.okText, confirmOption.cancelText)
+    }
+  },
   parseCollapse(collapse: boolean, dictionaryCollapse?: collapseType) {
     if (collapse) {
       return !!dictionaryCollapse

@@ -4,6 +4,7 @@ import { ButtonType } from "ant-design-vue/es/button"
 import { isPromise } from "complex-utils"
 import { MenuValue } from "complex-data/type"
 import icon from "../../icon"
+import config from "../../config"
 
 export default defineComponent({
   name: 'MenuView',
@@ -34,29 +35,31 @@ export default defineComponent({
         icon: icon.parse(this.data.icon),
         disabled: disabled,
         onClick: (e: Event) => {
-          this.$emit('click', e)
-          if (this.data.click) {
-            const res = this.data.click(e)
-            if (isPromise(res)) {
-              this.operate = true
-              res.finally(() => {
+          config.parseMenuConfirm(this.data.confirm, () => {
+            this.$emit('click', e)
+            if (this.data.click) {
+              const res = this.data.click(e)
+              if (isPromise(res)) {
+                this.operate = true
+                res.finally(() => {
+                  if (this.data.debounce) {
+                    setTimeout(() => {
+                      this.operate = false
+                    }, this.data.debounce)
+                  } else {
+                    this.operate = false
+                  }
+                })
+              } else {
                 if (this.data.debounce) {
+                  this.operate = true
                   setTimeout(() => {
                     this.operate = false
                   }, this.data.debounce)
-                } else {
-                  this.operate = false
                 }
-              })
-            } else {
-              if (this.data.debounce) {
-                this.operate = true
-                setTimeout(() => {
-                  this.operate = false
-                }, this.data.debounce)
               }
             }
-          }
+          })
         },
         ...this.$attrs
       }, {

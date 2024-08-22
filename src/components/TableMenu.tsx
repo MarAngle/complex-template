@@ -2,11 +2,10 @@ import { defineComponent, h, PropType } from "vue"
 import { camelToLine, debounce } from "complex-utils"
 import { MenuValue } from "complex-data/type"
 import { tablePayload } from "../TableView"
-import { colorKeys } from "../../config"
+import config, { colorKeys } from "../../config"
 
 export interface TableMenuValue extends MenuValue<never, [tablePayload]> {
   color?: | colorKeys
-  hidden?: boolean | ((payload: tablePayload) => boolean)
   class?: string[] | ((payload: tablePayload) => string[])
   option?: Record<string, unknown>
   children?: TableMenuValue[]
@@ -50,7 +49,9 @@ export default defineComponent({
           }
         }
         const onClick = () => {
-          this.$emit('menu', menuItem.prop, payload)
+          config.parseMenuConfirm(menuItem.confirm, () => {
+            this.$emit('menu', menuItem.prop, payload)
+          })
         }
         list.push(h('span', {
           class: classList.join(' '),
