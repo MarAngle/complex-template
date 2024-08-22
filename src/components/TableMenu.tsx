@@ -27,7 +27,7 @@ export default defineComponent({
     renderList(menuList: TableMenuValue[], payload: tablePayload) {
       const list: unknown[] = []
       for (let i = 0; i < menuList.length; i++) {
-      const menuItem = menuList[i]
+        const menuItem = menuList[i]
         let hidden = menuItem.hidden
         if (hidden) {
           if (typeof hidden === 'function') {
@@ -37,9 +37,18 @@ export default defineComponent({
             break
           }
         }
+        let disabled = menuItem.disabled
+        if (disabled) {
+          if (typeof disabled === 'function') {
+            disabled = disabled(payload)
+          }
+        }
         let classList = ['complex-table-menu-item']
         if (menuItem.color) {
           classList.push('complex-color-' + camelToLine(menuItem.color, '-'))
+        }
+        if (disabled) {
+          classList.push('complex-disabled complex-color-disabled')
         }
         if (menuItem.class) {
           if (typeof menuItem.class === 'function') {

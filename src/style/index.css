@@ -109,6 +109,11 @@
   cursor: pointer;
 }
 
+.complex-disabled{
+  cursor: not-allowed; /* 改变鼠标指针样式 */
+  pointer-events: none; /* 防止点击 */
+}
+
 .complex-like-form-item{
   display: inline-block;
   font-size: 14px;
