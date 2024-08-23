@@ -9,7 +9,7 @@ import { AutoItemPayloadType } from "./AutoItem"
 import InfoView, { InfoViewProps } from "../InfoView"
 import config from "../../config"
 
-export const bindButtonClick = function(prop: string, option: ButtonEdit['$option'], payload: AutoItemPayloadType<boolean>) {
+export const bindButtonClick = function(prop: string, option: ButtonEdit['$option'], payload: AutoItemPayloadType<boolean | 'list'>) {
   if (!option.upload) {
     return function() {
       (payload as AutoItemPayloadType<true>).parent.$emit('menu', prop, payload)
@@ -26,7 +26,7 @@ export default defineComponent({
   name: 'AutoInfoItem',
   props: {
     payload: {
-      type: Object as PropType<AutoItemPayloadType<boolean>>,
+      type: Object as PropType<AutoItemPayloadType<boolean | 'list'>>,
       required: true
     }
   },
@@ -43,7 +43,7 @@ export default defineComponent({
       })
     } else {
       const targetAttrs = config.component.parseData(this.payload.target.$local, 'target') || new AttrsValue()
-      if (!this.payload.parent.gridParse) {
+      if (!(this.payload.parent as InstanceType<typeof InfoView>).gridParse) {
         const width = this.payload.target.$width
         if (width) {
           targetAttrs.style.width = typeof width === 'number' ? width + 'px' : width

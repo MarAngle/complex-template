@@ -1,12 +1,13 @@
 import { defineComponent, h, PropType } from "vue"
 import { camelToLine, debounce } from "complex-utils"
 import { MenuValue } from "complex-data/type"
+import DefaultMod from "complex-data/src/dictionary/DefaultMod"
 import { tablePayload } from "../TableView"
 import config, { colorKeys } from "../../config"
 
-export interface TableMenuValue extends MenuValue<never, [tablePayload]> {
+export interface TableMenuValue extends MenuValue<never, [tablePayload<DefaultMod>]> {
   color?: | colorKeys
-  class?: string[] | ((payload: tablePayload) => string[])
+  class?: string[] | ((payload: tablePayload<DefaultMod>) => string[])
   option?: Record<string, unknown>
   children?: TableMenuValue[]
 }
@@ -19,12 +20,12 @@ export default defineComponent({
       required: true
     },
     payload: {
-      type: Object as PropType<tablePayload>,
+      type: Object as PropType<tablePayload<DefaultMod>>,
       required: true
     }
   },
   methods: {
-    renderList(menuList: TableMenuValue[], payload: tablePayload) {
+    renderList(menuList: TableMenuValue[], payload: tablePayload<DefaultMod>) {
       const list: unknown[] = []
       for (let i = 0; i < menuList.length; i++) {
         const menuItem = menuList[i]

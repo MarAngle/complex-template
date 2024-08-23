@@ -7,8 +7,9 @@ import PaginationView from "./components/PaginationView"
 import ChoiceInfo from "./components/ChoiceInfo.vue"
 import TableMenu, { TableMenuValue } from "./components/TableMenu"
 import config from "../config"
+import DefaultMod from "complex-data/src/dictionary/DefaultMod"
 
-type customRenderPayload = { text: unknown, record: Record<PropertyKey, unknown>, index: number }
+export type customRenderPayload = { text: unknown, record: Record<PropertyKey, unknown>, index: number }
 
 export type ColumnItemType = TableColumnType
 
@@ -27,12 +28,12 @@ export type autoType = {
   }
 }
 
-export type tablePayload = {
+export type tablePayload<T extends DefaultMod = DefaultList> = {
   targetData: Record<PropertyKey, unknown>
   type: string
   index: number
   payload: {
-    target: DefaultList
+    target: T
   }
 }
 
@@ -211,7 +212,7 @@ export default defineComponent({
         currentTableProps.dataSource = this.currentData
       }
       if (!currentTableProps.rowKey) {
-        currentTableProps.rowKey = this.listData.getDictionaryProp('id')
+        currentTableProps.rowKey = this.listData.getDictionaryProp('id') as string
       }
       if (currentTableProps.pagination == undefined) {
         currentTableProps.pagination = false

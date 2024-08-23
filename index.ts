@@ -8,6 +8,7 @@ import InfoArea from "./src/InfoArea"
 import EditView from "./src/EditView"
 import EditArea from "./src/EditArea"
 import SearchArea from "./src/SearchArea"
+import ImageViewer from "./src/ImageViewer"
 import QuickList from "./quick/QuickList"
 import QuickEdit from "./quick/QuickEdit"
 import QuickFloat from "./quick/QuickFloat"
@@ -23,6 +24,7 @@ export const ComplexInfoArea = InfoArea
 export const ComplexEditView = EditView
 export const ComplexEditArea = EditArea
 export const ComplexSearchArea = SearchArea
+export const ComplexImageViewer = ImageViewer
 export const ComplexQuickList = QuickList
 export const ComplexQuickEdit = QuickEdit
 export const ComplexQuickFloat = QuickFloat

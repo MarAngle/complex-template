@@ -15,6 +15,7 @@ import CustomEdit from "complex-data/src/dictionary/CustomEdit"
 import FormEdit from 'complex-data/src/dictionary/FormEdit'
 import SimpleDateEdit from 'complex-data/src/dictionary/SimpleDateEdit'
 import { AutoItemPayloadType } from './src/dictionary/AutoItem'
+import ListEdit from 'complex-data/src/dictionary/ListEdit'
 
 const init = function (itemAttrs: AttrsValue, targetProp: PropertyKey, formData: Record<PropertyKey, unknown>, prop: PropertyKey) {
   itemAttrs.props[targetProp] = formData[prop]
@@ -376,6 +377,29 @@ const dict = {
       bindEvent(this as dictItemType, itemAttrs, edit, payload)
       return itemAttrs
     }
+  },
+  $list: {
+    init: modelFuncDict.valueInit,
+    on: {
+      change: modelFuncDict.change
+    },
+    format(edit: ListEdit, payload: AutoItemPayloadType<true>) {
+      const itemAttrs = new AttrsValue({
+        props: {
+          dictionary: edit.$runtime.dictionary,
+          dictionaryList: edit.$runtime.dictionaryList,
+          list: edit.$runtime.observeList,
+          type: edit.$runtime.type,
+          build: edit.$option.build,
+          delete: edit.$option.delete,
+          index: edit.$option.index,
+          id: edit.$option.id,
+          tableProps: edit.$option.tableProps
+        }
+      })
+      bindEvent(this as dictItemType, itemAttrs, edit, payload)
+      return itemAttrs
+    }
   }
 }
 
@@ -402,6 +426,8 @@ export const parseEditAttrs = function (edit: DictionaryEditMod, payload: AutoIt
     return dict.$custom.format(edit, payload)
   } else if (edit.type === 'form') {
     return dict.$form.format(edit, payload)
+  } else if (edit.type === 'list') {
+    return dict.$list.format(edit, payload)
   } else {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     console.error(`[${(edit as any).type}]:FormItem类型匹配失败，请检查代码`)

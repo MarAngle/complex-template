@@ -11,11 +11,12 @@
 
 ### Doing
 
-### 4.6.2-ing
+### 4.6.2
 - 升级data依赖
 - 适配MenuValue.confirm/hidden
 - 适配TableMenu.disabled
 - 适配ListEdit
+- 添加ImageViewer
 
 ### 4.6.1
 - 升级data依赖

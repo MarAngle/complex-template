@@ -107,7 +107,7 @@ export default defineComponent({
     this.form.setRef(this.$refs[this.currentFormProps.ref])
   },
   methods: {
-    triggerEnter(prop: string, payload: AutoItemPayloadType<boolean>) {
+    triggerEnter(prop: string, payload: AutoItemPayloadType<boolean | 'list'>) {
       if (this.enter) {
         this.$emit('enter', prop, payload)
       }

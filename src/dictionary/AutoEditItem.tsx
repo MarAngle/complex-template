@@ -4,6 +4,7 @@ import { camelToLine } from "complex-utils"
 import PaginationView from "./../components/PaginationView"
 import { AutoItemPayloadType } from "./AutoItem"
 import EditView from "../EditView"
+import ListEditView from "../ListEditView.vue"
 import SingleImport from "../SingleImport"
 import MultipleImport from "../MultipleImport"
 import { parseEditAttrs } from "../../format"
@@ -13,7 +14,7 @@ export default defineComponent({
   name: 'AutoEditItem',
   props: {
     payload: {
-      type: Object as PropType<AutoItemPayloadType<true>>,
+      type: Object as PropType<AutoItemPayloadType<true | 'list'>>,
       required: true
     }
   },
@@ -32,7 +33,7 @@ export default defineComponent({
     targetAttrs.pushClass('complex-edit-item-' + camelToLine(target.type, '-'))
     targetAttrs.merge(config.component.parseData(target.$local, 'target'))
     let item = null
-    if (!this.payload.parent.gridParse) {
+    if (!(this.payload.parent as InstanceType<typeof EditView>).gridParse) {
       const width = target.$width
       if (width) {
         targetAttrs.style.width = typeof width === 'number' ? width + 'px' : width
@@ -156,6 +157,8 @@ export default defineComponent({
       tag = target.$custom
     } else if (target.type === 'form') {
       tag = EditView
+    } else if (target.type === 'list') {
+      tag = ListEditView
     }
     if (tag) {
       item = h(tag, option, children)

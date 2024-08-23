@@ -10,11 +10,12 @@ import InfoView from "../InfoView"
 import AutoEditItem from "./AutoEditItem"
 import AutoInfoItem from "./AutoInfoItem"
 import config from "../../config"
+import ListEditView from "../ListEditView"
 
-export interface AutoItemPayloadType<E = true> {
+export interface AutoItemPayloadType<E extends boolean | 'list' = true> {
   prop: string
   type: string
-  target: E extends true ? DictionaryEditMod : DefaultInfo
+  target: E extends true | 'list' ? DictionaryEditMod : DefaultInfo
   index: number
   list: ObserveList
   choice?: number
@@ -22,13 +23,13 @@ export interface AutoItemPayloadType<E = true> {
   loading?: boolean
   targetData: Record<PropertyKey, any>
   form: E extends true ? FormValue : undefined
-  data: E extends false ? Record<PropertyKey, any> : undefined
-  parent: E extends true ? InstanceType<typeof EditView> : InstanceType<typeof InfoView>
+  data: E extends false | 'list' ? Record<PropertyKey, any> : undefined
+  parent: E extends true ? InstanceType<typeof EditView> : E extends 'list' ? InstanceType<typeof ListEditView> : InstanceType<typeof InfoView>
 }
 
-export interface AutoItemProps<E = true> {
+export interface AutoItemProps<E extends boolean | 'list' = true> {
   edit: E
-  target: E extends true ? DictionaryEditMod : DefaultInfo
+  target: E extends true | 'list' ? DictionaryEditMod : DefaultInfo
   index: number
   list: ObserveList
   type: string
@@ -38,19 +39,19 @@ export interface AutoItemProps<E = true> {
   disabled?: boolean
   loading?: boolean
   form: E extends true ? FormValue : undefined
-  data: E extends false ? Record<PropertyKey, any> : undefined
-  parent: E extends true ? InstanceType<typeof EditView> : InstanceType<typeof InfoView>
+  data: E extends false | 'list' ? Record<PropertyKey, any> : undefined
+  parent: E extends true ? InstanceType<typeof EditView> : E extends 'list' ? InstanceType<typeof ListEditView> : InstanceType<typeof InfoView>
 }
 
 export default defineComponent({
   name: 'AutoItem',
   props: {
     edit: {
-      type: Boolean as PropType<AutoItemProps<boolean>['edit']>,
+      type: Boolean as PropType<AutoItemProps<boolean | 'list'>['edit']>,
       required: true
     },
     target: {
-      type: Object as PropType<AutoItemProps<boolean>['target']>,
+      type: Object as PropType<AutoItemProps<boolean | 'list'>['target']>,
       required: true
     },
     index: {
@@ -58,7 +59,7 @@ export default defineComponent({
       required: true
     },
     list: {
-      type: Object as PropType<AutoItemProps<boolean>['list']>,
+      type: Object as PropType<AutoItemProps<boolean | 'list'>['list']>,
       required: true
     },
     type: { // formType
@@ -66,7 +67,7 @@ export default defineComponent({
       required: true
     },
     gridParse: {
-      type: Object as PropType<AutoItemProps<boolean>['gridParse']>,
+      type: Object as PropType<AutoItemProps<boolean | 'list'>['gridParse']>,
       required: false
     },
     choice: {
@@ -86,15 +87,15 @@ export default defineComponent({
       required: false
     },
     form: {
-      type: Object as PropType<AutoItemProps<boolean>['form']>,
+      type: Object as PropType<AutoItemProps<boolean | 'list'>['form']>,
       required: false
     },
     data: {
-      type: Object as PropType<AutoItemProps<boolean>['data']>,
+      type: Object as PropType<AutoItemProps<boolean | 'list'>['data']>,
       required: false
     },
     parent: { // EditView实例
-      type: Object as PropType<AutoItemProps<boolean>['parent']>,
+      type: Object as PropType<AutoItemProps<boolean | 'list'>['parent']>,
       required: true
     }
   },
@@ -136,20 +137,24 @@ export default defineComponent({
       }
     },
     renderLabel() {
-      const labelAttrs = config.component.parseData(this.target.$local, 'label') || new AttrsValue()
-      labelAttrs.pushClass('complex-auto-item-label')
-      labelAttrs.pushClass(`complex-auto-item-${this.parent.labelAlign}-label`)
-      if (this.target.colon && this.target.$name) {
-        labelAttrs.pushClass('complex-auto-item-colon-label')
+      if (this.edit !== 'list') {
+        const labelAttrs = config.component.parseData(this.target.$local, 'label') || new AttrsValue()
+        labelAttrs.pushClass('complex-auto-item-label')
+        labelAttrs.pushClass(`complex-auto-item-${(this.parent as InstanceType<typeof EditView> | InstanceType<typeof InfoView>).labelAlign}-label`)
+        if (this.target.colon && this.target.$name) {
+          labelAttrs.pushClass('complex-auto-item-colon-label')
+        }
+        return h('div', config.component.parseAttrs(labelAttrs), {
+          default: () => this.target.$name
+        })
+      } else {
+        return null
       }
-      return h('div', config.component.parseAttrs(labelAttrs), {
-        default: () => this.target.$name
-      })
     },
     renderItem() {
       if (this.isEdit) {
         return h(AutoEditItem, {
-          payload: this.payload as AutoItemPayloadType<true>
+          payload: this.payload as AutoItemPayloadType<true | 'list'>
         })
       } else {
         return h(AutoInfoItem, {
@@ -167,47 +172,59 @@ export default defineComponent({
     if (config.parseCollapse(this.collapse, this.target.$collapse)) {
       const mainRender = config.component.parseData(this.target.$renders, 'main')
       if (!mainRender) {
-        if (this.isEdit) {
-          const mainAttributes = new AttrsValue({
-            class: ['complex-auto-item'],
-            props: {
-              name: this.target.$prop,
-              label: this.target.$name,
-              colon: this.target.colon,
-              required: (this.target as DictionaryEditMod).required,
-              rules: this.target instanceof DefaultEdit ? this.target.getRuleList(this.payload.targetData) : undefined
+        if (this.edit !== 'list') {
+          if (this.isEdit) {
+            const mainAttributes = new AttrsValue({
+              class: ['complex-auto-item'],
+              props: {
+                name: this.target.$prop,
+                label: this.target.$name,
+                colon: this.target.colon,
+                required: (this.target as DictionaryEditMod).required,
+                rules: this.target instanceof DefaultEdit ? this.target.getRuleList(this.payload.targetData) : undefined
+              }
+            })
+            if (this.gridParse) {
+              mainAttributes.props.labelCol = this.gridParse!.parseData(this.target.$grid, 'label', this.type)
+              mainAttributes.props.wrapperCol = this.gridParse!.parseData(this.target.$grid, 'content', this.type)
             }
-          })
-          if (this.gridParse) {
-            mainAttributes.props.labelCol = this.gridParse!.parseData(this.target.$grid, 'label', this.type)
-            mainAttributes.props.wrapperCol = this.gridParse!.parseData(this.target.$grid, 'content', this.type)
+            mainAttributes.merge(config.component.parseData(this.target.$local, 'main'))
+            return h(FormItem, config.component.parseAttrs(mainAttributes), { default: () => this.renderTip() })
+          } else {
+            const mainAttributes = new AttrsValue({
+              class: ['complex-auto-item', 'complex-auto-item-info']
+            })
+            mainAttributes.merge(config.component.parseData(this.target.$local, 'main'))
+            if (this.gridParse) {
+              return h(Row, config.component.parseAttrs(mainAttributes), {
+                default: () => [
+                  h(Col, config.parseGrid((this.payload.parent as InstanceType<typeof EditView> | InstanceType<typeof InfoView>).gridParse!.parseData(this.payload.target.$grid, 'label', this.payload.type)), {
+                    default: () => this.renderLabel()
+                  }),
+                  h(Col, config.parseGrid((this.payload.parent as InstanceType<typeof EditView> | InstanceType<typeof InfoView>).gridParse!.parseData(this.payload.target.$grid, 'content', this.payload.type)), {
+                    default: () => this.renderTip()
+                  })
+                ]
+              })
+            } else {
+              return h('div', config.component.parseAttrs(mainAttributes), {
+                default: () => [
+                  this.renderLabel(),
+                  this.renderTip()
+                ]
+              })
+            }
           }
-          mainAttributes.merge(config.component.parseData(this.target.$local, 'main'))
-          return h(FormItem, config.component.parseAttrs(mainAttributes), { default: () => this.renderTip() })
         } else {
           const mainAttributes = new AttrsValue({
-            class: ['complex-auto-item', 'complex-auto-item-info']
+            class: ['complex-auto-item', 'complex-auto-item-list']
           })
           mainAttributes.merge(config.component.parseData(this.target.$local, 'main'))
-          if (this.gridParse) {
-            return h(Row, config.component.parseAttrs(mainAttributes), {
-              default: () => [
-                h(Col, config.parseGrid(this.payload.parent.gridParse!.parseData(this.payload.target.$grid, 'label', this.payload.type)), {
-                  default: () => this.renderLabel()
-                }),
-                h(Col, config.parseGrid(this.payload.parent.gridParse!.parseData(this.payload.target.$grid, 'content', this.payload.type)), {
-                  default: () => this.renderTip()
-                })
-              ]
-            })
-          } else {
-            return h('div', config.component.parseAttrs(mainAttributes), {
-              default: () => [
-                this.renderLabel(),
-                this.renderTip()
-              ]
-            })
-          }
+          return h('div', config.component.parseAttrs(mainAttributes), {
+            default: () => [
+              this.renderTip()
+            ]
+          })
         }
       } else {
         return mainRender(this.payload)
