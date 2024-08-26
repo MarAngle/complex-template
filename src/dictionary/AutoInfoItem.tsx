@@ -46,7 +46,7 @@ export default defineComponent({
       if (!(this.payload.parent as InstanceType<typeof InfoView>).gridParse) {
         const width = this.payload.target.$width
         if (width) {
-          targetAttrs.style.width = typeof width === 'number' ? width + 'px' : width
+          targetAttrs.style.width = typeof width === 'number' ? config.component.data.formatPixel(width) : width
         }
       }
       if (this.payload.target instanceof ButtonEdit) {

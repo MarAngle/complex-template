@@ -36,7 +36,7 @@ export default defineComponent({
     if (!(this.payload.parent as InstanceType<typeof EditView>).gridParse) {
       const width = target.$width
       if (width) {
-        targetAttrs.style.width = typeof width === 'number' ? width + 'px' : width
+        targetAttrs.style.width = typeof width === 'number' ? config.component.data.formatPixel(width) : width
       }
     }
     const targetRender = config.component.parseData(target.$renders, 'target')

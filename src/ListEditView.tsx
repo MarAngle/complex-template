@@ -5,8 +5,8 @@ import { MenuValue } from "complex-data/type"
 import DictionaryValue, { DictionaryEditMod } from "complex-data/src/lib/DictionaryValue"
 import DefaultInfo from "complex-data/src/dictionary/DefaultInfo"
 import ObserveList from "complex-data/src/dictionary/ObserveList"
-import TableMenu, { TableMenuValue } from "./components/TableMenu"
 import { customRenderPayload, tablePayload } from "./TableView"
+import TableMenu, { TableMenuValue } from "./components/TableMenu"
 import MenuView from "./components/MenuView"
 import AutoItem, { AutoItemProps } from "./dictionary/AutoItem"
 import config from "../config"
@@ -96,9 +96,9 @@ export default defineComponent({
           width: target.$width,
           ...config.component.parseAttrs(attrs)
         }
-        columnItem.customRender = ({ text, record, index }: customRenderPayload) => {
+        columnItem.customRender = ({ record, index }: customRenderPayload) => {
           return h(AutoItem, {
-            edit: 'list',
+            parser: 'list',
             target: target,
             index: index,
             list: this.list,

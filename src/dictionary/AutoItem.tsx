@@ -7,10 +7,10 @@ import GridParse from "complex-data/src/lib/GridParse"
 import { DictionaryEditMod } from "complex-data/src/lib/DictionaryValue"
 import EditView from "../EditView"
 import InfoView from "../InfoView"
+import ListEditView from "../ListEditView"
 import AutoEditItem from "./AutoEditItem"
 import AutoInfoItem from "./AutoInfoItem"
 import config from "../../config"
-import ListEditView from "../ListEditView"
 
 export type AutoItemParser = 'info' | 'edit' | 'list'
 
@@ -119,13 +119,16 @@ export default defineComponent({
       }
     },
     isEdit() {
-      return this.parser && ['button', 'buttonGroup', 'content'].indexOf((this.target as DictionaryEditMod).type) === -1
+      return this.parser === 'edit' && ['button', 'buttonGroup', 'content'].indexOf((this.target as DictionaryEditMod).type) === -1
+    },
+    isList() {
+      return this.parser === 'list'
     }
   },
   methods: {
     renderTip() {
       const mainRender = config.component.parseData(this.target.$renders, 'main')
-      const item = !mainRender ? this.renderItem() : mainRender(this.payload)
+      const item = !mainRender ? this.renderContent() : mainRender(this.payload)
       if (this.target.$tip) {
         return h(Tooltip, {
           title: this.target.$tip.getData ? this.target.$tip.getData(this.payload) : this.target.$tip.data,
@@ -139,7 +142,7 @@ export default defineComponent({
       }
     },
     renderLabel() {
-      if (this.parser !== 'list') {
+      if (!this.isList) {
         const labelAttrs = config.component.parseData(this.target.$local, 'label') || new AttrsValue()
         labelAttrs.pushClass('complex-auto-item-label')
         labelAttrs.pushClass(`complex-auto-item-${(this.parent as InstanceType<typeof EditView> | InstanceType<typeof InfoView>).labelAlign}-label`)
@@ -153,8 +156,8 @@ export default defineComponent({
         return null
       }
     },
-    renderItem() {
-      if (this.isEdit) {
+    renderContent() {
+      if (this.isEdit || this.isList) {
         return h(AutoEditItem, {
           payload: this.payload as AutoItemPayloadType<'edit' | 'list'>
         })
@@ -174,8 +177,9 @@ export default defineComponent({
     if (config.parseCollapse(this.collapse, this.target.$collapse)) {
       const mainRender = config.component.parseData(this.target.$renders, 'main')
       if (!mainRender) {
-        if (this.parser !== 'list') {
+        if (!this.isList) {
           if (this.isEdit) {
+            // edit
             const mainAttributes = new AttrsValue({
               class: ['complex-auto-item'],
               props: {
@@ -193,6 +197,7 @@ export default defineComponent({
             mainAttributes.merge(config.component.parseData(this.target.$local, 'main'))
             return h(FormItem, config.component.parseAttrs(mainAttributes), { default: () => this.renderTip() })
           } else {
+            // info
             const mainAttributes = new AttrsValue({
               class: ['complex-auto-item', 'complex-auto-item-info']
             })
@@ -218,13 +223,18 @@ export default defineComponent({
             }
           }
         } else {
+          // list
           const mainAttributes = new AttrsValue({
             class: ['complex-auto-item', 'complex-auto-item-list']
           })
           mainAttributes.merge(config.component.parseData(this.target.$local, 'main'))
-          return h('div', config.component.parseAttrs(mainAttributes), {
+          return h(FormItemRest, config.component.parseAttrs(mainAttributes), {
             default: () => [
-              this.renderTip()
+              h(FormItemRest, {}, {
+                default: () => [
+                  this.renderTip()
+                ]
+              })
             ]
           })
         }
