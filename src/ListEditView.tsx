@@ -117,14 +117,14 @@ export default defineComponent({
         list.unshift({
           title: '序号',
           dataIndex: 'index',
-          width: 50,
+          width: 64,
           customRender: ({ record, index }) => {
             return config.table.renderIndex(record, index, undefined)
           }
         })
       }
       if (this.delete) {
-        list.unshift({
+        list.push({
           title: '操作',
           dataIndex: '$menu',
           width: 64,
@@ -140,8 +140,9 @@ export default defineComponent({
                 this.delete as TableMenuValue
               ],
               payload: payload,
-              onMenu: (prop: string, payload: tablePayload) => {
-                this.$emit('menu', prop, payload)
+              onMenu: (_prop: string, payload: tablePayload) => {
+                // console.log(payload)
+                this.currentValue.splice(payload.index, 1)
               }
             })
           }

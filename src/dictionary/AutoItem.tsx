@@ -47,7 +47,7 @@ export default defineComponent({
   name: 'AutoItem',
   props: {
     edit: {
-      type: Boolean as PropType<AutoItemProps<boolean | 'list'>['edit']>,
+      type: [Boolean, String] as PropType<AutoItemProps<boolean | 'list'>['edit']>,
       required: true
     },
     target: {
@@ -110,7 +110,7 @@ export default defineComponent({
         choice: this.choice,
         disabled: this.disabled,
         loading: this.loading,
-        targetData: this.edit ? this.form!.data : this.data!,
+        targetData: this.form ? this.form.data : this.data!,
         form: this.form,
         data: this.data,
         parent: this.parent,
