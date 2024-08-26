@@ -27,7 +27,7 @@ export interface InfoViewProps extends InfoViewDefaultProps {
 export default defineComponent({
   name: 'InfoView',
   emits: {
-    menu: (prop: string, _payload: AutoItemPayloadType<false>)  => {
+    menu: (prop: string, _payload: AutoItemPayloadType<'info'>)  => {
       return !!prop
     }
   },
@@ -100,7 +100,7 @@ export default defineComponent({
     },
     getItemProps(data: DefaultInfo, index: number) {
       return {
-        edit: false,
+        parser: 'info',
         target: data,
         index: index,
         list: this.list,
@@ -112,7 +112,7 @@ export default defineComponent({
         data: this.data,
         form: undefined,
         parent: this
-      } as AutoItemProps<false>
+      } as AutoItemProps<'info'>
     },
     renderItem(item: DefaultInfo, index: number) {
       return h(AutoItem, this.getItemProps(item, index))

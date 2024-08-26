@@ -14,7 +14,7 @@ export default defineComponent({
   name: 'AutoEditItem',
   props: {
     payload: {
-      type: Object as PropType<AutoItemPayloadType<true | 'list'>>,
+      type: Object as PropType<AutoItemPayloadType<'edit' | 'list'>>,
       required: true
     }
   },

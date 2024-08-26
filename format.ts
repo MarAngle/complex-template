@@ -51,10 +51,10 @@ interface dictItemType {
     change?: modelFuncDictType['change']
     select?: modelFuncDictType['select']
   },
-  format: (edit: DictionaryEditMod, payload: AutoItemPayloadType<true>) => AttrsValue
+  format: (edit: DictionaryEditMod, payload: AutoItemPayloadType<'edit'>) => AttrsValue
 }
 
-const bindEvent = function(dictItem: dictItemType, itemAttrs: AttrsValue, edit: DictionaryEditMod, payload: AutoItemPayloadType<true>) {
+const bindEvent = function(dictItem: dictItemType, itemAttrs: AttrsValue, edit: DictionaryEditMod, payload: AutoItemPayloadType<'edit'>) {
   const formData = payload.targetData
   const onData = dictItem.on
   if (dictItem.init) {
@@ -81,7 +81,7 @@ const dict = {
     on: {
       input: modelFuncDict.input
     },
-    format(edit: InputEdit, payload: AutoItemPayloadType<true>) {
+    format(edit: InputEdit, payload: AutoItemPayloadType<'edit'>) {
       const itemAttrs = new AttrsValue({
         props: {
           type: edit.$option.type,
@@ -105,7 +105,7 @@ const dict = {
     on: {
       change: modelFuncDict.change
     },
-    format(edit: InputNumberEdit, payload: AutoItemPayloadType<true>) {
+    format(edit: InputNumberEdit, payload: AutoItemPayloadType<'edit'>) {
       const itemAttrs = new AttrsValue({
         props: {
           min: edit.$option.min,
@@ -130,7 +130,7 @@ const dict = {
     on: {
       input: modelFuncDict.input
     },
-    format(edit: TextAreaEdit, payload: AutoItemPayloadType<true>) {
+    format(edit: TextAreaEdit, payload: AutoItemPayloadType<'edit'>) {
       const itemAttrs = new AttrsValue({
         props: {
           maxLength: edit.$option.size,
@@ -149,7 +149,7 @@ const dict = {
     on: {
       change: modelFuncDict.change
     },
-    format(edit: SwitchEdit, payload: AutoItemPayloadType<true>) {
+    format(edit: SwitchEdit, payload: AutoItemPayloadType<'edit'>) {
       const itemAttrs = new AttrsValue({
         props: {
           disabled: payload.disabled || edit.disabled
@@ -164,7 +164,7 @@ const dict = {
     on: {
       change: modelFuncDict.change
     },
-    format(edit: SelectEdit, payload: AutoItemPayloadType<true>) {
+    format(edit: SelectEdit, payload: AutoItemPayloadType<'edit'>) {
       let isLoading = edit.$load ? edit.getLoad() === StatusValue.ing : false
       const search = edit.$search
       const on: AttrsValueInitOption['on'] = {}
@@ -212,7 +212,7 @@ const dict = {
     on: {
       change: modelFuncDict.change
     },
-    format(edit: SelectEdit<PropertyKey>, payload: AutoItemPayloadType<true>) {
+    format(edit: SelectEdit<PropertyKey>, payload: AutoItemPayloadType<'edit'>) {
       const isLoading = edit.$load ? edit.getLoad() === StatusValue.ing : false
       const itemAttrs = new AttrsValue({
         props: {
@@ -232,7 +232,7 @@ const dict = {
     on: {
       change: modelFuncDict.change
     },
-    format(edit: DateEdit, payload: AutoItemPayloadType<true>) {
+    format(edit: DateEdit, payload: AutoItemPayloadType<'edit'>) {
       const showTime = edit.$option.time ? {
         format: edit.$option.time.showFormat,
         defaultValue: dayjs(edit.$option.time.defaultValue, edit.$option.time.format)
@@ -257,7 +257,7 @@ const dict = {
     on: {
       change: modelFuncDict.change
     },
-    format(edit: DateRangeEdit, payload: AutoItemPayloadType<true>) {
+    format(edit: DateRangeEdit, payload: AutoItemPayloadType<'edit'>) {
       const showTime = edit.$option.time ? {
         format: edit.$option.time.showFormat,
         defaultValue: [dayjs(edit.$option.time!.defaultValue, edit.$option.time.format), dayjs(edit.$option.time!.defaultEndValue, edit.$option.time.format)]
@@ -275,7 +275,7 @@ const dict = {
       })
       bindEvent(this as dictItemType, itemAttrs, edit, payload)
       if (edit.$option.rangeLimit) {
-        itemAttrs.pushEvent('calendarChange', function(dates: [Dayjs, Dayjs] | [string, string], dateStrings: [string, string], info: { range: 'start' | 'end' }, _payload: AutoItemPayloadType<true>) {
+        itemAttrs.pushEvent('calendarChange', function(dates: [Dayjs, Dayjs] | [string, string], dateStrings: [string, string], info: { range: 'start' | 'end' }, _payload: AutoItemPayloadType<'edit'>) {
           if (dates && dates[0] && dates[1]) {
             // 获取结束时间距离开始时间的时间间隔，毫秒
             const offset = SimpleDateEdit.$compareDate(dates[0], dates[1])
@@ -301,7 +301,7 @@ const dict = {
     on: {
       select: modelFuncDict.select
     },
-    format(edit: FileEdit<boolean>, payload: AutoItemPayloadType<true>) {
+    format(edit: FileEdit<boolean>, payload: AutoItemPayloadType<'edit'>) {
       let layout = edit.$option.layout
       if (layout == 'auto') {
         if (!payload.parent.gridParse) {
@@ -333,7 +333,7 @@ const dict = {
   $custom: {
     init: false,
     on: {},
-    format(edit: CustomEdit, payload: AutoItemPayloadType<true>) {
+    format(edit: CustomEdit, payload: AutoItemPayloadType<'edit'>) {
       const itemAttrs = new AttrsValue({
         props: {
           ...edit.$option,
@@ -363,7 +363,7 @@ const dict = {
   $form: {
     init: false,
     on: {},
-    format(edit: FormEdit, payload: AutoItemPayloadType<true>) {
+    format(edit: FormEdit, payload: AutoItemPayloadType<'edit'>) {
       const itemAttrs = new AttrsValue({
         props: {
           list: edit.$runtime.observeList,
@@ -383,7 +383,7 @@ const dict = {
     on: {
       change: modelFuncDict.change
     },
-    format(edit: ListEdit, payload: AutoItemPayloadType<true>) {
+    format(edit: ListEdit, payload: AutoItemPayloadType<'edit'>) {
       const itemAttrs = new AttrsValue({
         props: {
           dictionary: edit.$runtime.dictionary,
@@ -403,7 +403,7 @@ const dict = {
   }
 }
 
-export const parseEditAttrs = function (edit: DictionaryEditMod, payload: AutoItemPayloadType<true>) {
+export const parseEditAttrs = function (edit: DictionaryEditMod, payload: AutoItemPayloadType<'edit'>) {
   if (edit.type === 'input') {
     return dict.$input.format(edit, payload)
   } else if (edit.type === 'inputNumber') {

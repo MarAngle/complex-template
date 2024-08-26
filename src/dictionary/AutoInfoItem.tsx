@@ -5,14 +5,14 @@ import ObserveList from "complex-data/src/dictionary/ObserveList"
 import { ButtonEditOption } from "complex-data/src/dictionary/ButtonEdit"
 import FormEdit from "complex-data/src/dictionary/FormEdit"
 import ButtonView from "../ButtonView"
-import { AutoItemPayloadType } from "./AutoItem"
+import { AutoItemPayloadType, AutoItemParser } from "./AutoItem"
 import InfoView, { InfoViewProps } from "../InfoView"
 import config from "../../config"
 
-export const bindButtonClick = function(prop: string, option: ButtonEdit['$option'], payload: AutoItemPayloadType<boolean | 'list'>) {
+export const bindButtonClick = function(prop: string, option: ButtonEdit['$option'], payload: AutoItemPayloadType<AutoItemParser>) {
   if (!option.upload) {
     return function() {
-      (payload as AutoItemPayloadType<true>).parent.$emit('menu', prop, payload)
+      (payload as AutoItemPayloadType<'edit'>).parent.$emit('menu', prop, payload)
       if(option.click) {
         return option.click(payload)
       }
@@ -26,7 +26,7 @@ export default defineComponent({
   name: 'AutoInfoItem',
   props: {
     payload: {
-      type: Object as PropType<AutoItemPayloadType<boolean | 'list'>>,
+      type: Object as PropType<AutoItemPayloadType<AutoItemParser>>,
       required: true
     }
   },

@@ -51,7 +51,7 @@ export interface QuickListProps {
 export default defineComponent({
   name: 'QuickList',
   emits: {
-    search: (prop: string, _payload: AutoItemPayloadType<true>)  => {
+    search: (prop: string, _payload: AutoItemPayloadType<'edit'>)  => {
       return !!prop
     },
     table: (prop: string, _payload: tablePayload)  => {
@@ -174,11 +174,11 @@ export default defineComponent({
         return null
       }
     },
-    onSearchEnter(_prop: string, _payload: AutoItemPayloadType<true>) {
+    onSearchEnter(_prop: string, _payload: AutoItemPayloadType<'edit'>) {
       // 回车自动检索
       this.listData.setSearch()
     },
-    onSearchMenu(prop: string, payload: AutoItemPayloadType<true>) {
+    onSearchMenu(prop: string, payload: AutoItemPayloadType<'edit'>) {
       this.$emit('search', prop, payload)
       if (prop === '$search') {
         this.listData.setSearch()

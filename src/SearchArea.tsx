@@ -15,10 +15,10 @@ export interface SearchAreaProps extends EditViewDefaultProps {
 export default defineComponent({
   name: 'SearchArea',
   emits: {
-    menu: (prop: string, _payload: AutoItemPayloadType<true>) => {
+    menu: (prop: string, _payload: AutoItemPayloadType<'edit'>) => {
       return !!prop
     },
-    enter: (prop: string, _payload: AutoItemPayloadType<true>) => {
+    enter: (prop: string, _payload: AutoItemPayloadType<'edit'>) => {
       return !!prop
     }
   },
@@ -121,10 +121,10 @@ export default defineComponent({
         collapse: this.search.$collapse,
         disabled: this.disabled,
         loading: this.loading,
-        onMenu: (prop: string, payload: AutoItemPayloadType<true>) => {
+        onMenu: (prop: string, payload: AutoItemPayloadType<'edit'>) => {
           this.$emit('menu', prop, payload)
         },
-        onEnter: (prop: string, payload: AutoItemPayloadType<true>) => {
+        onEnter: (prop: string, payload: AutoItemPayloadType<'edit'>) => {
           this.$emit('enter', prop, payload)
         }
       })

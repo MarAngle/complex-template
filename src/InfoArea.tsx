@@ -22,7 +22,7 @@ export interface InfoAreaProps extends InfoAreaDefaultProps {
 export default defineComponent({
   name: 'InfoArea',
   emits: {
-    menu: (prop: string, _payload: AutoItemPayloadType<false>)  => {
+    menu: (prop: string, _payload: AutoItemPayloadType<'info'>)  => {
       return !!typeof prop
     }
   },
@@ -149,7 +149,7 @@ export default defineComponent({
           collapse: this.dictionary.$collapse,
           disabled: this.disabled,
           loading: this.loading,
-          onMenu: (prop: string, payload: AutoItemPayloadType<false>) => {
+          onMenu: (prop: string, payload: AutoItemPayloadType<'info'>) => {
             this.$emit('menu', prop, payload)
           }
         })

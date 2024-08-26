@@ -1,5 +1,5 @@
 import { defineComponent, h, PropType } from "vue"
-import { Col, FormItem, Row, Tooltip } from "ant-design-vue"
+import { Col, FormItem, FormItemRest, Row, Tooltip } from "ant-design-vue"
 import { AttrsValue, FormValue, DefaultInfo } from "complex-data"
 import ObserveList from "complex-data/src/dictionary/ObserveList"
 import DefaultEdit from "complex-data/src/dictionary/DefaultEdit"
@@ -12,24 +12,26 @@ import AutoInfoItem from "./AutoInfoItem"
 import config from "../../config"
 import ListEditView from "../ListEditView"
 
-export interface AutoItemPayloadType<E extends boolean | 'list' = true> {
+export type AutoItemParser = 'info' | 'edit' | 'list'
+
+export interface AutoItemPayloadType<P extends AutoItemParser = 'edit'> {
   prop: string
   type: string
-  target: E extends true | 'list' ? DictionaryEditMod : DefaultInfo
+  target: P extends 'edit' | 'list' ? DictionaryEditMod : DefaultInfo
   index: number
   list: ObserveList
   choice?: number
   disabled?: boolean
   loading?: boolean
   targetData: Record<PropertyKey, any>
-  form: E extends true ? FormValue : undefined
-  data: E extends false | 'list' ? Record<PropertyKey, any> : undefined
-  parent: E extends true ? InstanceType<typeof EditView> : E extends 'list' ? InstanceType<typeof ListEditView> : InstanceType<typeof InfoView>
+  form: P extends 'edit' ? FormValue : undefined
+  data: P extends 'info' | 'list' ? Record<PropertyKey, any> : undefined
+  parent: P extends 'edit' ? InstanceType<typeof EditView> : P extends 'info' ? InstanceType<typeof InfoView> : InstanceType<typeof ListEditView>
 }
 
-export interface AutoItemProps<E extends boolean | 'list' = true> {
-  edit: E
-  target: E extends true | 'list' ? DictionaryEditMod : DefaultInfo
+export interface AutoItemProps<P extends AutoItemParser = 'edit'> {
+  parser: P
+  target: P extends 'edit' | 'list' ? DictionaryEditMod : DefaultInfo
   index: number
   list: ObserveList
   type: string
@@ -38,20 +40,20 @@ export interface AutoItemProps<E extends boolean | 'list' = true> {
   collapse?: boolean
   disabled?: boolean
   loading?: boolean
-  form: E extends true ? FormValue : undefined
-  data: E extends false | 'list' ? Record<PropertyKey, any> : undefined
-  parent: E extends true ? InstanceType<typeof EditView> : E extends 'list' ? InstanceType<typeof ListEditView> : InstanceType<typeof InfoView>
+  form: P extends 'edit' ? FormValue : undefined
+  data: P extends 'info' | 'list' ? Record<PropertyKey, any> : undefined
+  parent: P extends 'edit' ? InstanceType<typeof EditView> : P extends 'info' ? InstanceType<typeof InfoView> : InstanceType<typeof ListEditView>
 }
 
 export default defineComponent({
   name: 'AutoItem',
   props: {
-    edit: {
-      type: [Boolean, String] as PropType<AutoItemProps<boolean | 'list'>['edit']>,
+    parser: {
+      type: String as PropType<AutoItemProps<AutoItemParser>['parser']>,
       required: true
     },
     target: {
-      type: Object as PropType<AutoItemProps<boolean | 'list'>['target']>,
+      type: Object as PropType<AutoItemProps<AutoItemParser>['target']>,
       required: true
     },
     index: {
@@ -59,7 +61,7 @@ export default defineComponent({
       required: true
     },
     list: {
-      type: Object as PropType<AutoItemProps<boolean | 'list'>['list']>,
+      type: Object as PropType<AutoItemProps<AutoItemParser>['list']>,
       required: true
     },
     type: { // formType
@@ -67,7 +69,7 @@ export default defineComponent({
       required: true
     },
     gridParse: {
-      type: Object as PropType<AutoItemProps<boolean | 'list'>['gridParse']>,
+      type: Object as PropType<AutoItemProps<AutoItemParser>['gridParse']>,
       required: false
     },
     choice: {
@@ -87,15 +89,15 @@ export default defineComponent({
       required: false
     },
     form: {
-      type: Object as PropType<AutoItemProps<boolean | 'list'>['form']>,
+      type: Object as PropType<AutoItemProps<AutoItemParser>['form']>,
       required: false
     },
     data: {
-      type: Object as PropType<AutoItemProps<boolean | 'list'>['data']>,
+      type: Object as PropType<AutoItemProps<AutoItemParser>['data']>,
       required: false
     },
     parent: { // EditView实例
-      type: Object as PropType<AutoItemProps<boolean | 'list'>['parent']>,
+      type: Object as PropType<AutoItemProps<AutoItemParser>['parent']>,
       required: true
     }
   },
@@ -117,7 +119,7 @@ export default defineComponent({
       }
     },
     isEdit() {
-      return this.edit && ['button', 'buttonGroup', 'content'].indexOf((this.target as DictionaryEditMod).type) === -1
+      return this.parser && ['button', 'buttonGroup', 'content'].indexOf((this.target as DictionaryEditMod).type) === -1
     }
   },
   methods: {
@@ -137,7 +139,7 @@ export default defineComponent({
       }
     },
     renderLabel() {
-      if (this.edit !== 'list') {
+      if (this.parser !== 'list') {
         const labelAttrs = config.component.parseData(this.target.$local, 'label') || new AttrsValue()
         labelAttrs.pushClass('complex-auto-item-label')
         labelAttrs.pushClass(`complex-auto-item-${(this.parent as InstanceType<typeof EditView> | InstanceType<typeof InfoView>).labelAlign}-label`)
@@ -154,11 +156,11 @@ export default defineComponent({
     renderItem() {
       if (this.isEdit) {
         return h(AutoEditItem, {
-          payload: this.payload as AutoItemPayloadType<true | 'list'>
+          payload: this.payload as AutoItemPayloadType<'edit' | 'list'>
         })
       } else {
         return h(AutoInfoItem, {
-          payload: this.payload as AutoItemPayloadType<false>
+          payload: this.payload as AutoItemPayloadType<'info'>
         })
       }
     }
@@ -172,7 +174,7 @@ export default defineComponent({
     if (config.parseCollapse(this.collapse, this.target.$collapse)) {
       const mainRender = config.component.parseData(this.target.$renders, 'main')
       if (!mainRender) {
-        if (this.edit !== 'list') {
+        if (this.parser !== 'list') {
           if (this.isEdit) {
             const mainAttributes = new AttrsValue({
               class: ['complex-auto-item'],

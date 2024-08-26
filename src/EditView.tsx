@@ -4,7 +4,7 @@ import { mergeData } from "complex-utils"
 import { FormValue } from "complex-data"
 import ObserveList from "complex-data/src/dictionary/ObserveList"
 import DefaultInfo from "complex-data/src/dictionary/DefaultInfo"
-import AutoItem, { AutoItemPayloadType, AutoItemProps } from "./dictionary/AutoItem"
+import AutoItem, { AutoItemPayloadType, AutoItemProps, AutoItemParser } from "./dictionary/AutoItem"
 import { InfoViewDefaultProps } from "./InfoView"
 import config from "../config"
 
@@ -23,10 +23,10 @@ export interface EditViewProps extends EditViewDefaultProps {
 export default defineComponent({
   name: 'EditView',
   emits: {
-    menu: (prop: string, _payload: AutoItemPayloadType<true>)  => {
+    menu: (prop: string, _payload: AutoItemPayloadType<'edit'>)  => {
       return !!prop
     },
-    enter: (prop: string, _payload: AutoItemPayloadType<true>)  => {
+    enter: (prop: string, _payload: AutoItemPayloadType<'edit'>)  => {
       return !!prop
     }
   },
@@ -107,7 +107,7 @@ export default defineComponent({
     this.form.setRef(this.$refs[this.currentFormProps.ref])
   },
   methods: {
-    triggerEnter(prop: string, payload: AutoItemPayloadType<boolean | 'list'>) {
+    triggerEnter(prop: string, payload: AutoItemPayloadType<AutoItemParser>) {
       if (this.enter) {
         this.$emit('enter', prop, payload)
       }
@@ -117,7 +117,7 @@ export default defineComponent({
     },
     getItemProps(data: DefaultInfo, index: number) {
       return {
-        edit: true,
+        parser: 'edit',
         target: data,
         index: index,
         list: this.list,
@@ -130,7 +130,7 @@ export default defineComponent({
         form: this.form,
         data: undefined,
         parent: this
-      } as AutoItemProps<true>
+      } as AutoItemProps<'edit'>
     },
     renderItem(item: DefaultInfo, index: number) {
       return h(AutoItem, this.getItemProps(item, index))
