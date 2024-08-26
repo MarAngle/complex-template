@@ -389,6 +389,7 @@ const dict = {
           dictionary: edit.$runtime.dictionary,
           dictionaryList: edit.$runtime.dictionaryList,
           list: edit.$runtime.observeList,
+          formList: edit.$runtime.formList,
           type: edit.$runtime.type,
           build: edit.$option.build,
           delete: edit.$option.delete,

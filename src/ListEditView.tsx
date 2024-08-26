@@ -30,6 +30,10 @@ export default defineComponent({
       type: Object as PropType<ObserveList>,
       required: true
     },
+    formList: {
+      type: Object as PropType<FormValue[]>,
+      required: false
+    },
     type: {
       type: String,
       required: true
@@ -143,6 +147,7 @@ export default defineComponent({
               onMenu: (_prop: string, payload: tablePayload) => {
                 // console.log(payload)
                 this.currentValue.splice(payload.index, 1)
+                this.formList!.splice(payload.index, 1)
               }
             })
           }
@@ -167,8 +172,10 @@ export default defineComponent({
   },
   methods: {
     createItemValue() {
-      this.dictionary.parseData(this.dictionaryList, new FormValue(), this.type).then(res => {
+      const form = new FormValue()
+      this.dictionary.parseData(this.dictionaryList, form, this.type).then(res => {
         this.currentValue.push(res.data)
+        this.formList!.push(form)
       })
     },
     renderTable() {
