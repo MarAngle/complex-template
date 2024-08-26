@@ -7,7 +7,7 @@ import GridParse from "complex-data/src/lib/GridParse"
 import { DictionaryEditMod } from "complex-data/src/lib/DictionaryValue"
 import EditView from "../EditView"
 import InfoView from "../InfoView"
-import ListEditView from "../ListEditView"
+import ListEditArea from "../ListEditArea"
 import AutoEditItem from "./AutoEditItem"
 import AutoInfoItem from "./AutoInfoItem"
 import config from "../../config"
@@ -26,7 +26,7 @@ export interface AutoItemPayloadType<P extends AutoItemParser = 'edit'> {
   targetData: Record<PropertyKey, any>
   form: P extends 'edit' ? FormValue : undefined
   data: P extends 'info' | 'list' ? Record<PropertyKey, any> : undefined
-  parent: P extends 'edit' ? InstanceType<typeof EditView> : P extends 'info' ? InstanceType<typeof InfoView> : InstanceType<typeof ListEditView>
+  parent: P extends 'edit' ? InstanceType<typeof EditView> : P extends 'info' ? InstanceType<typeof InfoView> : InstanceType<typeof ListEditArea>
 }
 
 export interface AutoItemProps<P extends AutoItemParser = 'edit'> {
@@ -42,7 +42,7 @@ export interface AutoItemProps<P extends AutoItemParser = 'edit'> {
   loading?: boolean
   form: P extends 'edit' ? FormValue : undefined
   data: P extends 'info' | 'list' ? Record<PropertyKey, any> : undefined
-  parent: P extends 'edit' ? InstanceType<typeof EditView> : P extends 'info' ? InstanceType<typeof InfoView> : InstanceType<typeof ListEditView>
+  parent: P extends 'edit' ? InstanceType<typeof EditView> : P extends 'info' ? InstanceType<typeof InfoView> : InstanceType<typeof ListEditArea>
 }
 
 export default defineComponent({

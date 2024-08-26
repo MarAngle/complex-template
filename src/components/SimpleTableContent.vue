@@ -124,7 +124,7 @@ export default defineComponent({
       default: 'list'
     },
     id: {
-      type: String,
+      type: [String, Number, Symbol],
       required: false
     },
     index: {
