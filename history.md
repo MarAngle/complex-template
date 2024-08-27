@@ -14,13 +14,13 @@
 
 ### 4.6.2
 - 升级data依赖
+- tablePayload.payload.target => tablePayload.payload.column
 - 适配MenuValue.confirm/hidden
 - 适配TableMenu.disabled
-- 适配ListEdit
 - 添加ImageViewer
 - 删除SimpleTableContent
+- 适配ListEdit:兼容问题暂不可用
 - 添加EditTable
-- tablePayload.payload.target => tablePayload.payload.column
 
 ### 4.6.1
 - 升级data依赖

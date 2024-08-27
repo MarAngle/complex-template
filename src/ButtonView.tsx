@@ -9,6 +9,14 @@ export default defineComponent({
     data: {
       type: Object as PropType<ButtonValue<any, [any]>>,
       required: true
+    },
+    disabled: {
+      type: Boolean,
+      required: false
+    },
+    loading: {
+      type: Boolean,
+      required: false
     }
   },
   methods: {
@@ -36,6 +44,8 @@ export default defineComponent({
         ...this.$attrs,
         ref: 'menu',
         data: this.data,
+        disabled: this.disabled,
+        loading: this.loading,
         onClick: () => {
           (this.$refs.file as InstanceType<typeof FileView>).$el.click()
         }

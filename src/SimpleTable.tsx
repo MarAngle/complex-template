@@ -39,7 +39,7 @@ export default defineComponent({
       required: false,
       default: null
     },
-    menu: { // 单独制定分页器数据，不从listData中取值
+    menu: {
       type: Object as PropType<SimpleTableProps['menu']>,
       required: false
     },

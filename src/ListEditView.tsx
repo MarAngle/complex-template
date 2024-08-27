@@ -1,9 +1,9 @@
 import { defineComponent, h, PropType } from "vue"
 import { FormValue } from "complex-data"
-import { MenuValue } from "complex-data/type"
+import ListEdit from "complex-data/src/dictionary/ListEdit"
 import EditTable, { EditTableProps } from "./EditTable"
 import MenuView from "./components/MenuView"
-import ListEdit from "complex-data/src/dictionary/ListEdit"
+import { tablePayload } from "./TableView"
 
 export default defineComponent({
   name: 'ListEditView',
@@ -20,16 +20,12 @@ export default defineComponent({
       type: String,
       required: true
     },
-    build: {
-      type: [Boolean, Object] as PropType<false | MenuValue>,
+    header: {
+      type: Object as PropType<ListEdit['$option']['header']>,
       required: false
     },
-    delete: {
-      type: [Boolean, Object] as PropType<false | MenuValue>,
-      required: false
-    },
-    id: {
-      type: [String, Number, Symbol] as PropType<PropertyKey>,
+    menu: {
+      type: Object as PropType<ListEdit['$option']['menu']>,
       required: false
     },
     tableProps: {
@@ -62,10 +58,10 @@ export default defineComponent({
     },
     currentValue(val: Record<PropertyKey, any>[]) {
       this.$emit('change', val)
-    },
+    }
   },
   methods: {
-    createItemValue() {
+    buildValue() {
       const form = new FormValue()
       this.runtime.dictionary!.parseData(this.runtime.dictionaryList!, form, this.type).then(res => {
         this.currentValue.push(res.data)
@@ -81,26 +77,35 @@ export default defineComponent({
             listProp: this.type,
             lineHeight: 32,
             parent: this,
+            menu: this.menu as EditTableProps['menu'],
             disabled: this.disabled,
             loading: this.loading,
+            onMenu: (prop: string, payload: tablePayload) => {
+              if (prop === '$delete') {
+                this.currentValue.splice(payload.index, 1)
+                this.runtime.formList!.splice(payload.index, 1)
+              }
+              this.$emit('menu', prop, payload)
+            }
           })
         ]
       })
     },
-    renderBuild() {
-      if (this.build && !this.disabled) {
-        const build = this.build
-        const render = h('div', { class: 'complex-list-edit-menu' }, {
-          default: () => [
-            h(MenuView, {
-              data: build,
-              onClick: () => {
-                this.createItemValue()
+    renderHeader() {
+      if (this.header) {
+        return this.header.map(headerMenu => {
+          return h(MenuView, {
+            data: headerMenu,
+            disabled: this.disabled,
+            loading: this.loading,
+            onClick: () => {
+              if (headerMenu.prop === '$build') {
+                this.buildValue()
               }
-            })
-          ]
+              this.$emit('header', headerMenu.prop)
+            }
+          })
         })
-        return render
       }
     }
   },
@@ -111,7 +116,7 @@ export default defineComponent({
    */
   render() {
     const render = h('div', { class: 'complex-list-edit' }, {
-      default: () => [this.renderBuild(), this.renderTable()]
+      default: () => [this.renderHeader(), this.renderTable()]
     })
     return render
   }

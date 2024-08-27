@@ -388,10 +388,8 @@ const dict = {
         props: {
           runtime: edit.$runtime,
           type: edit.$runtime.type,
-          build: edit.$option.build,
-          delete: edit.$option.delete,
-          index: edit.$option.index,
-          id: edit.$option.id,
+          header: edit.$option.header,
+          menu: edit.$option.menu,
           tableProps: edit.$option.tableProps
         }
       })

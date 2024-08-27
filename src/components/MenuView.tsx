@@ -12,6 +12,14 @@ export default defineComponent({
     data: {
       type: Object as PropType<MenuValue<any>>,
       required: true
+    },
+    disabled: {
+      type: Boolean,
+      required: false
+    },
+    loading: {
+      type: Boolean,
+      required: false
     }
   },
   data() {
@@ -24,9 +32,9 @@ export default defineComponent({
       const type = this.data.type
       let loading = this.operate
       if (!loading) {
-        loading = typeof this.data.loading === 'function' ? this.data.loading() : (this.data.loading || false)
+        loading = this.loading || (typeof this.data.loading === 'function' ? this.data.loading() : (this.data.loading || false))
       }
-      const disabled = typeof this.data.disabled === 'function' ? this.data.disabled() : (this.data.disabled || false)
+      const disabled = this.disabled || (typeof this.data.disabled === 'function' ? this.data.disabled() : (this.data.disabled || false))
       const render = h(Button, {
         class: 'complex-menu',
         loading: loading,

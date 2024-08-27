@@ -1,9 +1,11 @@
 import { defineComponent, h, PropType, VNode } from "vue"
 import { DictionaryEditMod } from "complex-data/src/lib/DictionaryValue"
 import ObserveList from "complex-data/src/dictionary/ObserveList"
+import TableMenu from "./components/TableMenu"
 import AutoItem, { AutoItemProps } from "./dictionary/AutoItem"
 import { tablePayload } from "./TableView"
 import ListEditView from "./ListEditView"
+import { SimpleTableProps } from "./SimpleTable"
 import config from "../config"
 
 export interface EditTableProps {
@@ -11,6 +13,7 @@ export interface EditTableProps {
   data: Record<PropertyKey, unknown>[]
   type: string
   parent: InstanceType<typeof ListEditView>
+  menu?: SimpleTableProps['menu']
   lineHeight?: number
   disabled?: boolean
   loading?: boolean
@@ -21,10 +24,7 @@ export default defineComponent({
   emits: {
     menu: (prop: string, _payload: tablePayload) => {
       return typeof prop === 'string'
-    },
-    pagination: (prop: 'page' | 'size', _page: number, _size: number) => {
-      return prop === 'page' || prop === 'size'
-    },
+    }
   },
   props: {
     observeList: {
@@ -46,6 +46,10 @@ export default defineComponent({
     },
     lineHeight: {
       type: Number as PropType<EditTableProps['lineHeight']>,
+      required: false
+    },
+    menu: {
+      type: Object as PropType<EditTableProps['menu']>,
       required: false
     },
     disabled: {
@@ -114,7 +118,7 @@ export default defineComponent({
       }
     },
     $renderContent(column: DictionaryEditMod, record: Record<PropertyKey, unknown>, index: number) {
-      const payload: tablePayload = {
+      const payload: tablePayload<DictionaryEditMod> = {
         targetData: record,
         type: this.type,
         index: index,
@@ -123,6 +127,7 @@ export default defineComponent({
       const text = record[column.$prop]
       const targetRender = config.component.parseData(column.$renders, 'target')
       const pureRender = config.component.parseData(column.$renders, 'pure')
+      const menuOption = config.component.parseData(this.menu, column.$prop)
       if (pureRender) {
         return pureRender({
           text: text,
@@ -133,12 +138,20 @@ export default defineComponent({
           text: text,
           payload
         }) as VNode | VNode[]
+      } else if (menuOption) {
+        return h(TableMenu, {
+          list: menuOption,
+          payload: payload,
+          onMenu: (prop: string, payload: tablePayload) => {
+            this.$emit('menu', prop, payload)
+          }
+        })
       } else if (column.$prop === config.table.auto.index.prop) {
         return config.table.renderIndex(record, index)
       } else {
         return h(AutoItem, {
           parser: 'list',
-          target: column as DictionaryEditMod,
+          target: column,
           index: index,
           list: this.observeList!,
           type: this.type!,
