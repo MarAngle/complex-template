@@ -1,12 +1,14 @@
-import { defineComponent, h, PropType } from "vue"
+import { defineComponent, h, PropType, VNode } from "vue"
 import { deepCloneData, updateData } from "complex-utils"
+import { DefaultInfo } from "complex-data"
 import DefaultList from "complex-data/src/dictionary/DefaultList"
-import SimpleTableContent from "./components/SimpleTableContent"
 import PaginationView from "./components/PaginationView"
+import TableMenu from "./components/TableMenu"
 import { tablePayload, TableViewDefaultProps } from "./TableView"
 import config from "../config"
 
 export interface SimpleTableProps extends TableViewDefaultProps {
+  form?: boolean
   lineHeight?: number
 }
 
@@ -51,6 +53,10 @@ export default defineComponent({
       type: Object as PropType<SimpleTableProps['auto']>,
       required: false
     },
+    form: {
+      type: Boolean as PropType<SimpleTableProps['form']>,
+      required: false
+    },
     lineHeight: {
       type: Number as PropType<SimpleTableProps['lineHeight']>,
       required: false
@@ -84,26 +90,92 @@ export default defineComponent({
     }
   },
   methods: {
+    rowWidth(column: DefaultList | DefaultInfo) {
+      const style: Record<string, string | number> = {}
+      if (column.$width != undefined) {
+        if (typeof column.$width === 'number') {
+          style.width = config.component.data.formatPixel(column.$width)
+        } else {
+          style.width = column.$width
+        }
+      }
+      return style
+    },
     renderTable() {
       return h('div', { class: 'complex-table-content complex-simple-table-content' }, {
         default: () => [
-          h(SimpleTableContent, {
-            columns: this.currentColumnList,
-            data: this.currentData,
-            listProp: this.listProp,
-            menu: this.menu,
-            id: this.listData?.getDictionaryProp('id'),
-            lineHeight: this.lineHeight,
-            index: {
-              prop: this.currentAuto.index.prop,
-              pagination: this.currentAuto.index.pagination ? this.currentPaginationData : undefined
-            },
-            onMenu: (prop: string, payload: tablePayload) => {
-              this.$emit('menu', prop, payload)
-            }
-          })
+          this.currentColumnList.map(column => this.renderColumn(column))
         ]
       })
+    },
+    renderColumn(column: DefaultList | DefaultInfo) {
+      return h('div', {
+        class: 'complex-simple-table-content-column complex-simple-table-content-column-' + ((column as DefaultList).align || 'left'),
+        style: this.rowWidth(column)
+      }, [
+        h('div', {
+          class: 'complex-simple-table-content-header'
+        }, column.$name),
+        this.currentData?.map((val, index) => {
+          return h('div', {
+            class: 'complex-simple-table-content-row'
+          }, [
+            this.renderContent(column, val, index)
+          ])
+        })
+      ])
+    },
+    renderContent(column: DefaultList | DefaultInfo, record: Record<PropertyKey, unknown>, index: number) {
+      const payload: tablePayload = {
+        targetData: record,
+        type: this.listProp,
+        index: index,
+        payload: { column: column }
+      }
+      const text = config.table.renderTableValue(record[column.$prop], payload)
+      const targetRender = config.component.parseData(column.$renders, 'target')
+      const pureRender = config.component.parseData(column.$renders, 'pure')
+      const menuOption = config.component.parseData(this.menu, column.$prop)
+      if (pureRender) {
+        return pureRender({
+          text: text,
+          payload
+        }) as VNode | VNode[]
+      } else if (targetRender) {
+        return targetRender({
+          text: text,
+          payload
+        }) as VNode | VNode[]
+      } else if (menuOption) {
+        return h(TableMenu, {
+          list: menuOption,
+          payload: payload,
+          onMenu: (prop: string, payload: tablePayload) => {
+            this.$emit('menu', prop, payload)
+          }
+        })
+      } else if (column.$prop === this.currentAuto.index.prop) {
+        return config.table.renderIndex(record, index, this.currentAuto.index.pagination ? this.currentPaginationData : undefined)
+      } else if ((column as DefaultList).ellipsis) {
+        // 自动省略切自动换行
+        return config.table.renderAutoText(text as string, column, payload, config.component.parseData(column.$local, 'autoText'))
+      } else {
+        return h('p', config.component.parseAttrs(config.component.parseData(column.$local, 'target')), {
+          default: () => text
+        })
+      }
+      // {
+      //   // return h(AutoItem, {
+      //   //   parser: 'list',
+      //   //   target: target,
+      //   //   index: index,
+      //   //   list: this.list,
+      //   //   type: this.type!,
+      //   //   form: undefined,
+      //   //   data: record,
+      //   //   parent: this as any
+      //   // } as AutoItemProps<'list'>)
+      // }
     },
     renderFooter() {
       const render = h('div', { class: 'complex-table-footer complex-simple-table-footer' }, {

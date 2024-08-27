@@ -18,7 +18,7 @@
 - 适配TableMenu.disabled
 - 适配ListEdit
 - 添加ImageViewer
-- 使用TSX重构SimpleTableContent
+- 删除SimpleTableContent
 - tablePayload.payload.target => tablePayload.payload.column
 
 ### 4.6.1
