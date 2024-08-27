@@ -126,6 +126,18 @@ export default defineComponent({
       ])
     },
     renderContent(column: DefaultList | DefaultInfo, record: Record<PropertyKey, unknown>, index: number) {
+      const content = this.$renderContent(column, record, index)
+      if (!this.lineHeight) {
+        return content
+      } else {
+        return h('div', {
+          style: {
+            height: config.component.data.formatPixel(this.lineHeight)
+          }
+        }, content)
+      }
+    },
+    $renderContent(column: DefaultList | DefaultInfo, record: Record<PropertyKey, unknown>, index: number) {
       const payload: tablePayload = {
         targetData: record,
         type: this.listProp,
@@ -164,18 +176,6 @@ export default defineComponent({
           default: () => text
         })
       }
-      // {
-      //   // return h(AutoItem, {
-      //   //   parser: 'list',
-      //   //   target: target,
-      //   //   index: index,
-      //   //   list: this.list,
-      //   //   type: this.type!,
-      //   //   form: undefined,
-      //   //   data: record,
-      //   //   parent: this as any
-      //   // } as AutoItemProps<'list'>)
-      // }
     },
     renderFooter() {
       const render = h('div', { class: 'complex-table-footer complex-simple-table-footer' }, {
