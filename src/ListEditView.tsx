@@ -1,14 +1,15 @@
 import { defineComponent, h, PropType } from "vue"
-import { Table, TableColumnType, TableProps } from 'ant-design-vue'
 import { DictionaryData, FormValue } from "complex-data"
 import { MenuValue } from "complex-data/type"
 import DictionaryValue, { DictionaryEditMod } from "complex-data/src/lib/DictionaryValue"
 import DefaultInfo from "complex-data/src/dictionary/DefaultInfo"
 import ObserveList from "complex-data/src/dictionary/ObserveList"
+import SimpleTableView, { SimpleTableProps } from "./SimpleTableView"
 import { customRenderPayload, tablePayload } from "./TableView"
 import TableMenu, { TableMenuValue } from "./components/TableMenu"
 import MenuView from "./components/MenuView"
 import AutoItem, { AutoItemProps } from "./dictionary/AutoItem"
+import widthCalculator from "../width"
 import config from "../config"
 
 export default defineComponent({
@@ -55,7 +56,7 @@ export default defineComponent({
       required: false
     },
     tableProps: {
-      type: Object as PropType<TableProps>,
+      type: Object as PropType<SimpleTableProps>,
       required: false
     },
     disabled: {
@@ -86,90 +87,6 @@ export default defineComponent({
       this.$emit('change', val)
     },
   },
-  computed: {
-    currentColumnList() {
-      const list: TableColumnType[] = []
-      const columnList = this.list.data
-      for (let i = 0; i < columnList.length; i++) {
-        const target = columnList[i] as DictionaryEditMod
-        const currentProp = target.$prop
-        const attrs = config.component.parseData(target.$local, 'target')
-        const columnItem: TableColumnType = {
-          dataIndex: currentProp,
-          title: target.$name,
-          width: target.$width,
-          ...config.component.parseAttrs(attrs)
-        }
-        columnItem.customRender = ({ record, index }: customRenderPayload) => {
-          return h(AutoItem, {
-            parser: 'list',
-            target: target,
-            index: index,
-            list: this.list,
-            type: this.type!,
-            disabled: this.disabled,
-            loading: this.loading,
-            form: undefined,
-            data: record,
-            parent: this
-          } as AutoItemProps<'list'>)
-        }
-        list.push(columnItem)
-      }
-      // 添加index/menu
-      if (this.index) {
-        list.unshift({
-          title: '序号',
-          dataIndex: 'index',
-          width: 64,
-          customRender: ({ record, index }) => {
-            return config.table.renderIndex(record, index, undefined)
-          }
-        })
-      }
-      if (this.delete) {
-        list.push({
-          title: '操作',
-          dataIndex: '$menu',
-          width: 64,
-          customRender: ({ record, index }) => {
-            const payload: tablePayload<DefaultInfo> = {
-              targetData: record,
-              type: this.type || '',
-              index: index,
-              payload: { column: {} as any }
-            }
-            return h(TableMenu, {
-              list: [
-                this.delete as TableMenuValue
-              ],
-              payload: payload,
-              onMenu: (_prop: string, payload: tablePayload) => {
-                // console.log(payload)
-                this.currentValue.splice(payload.index, 1)
-                this.formList!.splice(payload.index, 1)
-              }
-            })
-          }
-        })
-      }
-      return list
-    },
-    currentTableProps() {
-      const currentTableProps = this.tableProps ? { ...this.tableProps } : {}
-      if (!currentTableProps.columns) {
-        currentTableProps.columns = this.currentColumnList
-      }
-      currentTableProps.dataSource = this.currentValue
-      if (!currentTableProps.rowKey) {
-        currentTableProps.rowKey = '_index'
-      }
-      if (currentTableProps.pagination == undefined) {
-        currentTableProps.pagination = false
-      }
-      return currentTableProps
-    },
-  },
   methods: {
     createItemValue() {
       const form = new FormValue()
@@ -181,8 +98,11 @@ export default defineComponent({
     renderTable() {
       return h('div', { class: 'complex-list-edit-content' }, {
         default: () => [
-          h(Table, {
-            ...this.currentTableProps
+          h(SimpleTableView, {
+            columnList: this.list.data,
+            data: this.currentValue,
+            listProp: this.type,
+            lineHeight: 32
           })
         ]
       })

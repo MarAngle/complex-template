@@ -4,7 +4,7 @@ import { camelToLine } from "complex-utils"
 import PaginationView from "./../components/PaginationView"
 import { AutoItemPayloadType } from "./AutoItem"
 import EditView from "../EditView"
-import ListEditArea from "../ListEditArea"
+import ListEditView from "../ListEditView"
 import SingleImport from "../SingleImport"
 import MultipleImport from "../MultipleImport"
 import { parseEditAttrs } from "../../format"
@@ -158,7 +158,7 @@ export default defineComponent({
     } else if (target.type === 'form') {
       tag = EditView
     } else if (target.type === 'list') {
-      tag = ListEditArea
+      tag = ListEditView
     }
     if (tag) {
       item = h(tag, option, children)

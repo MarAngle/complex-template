@@ -3,7 +3,7 @@ import { Button } from "ant-design-vue"
 import { ButtonType } from "ant-design-vue/es/button"
 import { getType, camelToLine, downloadFile } from "complex-utils"
 import { notice, PluginLayout } from "complex-plugin"
-import { ChoiceData, PaginationData, AttrsValue, DictionaryData, DictionaryValue } from "complex-data"
+import { ChoiceData, PaginationData, AttrsValue, DictionaryData, DictionaryValue, DefaultInfo } from "complex-data"
 import DefaultList from 'complex-data/src/dictionary/DefaultList'
 import { GridValue } from "complex-data/src/lib/GridParse"
 import { FileValue } from "complex-data/src/lib/FileValue"
@@ -166,7 +166,7 @@ const config = {
       }
       return config.showValue(text)
     },
-    renderAutoText(text: string, column: DefaultList, payload: tablePayload, attrs?: AttrsValue) {
+    renderAutoText(text: string, column: DefaultList | DefaultInfo, payload: tablePayload, attrs?: AttrsValue) {
       return h(AutoText, {
         text: text,
         auto: true,

@@ -23,7 +23,7 @@ export default defineComponent({
   props: {
     listData: {
       type: Object as PropType<SimpleTableProps['listData']>,
-      required: true
+      required: false
     },
     columnList: { // 定制列配置
       type: Object as PropType<SimpleTableProps['columnList']>,
@@ -61,12 +61,12 @@ export default defineComponent({
       if (this.data) {
         return this.data
       } else {
-        return this.listData.$list
+        return this.listData?.$list!
       }
     },
     currentIdList() {
       return this.currentData.map(item => {
-        return item[this.listData.getDictionaryProp('id')]
+        return item[this.listData!.getDictionaryProp('id')]
       })
     },
     currentAuto() {
@@ -76,11 +76,11 @@ export default defineComponent({
       if (this.paginationData) {
         return this.paginationData
       } else {
-        return this.listData.$module.pagination
+        return this.listData?.$module.pagination
       }
     },
     currentColumnList() {
-      return this.columnList || this.listData.getDictionaryPageList(this.listProp, this.listData.getDictionaryList(this.listProp)) as DefaultList[]
+      return this.columnList || this.listData!.getDictionaryPageList(this.listProp, this.listData!.getDictionaryList(this.listProp)) as DefaultList[]
     }
   },
   methods: {
@@ -92,13 +92,13 @@ export default defineComponent({
             data: this.currentData,
             listProp: this.listProp,
             menu: this.menu,
-            id: this.listData.getDictionaryProp('id'),
+            id: this.listData?.getDictionaryProp('id'),
             lineHeight: this.lineHeight,
             index: {
               prop: this.currentAuto.index.prop,
               pagination: this.currentAuto.index.pagination ? this.currentPaginationData : undefined
             },
-            onMenu(prop: string, payload: tablePayload) {
+            onMenu: (prop: string, payload: tablePayload) => {
               this.$emit('menu', prop, payload)
             }
           })
@@ -132,7 +132,7 @@ export default defineComponent({
           },
           onCurrent: (page: number, size: number) => {
             if (this.currentAuto.pagination.auto) {
-              this.listData.reloadData({
+              this.listData?.reloadData({
                 data: true,
                 ing: true,
                 sync: true,
@@ -148,7 +148,7 @@ export default defineComponent({
           },
           onSize: (page: number, size: number) => {
             if (this.currentAuto.pagination.auto) {
-              this.listData.reloadData({
+              this.listData?.reloadData({
                 data: true,
                 ing: true,
                 sync: true,

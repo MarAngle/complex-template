@@ -1,5 +1,5 @@
 import { defineComponent, PropType, h, VNode } from 'vue'
-import { PaginationData } from 'complex-data'
+import { DefaultInfo, PaginationData } from 'complex-data'
 import DefaultList from 'complex-data/src/dictionary/DefaultList'
 import { tablePayload } from '../TableView'
 import { SimpleTableProps } from '../SimpleTableView'
@@ -10,7 +10,7 @@ export default defineComponent({
   name: 'SimpleTableContent',
   props: {
     columns: {
-      type: Object as PropType<DefaultList[]>,
+      type: Object as PropType<NonNullable<SimpleTableProps['columnList']>>,
       required: true
     },
     data: {
@@ -43,7 +43,7 @@ export default defineComponent({
     return {}
   },
   methods: {
-    rowWidth(target: DefaultList) {
+    rowWidth(target: DefaultList | DefaultInfo) {
       const style: Record<string, string | number> = {}
       if (target.$width != undefined) {
         if (typeof target.$width === 'number') {
@@ -54,7 +54,7 @@ export default defineComponent({
       }
       return style
     },
-    renderContent(column: DefaultList, record: Record<PropertyKey, unknown>, index: number) {
+    renderContent(column: DefaultList | DefaultInfo, record: Record<PropertyKey, unknown>, index: number) {
       const payload: tablePayload = {
         targetData: record,
         type: this.listProp,
@@ -85,7 +85,7 @@ export default defineComponent({
         })
       } else if (this.index && column.$prop === this.index.prop) {
         return config.table.renderIndex(record, index, this.index!.pagination)
-      } else if (column.ellipsis) {
+      } else if ((column as DefaultList).ellipsis) {
         // 自动省略切自动换行
         return config.table.renderAutoText(text as string, column, payload, config.component.parseData(column.$local, 'autoText'))
       } else {
@@ -94,9 +94,9 @@ export default defineComponent({
         })
       }
     },
-    renderColumn(column: DefaultList) {
+    renderColumn(column: DefaultList | DefaultInfo) {
       return h('div', {
-        class: 'complex-simple-table-content-column complex-simple-table-content-column-' + (column.align || 'left'),
+        class: 'complex-simple-table-content-column complex-simple-table-content-column-' + ((column as DefaultList).align || 'left'),
         style: this.rowWidth(column)
       }, [
         h('div', {

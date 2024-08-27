@@ -1,14 +1,15 @@
 import { defineComponent, h, PropType } from "vue"
-import { Table, TableColumnType, TableProps } from 'ant-design-vue'
 import { DictionaryData, FormValue } from "complex-data"
 import { MenuValue } from "complex-data/type"
 import DictionaryValue, { DictionaryEditMod } from "complex-data/src/lib/DictionaryValue"
 import DefaultInfo from "complex-data/src/dictionary/DefaultInfo"
 import ObserveList from "complex-data/src/dictionary/ObserveList"
+import { SimpleTableProps } from "./SimpleTableView"
 import { customRenderPayload, tablePayload } from "./TableView"
 import TableMenu, { TableMenuValue } from "./components/TableMenu"
 import MenuView from "./components/MenuView"
 import AutoItem, { AutoItemProps } from "./dictionary/AutoItem"
+import widthCalculator from "../width"
 import config from "../config"
 
 export default defineComponent({
@@ -55,7 +56,7 @@ export default defineComponent({
       required: false
     },
     tableProps: {
-      type: Object as PropType<TableProps>,
+      type: Object as PropType<SimpleTableProps>,
       required: false
     },
     disabled: {
@@ -121,7 +122,7 @@ export default defineComponent({
         list.unshift({
           title: '序号',
           dataIndex: 'index',
-          width: 64,
+          width: widthCalculator.getWidth(2, 0, 0, 8),
           customRender: ({ record, index }) => {
             return config.table.renderIndex(record, index, undefined)
           }
@@ -131,7 +132,7 @@ export default defineComponent({
         list.push({
           title: '操作',
           dataIndex: '$menu',
-          width: 64,
+          width: widthCalculator.getWidth(2),
           customRender: ({ record, index }) => {
             const payload: tablePayload<DefaultInfo> = {
               targetData: record,

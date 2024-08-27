@@ -1,7 +1,7 @@
 import { defineComponent, h, PropType } from "vue"
 import { Table, TableColumnType, TableProps } from 'ant-design-vue'
 import { deepCloneData, updateData } from "complex-utils"
-import { ComplexList, PaginationData } from "complex-data"
+import { ComplexList, DefaultInfo, PaginationData } from "complex-data"
 import DefaultList from "complex-data/src/dictionary/DefaultList"
 import PaginationView from "./components/PaginationView"
 import ChoiceInfo from "./components/ChoiceInfo.vue"
@@ -28,7 +28,7 @@ export type autoType = {
   }
 }
 
-export type tablePayload<T extends DefaultMod = DefaultList> = {
+export type tablePayload<T extends DefaultMod = (DefaultList | DefaultInfo)> = {
   targetData: Record<PropertyKey, unknown>
   type: string
   index: number
@@ -38,8 +38,8 @@ export type tablePayload<T extends DefaultMod = DefaultList> = {
 }
 
 export interface TableViewDefaultProps {
-  listData: ComplexList
-  columnList?: DefaultList[]
+  listData?: ComplexList
+  columnList?: (DefaultList | DefaultInfo)[]
   data?: Record<PropertyKey, unknown>[]
   paginationData?: PaginationData
   menu?: Record<string, TableMenuValue[]>
@@ -64,7 +64,7 @@ export default defineComponent({
   props: {
     listData: {
       type: Object as PropType<TableViewProps['listData']>,
-      required: true
+      required: false
     },
     columnList: { // 定制列配置
       type: Object as PropType<TableViewProps['columnList']>,
@@ -105,12 +105,12 @@ export default defineComponent({
       if (this.data) {
         return this.data
       } else {
-        return this.listData.$list
+        return this.listData?.$list!
       }
     },
     currentIdList() {
       return this.currentData.map(item => {
-        return item[this.listData.getDictionaryProp('id')]
+        return item[this.listData!.getDictionaryProp('id')]
       })
     },
     currentAuto() {
@@ -120,12 +120,12 @@ export default defineComponent({
       if (this.paginationData) {
         return this.paginationData
       } else {
-        return this.listData.$module.pagination
+        return this.listData?.$module.pagination
       }
     },
     currentColumnList() {
       const list = []
-      const columnList = this.columnList || this.listData.getDictionaryPageList(this.listProp, this.listData.getDictionaryList(this.listProp)) as DefaultList[]
+      const columnList = this.columnList || this.listData!.getDictionaryPageList(this.listProp, this.listData!.getDictionaryList(this.listProp)) as DefaultList[]
       for (let i = 0; i < columnList.length; i++) {
         const column = columnList[i]
         const currentProp = column.$prop
@@ -136,9 +136,9 @@ export default defineComponent({
         const columnItem: ColumnItemType = {
           dataIndex: currentProp,
           title: column.$name,
-          align: column.align,
+          align: (column as DefaultList).align,
           width: column.$width,
-          ellipsis: column.ellipsis,
+          ellipsis: (column as DefaultList).ellipsis,
           ...config.component.parseAttrs(attrs)
         }
         if (!pureRender) {
@@ -212,12 +212,12 @@ export default defineComponent({
         currentTableProps.dataSource = this.currentData
       }
       if (!currentTableProps.rowKey) {
-        currentTableProps.rowKey = this.listData.getDictionaryProp('id') as string
+        currentTableProps.rowKey = this.listData?.getDictionaryProp('id') as string
       }
       if (currentTableProps.pagination == undefined) {
         currentTableProps.pagination = false
       }
-      const choice = this.listData.$module.choice
+      const choice = this.listData?.$module.choice
       if (choice) {
         currentTableProps.rowSelection = {
           columnWidth: 50,
@@ -267,7 +267,7 @@ export default defineComponent({
       return render
     },
     renderChoiceInfo() {
-      const choice = this.listData.$module.choice
+      const choice = this.listData?.$module.choice
       if (choice) {
         const infoRender = config.component.parseData(choice.$renders, 'info')
         if (!infoRender) {
@@ -302,7 +302,7 @@ export default defineComponent({
           },
           onPage: (page: number, size: number) => {
             if (this.currentAuto.pagination.auto) {
-              this.listData.reloadData({
+              this.listData?.reloadData({
                 data: true,
                 ing: true,
                 sync: true,
@@ -318,7 +318,7 @@ export default defineComponent({
           },
           onSize: (page: number, size: number) => {
             if (this.currentAuto.pagination.auto) {
-              this.listData.reloadData({
+              this.listData?.reloadData({
                 data: true,
                 ing: true,
                 sync: true,
