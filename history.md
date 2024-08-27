@@ -19,6 +19,7 @@
 - 适配ListEdit
 - 添加ImageViewer
 - 删除SimpleTableContent
+- 添加EditTable
 - tablePayload.payload.target => tablePayload.payload.column
 
 ### 4.6.1

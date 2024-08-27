@@ -1,8 +1,6 @@
 import { defineComponent, h, PropType, VNode } from "vue"
-import { DefaultInfo } from "complex-data"
 import { DictionaryEditMod } from "complex-data/src/lib/DictionaryValue"
 import ObserveList from "complex-data/src/dictionary/ObserveList"
-import DefaultList from "complex-data/src/dictionary/DefaultList"
 import AutoItem, { AutoItemProps } from "./dictionary/AutoItem"
 import { tablePayload } from "./TableView"
 import ListEditView from "./ListEditView"
@@ -10,11 +8,12 @@ import config from "../config"
 
 export interface EditTableProps {
   observeList: ObserveList
-  columnList: DictionaryEditMod[]
   data: Record<PropertyKey, unknown>[]
   type: string
   parent: InstanceType<typeof ListEditView>
   lineHeight?: number
+  disabled?: boolean
+  loading?: boolean
 }
 
 export default defineComponent({
@@ -28,9 +27,9 @@ export default defineComponent({
     },
   },
   props: {
-    columnList: { // 定制列配置
-      type: Object as PropType<EditTableProps['columnList']>,
-      required: false
+    observeList: {
+      type: Object as PropType<EditTableProps['observeList']>,
+      required: true
     },
     data: { // 单独指定列表数据，不从listData.$list中取值
       type: Array as PropType<EditTableProps['data']>,
@@ -45,12 +44,16 @@ export default defineComponent({
       type: Object as PropType<EditTableProps['parent']>,
       required: true
     },
-    observeList: {
-      type: Object as PropType<EditTableProps['observeList']>,
-      required: false
-    },
     lineHeight: {
       type: Number as PropType<EditTableProps['lineHeight']>,
+      required: false
+    },
+    disabled: {
+      type: Boolean,
+      required: false
+    },
+    loading: {
+      type: Boolean,
       required: false
     }
   },
@@ -59,11 +62,11 @@ export default defineComponent({
       return this.data
     },
     currentColumnList() {
-      return this.columnList!
+      return this.observeList.data as DictionaryEditMod[]
     }
   },
   methods: {
-    rowWidth(column: DefaultList | DefaultInfo) {
+    rowWidth(column: DictionaryEditMod) {
       const style: Record<string, string | number> = {}
       if (column.$width != undefined) {
         if (typeof column.$width === 'number') {
@@ -81,9 +84,9 @@ export default defineComponent({
         ]
       })
     },
-    renderColumn(column: DefaultList | DefaultInfo) {
+    renderColumn(column: DictionaryEditMod) {
       return h('div', {
-        class: 'complex-simple-table-content-column complex-edit-table-content-column complex-simple-table-content-column-' + ((column as DefaultList).align || 'left'),
+        class: 'complex-simple-table-content-column complex-edit-table-content-column complex-simple-table-content-column-left',
         style: this.rowWidth(column)
       }, [
         h('div', {
@@ -98,7 +101,7 @@ export default defineComponent({
         })
       ])
     },
-    renderContent(column: DefaultList | DefaultInfo, record: Record<PropertyKey, unknown>, index: number) {
+    renderContent(column: DictionaryEditMod, record: Record<PropertyKey, unknown>, index: number) {
       const content = this.$renderContent(column, record, index)
       if (!this.lineHeight) {
         return content
@@ -110,7 +113,7 @@ export default defineComponent({
         }, content)
       }
     },
-    $renderContent(column: DefaultList | DefaultInfo, record: Record<PropertyKey, unknown>, index: number) {
+    $renderContent(column: DictionaryEditMod, record: Record<PropertyKey, unknown>, index: number) {
       const payload: tablePayload = {
         targetData: record,
         type: this.type,
@@ -132,9 +135,6 @@ export default defineComponent({
         }) as VNode | VNode[]
       } else if (column.$prop === config.table.auto.index.prop) {
         return config.table.renderIndex(record, index)
-      } else if ((column as DefaultList).ellipsis) {
-        // 自动省略切自动换行
-        return config.table.renderAutoText(text as string, column, payload, config.component.parseData(column.$local, 'autoText'))
       } else {
         return h(AutoItem, {
           parser: 'list',
@@ -144,6 +144,8 @@ export default defineComponent({
           type: this.type!,
           form: undefined,
           data: record,
+          disabled: this.disabled,
+          loading: this.loading,
           parent: this.parent
         } as AutoItemProps<'list'>)
       }

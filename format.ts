@@ -386,10 +386,7 @@ const dict = {
     format(edit: ListEdit, payload: AutoItemPayloadType<'edit'>) {
       const itemAttrs = new AttrsValue({
         props: {
-          dictionary: edit.$runtime.dictionary,
-          dictionaryList: edit.$runtime.dictionaryList,
-          list: edit.$runtime.observeList,
-          formList: edit.$runtime.formList,
+          runtime: edit.$runtime,
           type: edit.$runtime.type,
           build: edit.$option.build,
           delete: edit.$option.delete,
