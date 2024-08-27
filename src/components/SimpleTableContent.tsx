@@ -1,7 +1,6 @@
-import { defineComponent, PropType, h } from 'vue'
+import { defineComponent, PropType, h, VNode } from 'vue'
 import { PaginationData } from 'complex-data'
 import DefaultList from 'complex-data/src/dictionary/DefaultList'
-import AutoRender from './AutoRender'
 import { tablePayload } from '../TableView'
 import { SimpleTableProps } from '../SimpleTableView'
 import TableMenu from './TableMenu'
@@ -9,9 +8,6 @@ import config from '../../config'
 
 export default defineComponent({
   name: 'SimpleTableContent',
-  components: {
-    AutoRender
-  },
   props: {
     columns: {
       type: Object as PropType<DefaultList[]>,
@@ -37,6 +33,10 @@ export default defineComponent({
     index: {
       type: Object as PropType<{ prop: string, pagination?: PaginationData }>,
       required: false
+    },
+    lineHeight: {
+      type: Number as PropType<SimpleTableProps['lineHeight']>,
+      required: false
     }
   },
   data () {
@@ -54,56 +54,44 @@ export default defineComponent({
       }
       return style
     },
-    parseRender(target: DefaultList, record: Record<PropertyKey, unknown>, index: number) {
+    renderContent(column: DefaultList, record: Record<PropertyKey, unknown>, index: number) {
       const payload: tablePayload = {
         targetData: record,
         type: this.listProp,
         index: index,
-        payload: { target: target }
+        payload: { column: column }
       }
-      const text = config.table.renderTableValue(record[target.$prop], payload)
-      const targetRender = config.component.parseData(target.$renders, 'target')
-      const pureRender = config.component.parseData(target.$renders, 'pure')
-      const menuOption = config.component.parseData(this.menu, target.$prop)
+      const text = config.table.renderTableValue(record[column.$prop], payload)
+      const targetRender = config.component.parseData(column.$renders, 'target')
+      const pureRender = config.component.parseData(column.$renders, 'pure')
+      const menuOption = config.component.parseData(this.menu, column.$prop)
       if (pureRender) {
-        return () => {
-          return pureRender({
-            text: text,
-            payload
-          })
-        }
+        return pureRender({
+          text: text,
+          payload
+        }) as VNode | VNode[]
       } else if (targetRender) {
-        return () => {
-          return targetRender({
-            text: text,
-            payload
-          })
-        }
+        return targetRender({
+          text: text,
+          payload
+        }) as VNode | VNode[]
       } else if (menuOption) {
-        return () => {
-          return h(TableMenu, {
-            list: menuOption,
-            payload: payload,
-            onMenu: (prop: string, payload: tablePayload) => {
-              this.$emit('menu', prop, payload)
-            }
-          })
-        }
-      } else if (this.index && target.$prop === this.index.prop) {
-        return () => {
-          return config.table.renderIndex(record, index, this.index!.pagination)
-        }
-      } else if (target.ellipsis) {
+        return h(TableMenu, {
+          list: menuOption,
+          payload: payload,
+          onMenu: (prop: string, payload: tablePayload) => {
+            this.$emit('menu', prop, payload)
+          }
+        })
+      } else if (this.index && column.$prop === this.index.prop) {
+        return config.table.renderIndex(record, index, this.index!.pagination)
+      } else if (column.ellipsis) {
         // 自动省略切自动换行
-        return () => {
-          return config.table.renderAutoText(text as string, target, payload, config.component.parseData(target.$local, 'autoText'))
-        }
+        return config.table.renderAutoText(text as string, column, payload, config.component.parseData(column.$local, 'autoText'))
       } else {
-        return () => {
-          return h('p', config.component.parseAttrs(config.component.parseData(target.$local, 'target')), {
-            default: () => text
-          })
-        }
+        return h('p', config.component.parseAttrs(config.component.parseData(column.$local, 'target')), {
+          default: () => text
+        })
       }
     },
     renderColumn(column: DefaultList) {
@@ -118,9 +106,7 @@ export default defineComponent({
           return h('div', {
             class: 'complex-simple-table-content-row'
           }, [
-            h(AutoRender, {
-              render: this.parseRender(column, val, index)
-            })
+            this.renderContent(column, val, index)
           ])
         })
       ])

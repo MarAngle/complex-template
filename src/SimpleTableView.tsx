@@ -6,7 +6,9 @@ import PaginationView from "./components/PaginationView"
 import { tablePayload, TableViewDefaultProps } from "./TableView"
 import config from "../config"
 
-export type SimpleTableProps = TableViewDefaultProps
+export interface SimpleTableProps extends TableViewDefaultProps {
+  lineHeight?: number
+}
 
 export default defineComponent({
   name: 'SimpleTable',
@@ -48,6 +50,10 @@ export default defineComponent({
     auto: {
       type: Object as PropType<SimpleTableProps['auto']>,
       required: false
+    },
+    lineHeight: {
+      type: Number as PropType<SimpleTableProps['lineHeight']>,
+      required: false
     }
   },
   computed: {
@@ -87,6 +93,7 @@ export default defineComponent({
             listProp: this.listProp,
             menu: this.menu,
             id: this.listData.getDictionaryProp('id'),
+            lineHeight: this.lineHeight,
             index: {
               prop: this.currentAuto.index.prop,
               pagination: this.currentAuto.index.pagination ? this.currentPaginationData : undefined

@@ -137,7 +137,7 @@ export default defineComponent({
               targetData: record,
               type: this.type || '',
               index: index,
-              payload: { target: {} as any }
+              payload: { column: {} as any }
             }
             return h(TableMenu, {
               list: [

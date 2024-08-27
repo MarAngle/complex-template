@@ -156,11 +156,11 @@ const config = {
       }
     },
     renderTableValue(text: unknown, payload: tablePayload) {
-      const target = payload.payload.target
-      if (target.parse) {
-        text = target.parse(text, payload)
+      const column = payload.payload.column
+      if (column.parse) {
+        text = column.parse(text, payload)
       }
-      const parent = target.$getParent() as DictionaryValue
+      const parent = column.$getParent() as DictionaryValue
       if (parent && parent.parse) {
         text = parent.parse(text, payload)
       }

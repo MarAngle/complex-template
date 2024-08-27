@@ -33,7 +33,7 @@ export type tablePayload<T extends DefaultMod = DefaultList> = {
   type: string
   index: number
   payload: {
-    target: T
+    column: T
   }
 }
 
@@ -127,18 +127,18 @@ export default defineComponent({
       const list = []
       const columnList = this.columnList || this.listData.getDictionaryPageList(this.listProp, this.listData.getDictionaryList(this.listProp)) as DefaultList[]
       for (let i = 0; i < columnList.length; i++) {
-        const target = columnList[i]
-        const currentProp = target.$prop
-        const targetRender = this.$slots[currentProp] || config.component.parseData(target.$renders, 'target')
-        const pureRender = config.component.parseData(target.$renders, 'pure')
+        const column = columnList[i]
+        const currentProp = column.$prop
+        const targetRender = this.$slots[currentProp] || config.component.parseData(column.$renders, 'target')
+        const pureRender = config.component.parseData(column.$renders, 'pure')
         const menuOption = config.component.parseData(this.menu, currentProp)
-        const attrs = config.component.parseData(target.$local, 'target')
+        const attrs = config.component.parseData(column.$local, 'target')
         const columnItem: ColumnItemType = {
           dataIndex: currentProp,
-          title: target.$name,
-          align: target.align,
-          width: target.$width,
-          ellipsis: target.ellipsis,
+          title: column.$name,
+          align: column.align,
+          width: column.$width,
+          ellipsis: column.ellipsis,
           ...config.component.parseAttrs(attrs)
         }
         if (!pureRender) {
@@ -152,7 +152,7 @@ export default defineComponent({
                 targetData: record,
                 type: this.listProp,
                 index: index,
-                payload: { target: target }
+                payload: { column: column }
               }
               text = config.table.renderTableValue(text, payload)
               if (targetRender) {
@@ -164,7 +164,7 @@ export default defineComponent({
               }
               if (columnItem.ellipsis) {
                 // 自动省略切自动换行
-                return config.table.renderAutoText(text as string, target, payload, config.component.parseData(target.$local, 'autoText'))
+                return config.table.renderAutoText(text as string, column, payload, config.component.parseData(column.$local, 'autoText'))
               }
               return text
             }
@@ -174,7 +174,7 @@ export default defineComponent({
                 targetData: record,
                 type: this.listProp,
                 index: index,
-                payload: { target: target }
+                payload: { column: column }
               }
               return h(TableMenu, {
                 list: menuOption,
@@ -191,7 +191,7 @@ export default defineComponent({
               targetData: record,
               type: this.listProp,
               index: index,
-              payload: { target: target }
+              payload: { column: column }
             }
             return pureRender({
               text: text,

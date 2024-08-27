@@ -19,6 +19,7 @@
 - 适配ListEdit
 - 添加ImageViewer
 - 使用TSX重构SimpleTableContent
+- tablePayload.payload.target => tablePayload.payload.column
 
 ### 4.6.1
 - 升级data依赖
