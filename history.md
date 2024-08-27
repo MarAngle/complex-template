@@ -18,6 +18,7 @@
 - 适配TableMenu.disabled
 - 适配ListEdit
 - 添加ImageViewer
+- 使用TSX重构SimpleTableContent
 
 ### 4.6.1
 - 升级data依赖

@@ -1,7 +1,7 @@
 import { defineComponent, h, PropType } from "vue"
 import { deepCloneData, updateData } from "complex-utils"
 import DefaultList from "complex-data/src/dictionary/DefaultList"
-import SimpleTableContent from "./components/SimpleTableContent.vue"
+import SimpleTableContent from "./components/SimpleTableContent"
 import PaginationView from "./components/PaginationView"
 import { tablePayload, TableViewDefaultProps } from "./TableView"
 import config from "../config"
