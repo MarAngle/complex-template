@@ -12,6 +12,9 @@
 ### Doing
 - 简化SimpleTable，可自定义组件，通过此组件实现ListEdit
 
+### 4.6.3
+- 修正widthCalculator
+
 ### 4.6.2
 - 升级data依赖
 - tablePayload.payload.target => tablePayload.payload.column
