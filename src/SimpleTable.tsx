@@ -8,7 +8,6 @@ import { tablePayload, TableViewDefaultProps } from "./TableView"
 import config from "../config"
 
 export interface SimpleTableProps extends TableViewDefaultProps {
-  form?: boolean
   lineHeight?: number
 }
 
@@ -51,10 +50,6 @@ export default defineComponent({
     },
     auto: {
       type: Object as PropType<SimpleTableProps['auto']>,
-      required: false
-    },
-    form: {
-      type: Boolean as PropType<SimpleTableProps['form']>,
       required: false
     },
     lineHeight: {

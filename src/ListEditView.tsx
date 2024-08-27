@@ -2,15 +2,9 @@ import { defineComponent, h, PropType } from "vue"
 import { DictionaryData, FormValue } from "complex-data"
 import { MenuValue } from "complex-data/type"
 import DictionaryValue, { DictionaryEditMod } from "complex-data/src/lib/DictionaryValue"
-import DefaultInfo from "complex-data/src/dictionary/DefaultInfo"
 import ObserveList from "complex-data/src/dictionary/ObserveList"
-import SimpleTableView, { SimpleTableProps } from "./SimpleTableView"
-import { customRenderPayload, tablePayload } from "./TableView"
-import TableMenu, { TableMenuValue } from "./components/TableMenu"
+import EditTable, { EditTableProps } from "./EditTable"
 import MenuView from "./components/MenuView"
-import AutoItem, { AutoItemProps } from "./dictionary/AutoItem"
-import widthCalculator from "../width"
-import config from "../config"
 
 export default defineComponent({
   name: 'ListEditView',
@@ -56,7 +50,7 @@ export default defineComponent({
       required: false
     },
     tableProps: {
-      type: Object as PropType<SimpleTableProps>,
+      type: Object as PropType<EditTableProps>,
       required: false
     },
     disabled: {
@@ -89,6 +83,7 @@ export default defineComponent({
   },
   methods: {
     createItemValue() {
+      console.log(this)
       const form = new FormValue()
       this.dictionary.parseData(this.dictionaryList, form, this.type).then(res => {
         this.currentValue.push(res.data)
@@ -98,11 +93,13 @@ export default defineComponent({
     renderTable() {
       return h('div', { class: 'complex-list-edit-content' }, {
         default: () => [
-          h(SimpleTableView, {
-            columnList: this.list.data,
+          h(EditTable, {
+            observeList: this.list,
+            columnList: this.list.data as DictionaryEditMod[],
             data: this.currentValue,
             listProp: this.type,
-            lineHeight: 32
+            lineHeight: 32,
+            parent: this
           })
         ]
       })

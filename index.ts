@@ -1,6 +1,6 @@
 import AutoText from "./src/AutoText.vue"
 import ButtonView from "./src/ButtonView"
-import SimpleTableView from "./src/SimpleTableView"
+import SimpleTable from "./src/SimpleTable"
 import TableView from "./src/TableView"
 import ModalView from "./src/ModalView"
 import InfoView from "./src/InfoView"
@@ -16,7 +16,7 @@ import plugin from "./plugin"
 
 export const ComplexAutoText = AutoText
 export const ComplexButtonView = ButtonView
-export const ComplexSimpleTableView = SimpleTableView
+export const ComplexSimpleTable = SimpleTable
 export const ComplexTableView = TableView
 export const ComplexModalView = ModalView
 export const ComplexInfoView = InfoView

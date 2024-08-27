@@ -4,7 +4,7 @@ import { ComplexList } from "complex-data"
 import { resetOptionType, triggerMethodOption } from "complex-data/src/data/BaseData"
 import AutoSpin from "./../src/components/AutoSpin.vue"
 import TableView, { tablePayload, TableViewProps } from "./../src/TableView"
-import SimpleTableView from "./../src/SimpleTableView"
+import SimpleTable from "./../src/SimpleTable"
 import ModalView, { ModalViewProps } from "./../src/ModalView"
 import SearchArea, { SearchAreaProps } from "./../src/SearchArea"
 import EditArea, { EditAreaProps, EditAreaSubmitOption } from "./../src/EditArea"
@@ -222,7 +222,7 @@ export default defineComponent({
           },
           ...this.currentComponentsProps.table
         }
-        return h(!this.currentSimpleTable ? TableView : SimpleTableView, tableOption, {
+        return h(!this.currentSimpleTable ? TableView : SimpleTable, tableOption, {
           ...this.currentRender.table
         })
       } else {
