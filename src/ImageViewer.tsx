@@ -1,15 +1,16 @@
 import { defineComponent, h, PropType, VNode } from "vue"
 import ModalView, { ModalViewProps } from "./ModalView"
+import icon, { localIconProps } from "../icon"
 import config from "../config"
 
-type renderType = () => VNode | VNode[]
+type renderType = (payload: localIconProps) => VNode | VNode[]
 
 export default defineComponent({
   name: 'ImageViewer',
   props: {
     src: {
       type: String,
-      required: true,
+      required: false
     },
     width: {
       type: Number,
@@ -29,6 +30,14 @@ export default defineComponent({
       required: false
     }
   },
+  computed: {
+    currentHeight() {
+      return this.height || this.width
+    },
+    currentSize() {
+      return this.width >= this.currentHeight ? this.width : this.currentHeight
+    }
+  },
   methods: {
     renderImage() {
       if (this.src) {
@@ -39,16 +48,14 @@ export default defineComponent({
             width: '100%',
             height: '100%'
           },
-          on: this.modal ? {
-            click: () => {
-              (this.$refs.modal as InstanceType<typeof ModalView>).show()
-            }
-          } : {}
+          onClick: this.modal ? () => {
+            (this.$refs.modal as InstanceType<typeof ModalView>).show()
+          } : undefined
         })
       } else if (this.emptyRender) {
-        return this.emptyRender()
+        return this.emptyRender({ size: this.currentSize, color: config.style.color.disabled })
       } else {
-        return config.imageViewer.emptyRender()
+        return icon.local('emptyPic', { size: this.currentSize, color: config.style.color.disabled })
       }
     },
     renderModal() {
@@ -74,7 +81,7 @@ export default defineComponent({
   },
   render() {
     const width = config.component.data.formatPixel(this.width)
-    const height = this.height ? config.component.data.formatPixel(this.height) : width
+    const height = config.component.data.formatPixel(this.currentHeight)
     return h('div', {
       class: 'complex-image-viewer',
       style: {

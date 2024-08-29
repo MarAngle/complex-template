@@ -315,15 +315,6 @@ const config = {
         ]
       })
     }
-  },
-  imageViewer: {
-    emptyRender() {
-      return h('div', {
-        class: 'complex-image-viewer-empty'
-      }, {
-        default: () => '暂无图片'
-      })
-    }
   }
 }
 
