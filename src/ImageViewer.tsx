@@ -52,10 +52,12 @@ export default defineComponent({
             (this.$refs.modal as InstanceType<typeof ModalView>).show()
           } : undefined
         })
-      } else if (this.emptyRender) {
-        return this.emptyRender({ size: this.currentSize, color: config.style.color.disabled })
       } else {
-        return icon.local('emptyPic', { size: this.currentSize, color: config.style.color.disabled })
+        return h('div', {
+          class: 'complex-image-viewer-empty'
+        }, [
+          !this.emptyRender ? icon.local('emptyPic', { size: this.currentSize, color: config.style.color.disabled }) : this.emptyRender({ size: this.currentSize, color: config.style.color.disabled })
+        ])
       }
     },
     renderModal() {

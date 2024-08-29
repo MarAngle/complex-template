@@ -189,6 +189,12 @@
   padding: 0px 11px;
 }
 
+.complex-image-viewer .complex-image-viewer-empty{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
 
 .complex-quick-list{
   padding: 0 16px;
