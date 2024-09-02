@@ -3,8 +3,8 @@ import { Button } from "ant-design-vue"
 import { ButtonType } from "ant-design-vue/es/button"
 import { isPromise } from "complex-utils"
 import { MenuValue } from "complex-data/type"
-import icon from "../../icon"
-import config from "../../config"
+import icon from "../icon"
+import config from "../config"
 
 export default defineComponent({
   name: 'MenuView',
