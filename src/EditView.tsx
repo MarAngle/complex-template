@@ -95,12 +95,15 @@ export default defineComponent({
       }
       return mergeData(formProps, this.formProps!)
     },
-    currentList() {
+    concatList() {
       if (this.menu && this.menu.length > 0) {
         return this.list.data.concat(this.menu)
       } else {
         return this.list.data
       }
+    },
+    currentList() {
+      return this.concatList.filter(item => (!item.$hidden && !item.$frozen))
     }
   },
   mounted () {

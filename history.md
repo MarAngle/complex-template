@@ -12,6 +12,10 @@
 ### Doing
 - 简化SimpleTable，可自定义组件，通过此组件实现ListEdit
 
+### 4.6.7
+- 升级data依赖,Edit适配DefaultMod的hidden/frozen属性
+- 开发环境添加observe检查
+
 ### 4.6.5/6
 - ImageViewer无图优化，添加localIcon
 

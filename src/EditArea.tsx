@@ -1,4 +1,5 @@
 import { defineComponent, h, PropType } from "vue"
+import { getEnv } from "complex-utils"
 import { DictionaryValue, FormValue } from "complex-data"
 import ObserveList from "complex-data/src/dictionary/ObserveList"
 import EditView, { EditViewDefaultProps } from "./EditView"
@@ -137,6 +138,17 @@ export default defineComponent({
         this.observeList = observeList
         if (this.observe) {
           this.observeList!.startObserve(this.currentForm.getData(), this.currentType!)
+        } else if (getEnv('real') === 'development') {
+          // 开发环境下
+          const list: string[] = []
+          this.observeList.$map.forEach(item => {
+            if (item.$observe) {
+              list.push(item.$prop)
+            }
+          })
+          if (list.length > 0) {
+            console.error(`[${list.join('/')}]模块存在observe监控函数，当前observe未开启，请确认！`)
+          }
         }
         this.$nextTick(() => {
           this.currentForm.clearValidate()
