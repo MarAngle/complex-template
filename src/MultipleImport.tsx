@@ -28,7 +28,11 @@ export default defineComponent({
       required: false
     },
     complex: {
-      type: Boolean,
+      type: Boolean as PropType<MultipleImportProps['complex']>,
+      required: false
+    },
+    image: {
+      type: Object as PropType<MultipleImportProps['image']>,
       required: false
     },
     upload: {
@@ -161,7 +165,7 @@ export default defineComponent({
     },
     renderList(list: FileMultipleValue) {
       return h('div', {
-        class: 'complex-import-content-list'
+        class: !this.image ? 'complex-import-content-list' : 'complex-import-image-list'
       }, {
         default: () => list.value.map((file, index) => {
           return this.renderContent(file, index)
@@ -177,7 +181,7 @@ export default defineComponent({
       this.emitData()
     },
     renderContent(file: FileValue, index: number) {
-      return config.import.renderContent(file, this.disabled, () => {
+      return config.import.renderContent(file, this.disabled, this.image, () => {
         this.deleteData(file.value, index)
       })
     }

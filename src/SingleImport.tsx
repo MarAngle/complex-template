@@ -1,7 +1,7 @@
 import { defineComponent, h, PropType, VNode } from "vue"
 import { defaultFileOption, fileDataType } from "complex-data/type"
 import { FileEditOption } from "complex-data/src/dictionary/FileEdit"
-import { FileMultipleValue, FileValue, fileValueType } from "complex-data/src/lib/FileValue"
+import { FileValue, fileValueType } from "complex-data/src/lib/FileValue"
 import { FileView } from "complex-component"
 import { FileProps } from "complex-component/type"
 import config from "../config"
@@ -9,6 +9,7 @@ import config from "../config"
 export interface DefaultImportProps {
   button?: defaultFileOption['button']
   complex?: defaultFileOption['complex']
+  image?: defaultFileOption['image']
   loading?: boolean
   render?: {
     menu?: () => (VNode | VNode[])
@@ -36,7 +37,11 @@ export default defineComponent({
       required: false
     },
     complex: {
-      type: Boolean,
+      type: Boolean as PropType<SingleImportProps['complex']>,
+      required: false
+    },
+    image: {
+      type: Object as PropType<SingleImportProps['image']>,
       required: false
     },
     upload: {
@@ -131,15 +136,6 @@ export default defineComponent({
     renderMenu() {
       return config.import.renderMenu(this)
     },
-    renderList(list: FileMultipleValue) {
-      return h('div', {
-        class: 'complex-import-content-list'
-      }, {
-        default: () => list.value.map((file) => {
-          return this.renderContent(file)
-        })
-      })
-    },
     deleteData() {
       if (this.disabled || this.loading) {
         return
@@ -149,7 +145,7 @@ export default defineComponent({
       this.emitData()
     },
     renderContent(file?: FileValue) {
-      return file ? config.import.renderContent(file, this.disabled, () => {
+      return file ? config.import.renderContent(file, this.disabled, this.image, () => {
         this.deleteData()
       }) : null
     }

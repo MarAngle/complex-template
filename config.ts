@@ -8,7 +8,7 @@ import DefaultList from 'complex-data/src/dictionary/DefaultList'
 import { GridValue } from "complex-data/src/lib/GridParse"
 import { FileValue } from "complex-data/src/lib/FileValue"
 import { collapseType } from "complex-data/src/dictionary/DefaultMod"
-import { MenuValue } from "complex-data/type"
+import { defaultFileOption, MenuValue } from "complex-data/type"
 import { AutoIndex, FileView } from "complex-component"
 import componentConfig from "complex-component/config"
 import AutoText from "./src/AutoText.vue"
@@ -19,6 +19,7 @@ import SingleImport from "./src/SingleImport"
 import MenuView from "./src/MenuView"
 import { QuickListProps } from "./quick/QuickList"
 import $icon from "./icon"
+import ImageViewer from "./src/ImageViewer"
 
 export class LayoutLifeData {
   life: string
@@ -290,30 +291,50 @@ const config = {
         default: () => name
       })
     },
-    renderContent(file: FileValue, disabled: boolean, onDelete: (file: FileValue) => void) {
-      return h('div', {
-        class: 'complex-import-content'
-      }, {
-        default: () => [
-          h('span', {
-            class: file.url ? 'complex-import-content-name complex-color-link' : 'complex-import-content-name',
-            onClick: () => {
-              if (file.url) {
-                // 文件对象类型以及存在下载链接时，点击下载
-                downloadFile(file.url, file.name)
+    renderContent(file: FileValue, disabled: boolean, image: defaultFileOption['image'], onDelete: (file: FileValue) => void) {
+      if (!image) {
+        return h('div', {
+          class: 'complex-import-content'
+        }, {
+          default: () => [
+            h('span', {
+              class: file.url ? 'complex-import-content-name complex-color-link' : 'complex-import-content-name',
+              onClick: () => {
+                if (file.url) {
+                  // 文件对象类型以及存在下载链接时，点击下载
+                  downloadFile(file.url, file.name)
+                }
               }
-            }
-          }, {
-            default: () => file.name
-          }),
-          h('span', {
-            class: 'complex-import-content-delete complex-color-danger',
-            onClick () {
-              onDelete(file)
-            }
-          }, disabled ? [] : [$icon.parse('close')]),
-        ]
-      })
+            }, {
+              default: () => file.name
+            }),
+            h('span', {
+              class: 'complex-import-content-delete complex-color-danger',
+              onClick () {
+                onDelete(file)
+              }
+            }, disabled ? [] : [$icon.parse('close')]),
+          ]
+        })
+      } else {
+        return h('div', {
+          class: 'complex-import-image'
+        }, {
+          default: () => [
+            h(ImageViewer, {
+              class: 'complex-import-image-viewer',
+              src: file.url,
+              ...image
+            }),
+            h('span', {
+              class: 'complex-import-content-delete complex-color-danger',
+              onClick () {
+                onDelete(file)
+              }
+            }, disabled ? [] : [$icon.parse('close')]),
+          ]
+        })
+      }
     }
   }
 }

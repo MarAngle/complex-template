@@ -14,6 +14,7 @@
 
 ### 4.6.8
 - 升级data依赖,同步icon变更
+- 文件上传组件通过图片查看器实现图片的特殊处理
 
 ### 4.6.7
 - 升级data依赖,Edit适配DefaultMod的hidden/frozen属性
