@@ -322,6 +322,7 @@ const dict = {
           multiple: (edit as FileEdit<true>).$option.multiple,
           complex: edit.$option.complex,
           upload: edit.$option.upload,
+          image: edit.$option.image,
           layout: layout,
           disabled: payload.disabled || edit.disabled
         }

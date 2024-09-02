@@ -14,12 +14,16 @@
 }
 .complex-import .complex-import-image{
   position: relative;
+  margin-top: 12px;
 }
 .complex-import .complex-import-image .complex-import-content-delete{
+  cursor: pointer;
   position: absolute;
   top: 0;
   right: 0;
   font-size: 20px;
+  line-height: 20px;
+  padding: 5px;
 }
 .complex-import .complex-import-image-list{
   display: flex;
@@ -31,7 +35,6 @@
 .complex-import .complex-import-image-list .complex-import-image{
   flex: none;
   margin-right: 12px;
-  margin-bottom: 12px;
 }
 
 .complex-collapse-area-collapsed{

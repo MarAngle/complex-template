@@ -317,8 +317,12 @@ const config = {
           ]
         })
       } else {
+        const width = config.component.data.formatPixel(image.width)
         return h('div', {
-          class: 'complex-import-image'
+          class: 'complex-import-image',
+          style: {
+            width
+          }
         }, {
           default: () => [
             h(ImageViewer, {
