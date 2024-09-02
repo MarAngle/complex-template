@@ -2,7 +2,7 @@ import { defineComponent, h, PropType } from "vue"
 import { FormValue } from "complex-data"
 import ListEdit from "complex-data/src/dictionary/ListEdit"
 import EditTable, { EditTableProps } from "./EditTable"
-import MenuView from "./components/MenuView"
+import MenuView from "./MenuView"
 import { tablePayload } from "./TableView"
 
 export default defineComponent({

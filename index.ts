@@ -1,4 +1,5 @@
 import AutoText from "./src/AutoText.vue"
+import MenuView from "./src/MenuView"
 import ButtonView from "./src/ButtonView"
 import SimpleTable from "./src/SimpleTable"
 import TableView from "./src/TableView"
@@ -15,6 +16,7 @@ import QuickFloat from "./quick/QuickFloat"
 import plugin from "./plugin"
 
 export const ComplexAutoText = AutoText
+export const ComplexMenuView = MenuView
 export const ComplexButtonView = ButtonView
 export const ComplexSimpleTable = SimpleTable
 export const ComplexTableView = TableView

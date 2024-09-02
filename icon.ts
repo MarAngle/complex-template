@@ -11,15 +11,15 @@ export interface localIconProps {
 export const iconDict: Record<string, Component> = {
   search: SearchOutlined,
   setting: SettingOutlined,
-  plus: PlusOutlined,
+  build: PlusOutlined,
   delete: DeleteOutlined,
   info: ContainerOutlined,
   reset: ReloadOutlined,
   refresh: SyncOutlined,
   close: CloseOutlined,
   stop: StopOutlined,
-  download: DownloadOutlined,
-  upload: UploadOutlined,
+  export: DownloadOutlined,
+  import: UploadOutlined,
   link: LinkOutlined,
   down: DownOutlined,
   up: UpOutlined

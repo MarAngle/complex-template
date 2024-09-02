@@ -16,7 +16,7 @@ import { modalLayoutOption } from "./src/ModalView"
 import { tablePayload } from "./src/TableView"
 import MultipleImport from "./src/MultipleImport"
 import SingleImport from "./src/SingleImport"
-import MenuView from "./src/components/MenuView"
+import MenuView from "./src/MenuView"
 import { QuickListProps } from "./quick/QuickList"
 import $icon from "./icon"
 
@@ -264,7 +264,7 @@ const config = {
   },
   import: {
     renderMenu(target: (InstanceType<typeof MultipleImport> | InstanceType<typeof SingleImport>)) {
-      const { icon = 'upload', type = 'default', name = '上传' } = target.button || {}
+      const { icon = 'import', type = 'default', name = '上传' } = target.button || {}
       const props = {
         class: 'complex-import-menu',
         loading: target.loading || target.operate,
