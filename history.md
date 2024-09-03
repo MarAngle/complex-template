@@ -12,6 +12,10 @@
 ### Doing
 - 简化SimpleTable，可自定义组件，通过此组件实现ListEdit
 
+### 4.6.11
+- 升级data依赖,优化refreshData调用
+- 优化openEdit函数
+
 ### 4.6.8/9/10
 - 升级data依赖,同步icon变更
 - 文件上传组件通过图片查看器实现图片的特殊处理

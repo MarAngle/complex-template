@@ -321,17 +321,13 @@ export default defineComponent({
       }
     },
     refreshData(record: Record<PropertyKey, any>, next: (record: Record<PropertyKey, any>) => void) {
-      if (!this.listData.$refreshData) {
+      this.listData.triggerMethod('$refreshData', [record], {
+        strict: true
+      }).then(() => {
         next(record)
-      } else {
-        this.listData.triggerMethod('$refreshData', [record], {
-          strict: true
-        }).then(() => {
-          next(record)
-        }).catch((err: unknown) => {
-          console.error(err)
-        })
-      }
+      }).catch((err: unknown) => {
+        console.error(err)
+      })
     },
     openInfo(record?: Record<PropertyKey, any>) {
       if (!record) {
@@ -356,17 +352,14 @@ export default defineComponent({
         (this.$refs['info'] as InstanceType<typeof InfoArea>).$show(type, record)
       })
     },
-    openEdit(record?: Record<PropertyKey, any>) {
-      let type = 'build'
-      let name = '新增'
-      if (record) {
-        type = 'change'
-        name = '编辑'
-      }
+    openEdit(record?: Record<PropertyKey, any>, build?: boolean) {
+      const isBuild = !record || build
+      let type = isBuild ? 'build' : 'change'
+      let name = isBuild ? '新增' : '编辑'
       if (this.currentComponentsProps.editModal && this.currentComponentsProps.editModal.formatName) {
         name = this.currentComponentsProps.editModal.formatName(name, type)
       }
-      if (record) {
+      if (!isBuild) {
         this.refreshData(record, (record) => {
           this.showEdit(name, type, record)
         })
