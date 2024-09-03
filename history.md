@@ -12,9 +12,10 @@
 ### Doing
 - 简化SimpleTable，可自定义组件，通过此组件实现ListEdit
 
-### 4.6.11
+### 4.6.11/12
 - 升级data依赖,优化refreshData调用
 - 优化openEdit函数
+- 优化SingleImport.renderContent
 
 ### 4.6.8/9/10
 - 升级data依赖,同步icon变更

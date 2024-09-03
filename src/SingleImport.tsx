@@ -145,7 +145,7 @@ export default defineComponent({
       this.emitData()
     },
     renderContent(file?: FileValue) {
-      return file ? config.import.renderContent(file, this.disabled, this.image, () => {
+      return (file && file.value) ? config.import.renderContent(file, this.disabled, this.image, () => {
         this.deleteData()
       }) : null
     }
