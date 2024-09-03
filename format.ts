@@ -320,6 +320,7 @@ const dict = {
           maxSize: edit.$option.size,
           button: buttonOption,
           multiple: (edit as FileEdit<true>).$option.multiple,
+          isUrl: edit.$option.isUrl,
           complex: edit.$option.complex,
           upload: edit.$option.upload,
           image: edit.$option.image,

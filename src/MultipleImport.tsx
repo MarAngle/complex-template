@@ -31,6 +31,10 @@ export default defineComponent({
       type: Boolean as PropType<MultipleImportProps['complex']>,
       required: false
     },
+    isUrl: {
+      type: Boolean as PropType<MultipleImportProps['isUrl']>,
+      required: false
+    },
     image: {
       type: Object as PropType<MultipleImportProps['image']>,
       required: false
@@ -97,7 +101,7 @@ export default defineComponent({
       this.syncData()
     },
     parseValue(value?: fileValueType[]) {
-      return new FileMultipleValue((value || []).map(valueItem => new FileValue(valueItem)))
+      return new FileMultipleValue((value || []).map(valueItem => new FileValue(valueItem, this.isUrl)))
     },
     syncData() {
       // 多选模式下，value可能存在splice的改变或者是splice后重新赋值，此时需要将额外数据删除
@@ -123,14 +127,14 @@ export default defineComponent({
           // 通过data判断，避免complex模式下的判断错误
           if (!this.data.has(file.value)) {
             this.currentValue!.push(!this.complex ? file.value : file)
-            this.data.push(new FileValue(file))
+            this.data.push(new FileValue(file, this.isUrl))
           }
         })
       } else {
         this.currentValue = []
         fileList.forEach(file => {
           this.currentValue!.push(!this.complex ? file.value : file)
-          this.data.push(new FileValue(file))
+          this.data.push(new FileValue(file, this.isUrl))
         })
       }
       if (this.max && this.currentValue.length > this.max) {

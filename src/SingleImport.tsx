@@ -9,6 +9,7 @@ import config from "../config"
 export interface DefaultImportProps {
   button?: defaultFileOption['button']
   complex?: defaultFileOption['complex']
+  isUrl?: defaultFileOption['isUrl']
   image?: defaultFileOption['image']
   loading?: boolean
   render?: {
@@ -38,6 +39,10 @@ export default defineComponent({
     },
     complex: {
       type: Boolean as PropType<SingleImportProps['complex']>,
+      required: false
+    },
+    isUrl: {
+      type: Boolean as PropType<SingleImportProps['isUrl']>,
       required: false
     },
     image: {
@@ -95,7 +100,7 @@ export default defineComponent({
       this.syncData()
     },
     parseValue(value?: fileValueType) {
-      return value ? new FileValue(value) : undefined
+      return value ? new FileValue(value, this.isUrl) : undefined
     },
     syncData() {
       // 校准data
@@ -114,7 +119,7 @@ export default defineComponent({
     onUpload(file: fileDataType, emit?: boolean) {
       if (!this.data || this.data.value !== file.value) {
         this.currentValue = !this.complex ? file.value : file
-        this.data = new FileValue(file)
+        this.data = new FileValue(file, this.isUrl)
         if (emit) {
           this.emitData()
         }

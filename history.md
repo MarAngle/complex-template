@@ -12,6 +12,9 @@
 ### Doing
 - 简化SimpleTable，可自定义组件，通过此组件实现ListEdit
 
+### 4.6.13
+- 适配File的isUrl配置项
+
 ### 4.6.11/12
 - 升级data依赖,优化refreshData调用
 - 优化openEdit函数
