@@ -11,6 +11,7 @@ import ListEditView from "../ListEditView"
 import AutoEditItem from "./AutoEditItem"
 import AutoInfoItem from "./AutoInfoItem"
 import config from "../../config"
+import DefaultSimpleEdit from "complex-data/src/dictionary/DefaultSimpleEdit"
 
 export type AutoItemParser = 'info' | 'edit' | 'list'
 
@@ -103,6 +104,10 @@ export default defineComponent({
   },
   computed: {
     payload() {
+      let disabled = this.disabled
+      if (!disabled && this.target instanceof DefaultSimpleEdit) {
+        disabled = this.target.disabled.getValue(this.type)
+      }
       return {
         prop: this.target.$prop,
         type: this.type,
@@ -110,7 +115,7 @@ export default defineComponent({
         index: this.index,
         list: this.list,
         choice: this.choice,
-        disabled: this.disabled,
+        disabled: disabled,
         loading: this.loading,
         targetData: this.form ? this.form.data : this.data!,
         form: this.form,
@@ -187,7 +192,7 @@ export default defineComponent({
                 label: this.target.$name,
                 colon: this.target.colon,
                 required: (this.target as DictionaryEditMod).required,
-                rules: this.target instanceof DefaultEdit ? this.target.getRuleList(this.payload.targetData) : undefined
+                rules: this.target instanceof DefaultEdit ? this.target.getRuleList(this.payload.targetData, this.payload.type) : undefined
               }
             })
             if (this.gridParse) {

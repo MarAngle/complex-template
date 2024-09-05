@@ -72,7 +72,7 @@ export default defineComponent({
             current: this.pagination.page.data,
             total: this.pagination.count,
             pageSize: this.pagination.size.data,
-            pageSizeOptions: this.pagination.size.list,
+            pageSizeOptions: this.pagination.size.list.map(item => item.toString()),
             showSizeChanger: this.pagination.size.show,
             showQuickJumper: this.pagination.jumper,
             simple: this.simple

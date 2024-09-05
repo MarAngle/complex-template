@@ -64,7 +64,7 @@ export default defineComponent({
         } else if (this.payload.target.$option.loading && typeof this.payload.target.$option.loading === 'function') {
           option.loading = this.payload.target.$option.loading(this.payload)
         }
-        if (this.payload.disabled || this.payload.target.disabled) {
+        if (this.payload.disabled) {
           option.disabled = true
         } else if (this.payload.target.$option.disabled && typeof this.payload.target.$option.disabled === 'function') {
           option.disabled = this.payload.target.$option.disabled(this.payload)
@@ -85,7 +85,7 @@ export default defineComponent({
             } else if (buttonOption.loading && typeof buttonOption.loading === 'function') {
               option.loading = buttonOption.loading(this.payload)
             }
-            if (this.payload.disabled || (this.payload.target as DictionaryEditMod).disabled) {
+            if (this.payload.disabled) {
               option.disabled = true
             } else if (buttonOption.disabled && typeof buttonOption.disabled === 'function') {
               option.disabled = buttonOption.disabled(this.payload)
@@ -112,7 +112,7 @@ export default defineComponent({
             type: this.payload.target.$runtime.type!,
             gridParse: this.payload.target.$option.gridParse === false ? undefined : (this.payload.target.$option.gridParse || this.payload.target.$runtime.gridParse),
             menu: this.payload.target.$option.menu,
-            disabled: this.payload.disabled || this.payload.target.disabled
+            disabled: this.payload.disabled
           } as InfoViewProps
         }))
         return h(InfoView, config.component.parseAttrs(targetAttrs) as unknown as InfoViewProps)

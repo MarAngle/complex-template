@@ -12,6 +12,10 @@
 ### Doing
 - 简化SimpleTable，可自定义组件，通过此组件实现ListEdit
 
+### 4.6.15
+- 升级data依赖,适配DefaultSimpleEdit.disabled更改为InterfaceValue结构
+- 修正PaginationView的sizeSelect展示错误的BUG
+
 ### 4.6.13
 - 适配File的isUrl配置项
 
