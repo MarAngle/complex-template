@@ -12,8 +12,9 @@
 ### Doing
 - 简化SimpleTable，可自定义组件，通过此组件实现ListEdit
 
-### 4.6.16
+### 4.6.16/17
 - 优化iconDict构建逻辑
+- 优化按钮icon与文字的间隔
 
 ### 4.6.15
 - 升级data依赖,适配DefaultSimpleEdit.disabled更改为InterfaceValue结构

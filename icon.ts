@@ -1,5 +1,5 @@
 import { Component, VNode, h } from 'vue'
-import { SearchOutlined, SettingOutlined, PlusOutlined, DeleteOutlined, ContainerOutlined, ReloadOutlined, SyncOutlined, CloseOutlined, StopOutlined, DownloadOutlined, UploadOutlined, LinkOutlined, DownOutlined, UpOutlined } from '@ant-design/icons-vue'
+import { SearchOutlined, SettingOutlined, PlusOutlined, DeleteOutlined, ContainerOutlined, EditOutlined, ReloadOutlined, SyncOutlined, CloseOutlined, StopOutlined, DownloadOutlined, UploadOutlined, LinkOutlined, DownOutlined, UpOutlined } from '@ant-design/icons-vue'
 import { MenuValue } from 'complex-data/type'
 import EmptyPic from "./src/icons/EmptyPic.vue"
 
@@ -8,21 +8,22 @@ export interface localIconProps {
   color?: string
 }
 
-export const iconDict: Record<string, () => VNode> = {
-  search: () => h(SearchOutlined),
-  setting: () => h(SettingOutlined),
-  build: () => h(PlusOutlined),
-  delete: () => h(DeleteOutlined),
-  info: () => h(ContainerOutlined),
-  reset: () => h(ReloadOutlined),
-  refresh: () => h(SyncOutlined),
-  close: () => h(CloseOutlined),
-  stop: () => h(StopOutlined),
-  export: () => h(DownloadOutlined),
-  import: () => h(UploadOutlined),
-  link: () => h(LinkOutlined),
-  down: () => h(DownOutlined),
-  up: () => h(UpOutlined)
+export const iconDict: Record<string, (props?: Record<PropertyKey, any>) => VNode> = {
+  search: (props) => h(SearchOutlined, props),
+  setting: (props) => h(SettingOutlined, props),
+  build: (props) => h(PlusOutlined, props),
+  delete: (props) => h(DeleteOutlined, props),
+  info: (props) => h(ContainerOutlined, props),
+  edit: (props) => h(EditOutlined, props),
+  reset: (props) => h(ReloadOutlined, props),
+  refresh: (props) => h(SyncOutlined, props),
+  close: (props) => h(CloseOutlined, props),
+  stop: (props) => h(StopOutlined, props),
+  export: (props) => h(DownloadOutlined, props),
+  import: (props) => h(UploadOutlined, props),
+  link: (props) => h(LinkOutlined, props),
+  down: (props) => h(DownOutlined, props),
+  up: (props) => h(UpOutlined, props)
 }
 
 export const localIconDict: Record<string, Component> = {
@@ -34,7 +35,9 @@ const icon = {
     if (name) {
       if (typeof name === 'string') {
         if (iconDict[name]) {
-          return iconDict[name]()
+          return iconDict[name]({
+            class: 'complex-icon'
+          })
         } else {
           console.error(`警告:${name}对应的icon未定义！`)
           return name

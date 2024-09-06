@@ -258,3 +258,7 @@
 .complex-quick-float .complex-quick-float-item:last-child{
   margin-right: 0px;
 }
+
+.ant-btn > .complex-icon + span, .ant-btn > span + .complex-icon {
+  margin-inline-start: 8px;
+}
