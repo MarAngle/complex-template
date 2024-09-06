@@ -12,8 +12,12 @@
 ### Doing
 - 简化SimpleTable，可自定义组件，通过此组件实现ListEdit
 
+### 4.6.16
+- 优化iconDict构建逻辑
+
 ### 4.6.15
 - 升级data依赖,适配DefaultSimpleEdit.disabled更改为InterfaceValue结构
+- 优化编辑的disabled传值逻辑
 - 修正PaginationView的sizeSelect展示错误的BUG
 
 ### 4.6.13

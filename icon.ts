@@ -8,21 +8,21 @@ export interface localIconProps {
   color?: string
 }
 
-export const iconDict: Record<string, Component> = {
-  search: SearchOutlined,
-  setting: SettingOutlined,
-  build: PlusOutlined,
-  delete: DeleteOutlined,
-  info: ContainerOutlined,
-  reset: ReloadOutlined,
-  refresh: SyncOutlined,
-  close: CloseOutlined,
-  stop: StopOutlined,
-  export: DownloadOutlined,
-  import: UploadOutlined,
-  link: LinkOutlined,
-  down: DownOutlined,
-  up: UpOutlined
+export const iconDict: Record<string, () => VNode> = {
+  search: () => h(SearchOutlined),
+  setting: () => h(SettingOutlined),
+  build: () => h(PlusOutlined),
+  delete: () => h(DeleteOutlined),
+  info: () => h(ContainerOutlined),
+  reset: () => h(ReloadOutlined),
+  refresh: () => h(SyncOutlined),
+  close: () => h(CloseOutlined),
+  stop: () => h(StopOutlined),
+  export: () => h(DownloadOutlined),
+  import: () => h(UploadOutlined),
+  link: () => h(LinkOutlined),
+  down: () => h(DownOutlined),
+  up: () => h(UpOutlined)
 }
 
 export const localIconDict: Record<string, Component> = {
@@ -34,7 +34,7 @@ const icon = {
     if (name) {
       if (typeof name === 'string') {
         if (iconDict[name]) {
-          return h(iconDict[name])
+          return iconDict[name]()
         } else {
           console.error(`警告:${name}对应的icon未定义！`)
           return name
