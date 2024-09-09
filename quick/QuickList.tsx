@@ -199,7 +199,7 @@ export default defineComponent({
       } else if (prop === '$delete') {
         this.deleteChoiceList()
       } else if (prop === '$export') {
-        this.listData.triggerMethod('$exportData', [], {
+        this.listData.triggerMethod('exportData', [], {
           strict: true
         })
       }
@@ -236,7 +236,7 @@ export default defineComponent({
       } else if (prop === '$delete') {
         notice.confirm('确认进行删除操作吗？', '警告', (act: string) => {
           if (act === 'ok') {
-            this.listData.triggerMethod('$deleteData', [payload!.targetData], {
+            this.listData.triggerMethod('deleteData', [payload!.targetData], {
               strict: true,
               throttle: this.editThrottle
             })
@@ -308,7 +308,7 @@ export default defineComponent({
       if (this.choiceSize) {
         notice.confirm('确认进行删除操作吗？', '警告', (act: string) => {
           if (act === 'ok') {
-            this.listData.triggerMethod('$multipleDeleteData', [this.currentChoice], {
+            this.listData.triggerMethod('multipleDeleteData', [this.currentChoice], {
               strict: true,
               throttle: this.editThrottle
             }).then(() => {
@@ -321,7 +321,7 @@ export default defineComponent({
       }
     },
     refreshData(record: Record<PropertyKey, any>, next: (record: Record<PropertyKey, any>) => void) {
-      this.listData.triggerMethod('$refreshData', [record], {
+      this.listData.triggerMethod('refreshData', [record], {
         strict: true
       }).then(() => {
         next(record)
@@ -425,7 +425,7 @@ export default defineComponent({
     $onEditSubmit(res: EditAreaSubmitOption) {
       return new Promise((resolve, reject) => {
         if (res.type === 'build') {
-          this.listData.triggerMethod('$buildData', [res.targetData, res.type], {
+          this.listData.triggerMethod('buildData', [res.targetData, res.type], {
             strict: true,
             throttle: this.editThrottle
           }).then(() => {
@@ -434,7 +434,7 @@ export default defineComponent({
             reject(err)
           })
         } else if (res.type === 'change') {
-          this.listData.triggerMethod('$changeData', [res.targetData, res.originData, res.type], {
+          this.listData.triggerMethod('changeData', [res.targetData, res.originData, res.type], {
             strict: true,
             throttle: this.editThrottle
           }).then(() => {
@@ -443,7 +443,7 @@ export default defineComponent({
             reject(err)
           })
         } else {
-          this.listData.triggerMethod('$editData', [res.targetData, res.originData, res.type], {
+          this.listData.triggerMethod('editData', [res.targetData, res.originData, res.type], {
             strict: true,
             throttle: this.editThrottle
           }).then(() => {
