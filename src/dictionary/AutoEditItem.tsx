@@ -34,10 +34,8 @@ export default defineComponent({
     targetAttrs.merge(config.component.parseData(target.$local, 'target'))
     let item = null
     if (!(this.payload.parent as InstanceType<typeof EditView>).gridParse) {
-      const width = target.$width
-      if (width) {
-        targetAttrs.style.width = typeof width === 'number' ? config.component.data.formatPixel(width) : width
-      }
+      const width = target.$width === undefined ? config.edit.lineWidth : target.$width
+      targetAttrs.style.width = typeof width === 'number' ? config.component.data.formatPixel(width) : width
     }
     const targetRender = config.component.parseData(target.$renders, 'target')
     const option = config.component.parseAttrs(targetAttrs)

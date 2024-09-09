@@ -87,12 +87,11 @@ export default defineComponent({
   methods: {
     rowWidth(column: DefaultList | DefaultInfo) {
       const style: Record<string, string | number> = {}
-      if (column.$width != undefined) {
-        if (typeof column.$width === 'number') {
-          style.width = config.component.data.formatPixel(column.$width)
-        } else {
-          style.width = column.$width
-        }
+      const width = column.$width === undefined ? config.table.width : column.$width
+      if (typeof width === 'number') {
+        style.width = config.component.data.formatPixel(width)
+      } else {
+        style.width = width
       }
       return style
     },

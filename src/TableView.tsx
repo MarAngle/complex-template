@@ -133,11 +133,12 @@ export default defineComponent({
         const pureRender = config.component.parseData(column.$renders, 'pure')
         const menuOption = config.component.parseData(this.menu, currentProp)
         const attrs = config.component.parseData(column.$local, 'target')
+        const width = column.$width === undefined ? config.table.width : column.$width
         const columnItem: ColumnItemType = {
           dataIndex: currentProp,
           title: column.$name,
           align: (column as DefaultList).align,
-          width: column.$width,
+          width: width,
           ellipsis: (column as DefaultList).ellipsis,
           ...config.component.parseAttrs(attrs)
         }
