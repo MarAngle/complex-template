@@ -12,8 +12,8 @@
 ### Doing
 - 简化SimpleTable，可自定义组件，通过此组件实现ListEdit
 
-### 4.6.18
-- 全局默认width赋值
+### 4.6.18/19/20
+- 全局优化width赋值
 - 升级data依赖,适配ComplexData的常见方法去除$符
 
 ### 4.6.16/17

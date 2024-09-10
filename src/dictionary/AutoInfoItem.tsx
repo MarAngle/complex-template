@@ -43,9 +43,8 @@ export default defineComponent({
       })
     } else {
       const targetAttrs = config.component.parseData(this.payload.target.$local, 'target') || new AttrsValue()
-      if (!(this.payload.parent as InstanceType<typeof InfoView>).gridParse) {
-        const width = this.payload.target.$width === undefined ? config.edit.lineWidth : this.payload.target.$width
-        targetAttrs.style.width = typeof width === 'number' ? config.component.data.formatPixel(width) : width
+      if (!(this.payload.parent as InstanceType<typeof InfoView>).gridParse && this.payload.target.$width) {
+        targetAttrs.style.width = typeof this.payload.target.$width === 'number' ? config.component.data.formatPixel(this.payload.target.$width) : this.payload.target.$width
       }
       if (this.payload.target instanceof ButtonEdit) {
         const option = {

@@ -33,9 +33,8 @@ export default defineComponent({
     targetAttrs.pushClass('complex-edit-item-' + camelToLine(target.type, '-'))
     targetAttrs.merge(config.component.parseData(target.$local, 'target'))
     let item = null
-    if (!(this.payload.parent as InstanceType<typeof EditView>).gridParse) {
-      const width = target.$width === undefined ? config.edit.lineWidth : target.$width
-      targetAttrs.style.width = typeof width === 'number' ? config.component.data.formatPixel(width) : width
+    if (!(this.payload.parent as InstanceType<typeof EditView>).gridParse && target.$width) {
+      targetAttrs.style.width = typeof target.$width === 'number' ? config.component.data.formatPixel(target.$width) : target.$width
     }
     const targetRender = config.component.parseData(target.$renders, 'target')
     const option = config.component.parseAttrs(targetAttrs)

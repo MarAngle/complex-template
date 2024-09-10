@@ -71,14 +71,13 @@ export default defineComponent({
   },
   methods: {
     rowWidth(column: DictionaryEditMod) {
-      const style: Record<string, string | number> = {}
-      const width = column.$width === undefined ? config.table.width : column.$width
-      if (typeof width === 'number') {
-        style.width = config.component.data.formatPixel(width)
+      if (column.$width) {
+        return {
+          width: typeof column.$width === 'number' ? config.component.data.formatPixel(column.$width) : column.$width
+        }
       } else {
-        style.width = width
+        return undefined
       }
-      return style
     },
     renderTable() {
       return h('div', { class: 'complex-table-content complex-simple-table-content complex-edit-table-content' }, {

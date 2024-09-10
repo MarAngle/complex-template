@@ -133,8 +133,7 @@ const config = {
   },
   edit: {
     inline: false,
-    observe: false,
-    lineWidth: 100
+    observe: false
   },
   info: {
     inline: false,
@@ -143,7 +142,6 @@ const config = {
   table: {
     size: 'default',
     bordered: true,
-    width: 100,
     auto: {
       expandWidth: 50,
       choiceWidth: 60,
