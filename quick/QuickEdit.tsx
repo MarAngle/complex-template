@@ -75,14 +75,11 @@ export default defineComponent({
           width: 880,
           menu: ['cancel', 'submit'],
           submit: () => {
-            return new Promise((resolve, reject) => {
-              (this.$refs.target as InstanceType<typeof EditArea>).$submit().then(res => {
-                this.$emit('submit', res.targetData, res.originData, res.type)
-                resolve(res)
-              }).catch(err => {
-                reject(err)
-              })
+            const promise = (this.$refs.target as InstanceType<typeof EditArea>).$submit()
+            promise.then(res => {
+              this.$emit('submit', res.targetData, res.originData, res.type)
             })
+            return promise
           },
           ...this.modalProps
         }, {

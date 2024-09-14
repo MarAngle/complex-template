@@ -97,14 +97,11 @@ export default defineComponent({
       }
       const submit = () => {
         if (this.submit) {
-          return new Promise((resolve, reject) => {
-            this.submit!().then(() => {
-              this.close('submit')
-              resolve({ status: 'success' })
-            }).catch(err => {
-              reject(err)
-            })
+          const promise = this.submit!()
+          promise.then(() => {
+            this.close('submit')
           })
+          return promise
         } else {
           console.error('submit按钮需要定义对应的submit函数')
         }

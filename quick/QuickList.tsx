@@ -397,62 +397,39 @@ export default defineComponent({
       }
     },
     onEditSubmit() {
-      return new Promise((resolve, reject) => {
-        if (!this.float) {
-          const edit = this.$refs['edit'] as InstanceType<typeof EditArea>
-          edit.$submit().then(res => {
-            this.$onEditSubmit(res).then(() => {
-              resolve(res)
-            }).catch((err: unknown) => {
-              reject(err)
-            })
+      const promise = new Promise((resolve, reject) => {
+        const editPromise = !this.float ? (this.$refs['edit'] as InstanceType<typeof EditArea>).$submit() : this.floatValue!.ref!.submit()
+        editPromise.then(res => {
+          this.$onEditSubmit(res).then(() => {
+            resolve(res)
           }).catch((err: unknown) => {
             reject(err)
           })
-        } else {
-          this.floatValue!.ref!.submit().then(res => {
-            this.$onEditSubmit(res).then(() => {
-              resolve(res)
-            }).catch((err: unknown) => {
-              reject(err)
-            })
-          }).catch((err: unknown) => {
-            reject(err)
-          })
-        }
+        }).catch((err: unknown) => {
+          reject(err)
+        })
       })
+      return promise
     },
     $onEditSubmit(res: EditAreaSubmitOption) {
-      return new Promise((resolve, reject) => {
-        if (res.type === 'build') {
-          this.listData.triggerMethod('buildData', [res.targetData, res.type], {
-            strict: true,
-            throttle: this.editThrottle
-          }).then(() => {
-            resolve(res)
-          }).catch((err: unknown) => {
-            reject(err)
-          })
-        } else if (res.type === 'change') {
-          this.listData.triggerMethod('changeData', [res.targetData, res.originData, res.type], {
-            strict: true,
-            throttle: this.editThrottle
-          }).then(() => {
-            resolve(res)
-          }).catch((err: unknown) => {
-            reject(err)
-          })
-        } else {
-          this.listData.triggerMethod('editData', [res.targetData, res.originData, res.type], {
-            strict: true,
-            throttle: this.editThrottle
-          }).then(() => {
-            resolve(res)
-          }).catch((err: unknown) => {
-            reject(err)
-          })
-        }
-      })
+      let promise
+      if (res.type === 'build') {
+        promise = this.listData.triggerMethod('buildData', [res.targetData, res.type], {
+          strict: true,
+          throttle: this.editThrottle
+        })
+      } else if (res.type === 'change') {
+        promise = this.listData.triggerMethod('changeData', [res.targetData, res.originData, res.type], {
+          strict: true,
+          throttle: this.editThrottle
+        })
+      } else {
+        promise = this.listData.triggerMethod('editData', [res.targetData, res.originData, res.type], {
+          strict: true,
+          throttle: this.editThrottle
+        })
+      }
+      return promise
     },
   },
   /**
