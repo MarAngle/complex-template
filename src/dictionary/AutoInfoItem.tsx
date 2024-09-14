@@ -107,7 +107,7 @@ export default defineComponent({
             list: this.payload.target.$runtime.observeList as ObserveList,
             data: this.payload.target.$runtime.form!.getData(),
             type: this.payload.target.$runtime.type!,
-            gridParse: this.payload.target.$option.gridParse === false ? undefined : (this.payload.target.$option.gridParse || this.payload.target.$runtime.gridParse),
+            gridParse: this.payload.target.$option.gridParse === false ? undefined : (this.payload.target.$option.gridParse || this.payload.target.$runtime.dictionary!.$layout.grid.getValue(this.payload.type)),
             menu: this.payload.target.$option.menu,
             disabled: this.payload.disabled
           } as InfoViewProps

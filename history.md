@@ -12,6 +12,9 @@
 ### Doing
 - 简化SimpleTable，可自定义组件，通过此组件实现ListEdit
 
+### 4.6.23
+- 初步视频优化FormEdit/ListEdit数据格式
+
 ### 4.6.22
 - 全局优化Promise返回逻辑
 

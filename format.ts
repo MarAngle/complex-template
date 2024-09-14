@@ -371,7 +371,7 @@ const dict = {
           list: edit.$runtime.observeList,
           form: edit.$runtime.form,
           type: edit.$runtime.type,
-          gridParse: edit.$option.gridParse === false ? undefined : (edit.$option.gridParse || edit.$runtime.gridParse),
+          gridParse: edit.$option.gridParse === false ? undefined : (edit.$option.gridParse || edit.$runtime.dictionary!.$layout.grid.getValue(payload.type)),
           menu: edit.$option.menu,
           disabled: payload.disabled
         }
