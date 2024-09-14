@@ -1,4 +1,4 @@
-import { defineComponent, h, PropType } from "vue"
+import { defineComponent, h, PropType, markRaw } from "vue"
 import { Col, Row, RowProps } from "ant-design-vue"
 import ObserveList from "complex-data/src/dictionary/ObserveList"
 import DefaultInfo from "complex-data/src/dictionary/DefaultInfo"
@@ -114,7 +114,7 @@ export default defineComponent({
         loading: this.loading,
         data: this.data,
         form: undefined,
-        parent: this
+        parent: markRaw(this)
       } as AutoItemProps<'info'>
     },
     renderItem(item: DefaultInfo, index: number) {

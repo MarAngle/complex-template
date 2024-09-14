@@ -1,4 +1,4 @@
-import { defineComponent, h, PropType } from "vue"
+import { defineComponent, h, markRaw, PropType } from "vue"
 import { Modal, ModalProps } from "ant-design-vue"
 import { deepCloneData, updateData } from "complex-utils"
 import { MenuValue } from "complex-data/type"
@@ -176,7 +176,7 @@ export default defineComponent({
       return this.$slots.default!({
         width: this.contentWidth,
         height: this.contentHeight,
-        modal: this
+        modal: markRaw(this)
       })
     },
     onMenu(prop: string) {

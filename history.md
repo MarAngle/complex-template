@@ -12,7 +12,7 @@
 ### Doing
 - 简化SimpleTable，可自定义组件，通过此组件实现ListEdit
 
-### 4.6.18/19/20
+### 4.6.18/19/20/21
 - 全局优化width赋值
 - 升级data依赖,适配ComplexData的常见方法去除$符
 

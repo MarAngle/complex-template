@@ -1,6 +1,6 @@
 import { defineComponent, h, PropType } from "vue"
 import { AttrsValue, ButtonEdit, ButtonGroupEdit, ContentEdit } from "complex-data"
-import DictionaryValue, { DictionaryEditMod } from "complex-data/src/lib/DictionaryValue"
+import DictionaryValue from "complex-data/src/lib/DictionaryValue"
 import ObserveList from "complex-data/src/dictionary/ObserveList"
 import { ButtonEditOption } from "complex-data/src/dictionary/ButtonEdit"
 import FormEdit from "complex-data/src/dictionary/FormEdit"

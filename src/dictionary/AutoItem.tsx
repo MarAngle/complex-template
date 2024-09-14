@@ -5,20 +5,20 @@ import ObserveList from "complex-data/src/dictionary/ObserveList"
 import DefaultEdit from "complex-data/src/dictionary/DefaultEdit"
 import GridParse from "complex-data/src/lib/GridParse"
 import { DictionaryEditMod } from "complex-data/src/lib/DictionaryValue"
+import DefaultSimpleEdit from "complex-data/src/dictionary/DefaultSimpleEdit"
 import EditView from "../EditView"
 import InfoView from "../InfoView"
 import ListEditView from "../ListEditView"
 import AutoEditItem from "./AutoEditItem"
 import AutoInfoItem from "./AutoInfoItem"
 import config from "../../config"
-import DefaultSimpleEdit from "complex-data/src/dictionary/DefaultSimpleEdit"
 
 export type AutoItemParser = 'info' | 'edit' | 'list'
 
 export interface AutoItemPayloadType<P extends AutoItemParser = 'edit'> {
   prop: string
   type: string
-  target: P extends 'edit' | 'list' ? DictionaryEditMod : DefaultInfo
+  target: DefaultInfo
   index: number
   list: ObserveList
   choice?: number
@@ -32,7 +32,7 @@ export interface AutoItemPayloadType<P extends AutoItemParser = 'edit'> {
 
 export interface AutoItemProps<P extends AutoItemParser = 'edit'> {
   parser: P
-  target: P extends 'edit' | 'list' ? DictionaryEditMod : DefaultInfo
+  target: DefaultInfo
   index: number
   list: ObserveList
   type: string

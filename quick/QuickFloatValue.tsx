@@ -32,7 +32,7 @@ export default defineComponent({
     }
   },
   mounted() {
-    this.floatValue.ref = markRaw(this)
+    this.floatValue.ref = markRaw(this) as any
   },
   beforeUnmount() {
     this.floatValue.ref = undefined

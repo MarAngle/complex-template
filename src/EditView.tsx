@@ -1,4 +1,4 @@
-import { defineComponent, h, PropType } from "vue"
+import { defineComponent, h, PropType, markRaw } from "vue"
 import { Col, Form, Row, FormProps } from "ant-design-vue"
 import { mergeData } from "complex-utils"
 import { FormValue } from "complex-data"
@@ -132,7 +132,7 @@ export default defineComponent({
         loading: this.loading,
         form: this.form,
         data: undefined,
-        parent: this
+        parent: markRaw(this)
       } as AutoItemProps<'edit'>
     },
     renderItem(item: DefaultInfo, index: number) {

@@ -1,6 +1,7 @@
 import { defineComponent, h, PropType, VNode } from "vue"
 import { Input, InputNumber, Textarea, Switch, Select, Divider, Cascader, DatePicker, RangePicker } from "ant-design-vue"
 import { camelToLine } from "complex-utils"
+import { DictionaryEditMod } from "complex-data/src/lib/DictionaryValue"
 import PaginationView from "./../components/PaginationView"
 import { AutoItemPayloadType } from "./AutoItem"
 import EditView from "../EditView"
@@ -27,7 +28,7 @@ export default defineComponent({
     let tag: any
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let children: any = undefined
-    const target = this.payload.target
+    const target = this.payload.target as DictionaryEditMod
     const targetAttrs = parseEditAttrs(target, this.payload)!
     targetAttrs.pushClass('complex-edit-item')
     targetAttrs.pushClass('complex-edit-item-' + camelToLine(target.type, '-'))

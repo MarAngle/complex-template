@@ -310,7 +310,7 @@ const dict = {
           layout = 'bottom'
         }
       }
-      const buttonOption = { ...edit.$option.button } || {}
+      const buttonOption = { ...edit.$option.button }
       if (buttonOption.name == undefined) {
         buttonOption.name = edit.$name
       }

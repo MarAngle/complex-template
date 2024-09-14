@@ -165,7 +165,7 @@ export default defineComponent({
       })
     },
     renderMenu() {
-      return config.import.renderMenu(this)
+      return config.import.renderMenu(this as any)
     },
     renderList(list: FileMultipleValue) {
       return h('div', {

@@ -1,4 +1,4 @@
-import { defineComponent, h, PropType } from "vue"
+import { defineComponent, h, PropType, markRaw } from "vue"
 import { FormValue } from "complex-data"
 import ListEdit from "complex-data/src/dictionary/ListEdit"
 import EditTable, { EditTableProps } from "./EditTable"
@@ -76,7 +76,7 @@ export default defineComponent({
             data: this.currentValue,
             listProp: this.type,
             lineHeight: 32,
-            parent: this,
+            parent: markRaw(this) as any,
             menu: this.menu as EditTableProps['menu'],
             disabled: this.disabled,
             loading: this.loading,

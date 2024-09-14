@@ -139,7 +139,7 @@ export default defineComponent({
       })
     },
     renderMenu() {
-      return config.import.renderMenu(this)
+      return config.import.renderMenu(this as any)
     },
     deleteData() {
       if (this.disabled || this.loading) {
