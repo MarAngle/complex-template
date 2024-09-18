@@ -123,7 +123,7 @@ export default defineComponent({
       }
     },
     isEdit() {
-      return this.parser === 'edit' && ['button', 'buttonGroup', 'content'].indexOf((this.target as DictionaryEditMod).type) === -1
+      return this.parser === 'edit' && config.isEdit(this.target)
     }
   },
   methods: {

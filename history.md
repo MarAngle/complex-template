@@ -12,8 +12,9 @@
 ### Doing
 - 简化SimpleTable，可自定义组件，通过此组件实现ListEdit
 
-### 4.6.24-ing
+### 4.6.24
 - 修正TableMenu中间hidden后错误break的BUG
+- ListEdit仅作为数据结构存在，不统一处理
 
 ### 4.6.23
 - 初步视频优化FormEdit/ListEdit数据格式

@@ -20,6 +20,8 @@ import MenuView from "./src/MenuView"
 import { QuickListProps } from "./quick/QuickList"
 import $icon from "./icon"
 import ImageViewer from "./src/ImageViewer"
+import { DictionaryEditMod } from "complex-data/src/lib/DictionaryValue"
+import DefaultEdit from "complex-data/src/dictionary/DefaultEdit"
 
 export class LayoutLifeData {
   life: string
@@ -47,6 +49,9 @@ export type colorKeys = keyof typeof config.style.color
 const config = {
   component: componentConfig,
   pluginLayout: null as null | PluginLayout,
+  isEdit(target: DefaultInfo) {
+    return target instanceof DefaultEdit && target.$editable === true
+  },
   parseMenuConfirm(confirm: MenuValue['confirm'], next: () => void) {
     if (!confirm) {
       next()

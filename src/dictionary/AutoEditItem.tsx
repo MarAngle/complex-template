@@ -5,7 +5,6 @@ import { DictionaryEditMod } from "complex-data/src/lib/DictionaryValue"
 import PaginationView from "./../components/PaginationView"
 import { AutoItemPayloadType } from "./AutoItem"
 import EditView from "../EditView"
-import ListEditView from "../ListEditView"
 import SingleImport from "../SingleImport"
 import MultipleImport from "../MultipleImport"
 import { parseEditAttrs } from "../../format"
@@ -15,7 +14,7 @@ export default defineComponent({
   name: 'AutoEditItem',
   props: {
     payload: {
-      type: Object as PropType<AutoItemPayloadType<'edit' | 'list'>>,
+      type: Object as PropType<AutoItemPayloadType<'edit'>>,
       required: true
     }
   },
@@ -155,8 +154,6 @@ export default defineComponent({
       tag = target.$custom
     } else if (target.type === 'form') {
       tag = EditView
-    } else if (target.type === 'list') {
-      tag = ListEditView
     }
     if (tag) {
       item = h(tag, option, children)
