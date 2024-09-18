@@ -4,7 +4,7 @@ import ObserveList from "complex-data/src/dictionary/ObserveList"
 import TableMenu from "./components/TableMenu"
 import AutoItem, { AutoItemProps } from "./dictionary/AutoItem"
 import { tablePayload } from "./TableView"
-import ListEditView from "./ListEditView"
+import ListEditView from "./ListEditViewDelete"
 import { SimpleTableProps } from "./SimpleTable"
 import config from "../config"
 

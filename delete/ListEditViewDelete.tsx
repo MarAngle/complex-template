@@ -1,8 +1,8 @@
 import { defineComponent, h, PropType, markRaw } from "vue"
-import { Form } from "ant-design-vue"
+import { Form, FormItemRest } from "ant-design-vue"
 import { FormValue } from "complex-data"
 import ListEdit from "complex-data/src/dictionary/ListEdit"
-import EditTable, { EditTableProps } from "./EditTable"
+import EditTable, { EditTableProps } from "./EditTableDelete"
 import MenuView from "./MenuView"
 import { tablePayload } from "./TableView"
 
@@ -76,24 +76,28 @@ export default defineComponent({
       })
     },
     renderTable() {
-      return h('div', { class: 'complex-list-edit-content' }, {
+      return h(FormItemRest, {}, {
         default: () => [
-          h(EditTable, {
-            observeList: this.runtime.observeList!,
-            data: this.currentValue,
-            listProp: this.type,
-            lineHeight: 32,
-            parent: markRaw(this) as any,
-            menu: this.menu as EditTableProps['menu'],
-            disabled: this.disabled,
-            loading: this.loading,
-            onMenu: (prop: string, payload: tablePayload) => {
-              if (prop === '$delete') {
-                this.currentValue.splice(payload.index, 1)
-                this.runtime.formList!.splice(payload.index, 1)
-              }
-              this.$emit('menu', prop, payload)
-            }
+          h('div', { class: 'complex-list-edit-content' }, {
+            default: () => [
+              h(EditTable, {
+                observeList: this.runtime.observeList!,
+                data: this.currentValue,
+                listProp: this.type,
+                lineHeight: 32,
+                parent: markRaw(this) as any,
+                menu: this.menu as EditTableProps['menu'],
+                disabled: this.disabled,
+                loading: this.loading,
+                onMenu: (prop: string, payload: tablePayload) => {
+                  if (prop === '$delete') {
+                    this.currentValue.splice(payload.index, 1)
+                    this.runtime.formList!.splice(payload.index, 1)
+                  }
+                  this.$emit('menu', prop, payload)
+                }
+              })
+            ]
           })
         ]
       })
