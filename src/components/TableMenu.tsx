@@ -35,7 +35,7 @@ export default defineComponent({
             hidden = hidden(payload)
           }
           if (hidden) {
-            break
+            continue
           }
         }
         let disabled = menuItem.disabled

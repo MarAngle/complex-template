@@ -63,7 +63,7 @@ export default defineComponent({
   },
   computed: {
     currentData () {
-      return this.data
+      return this.data || []
     },
     currentColumnList() {
       return this.observeList.data as DictionaryEditMod[]
@@ -94,7 +94,7 @@ export default defineComponent({
         h('div', {
           class: 'complex-simple-table-content-header complex-edit-table-content-header'
         }, column.$name),
-        this.currentData?.map((val, index) => {
+        this.currentData.map((val, index) => {
           return h('div', {
             class: 'complex-simple-table-content-row complex-edit-table-content-row'
           }, [

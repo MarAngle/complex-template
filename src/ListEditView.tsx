@@ -1,4 +1,5 @@
 import { defineComponent, h, PropType, markRaw } from "vue"
+import { Form } from "ant-design-vue"
 import { FormValue } from "complex-data"
 import ListEdit from "complex-data/src/dictionary/ListEdit"
 import EditTable, { EditTableProps } from "./EditTable"
@@ -48,6 +49,7 @@ export default defineComponent({
   },
   watch: {
     value(val?: Record<PropertyKey, any>[]) {
+      console.log('value change', val)
       if (val) {
         if (val !== this.currentValue) {
           this.currentValue = val
@@ -57,8 +59,13 @@ export default defineComponent({
       }
     },
     currentValue(val: Record<PropertyKey, any>[]) {
+      console.log('currentValue change', val)
       this.$emit('change', val)
     }
+  },
+  setup() {
+    const formItemContext = Form.useInjectFormItemContext()
+    console.log(formItemContext)
   },
   methods: {
     buildValue() {

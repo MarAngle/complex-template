@@ -233,13 +233,16 @@ export default defineComponent({
             class: ['complex-auto-item', 'complex-auto-item-list']
           })
           mainAttributes.merge(config.component.parseData(this.target.$local, 'main'))
-          return h(FormItemRest, config.component.parseAttrs(mainAttributes), {
+          return h(FormItemRest, {}, {
             default: () => [
-              h(FormItemRest, {}, {
-                default: () => [
-                  this.renderTip()
-                ]
-              })
+              // h(FormItem, config.component.parseAttrs(mainAttributes), {
+              //   default: () => [
+              //     this.renderTip()
+              //   ]
+              // })
+              h('div', config.component.parseAttrs(mainAttributes), [
+                this.renderTip()
+              ])
             ]
           })
         }
