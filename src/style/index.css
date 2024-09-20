@@ -223,6 +223,7 @@
 
 .complex-quick-list{
   padding: 0 16px;
+  overflow: auto;
 }
 .complex-quick-list .complex-search-area{
   padding-top: 24px;

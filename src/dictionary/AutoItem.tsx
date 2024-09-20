@@ -1,5 +1,5 @@
 import { defineComponent, h, PropType } from "vue"
-import { Col, FormItem, FormItemRest, Row, Tooltip } from "ant-design-vue"
+import { Col, FormItem, Row, Tooltip } from "ant-design-vue"
 import { AttrsValue, FormValue, DefaultInfo } from "complex-data"
 import ObserveList from "complex-data/src/dictionary/ObserveList"
 import DefaultEdit from "complex-data/src/dictionary/DefaultEdit"

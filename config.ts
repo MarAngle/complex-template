@@ -5,6 +5,7 @@ import { getType, camelToLine, downloadFile } from "complex-utils"
 import { notice, PluginLayout } from "complex-plugin"
 import { ChoiceData, PaginationData, AttrsValue, DictionaryData, DictionaryValue, DefaultInfo } from "complex-data"
 import DefaultList from 'complex-data/src/dictionary/DefaultList'
+import DefaultEdit from "complex-data/src/dictionary/DefaultEdit"
 import { GridValue } from "complex-data/src/lib/GridParse"
 import { FileValue } from "complex-data/src/lib/FileValue"
 import { collapseType } from "complex-data/src/dictionary/DefaultMod"
@@ -20,8 +21,6 @@ import MenuView from "./src/MenuView"
 import { QuickListProps } from "./quick/QuickList"
 import $icon from "./icon"
 import ImageViewer from "./src/ImageViewer"
-import { DictionaryEditMod } from "complex-data/src/lib/DictionaryValue"
-import DefaultEdit from "complex-data/src/dictionary/DefaultEdit"
 
 export class LayoutLifeData {
   life: string
