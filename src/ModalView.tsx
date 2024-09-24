@@ -18,6 +18,7 @@ export type modalLayoutOption = {
 export interface ModalViewProps {
   width?: number
   title?: string
+  destroyOnClose?: boolean
   layout?: Partial<modalLayoutOption>
   menu?: (string | MenuValue)[] // 菜单列表，字符串则通过config.modal.getMenu实现
   menuOption?: Record<string, Partial<MenuValue>> // 根据prop匹配菜单列表中的字符串数据获取的默认值，通过可选参数重写属性
@@ -51,6 +52,13 @@ export default defineComponent({
     title: {
       type: String,
       required: false
+    },
+    destroyOnClose: {
+      type: Boolean,
+      required: false,
+      default: () => {
+        return config.modal.destroyOnClose
+      }
     },
     layout: {
       type: Object as PropType<ModalViewProps['layout']>,
@@ -219,6 +227,7 @@ export default defineComponent({
       open: this.$data.$open,
       width: this.currentWidth,
       title: this.currentTitle,
+      destroyOnClose: this.destroyOnClose,
       ...this.modalProps,
       ...this.localModalProps,
       onCancel: (e: MouseEvent | KeyboardEvent) => {

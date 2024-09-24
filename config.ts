@@ -213,6 +213,7 @@ const config = {
   },
   modal: {
     width: 520,
+    destroyOnClose: true,
     layout: {
       type: 'auto',
       top: 100,

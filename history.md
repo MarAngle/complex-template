@@ -14,6 +14,7 @@
 
 ### 4.6.26
 - 修正AutoText在text变更后直接计算宽度的BUG
+- ModalView添加destroyOnClose配置项，默认为真，减少dom结构的同时保证默认情况下每次打开的加载存在，避免BUG
 
 ### 4.6.24/25
 - 修正TableMenu中间hidden后错误break的BUG
