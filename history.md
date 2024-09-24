@@ -12,6 +12,9 @@
 ### Doing
 - 简化SimpleTable，可自定义组件，通过此组件实现ListEdit
 
+### 4.6.26
+- 修正AutoText在text变更后直接计算宽度的BUG
+
 ### 4.6.24/25
 - 修正TableMenu中间hidden后错误break的BUG
 - ListEdit仅作为数据结构存在，不统一处理

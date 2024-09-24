@@ -85,7 +85,9 @@ export default defineComponent({
       nextTick(() => {
         resizeObserver.observe(mainRef.value!)
         watch(() => props.text, function() {
-          onResize()
+          nextTick(() => {
+            onResize()
+          })
         })
       })
     })
@@ -93,7 +95,6 @@ export default defineComponent({
       resizeObserver.disconnect()
     })
     return {
-      onResize,
       mainRef,
       sizeRef,
       isEllipsis: isEllipsis,
