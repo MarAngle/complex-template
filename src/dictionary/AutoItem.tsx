@@ -183,7 +183,7 @@ export default defineComponent({
               label: this.target.$name,
               colon: this.target.colon,
               required: (this.target as DictionaryEditMod).required,
-              rules: this.target instanceof DefaultEdit ? this.target.getRuleList(this.payload.targetData, this.payload.type) : undefined
+              rules: this.target instanceof DefaultEdit ? this.target.parseRuleList(this.payload.targetData, this.payload.type) : undefined
             }
           })
           if (this.gridParse) {

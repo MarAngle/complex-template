@@ -143,6 +143,7 @@ export default defineComponent({
 
     const emitData = () => {
       emit('change', currentValue.value)
+      formItemContext.onFieldChange()
     }
 
     const renderFile = () => {
