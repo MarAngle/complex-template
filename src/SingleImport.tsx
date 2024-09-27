@@ -1,4 +1,5 @@
-import { defineComponent, h, PropType, VNode } from "vue"
+import { defineComponent, h, PropType, ref, watch, VNode } from "vue"
+import { useInjectFormItemContext } from "ant-design-vue/es/form"
 import { defaultFileOption, fileDataType } from "complex-data/type"
 import { FileEditOption } from "complex-data/src/dictionary/FileEdit"
 import { FileValue, fileValueType } from "complex-data/src/lib/FileValue"
@@ -74,88 +75,91 @@ export default defineComponent({
       required: false
     }
   },
-  watch: {
-    value: function() {
-      this.syncValue()
+  setup(props, { emit }) {
+    const formItemContext = useInjectFormItemContext()
+    const parseValue = function (value?: fileValueType) {
+      return value ? new FileValue(value, props.isUrl) : undefined
     }
-  },
-  computed: {
-    currentUpload() {
-      return this.upload || defaultUpload
-    }
-  },
-  data() {
-    return {
-      operate: false,
-      currentValue: this.value,
-      data: this.parseValue(this.value) as undefined | FileValue
-    }
-  },
-  methods: {
-    syncValue() {
-      // 此处基于外部数据整合内部数据
-      if (this.value !== this.currentValue) {
-        this.currentValue = this.value
+    const operate = ref(false)
+    const currentValue = ref(props.value)
+    const data = ref(parseValue(props.value))
+
+    const syncValue = () => {
+      if (props.value !== currentValue.value) {
+        currentValue.value = props.value
       }
-      this.syncData()
-    },
-    parseValue(value?: fileValueType) {
-      return value ? new FileValue(value, this.isUrl) : undefined
-    },
-    syncData() {
-      // 校准data
-      this.data = this.parseValue(this.value)
-    },
-    onSelect(file: File) {
-      this.operate = true;
-      this.currentUpload(file).then(res => {
-        this.onUpload(res.file, true)
+      data.value = parseValue(props.value)
+    }
+
+    watch(() => props.value, () => {
+      syncValue()
+      formItemContext.onFieldChange()
+    })
+
+    const onSelect = (file: File) => {
+      operate.value = true;
+      (props.upload || defaultUpload)(file).then(res => {
+        onUpload(res.file, true)
       }).catch((err: unknown) => {
         console.error(err)
       }).finally(() => {
-        this.operate = false
+        operate.value = false
       })
-    },
-    onUpload(file: fileDataType, emit?: boolean) {
-      if (!this.data || this.data.value !== file.value) {
-        this.currentValue = !this.complex ? file.value : file
-        this.data = new FileValue(file, this.isUrl)
+    }
+
+    const onUpload = (file: fileDataType, emit?: boolean) => {
+      if (!data.value || data.value.value !== file.value) {
+        currentValue.value = !props.complex ? file.value : file
+        data.value = new FileValue(file, props.isUrl)
         if (emit) {
-          this.emitData()
+          emitData()
         }
       }
-    },
-    emitData() {
-      this.$emit('change', this.currentValue)
-    },
-    renderFile() {
+    }
+
+    const emitData = () => {
+      emit('change', currentValue.value)
+    }
+
+    const renderFile = () => {
       return h(FileView, {
         class: 'complex-import-file',
         ref: 'file',
-        accept: this.accept,
-        disabled: this.disabled,
-        size: this.size,
-        onSelect: this.onSelect,
+        accept: props.accept,
+        disabled: props.disabled,
+        size: props.size,
+        onSelect: onSelect,
         onChange(e: Event) {
           e.stopPropagation() // 阻止事件冒泡
         }
       })
-    },
-    renderMenu() {
-      return config.import.renderMenu(this as any)
-    },
-    deleteData() {
-      if (this.disabled || this.loading) {
+    }
+
+    const deleteData = () => {
+      if (props.disabled || props.loading) {
         return
       }
-      this.currentValue = undefined
-      this.data = undefined
-      this.emitData()
-    },
-    renderContent(file?: FileValue) {
-      return (file && file.value) ? config.import.renderContent(file, this.disabled, this.image, () => {
-        this.deleteData()
+      currentValue.value = undefined
+      data.value = undefined
+      emitData()
+    }
+
+    const renderContent = (file?: FileValue) => {
+      return (file && file.value) ? config.import.renderContent(file, props.disabled, props.image, () => {
+        deleteData()
       }) : null
+    }
+
+    return {
+      operate,
+      currentValue,
+      data,
+      onSelect,
+      onUpload,
+      emitData,
+      renderFile,
+      deleteData,
+      renderContent
     }
   },
   render() {
@@ -165,19 +169,19 @@ export default defineComponent({
         props: {
           upload: this.upload,
           value: this.currentValue,
-          data: this.data
+          data: this.data,
         }
       })
     } else {
       content = this.renderContent(this.data)
     }
     return h('div', {
-      class: 'complex-import'
+      class: 'complex-import',
     }, {
       default: () => [
         this.renderFile(),
-        this.renderMenu(),
-        content
+        config.import.renderMenu(this as any),
+        content,
       ]
     })
   }
