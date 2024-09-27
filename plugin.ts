@@ -47,7 +47,7 @@ const plugin = {
       }
     }
   
-    DefaultEdit.$parseRule = function(ruleValue: ruleOption, form: Record<PropertyKey, any>) {
+    const defaultParseRule = function(ruleValue: ruleOption, form: Record<PropertyKey, any>) {
       const currentRuleValue = { ...ruleValue } as any
       if (currentRuleValue.validator) {
         currentRuleValue.validator = function(rule: any, value: any, callback: any) {
@@ -61,7 +61,9 @@ const plugin = {
       }
       return currentRuleValue
     }
-  
+
+    DefaultEdit.$parseRule = defaultParseRule
+
     date.pushParse('dayjs', value => dayjs(value))
   
     SimpleDateEdit.$parseDate = function(dateValue) {

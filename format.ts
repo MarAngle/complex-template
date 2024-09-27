@@ -299,7 +299,7 @@ const dict = {
   $file: {
     init: modelFuncDict.valueInit,
     on: {
-      select: modelFuncDict.select
+      change: modelFuncDict.change
     },
     format(edit: FileEdit<boolean>, payload: AutoItemPayloadType<'edit'>) {
       let layout = edit.$option.layout

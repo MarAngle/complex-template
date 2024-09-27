@@ -147,7 +147,7 @@ export default defineComponent({
       }
     },
     emitData() {
-      this.$emit('select', this.currentValue)
+      this.$emit('change', this.currentValue)
     },
     renderFile() {
       let disabled = this.disabled
@@ -161,7 +161,10 @@ export default defineComponent({
         multiple: this.multiple,
         disabled: disabled,
         size: this.size,
-        onSelect: this.onSelect
+        onSelect: this.onSelect,
+        onChange(e: Event) {
+          e.stopPropagation() // 阻止事件冒泡
+        }
       })
     },
     renderMenu() {

@@ -126,7 +126,7 @@ export default defineComponent({
       }
     },
     emitData() {
-      this.$emit('select', this.currentValue)
+      this.$emit('change', this.currentValue)
     },
     renderFile() {
       return h(FileView, {
@@ -135,7 +135,10 @@ export default defineComponent({
         accept: this.accept,
         disabled: this.disabled,
         size: this.size,
-        onSelect: this.onSelect
+        onSelect: this.onSelect,
+        onChange(e: Event) {
+          e.stopPropagation() // 阻止事件冒泡
+        }
       })
     },
     renderMenu() {
