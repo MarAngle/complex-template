@@ -1,4 +1,5 @@
-import { defineComponent, h, PropType, VNode } from "vue"
+import { defineComponent, h, PropType, ref, watch, VNode, computed } from "vue"
+import { useInjectFormItemContext } from "ant-design-vue/es/form"
 import { notice } from "complex-plugin"
 import { fileDataType } from "complex-data/type"
 import { FileEditOption } from "complex-data/src/dictionary/FileEdit"
@@ -68,129 +69,137 @@ export default defineComponent({
       required: false
     }
   },
-  watch: {
-    value: function() {
-      this.syncValue()
+  setup(props, { emit }) {
+    const formItemContext = useInjectFormItemContext()
+    const parseValue = function (value?: fileValueType[]) {
+      return new FileMultipleValue((value || []).map(valueItem => new FileValue(valueItem, props.isUrl)))
     }
-  },
-  computed: {
-    max() {
-      if (this.multiple) {
-        return this.multiple.max || 0
-      } else {
-        return 0
-      }
-    },
-    currentUpload() {
-      return this.upload || defaultMultipleUpload
-    }
-  },
-  data() {
-    return {
-      operate: false,
-      currentValue: this.value,
-      data: this.parseValue(this.value) as FileMultipleValue
-    }
-  },
-  methods: {
-    syncValue() {
+    const operate = ref(false)
+    const currentValue = ref(props.value)
+    const data = ref(parseValue(props.value))
+
+    const syncValue = () => {
       // 此处基于外部数据整合内部数据
-      if (this.value !== this.currentValue) {
-        this.currentValue = this.value
+      if (props.value !== currentValue.value) {
+        currentValue.value = props.value
       }
-      this.syncData()
-    },
-    parseValue(value?: fileValueType[]) {
-      return new FileMultipleValue((value || []).map(valueItem => new FileValue(valueItem, this.isUrl)))
-    },
-    syncData() {
       // 多选模式下，value可能存在splice的改变或者是splice后重新赋值，此时需要将额外数据删除
-      if (this.value) {
-        this.data.assign(this.parseValue(this.value))
+      if (props.value) {
+        data.value.assign(parseValue(props.value))
       } else {
-        this.data.reset()
+        data.value.reset()
       }
-    },
-    onSelect(file: File[]) {
-      this.operate = true
-      this.currentUpload(file).then(res => {
-        this.onUpload(res.file, true)
+    }
+
+    watch(() => props.value, () => {
+      syncValue()
+      formItemContext.onFieldChange()
+    })
+
+    const onSelect = (file: File[]) => {
+      operate.value = true;
+      (props.upload || defaultMultipleUpload)(file).then(res => {
+        onUpload(res.file, true)
       }).catch((err: unknown) => {
         console.error(err)
       }).finally(() => {
-        this.operate = false
+        operate.value = false
       })
-    },
-    onUpload(fileList: fileDataType[], emit?: boolean) {
-      if (this.currentValue) {
+    }
+
+    const max = computed(() => {
+      if (props.multiple) {
+        return props.multiple.max || 0
+      } else {
+        return 0
+      }
+    })
+
+    const onUpload = (fileList: fileDataType[], emit?: boolean) => {
+      if (currentValue.value) {
         fileList.forEach(file => {
           // 通过data判断，避免complex模式下的判断错误
-          if (!this.data.has(file.value)) {
-            this.currentValue!.push(!this.complex ? file.value : file)
-            this.data.push(new FileValue(file, this.isUrl))
+          if (!data.value.has(file.value)) {
+            currentValue.value!.push(!props.complex ? file.value : file)
+            data.value.push(new FileValue(file, props.isUrl))
           }
         })
       } else {
-        this.currentValue = []
+        currentValue.value = []
         fileList.forEach(file => {
-          this.currentValue!.push(!this.complex ? file.value : file)
-          this.data.push(new FileValue(file, this.isUrl))
+          currentValue.value!.push(!props.complex ? file.value : file)
+          data.value.push(new FileValue(file, props.isUrl))
         })
       }
-      if (this.max && this.currentValue.length > this.max) {
-        this.currentValue.length = this.max
-        this.data.truncation(this.max)
-        notice.message(`当前选择的文件数量超过限制值${this.max}，超过部分已被删除！`, 'error')
+      if (max.value && currentValue.value.length > max.value) {
+        currentValue.value.length = max.value
+        data.value.truncation(max.value)
+        notice.message(`当前选择的文件数量超过限制值${max.value}，超过部分已被删除！`, 'error')
       }
       if (emit) {
-        this.emitData()
+        emitData()
       }
-    },
-    emitData() {
-      this.$emit('change', this.currentValue)
-    },
-    renderFile() {
-      let disabled = this.disabled
-      if (this.max && this.currentValue && this.currentValue.length >= this.max) {
+    }
+
+    const emitData = () => {
+      emit('change', currentValue.value)
+    }
+
+    const renderFile = () => {
+      let disabled = props.disabled
+      if (max.value && currentValue.value && currentValue.value.length >= max.value) {
         disabled = true
       }
       return h(FileView, {
         class: 'complex-import-file',
         ref: 'file',
-        accept: this.accept,
-        multiple: this.multiple,
+        accept: props.accept,
+        multiple: props.multiple,
         disabled: disabled,
-        size: this.size,
-        onSelect: this.onSelect,
+        size: props.size,
+        onSelect: onSelect,
         onChange(e: Event) {
           e.stopPropagation() // 阻止事件冒泡
         }
       })
-    },
-    renderMenu() {
-      return config.import.renderMenu(this as any)
-    },
-    renderList(list: FileMultipleValue) {
+    }
+
+    const renderList = (list: FileMultipleValue) => {
       return h('div', {
-        class: !this.image ? 'complex-import-content-list' : 'complex-import-image-list'
+        class: !props.image ? 'complex-import-content-list' : 'complex-import-image-list'
       }, {
         default: () => list.value.map((file, index) => {
-          return this.renderContent(file, index)
+          return renderContent(file, index)
         })
       })
-    },
-    deleteData(key: any, index: number) {
-      if (this.disabled || this.loading) {
+    }
+
+    const deleteData = (key: any, index: number) => {
+      if (props.disabled || props.loading) {
         return
       }
-      this.currentValue!.splice(index, 1)
-      this.data.delete(key)
-      this.emitData()
-    },
-    renderContent(file: FileValue, index: number) {
-      return config.import.renderContent(file, this.disabled, this.image, () => {
-        this.deleteData(file.value, index)
+      currentValue.value!.splice(index, 1)
+      data.value.delete(key)
+      emitData()
+    }
+
+    const renderContent = (file: FileValue, index: number) => {
+      return config.import.renderContent(file, props.disabled, props.image, () => {
+        deleteData(file.value, index)
       })
+    }
+
+    return {
+      operate,
+      currentValue,
+      data,
+      onSelect,
+      onUpload,
+      emitData,
+      renderFile,
+      renderList,
+      deleteData,
+      renderContent
     }
   },
   render() {
@@ -212,7 +221,7 @@ export default defineComponent({
     }, {
       default: () => [
         this.renderFile(),
-        this.renderMenu(),
+        config.import.renderMenu(this as any),
         content
       ]
     })

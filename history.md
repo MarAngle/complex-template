@@ -14,6 +14,7 @@
 
 ### 4.6.27
 - ImportView的事件更改为change
+- ImportView使用组合式API重构，修正数据变更未触发校验的BUG
 
 ### 4.6.26
 - 修正AutoText在text变更后直接计算宽度的BUG
