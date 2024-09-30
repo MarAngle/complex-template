@@ -12,8 +12,8 @@
 ### Doing
 - 简化SimpleTable，可自定义组件，通过此组件实现ListEdit
 
-### 4.6.27
-- 升级data依赖
+### 4.6.27/28
+- 升级依赖
 - ImportView的事件更改为change
 - ImportView使用组合式API重构，修正数据变更未触发校验的BUG
 
