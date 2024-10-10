@@ -220,6 +220,14 @@
   align-items: center;
   justify-content: center;
 }
+.complex-image-viewer .complex-image-viewer-content{
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.complex-image-viewer .complex-image-viewer-content-has-modal{
+  cursor: pointer;
+}
 
 .complex-quick-list{
   padding: 0 16px;

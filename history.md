@@ -12,6 +12,9 @@
 ### Doing
 - 简化SimpleTable，可自定义组件，通过此组件实现ListEdit
 
+### 4.6.29
+- ImageViewer的class优化，样式优化
+
 ### 4.6.27/28
 - 升级依赖
 - ImportView的事件更改为change

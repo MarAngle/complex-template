@@ -42,12 +42,8 @@ export default defineComponent({
     renderImage() {
       if (this.src) {
         return h('img', {
-          class: 'complex-image-viewer-content',
+          class: this.modal ? 'complex-image-viewer-content complex-image-viewer-content-has-modal' : 'complex-image-viewer-content',
           src: this.src,
-          style: {
-            width: '100%',
-            height: '100%'
-          },
           onClick: this.modal ? () => {
             (this.$refs.modal as InstanceType<typeof ModalView>).show()
           } : undefined
