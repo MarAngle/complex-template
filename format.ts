@@ -34,9 +34,6 @@ const modelFuncDict = {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     formdata[prop] = (args[0] as any).target.value
   },
-  select: function (formdata: Record<PropertyKey, unknown>, prop: PropertyKey, args: unknown[]) {
-    formdata[prop] = args[0]
-  },
   change: function (formdata: Record<PropertyKey, unknown>, prop: PropertyKey, args: unknown[]) {
     formdata[prop] = args[0]
   }
@@ -46,11 +43,7 @@ type modelFuncDictType = typeof modelFuncDict
 
 interface dictItemType {
   init: false | modelFuncDictType['checkInit'] | modelFuncDictType['valueInit']
-  on?: {
-    input?: modelFuncDictType['input']
-    change?: modelFuncDictType['change']
-    select?: modelFuncDictType['select']
-  },
+  on?: Record<string, modelFuncDictType['input'] | modelFuncDictType['change']>
   format: (edit: DictionaryEditMod, payload: AutoItemPayloadType<'edit'>) => AttrsValue
 }
 
@@ -350,12 +343,12 @@ const dict = {
         self.init = createInit(edit.$model.init)
       }
       if (edit.$model.change) {
-        if (edit.$model.change === 'input') {
+        if (edit.$model.handler) {
+          self.on![edit.$model.change] = edit.$model.handler
+        } else if (edit.$model.change === 'input') {
           self.on!.input = modelFuncDict.input
-        } else if (edit.$model.change === 'select') {
-          self.on!.select = modelFuncDict.select
-        } else if (edit.$model.change === 'change') {
-          self.on!.change = modelFuncDict.change
+        } else {
+          self.on![edit.$model.change] = modelFuncDict.change
         }
       }
       bindEvent(self as dictItemType, itemAttrs, edit, payload)
