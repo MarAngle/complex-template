@@ -306,11 +306,9 @@ export default defineComponent({
                 data: true,
                 ing: true,
                 sync: true,
-                module: {
-                  choice: {
-                    from: 'pagination',
-                    act: 'page'
-                  }
+                trigger: {
+                  from: 'pagination',
+                  action: 'page'
                 }
               })
             }
@@ -322,11 +320,9 @@ export default defineComponent({
                 data: true,
                 ing: true,
                 sync: true,
-                module: {
-                  choice: {
-                    from: 'pagination',
-                    act: 'size'
-                  }
+                trigger: {
+                  from: 'pagination',
+                  action: 'size'
                 }
               })
             }

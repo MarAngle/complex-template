@@ -187,10 +187,7 @@ export default defineComponent({
       } else if (prop === '$refresh') {
         this.listData.reloadData({
           data: true,
-          sync: true,
-          module: {
-            choice: 'reload'
-          }
+          sync: true
         })
       } else if (prop === '$build') {
         this.openEdit()
