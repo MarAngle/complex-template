@@ -158,6 +158,9 @@ const config = {
         default: 'choice',
         front: 'total',
         end: false
+      },
+      sort: {
+        auto: true
       }
     },
     renderTableValue(text: unknown, payload: tablePayload) {

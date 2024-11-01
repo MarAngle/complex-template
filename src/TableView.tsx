@@ -1,13 +1,14 @@
 import { defineComponent, h, PropType } from "vue"
 import { Table, TableColumnType, TableProps } from 'ant-design-vue'
-import { deepCloneData, updateData } from "complex-utils"
+import { deepCloneData, isArray, updateData } from "complex-utils"
 import { ComplexList, DefaultInfo, PaginationData } from "complex-data"
+import DefaultMod from "complex-data/src/dictionary/DefaultMod"
+import { orderType } from "complex-data/src/module/SortData"
 import DefaultList from "complex-data/src/dictionary/DefaultList"
 import PaginationView from "./components/PaginationView"
 import ChoiceInfo from "./components/ChoiceInfo.vue"
 import TableMenu, { TableMenuValue } from "./components/TableMenu"
 import config from "../config"
-import DefaultMod from "complex-data/src/dictionary/DefaultMod"
 
 export type customRenderPayload = { text: unknown, record: Record<PropertyKey, unknown>, index: number }
 
@@ -59,6 +60,12 @@ export default defineComponent({
     },
     pagination: (prop: 'page' | 'size', _page: number, _size: number) => {
       return prop === 'page' || prop === 'size'
+    },
+    choice: (_idList: PropertyKey[], _dataList: Record<PropertyKey, any>[]) => {
+      return true
+    },
+    sort: (_prop: PropertyKey, _order: undefined | orderType) => {
+      return true
     },
   },
   props: {
@@ -123,6 +130,9 @@ export default defineComponent({
         return this.listData?.$module.pagination
       }
     },
+    currentSort() {
+      return this.listData?.$module.sort
+    },
     currentColumnList() {
       const list = []
       const columnList = this.columnList || this.listData!.getDictionaryPageList(this.listProp, this.listData!.getDictionaryList(this.listProp)) as DefaultList[]
@@ -140,6 +150,16 @@ export default defineComponent({
           width: column.$width,
           ellipsis: (column as DefaultList).ellipsis,
           ...config.component.parseAttrs(attrs)
+        }
+        if (this.currentSort) {
+          const config = this.currentSort.getConfig(currentProp)
+          if (config !== false) {
+            columnItem.sorter = config || true
+            if (currentProp === this.currentSort.getValue()) {
+              const order = this.currentSort.getOrder()
+              columnItem.sortOrder = order ? order === 'asc' ? 'ascend' : 'descend' : null
+            }
+          }
         }
         if (!pureRender) {
           if (!menuOption || targetRender) {
@@ -237,8 +257,46 @@ export default defineComponent({
               }
             }
             choice.pushData(selectedRowKeys, selectedRows)
+            this.$emit('choice', choice.data.id, choice.data.list)
           },
           ...config.component.parseAttrs(config.component.parseData(choice.$local, 'target'))
+        }
+      }
+      if (this.currentSort) {
+        const onChange = currentTableProps.onChange
+        currentTableProps.onChange = (pagination, filters, sorter, extra) => {
+          if (extra.action === 'sort') {
+            // 排序变换时
+            let prop: undefined | string | number
+            let order: undefined | orderType
+            if (!isArray(sorter)) {
+              prop = sorter.field as string | number
+              order = sorter.order ? sorter.order === 'ascend' ? 'asc' : 'desc' : undefined
+            } else {
+              prop = sorter[0].field as string | number
+              order = sorter[0].order ? sorter[0].order === 'ascend' ? 'asc' : 'desc' : undefined
+            }
+            this.currentSort!.setData(prop, order)
+            const sortConfig = this.currentSort!.getConfig(prop)
+            if (sortConfig === true || sortConfig === undefined) {
+              // 配置项默认或为真时，自动重新获取数据
+              if (this.currentAuto.sort.auto) {
+                this.listData?.reloadData({
+                  data: true,
+                  ing: true,
+                  sync: true,
+                  trigger: {
+                    from: 'sort',
+                    action: 'order'
+                  }
+                })
+              }
+            }
+            this.$emit('sort', prop, order)
+          }
+          if (onChange) {
+            onChange(pagination, filters, sorter, extra)
+          }
         }
       }
       return currentTableProps
