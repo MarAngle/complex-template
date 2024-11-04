@@ -12,7 +12,7 @@
 ### Doing
 - 简化SimpleTable，可自定义组件，通过此组件实现ListEdit
 
-### 4.6.31
+### 4.6.31/32
 - 升级data依赖,同步ChoiceData改动
 - 适配SortData列表排序
 - TableView添加事件['choice', 'sort']
