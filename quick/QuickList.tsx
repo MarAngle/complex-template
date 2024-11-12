@@ -124,8 +124,8 @@ export default defineComponent({
       return this.currentChoice ? this.currentChoice.length : undefined
     },
     currentSimpleTable() {
-      if (this.simpleTable && this.currentChoice) {
-        console.error('SimpleTable无法实现选择功能，无法启用SimpleTable！')
+      if (this.simpleTable && (this.listData.$module.choice || this.listData.$module.sort)) {
+        console.error('SimpleTable无法实现选择/排序功能，无法启用SimpleTable！')
         return false
       } else {
         return this.simpleTable

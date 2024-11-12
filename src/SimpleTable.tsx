@@ -1,4 +1,5 @@
 import { defineComponent, h, PropType, VNode } from "vue"
+import { Empty } from "ant-design-vue"
 import { deepCloneData, updateData } from "complex-utils"
 import { DefaultInfo } from "complex-data"
 import DefaultList from "complex-data/src/dictionary/DefaultList"
@@ -82,6 +83,9 @@ export default defineComponent({
     },
     currentColumnList() {
       return this.columnList || this.listData!.getDictionaryPageList(this.listProp, this.listData!.getDictionaryList(this.listProp)) as DefaultList[]
+    },
+    isEmpty() {
+      return !this.currentData || this.currentData.length === 0
     }
   },
   methods: {
@@ -109,12 +113,21 @@ export default defineComponent({
         h('div', {
           class: 'complex-simple-table-content-header'
         }, column.$name),
-        this.currentData?.map((val, index) => {
+        !this.isEmpty ? this.currentData.map((val, index) => {
           return h('div', {
             class: 'complex-simple-table-content-row'
           }, [
             this.renderContent(column, val, index)
           ])
+        }) : null
+      ])
+    },
+    renderEmpty() {
+      return !this.isEmpty ? null : h('div', {
+        class: 'complex-simple-table-content-empty'
+      }, [
+        h(Empty, {
+          "image": Empty.PRESENTED_IMAGE_SIMPLE
         })
       ])
     },
@@ -237,7 +250,7 @@ export default defineComponent({
    */
   render() {
     const render = h('div', { class: 'complex-table complex-simple-table' }, {
-      default: () => [this.renderTable(), this.renderFooter()]
+      default: () => [this.renderTable(), this.renderEmpty(), this.renderFooter()]
     })
     return render
   }
