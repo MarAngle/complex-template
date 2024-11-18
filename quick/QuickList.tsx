@@ -1,14 +1,14 @@
-import { defineComponent, h, PropType } from "vue"
+import { defineComponent, h, PropType, VNode } from "vue"
 import { notice } from "complex-plugin"
 import { ComplexList } from "complex-data"
 import { resetOptionType, triggerMethodOption } from "complex-data/src/data/BaseData"
 import AutoSpin from "./../src/components/AutoSpin.vue"
-import TableView, { tablePayload, TableViewProps } from "./../src/TableView"
+import TableView, { tablePayload, TableViewProps, TableViewOption } from "./../src/TableView"
 import SimpleTable from "./../src/SimpleTable"
 import ModalView, { ModalViewProps } from "./../src/ModalView"
-import SearchArea, { SearchAreaProps } from "./../src/SearchArea"
-import EditArea, { EditAreaProps, EditAreaSubmitOption } from "./../src/EditArea"
-import InfoArea, { InfoAreaProps } from "./../src/InfoArea"
+import SearchArea, { SearchAreaProps, SearchAreaOption } from "./../src/SearchArea"
+import EditArea, { EditAreaOption, EditAreaProps, EditAreaSubmitOption } from "./../src/EditArea"
+import InfoArea, { InfoAreaOption, InfoAreaProps } from "./../src/InfoArea"
 // import CollapseArea, { CollapseAreaProps } from "./../src/CollapseArea"
 import { AutoItemPayloadType } from "./../src/dictionary/AutoItem"
 import FloatData, { FloatValue } from "./data/FloatData"
@@ -29,11 +29,11 @@ export type componentsProps = {
 }
 
 export type renderType = {
-  top?: (...args: unknown[]) => unknown
-  search?: Record<string, (...args: unknown[]) => unknown>
-  table?: Record<string, (payload: tablePayload) => unknown>
-  edit?: Record<string, (...args: unknown[]) => unknown>
-  info?: Record<string, (...args: unknown[]) => unknown>
+  top?: (listData: ComplexList) => VNode
+  search?: (props: SearchAreaOption) => VNode
+  table?: (props: TableViewOption) => VNode
+  edit?: (props: EditAreaOption) => VNode
+  info?: (props: InfoAreaOption) => VNode
 }
 
 export interface QuickListProps {
@@ -147,9 +147,17 @@ export default defineComponent({
         return null
       }
     },
+    $renderSearch(option: SearchAreaOption) {
+      const render = this.$slots.search || this.currentRender.search
+      if (!render) {
+        return h(SearchArea, option)
+      } else {
+        return render(option)
+      }
+    },
     renderSearch() {
       if (this.currentComponents.indexOf('search') > -1 && this.listData.$module.search) {
-        const searchArea = h(SearchArea, {
+        return this.$renderSearch({
           ref: 'search',
           search: this.listData.$module.search!,
           choice: this.choiceSize,
@@ -158,7 +166,6 @@ export default defineComponent({
           onEnter: this.onSearchEnter,
           ...this.currentComponentsProps.search
         })
-        return searchArea
         // if (this.currentComponentsProps.searchCollapse) {
         //   return h(CollapseArea, {
         //     ref: 'collapse',
@@ -204,23 +211,28 @@ export default defineComponent({
     renderTop() {
       const render = this.$slots.top || this.currentRender.top
       if (render) {
-        return render()
+        return render(this.listData)
       } else {
         return null
       }
     },
+    $renderTable(option: TableViewOption) {
+      const render = this.$slots.table || this.currentRender.table
+      if (!render) {
+        return h(!this.currentSimpleTable ? TableView : SimpleTable, option)
+      } else {
+        return render(option)
+      }
+    },
     renderTable() {
       if (this.currentComponents.indexOf('table') > -1) {
-        const tableOption = {
+        return this.$renderTable({
           ref: 'table',
           listData: this.listData,
           onMenu: (prop: string, payload: tablePayload) => {
             this.onTableMenu(prop, payload)
           },
           ...this.currentComponentsProps.table
-        }
-        return h(!this.currentSimpleTable ? TableView : SimpleTable, tableOption, {
-          ...this.currentRender.table
         })
       } else {
         return null
@@ -252,6 +264,22 @@ export default defineComponent({
       }
       return null
     },
+    $getInfoOption() {
+      return {
+        ref: 'info',
+        dictionary: this.listData.$module.dictionary!,
+        loading: this.operate === 'ing',
+        ...this.currentComponentsProps.info
+      }
+    },
+    $renderInfo(option: InfoAreaOption) {
+      const render = this.$slots.info || this.currentRender.info
+      if (!render) {
+        return h(InfoArea, option)
+      } else {
+        return render(option)
+      }
+    },
     renderInfo() {
       if (this.currentComponents.indexOf('info') > -1 && !this.float) {
         return h(
@@ -263,17 +291,28 @@ export default defineComponent({
           },
           {
             default: () => {
-              return h(InfoArea, {
-                ref: 'info',
-                dictionary: this.listData.$module.dictionary!,
-                loading: this.operate === 'ing',
-                ...this.currentComponentsProps.info
-              })
+              return this.$renderInfo(this.$getInfoOption())
             }
           }
         )
       } else {
         return null
+      }
+    },
+    $getEditOption() {
+      return {
+        ref: 'edit',
+        dictionary: this.listData.$module.dictionary!,
+        loading: this.operate === 'ing',
+        ...this.currentComponentsProps.edit
+      }
+    },
+    $renderEdit(option: EditAreaOption) {
+      const render = this.$slots.edit || this.currentRender.edit
+      if (!render) {
+        return h(EditArea, option)
+      } else {
+        return render(option)
       }
     },
     renderEdit() {
@@ -288,12 +327,7 @@ export default defineComponent({
           },
           {
             default: () => {
-              return h(EditArea, {
-                ref: 'edit',
-                dictionary: this.listData.$module.dictionary!,
-                loading: this.operate === 'ing',
-                ...this.currentComponentsProps.edit
-              })
+              return this.$renderEdit(this.$getEditOption())
             }
           }
         )
@@ -384,10 +418,7 @@ export default defineComponent({
           },
           component: {
             data: EditArea,
-            props: {
-              dictionary: this.listData.$module.dictionary!,
-              ...this.currentComponentsProps.edit
-            },
+            props: this.$getEditOption(),
             show: [type, record]
           }
         })

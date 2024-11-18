@@ -19,6 +19,12 @@ export type EditAreaProps = EditViewDefaultProps & InfoAreaDefaultProps & {
   form?: FormValue
 }
 
+export interface EditAreaOption extends EditAreaProps {
+  ref?: string
+  onMenu?: (prop: string, payload: AutoItemPayloadType<'edit'>) => unknown
+  onEnter?: (prop: string, payload: AutoItemPayloadType<'edit'>) => unknown
+}
+
 export default defineComponent({
   name: 'EditArea',
   emits: {

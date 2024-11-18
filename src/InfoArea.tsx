@@ -20,6 +20,11 @@ export interface InfoAreaProps extends InfoAreaDefaultProps {
   infoAttrs?: AttrsValueInitOption
 }
 
+export interface InfoAreaOption extends InfoAreaProps {
+  ref?: string
+  onMenu?: (prop: string, payload: AutoItemPayloadType<'info'>) => unknown
+}
+
 export default defineComponent({
   name: 'InfoArea',
   emits: {

@@ -12,6 +12,12 @@ export interface SearchAreaProps extends EditViewDefaultProps {
   collapseMenuRender?: (collapse: boolean) => null | VNode | VNode[]
 }
 
+export interface SearchAreaOption extends SearchAreaProps {
+  ref?: string
+  onMenu?: (prop: string, payload: AutoItemPayloadType<'edit'>) => unknown
+  onEnter?: (prop: string, payload: AutoItemPayloadType<'edit'>) => unknown
+}
+
 export default defineComponent({
   name: 'SearchArea',
   emits: {

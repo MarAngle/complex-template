@@ -52,6 +52,14 @@ export interface TableViewProps extends TableViewDefaultProps {
   tableProps?: TableProps
 }
 
+export interface TableViewOption extends TableViewProps {
+  ref?: string
+  onMenu?: (prop: string, payload: tablePayload) => unknown
+  onPagination?: (prop: 'page' | 'size', page: number, size: number) => unknown
+  onChoice?: (idList: PropertyKey[], dataList: Record<PropertyKey, any>[]) => unknown
+  onSort?: (prop: PropertyKey, order: undefined | orderType) => unknown
+}
+
 export default defineComponent({
   name: 'TableView',
   emits: {
