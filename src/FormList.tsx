@@ -1,4 +1,4 @@
-import { defineComponent, h, PropType, markRaw } from "vue"
+import { defineComponent, h, PropType } from "vue"
 import { Form, FormItemRest, Table, TableColumnType, TableProps } from "ant-design-vue"
 import { FormValue } from "complex-data"
 import ListEdit from "complex-data/src/dictionary/ListEdit"
@@ -75,7 +75,7 @@ export default defineComponent({
           }
           if (!pureRender) {
             if (!targetRender) {
-              columnItem.customRender = ({ text, record, index }: customRenderPayload) => {
+              columnItem.customRender = ({ record, index }: customRenderPayload) => {
                 if (currentProp === config.table.auto.index.prop) {
                   // 自动index
                   return config.table.renderIndex(record, index, undefined)

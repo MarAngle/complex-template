@@ -12,6 +12,10 @@
 ### Doing
 - 简化SimpleTable，可自定义组件，通过此组件实现ListEdit
 
+### 4.6.35-ing
+- 升级依赖
+- 级联列表组件
+
 ### 4.6.33
 - 升级依赖
 - SimpleTable无数据样式同步antd

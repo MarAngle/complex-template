@@ -11,6 +11,7 @@ import EditArea from "./src/EditArea"
 import SearchArea from "./src/SearchArea"
 import ImageViewer from "./src/ImageViewer"
 import QuickList from "./quick/QuickList"
+import QuickCascade from "./quick/QuickCascade"
 import QuickEdit from "./quick/QuickEdit"
 import QuickFloat from "./quick/QuickFloat"
 import plugin from "./plugin"
@@ -28,6 +29,7 @@ export const ComplexEditArea = EditArea
 export const ComplexSearchArea = SearchArea
 export const ComplexImageViewer = ImageViewer
 export const ComplexQuickList = QuickList
+export const ComplexQuickCascade = QuickCascade
 export const ComplexQuickEdit = QuickEdit
 export const ComplexQuickFloat = QuickFloat
 
