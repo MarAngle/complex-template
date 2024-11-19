@@ -62,7 +62,7 @@ export default defineComponent({
         ModalView,
         {
           ref: 'sublist-modal',
-          menu: ['cancel'],
+          menu: ['close'],
           ...this.sublist.modal
         },
         {

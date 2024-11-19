@@ -1,4 +1,4 @@
-import { defineComponent, h, PropType, VNode } from "vue"
+import { defineComponent, h, markRaw, PropType, VNode } from "vue"
 import { notice } from "complex-plugin"
 import { ComplexList } from "complex-data"
 import { resetOptionType, triggerMethodOption } from "complex-data/src/data/BaseData"
@@ -6,6 +6,7 @@ import AutoSpin from "./../src/components/AutoSpin.vue"
 import TableView, { tablePayload, TableViewProps, TableViewOption } from "./../src/TableView"
 import SimpleTable from "./../src/SimpleTable"
 import ModalView, { ModalViewProps } from "./../src/ModalView"
+import QuickFloatModal from "./QuickFloatModal"
 import SearchArea, { SearchAreaProps, SearchAreaOption } from "./../src/SearchArea"
 import EditArea, { EditAreaOption, EditAreaProps, EditAreaSubmitOption } from "./../src/EditArea"
 import InfoArea, { InfoAreaOption, InfoAreaProps } from "./../src/InfoArea"
@@ -13,9 +14,11 @@ import InfoArea, { InfoAreaOption, InfoAreaProps } from "./../src/InfoArea"
 import { AutoItemPayloadType } from "./../src/dictionary/AutoItem"
 import FloatData, { FloatValue } from "./data/FloatData"
 import config from "./../config"
+import QuickFloatValue from "./QuickFloatValue"
 
 export interface ListModalViewProps extends ModalViewProps {
   formatName?: (name: string, payload?: unknown) => string
+  float?: FloatData
 }
 
 export type componentsProps = {
@@ -42,7 +45,6 @@ export interface QuickListProps {
   components?: ('spin' | 'search' | 'table' | 'info' | 'edit')[]
   componentsProps?: componentsProps
   editThrottle?: triggerMethodOption['throttle']
-  float?: FloatData
   render?: renderType
   reset?: resetOptionType
   destroy?: resetOptionType
@@ -56,11 +58,6 @@ export default defineComponent({
     },
     table: (prop: string, _payload: tablePayload)  => {
       return !!prop
-    }
-  },
-  data() {
-    return {
-      floatValue: undefined as undefined | FloatValue
     }
   },
   props: {
@@ -86,10 +83,6 @@ export default defineComponent({
       default: () => {
         return config.list.editThrottle
       }
-    },
-    float: {
-      type: Object as PropType<QuickListProps['float']>,
-      required: false
     },
     render: {
       type: Object as PropType<QuickListProps['render']>,
@@ -266,71 +259,49 @@ export default defineComponent({
     },
     $getInfoOption() {
       return {
-        ref: 'info',
         dictionary: this.listData.$module.dictionary!,
         loading: this.operate === 'ing',
         ...this.currentComponentsProps.info
       }
     },
-    $renderInfo(option: InfoAreaOption) {
-      const render = this.$slots.info || this.currentRender.info
-      if (!render) {
-        return h(InfoArea, option)
-      } else {
-        return render(option)
-      }
-    },
     renderInfo() {
-      if (this.currentComponents.indexOf('info') > -1 && !this.float) {
-        return h(
-          ModalView,
-          {
-            ref: 'info-modal',
+      if (this.currentComponents.indexOf('info') > -1) {
+        return h(QuickFloatModal, {
+          ref: 'info-modal',
+          modal: {
             menu: ['close'],
             ...this.currentComponentsProps.infoModal
           },
-          {
-            default: () => {
-              return this.$renderInfo(this.$getInfoOption())
-            }
+          content: {
+            data: markRaw(InfoArea),
+            props: this.$getInfoOption()
           }
-        )
+        })
       } else {
         return null
       }
     },
     $getEditOption() {
       return {
-        ref: 'edit',
         dictionary: this.listData.$module.dictionary!,
         loading: this.operate === 'ing',
         ...this.currentComponentsProps.edit
       }
     },
-    $renderEdit(option: EditAreaOption) {
-      const render = this.$slots.edit || this.currentRender.edit
-      if (!render) {
-        return h(EditArea, option)
-      } else {
-        return render(option)
-      }
-    },
     renderEdit() {
-      if (this.currentComponents.indexOf('edit') > -1 && !this.float) {
-        return h(
-          ModalView,
-          {
-            ref: 'edit-modal',
+      if (this.currentComponents.indexOf('edit') > -1) {
+        return h(QuickFloatModal, {
+          ref: 'edit-modal',
+          modal: {
             menu: ['cancel', 'submit'],
             submit: this.onEditSubmit,
             ...this.currentComponentsProps.editModal
           },
-          {
-            default: () => {
-              return this.$renderEdit(this.$getEditOption())
-            }
+          content: {
+            data: markRaw(EditArea),
+            props: this.$getEditOption()
           }
-        )
+        })
       } else {
         return null
       }
@@ -378,10 +349,7 @@ export default defineComponent({
       if (this.currentComponentsProps.infoModal && this.currentComponentsProps.infoModal.formatName) {
         name = this.currentComponentsProps.infoModal.formatName(name, type)
       }
-      (this.$refs['info-modal'] as InstanceType<typeof ModalView>).show(name)
-      this.$nextTick(() => {
-        (this.$refs['info'] as InstanceType<typeof InfoArea>).$show(type, record)
-      })
+      (this.$refs['info-modal'] as InstanceType<typeof QuickFloatModal>).showModal([type, record], name)
     },
     openEdit(record?: Record<PropertyKey, any>, build?: boolean) {
       const isBuild = !record || build
@@ -399,34 +367,11 @@ export default defineComponent({
       }
     },
     showEdit(name: string, type: string, record?: Record<PropertyKey, any>) {
-      if (!this.float) {
-        (this.$refs['edit-modal'] as InstanceType<typeof ModalView>).show(name)
-        this.$nextTick(() => {
-          (this.$refs['edit'] as InstanceType<typeof EditArea>).$show(type, record)
-        })
-      } else {
-        this.floatValue = this.float.push({
-          type: 'edit',
-          name: name,
-          modal: {
-            props: {
-              title: name,
-              menu: ['cancel', 'submit'],
-              submit: this.onEditSubmit,
-              ...this.currentComponentsProps.editModal
-            }
-          },
-          component: {
-            data: EditArea,
-            props: this.$getEditOption(),
-            show: [type, record]
-          }
-        })
-      }
+      (this.$refs['edit-modal'] as InstanceType<typeof QuickFloatModal>).showModal([type, record], name)
     },
     onEditSubmit() {
       const promise = new Promise((resolve, reject) => {
-        const editPromise = !this.float ? (this.$refs['edit'] as InstanceType<typeof EditArea>).$submit() : this.floatValue!.ref!.submit()
+        const editPromise = (this.$refs['edit-modal'] as InstanceType<typeof QuickFloatModal>).submit()
         editPromise.then(res => {
           this.$onEditSubmit(res).then(() => {
             resolve(res)

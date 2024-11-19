@@ -178,11 +178,11 @@ export default defineComponent({
       this.$emit('close', from)
     },
     renderContent() {
-      return this.$slots.default!({
+      return this.$slots.default ? this.$slots.default({
         width: this.contentWidth,
         height: this.contentHeight,
         modal: markRaw(this)
-      })
+      }) : null
     },
     onMenu(prop: string) {
       this.$emit('menu', prop, this)

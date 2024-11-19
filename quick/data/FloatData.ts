@@ -6,12 +6,11 @@ import QuickFloatValue from "../QuickFloatValue"
 let id = 1
 
 export interface FloatValueInitOption {
-  type: string
   name: string
   modal: {
     props: ModalViewProps
   }
-  component: {
+  content: {
     data: Component
     props?: Record<PropertyKey, unknown>
     show?: any[]
@@ -21,13 +20,12 @@ export interface FloatValueInitOption {
 export class FloatValue extends Data {
   static $formatConfig = { name: 'FloatValue', level: 80, recommend: true } // 不通过通用格式化函数格式化实例判断值
   id: number
-  type: string
   name: string
   ref?: InstanceType<typeof QuickFloatValue>
   modal: {
     props: ModalViewProps
   }
-  component: {
+  content: {
     data: Component
     props?: Record<PropertyKey, unknown>
     show?: any[]
@@ -37,13 +35,12 @@ export class FloatValue extends Data {
   constructor(initOption: FloatValueInitOption, show = true) {
     super()
     this.id = id++
-    this.type = initOption.type
     this.name = initOption.name
     this.modal = initOption.modal
-    this.component = {
-      data: markRaw(initOption.component.data),
-      props: initOption.component.props,
-      show: initOption.component.show
+    this.content = {
+      data: markRaw(initOption.content.data),
+      props: initOption.content.props,
+      show: initOption.content.show
     }
     this.show = show
     this.init = false
