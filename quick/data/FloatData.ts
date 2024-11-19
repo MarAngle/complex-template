@@ -11,9 +11,9 @@ export interface FloatValueInitOption {
     props: ModalViewProps
   }
   content: {
-    render: (...args: any[]) => VNode
-    onShow?: (content: any) => void
-    onSubmit?: (content: any) => Promise<any>
+    render: (ref: string, modalSlotProps: ModalViewSlotProps,...args: any[]) => VNode
+    show?: any[]
+    onShow?: (content: any, args?: any[]) => void
   }
 }
 
@@ -22,14 +22,8 @@ export class FloatValue extends Data {
   id: number
   name: string
   ref?: InstanceType<typeof QuickFloatValue>
-  modal: {
-    props: ModalViewProps
-  }
-  content: {
-    render: (ref: string, modalSlotProps: ModalViewSlotProps,...args: any[]) => VNode
-    onShow?: (content: any) => void
-    onSubmit?: (content: any) => Promise<any>
-  }
+  modal: FloatValueInitOption['modal']
+  content: FloatValueInitOption['content']
   show: boolean
   init: boolean
   constructor(initOption: FloatValueInitOption, show = true) {
@@ -41,8 +35,9 @@ export class FloatValue extends Data {
     this.show = show
     this.init = false
   }
-  destroy() {
+  close() {
     //
+    this.show = false
   }
 }
 
@@ -60,7 +55,7 @@ class FloatData extends Data {
   }
   close(floatValue: FloatValue, _from: string) {
     const index = this.list.indexOf(floatValue)
-    floatValue.destroy()
+    floatValue.close()
     this.list.splice(index, 1)
     return index
   }

@@ -5,16 +5,15 @@ import { resetOptionType, triggerMethodOption } from "complex-data/src/data/Base
 import AutoSpin from "./../src/components/AutoSpin.vue"
 import TableView, { tablePayload, TableViewProps, TableViewOption } from "./../src/TableView"
 import SimpleTable from "./../src/SimpleTable"
-import ModalView, { ModalViewProps } from "./../src/ModalView"
+import { ModalViewProps } from "./../src/ModalView"
 import QuickFloatModal from "./QuickFloatModal"
 import SearchArea, { SearchAreaProps, SearchAreaOption } from "./../src/SearchArea"
 import EditArea, { EditAreaOption, EditAreaProps, EditAreaSubmitOption } from "./../src/EditArea"
 import InfoArea, { InfoAreaOption, InfoAreaProps } from "./../src/InfoArea"
 // import CollapseArea, { CollapseAreaProps } from "./../src/CollapseArea"
 import { AutoItemPayloadType } from "./../src/dictionary/AutoItem"
-import FloatData, { FloatValue } from "./data/FloatData"
+import FloatData from "./data/FloatData"
 import config from "./../config"
-import QuickFloatValue from "./QuickFloatValue"
 
 export interface ListModalViewProps extends ModalViewProps {
   formatName?: (name: string, payload?: unknown) => string
@@ -303,6 +302,9 @@ export default defineComponent({
           content: {
             render: (ref) => {
               return h(EditArea, this.$getEditOption(ref))
+            },
+            onShow(content: InstanceType<typeof EditArea>, args?: any[]) {
+              content.$show(...(args || []))
             }
           }
         })
@@ -375,7 +377,7 @@ export default defineComponent({
     },
     onEditSubmit() {
       const promise = new Promise((resolve, reject) => {
-        const editPromise = (this.$refs['edit-modal'] as InstanceType<typeof QuickFloatModal>).submit()
+        const editPromise = ((this.$refs['edit-modal'] as InstanceType<typeof QuickFloatModal>).getContent() as InstanceType<typeof EditArea>).$submit()
         editPromise.then(res => {
           this.$onEditSubmit(res).then(() => {
             resolve(res)

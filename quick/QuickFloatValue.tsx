@@ -49,20 +49,13 @@ export default defineComponent({
         this.floatValue.init = true
         this.$nextTick(() => {
           if (this.floatValue.content.onShow) {
-            this.floatValue.content.onShow(this.$refs.content)
+            this.floatValue.content.onShow(this.$refs.content, this.floatValue.content.show)
           }
         })
       }
     },
     close(from = 'float') {
       (this.$refs.modal as InstanceType<typeof ModalView>).close(from)
-    },
-    $submit(): Promise<any> {
-      if (this.floatValue.content.onSubmit) {
-        return this.floatValue.content.onSubmit(this.$refs.content)
-      } else {
-        return Promise.resolve({})
-      }
     },
     renderContent() {
       if (!this.floatValue.init && !this.floatValue.show) {
