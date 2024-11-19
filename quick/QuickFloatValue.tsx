@@ -2,6 +2,8 @@ import { defineComponent, h, PropType, markRaw } from "vue"
 import { FloatValue } from "./data/FloatData"
 import ModalView, { ModalViewSlotProps } from "./../src/ModalView"
 
+export const contentRef = 'content'
+
 export default defineComponent({
   name: 'QuickFloatValue',
   emits: {
@@ -38,6 +40,9 @@ export default defineComponent({
     this.floatValue.ref = undefined
   },
   methods: {
+    getContent() {
+      return this.$refs[contentRef]
+    },
     show() {
       (this.$refs.modal as InstanceType<typeof ModalView>).show()
       if (!this.floatValue.init) {
@@ -73,7 +78,7 @@ export default defineComponent({
         ...this.floatValue.modal.props
       }, {
         default: (modalSlotProps: ModalViewSlotProps) => {
-          return this.floatValue.content.render(modalSlotProps)
+          return this.floatValue.content.render('content', modalSlotProps)
         }
       })
     },

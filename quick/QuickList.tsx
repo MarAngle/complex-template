@@ -257,9 +257,9 @@ export default defineComponent({
       }
       return null
     },
-    $getInfoOption() {
+    $getInfoOption(ref: string) {
       return {
-        ref: 'content',
+        ref: ref,
         dictionary: this.listData.$module.dictionary!,
         loading: this.operate === 'ing',
         ...this.currentComponentsProps.info
@@ -274,8 +274,8 @@ export default defineComponent({
             ...this.currentComponentsProps.infoModal
           },
           content: {
-            render: () => {
-              return h(InfoArea, this.$getInfoOption())
+            render: (ref) => {
+              return h(InfoArea, this.$getInfoOption(ref))
             }
           }
         })
@@ -283,9 +283,9 @@ export default defineComponent({
         return null
       }
     },
-    $getEditOption() {
+    $getEditOption(ref: string) {
       return {
-        ref: 'content',
+        ref: ref,
         dictionary: this.listData.$module.dictionary!,
         loading: this.operate === 'ing',
         ...this.currentComponentsProps.edit
@@ -301,8 +301,8 @@ export default defineComponent({
             ...this.currentComponentsProps.editModal
           },
           content: {
-            render: () => {
-              return h(EditArea, this.$getEditOption())
+            render: (ref) => {
+              return h(EditArea, this.$getEditOption(ref))
             }
           }
         })
@@ -353,7 +353,7 @@ export default defineComponent({
       if (this.currentComponentsProps.infoModal && this.currentComponentsProps.infoModal.formatName) {
         name = this.currentComponentsProps.infoModal.formatName(name, type)
       }
-      (this.$refs['info-modal'] as InstanceType<typeof QuickFloatModal>).showModal([type, record], name)
+      (this.$refs['info-modal'] as InstanceType<typeof QuickFloatModal>).show([type, record], name)
     },
     openEdit(record?: Record<PropertyKey, any>, build?: boolean) {
       const isBuild = !record || build
@@ -371,7 +371,7 @@ export default defineComponent({
       }
     },
     showEdit(name: string, type: string, record?: Record<PropertyKey, any>) {
-      (this.$refs['edit-modal'] as InstanceType<typeof QuickFloatModal>).showModal([type, record], name)
+      (this.$refs['edit-modal'] as InstanceType<typeof QuickFloatModal>).show([type, record], name)
     },
     onEditSubmit() {
       const promise = new Promise((resolve, reject) => {

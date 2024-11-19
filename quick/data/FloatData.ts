@@ -26,7 +26,7 @@ export class FloatValue extends Data {
     props: ModalViewProps
   }
   content: {
-    render: (...args: any[]) => VNode
+    render: (ref: string, modalSlotProps: ModalViewSlotProps,...args: any[]) => VNode
     onShow?: (content: any) => void
     onSubmit?: (content: any) => Promise<any>
   }
