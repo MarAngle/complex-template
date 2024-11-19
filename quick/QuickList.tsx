@@ -1,4 +1,4 @@
-import { defineComponent, h, markRaw, PropType, VNode } from "vue"
+import { defineComponent, h, PropType, VNode } from "vue"
 import { notice } from "complex-plugin"
 import { ComplexList } from "complex-data"
 import { resetOptionType, triggerMethodOption } from "complex-data/src/data/BaseData"

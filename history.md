@@ -12,7 +12,7 @@
 ### Doing
 - 简化SimpleTable，可自定义组件，通过此组件实现ListEdit
 
-### 4.6.35
+### 4.6.35/36
 - 升级依赖
 - 级联列表组件
 - QuickList优化render模块功能
