@@ -273,8 +273,10 @@ export default defineComponent({
             menu: ['close'],
             ...this.currentComponentsProps.infoModal
           },
-          render: () => {
-            return h(InfoArea, this.$getInfoOption())
+          content: {
+            render: () => {
+              return h(InfoArea, this.$getInfoOption())
+            }
           }
         })
       } else {
@@ -298,8 +300,10 @@ export default defineComponent({
             submit: this.onEditSubmit,
             ...this.currentComponentsProps.editModal
           },
-          render: () => {
-            return h(EditArea, this.$getEditOption())
+          content: {
+            render: () => {
+              return h(EditArea, this.$getEditOption())
+            }
           }
         })
       } else {

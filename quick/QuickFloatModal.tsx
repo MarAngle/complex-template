@@ -5,7 +5,7 @@ import FloatData, { FloatValue } from "./data/FloatData"
 
 export interface QuickFloatModalProps {
   modal: ModalViewProps
-  render: FloatValue['render']
+  content: FloatValue['content']
   float?: FloatData
 }
 
@@ -26,8 +26,8 @@ export default defineComponent({
       type: Object as PropType<QuickFloatModalProps['modal']>,
       required: true
     },
-    render: {
-      type: Function as PropType<QuickFloatModalProps['render']>,
+    content: {
+      type: Object as PropType<QuickFloatModalProps['content']>,
       required: true
     },
     float: {
@@ -69,7 +69,7 @@ export default defineComponent({
               ...this.modal
             }
           },
-          render: this.render
+          content: this.content
         })
       }
     }
@@ -81,7 +81,7 @@ export default defineComponent({
         ...this.modal
       }, {
         default: (modalSlotProps: ModalViewSlotProps) => {
-          return this.render(modalSlotProps)
+          return this.content.render(modalSlotProps)
         }
       })
     } else {

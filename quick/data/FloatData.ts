@@ -10,9 +10,11 @@ export interface FloatValueInitOption {
   modal: {
     props: ModalViewProps
   }
-  render: (...args: any[]) => VNode
-  onShow?: (content: any) => void
-  onSubmit?: (content: any) => Promise<any>
+  content: {
+    render: (...args: any[]) => VNode
+    onShow?: (content: any) => void
+    onSubmit?: (content: any) => Promise<any>
+  }
 }
 
 export class FloatValue extends Data {
@@ -23,9 +25,11 @@ export class FloatValue extends Data {
   modal: {
     props: ModalViewProps
   }
-  render: (modalSlotProps: ModalViewSlotProps) => VNode
-  onShow?: (content: any) => void
-  onSubmit?: (content: any) => Promise<any>
+  content: {
+    render: (...args: any[]) => VNode
+    onShow?: (content: any) => void
+    onSubmit?: (content: any) => Promise<any>
+  }
   show: boolean
   init: boolean
   constructor(initOption: FloatValueInitOption, show = true) {
@@ -33,9 +37,7 @@ export class FloatValue extends Data {
     this.id = id++
     this.name = initOption.name
     this.modal = initOption.modal
-    this.render = initOption.render
-    this.onShow = initOption.onShow
-    this.onSubmit = initOption.onSubmit
+    this.content = initOption.content
     this.show = show
     this.init = false
   }
