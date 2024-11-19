@@ -1,6 +1,6 @@
-import { Component, markRaw } from "vue"
+import { VNode } from "vue"
 import { Data } from "complex-data"
-import { ModalViewProps } from "../../src/ModalView"
+import { ModalViewProps, ModalViewSlotProps } from "../../src/ModalView"
 import QuickFloatValue from "../QuickFloatValue"
 
 let id = 1
@@ -10,11 +10,9 @@ export interface FloatValueInitOption {
   modal: {
     props: ModalViewProps
   }
-  content: {
-    data: Component
-    props?: Record<PropertyKey, unknown>
-    show?: any[]
-  }
+  render: (...args: any[]) => VNode
+  onShow?: (content: any) => void
+  onSubmit?: (content: any) => Promise<any>
 }
 
 export class FloatValue extends Data {
@@ -25,11 +23,9 @@ export class FloatValue extends Data {
   modal: {
     props: ModalViewProps
   }
-  content: {
-    data: Component
-    props?: Record<PropertyKey, unknown>
-    show?: any[]
-  }
+  render: (modalSlotProps: ModalViewSlotProps) => VNode
+  onShow?: (content: any) => void
+  onSubmit?: (content: any) => Promise<any>
   show: boolean
   init: boolean
   constructor(initOption: FloatValueInitOption, show = true) {
@@ -37,11 +33,9 @@ export class FloatValue extends Data {
     this.id = id++
     this.name = initOption.name
     this.modal = initOption.modal
-    this.content = {
-      data: markRaw(initOption.content.data),
-      props: initOption.content.props,
-      show: initOption.content.show
-    }
+    this.render = initOption.render
+    this.onShow = initOption.onShow
+    this.onSubmit = initOption.onSubmit
     this.show = show
     this.init = false
   }

@@ -1,11 +1,11 @@
-import { defineComponent, h, markRaw, PropType } from "vue"
+import { defineComponent, h, PropType } from "vue"
 import { ModalProps } from "ant-design-vue"
 import ModalView, { ModalViewProps, ModalViewSlotProps } from "../src/ModalView"
 import FloatData, { FloatValue } from "./data/FloatData"
 
 export interface QuickFloatModalProps {
   modal: ModalViewProps
-  content: FloatValue['content']
+  render: FloatValue['render']
   float?: FloatData
 }
 
@@ -26,8 +26,8 @@ export default defineComponent({
       type: Object as PropType<QuickFloatModalProps['modal']>,
       required: true
     },
-    content: {
-      type: Object as PropType<QuickFloatModalProps['content']>,
+    render: {
+      type: Function as PropType<QuickFloatModalProps['render']>,
       required: true
     },
     float: {
@@ -56,9 +56,8 @@ export default defineComponent({
       if (!this.float) {
         (this.$refs.modal as InstanceType<typeof ModalView>).show(title, option)
         this.$nextTick(() => {
-          console.log(this)
           if (typeof (this.$refs.content as any).$show === 'function') {
-            (this.$refs.content as any).$show(...(showArgs || this.content.show || []))
+            (this.$refs.content as any).$show(...(showArgs || []))
           }
         })
       } else {
@@ -70,10 +69,7 @@ export default defineComponent({
               ...this.modal
             }
           },
-          content: {
-            show: showArgs,
-            ...this.content
-          }
+          render: this.render
         })
       }
     }
@@ -84,11 +80,8 @@ export default defineComponent({
         ref: 'modal',
         ...this.modal
       }, {
-        default: () => {
-          return h(this.content.data, {
-            ref: 'content',
-            ...this.content.props
-          })
+        default: (modalSlotProps: ModalViewSlotProps) => {
+          return this.render(modalSlotProps)
         }
       })
     } else {

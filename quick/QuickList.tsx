@@ -259,6 +259,7 @@ export default defineComponent({
     },
     $getInfoOption() {
       return {
+        ref: 'content',
         dictionary: this.listData.$module.dictionary!,
         loading: this.operate === 'ing',
         ...this.currentComponentsProps.info
@@ -272,9 +273,8 @@ export default defineComponent({
             menu: ['close'],
             ...this.currentComponentsProps.infoModal
           },
-          content: {
-            data: markRaw(InfoArea),
-            props: this.$getInfoOption()
+          render: () => {
+            return h(InfoArea, this.$getInfoOption())
           }
         })
       } else {
@@ -283,6 +283,7 @@ export default defineComponent({
     },
     $getEditOption() {
       return {
+        ref: 'content',
         dictionary: this.listData.$module.dictionary!,
         loading: this.operate === 'ing',
         ...this.currentComponentsProps.edit
@@ -297,9 +298,8 @@ export default defineComponent({
             submit: this.onEditSubmit,
             ...this.currentComponentsProps.editModal
           },
-          content: {
-            data: markRaw(EditArea),
-            props: this.$getEditOption()
+          render: () => {
+            return h(EditArea, this.$getEditOption())
           }
         })
       } else {

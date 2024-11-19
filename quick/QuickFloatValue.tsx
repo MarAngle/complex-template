@@ -43,8 +43,8 @@ export default defineComponent({
       if (!this.floatValue.init) {
         this.floatValue.init = true
         this.$nextTick(() => {
-          if (typeof (this.$refs.content as any).$show === 'function') {
-            (this.$refs.content as any).$show(...(this.floatValue.content.show || []))
+          if (this.floatValue.onShow) {
+            this.floatValue.onShow(this.$refs.content)
           }
         })
       }
@@ -52,9 +52,9 @@ export default defineComponent({
     close(from = 'float') {
       (this.$refs.modal as InstanceType<typeof ModalView>).close(from)
     },
-    $submit(...args: any[]): Promise<any> {
-      if ((this.$refs.content as any).$submit) {
-        return (this.$refs.content as any).$submit(...args)
+    $submit(): Promise<any> {
+      if (this.floatValue.onSubmit) {
+        return this.floatValue.onSubmit(this.$refs.content)
       } else {
         return Promise.resolve({})
       }
@@ -73,13 +73,7 @@ export default defineComponent({
         ...this.floatValue.modal.props
       }, {
         default: (modalSlotProps: ModalViewSlotProps) => {
-          return h(this.floatValue.content.data, {
-            class: 'complex-quick-float-item-content',
-            ref: 'content',
-            modalSlotProps: modalSlotProps,
-            floatValue: this.floatValue,
-            ...this.floatValue.content.props
-          })
+          return this.floatValue.render(modalSlotProps)
         }
       })
     },
