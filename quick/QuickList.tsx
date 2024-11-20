@@ -303,8 +303,11 @@ export default defineComponent({
             render: (ref) => {
               return h(EditArea, this.$getEditOption(ref))
             },
-            onShow(content: InstanceType<typeof EditArea>, args?: any[]) {
-              content.$show(...(args || []))
+            show: {
+              args: [],
+              trigger(content: InstanceType<typeof EditArea>, args: any[]) {
+                content.$show(...args)
+              }
             }
           }
         })

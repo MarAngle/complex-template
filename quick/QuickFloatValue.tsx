@@ -48,8 +48,8 @@ export default defineComponent({
       if (!this.floatValue.init) {
         this.floatValue.init = true
         this.$nextTick(() => {
-          if (this.floatValue.content.onShow) {
-            this.floatValue.content.onShow(this.$refs.content, this.floatValue.content.show)
+          if (this.floatValue.content.show) {
+            this.floatValue.content.show.trigger(this.$refs.content, this.floatValue.content.show.args)
           }
         })
       }
@@ -68,7 +68,7 @@ export default defineComponent({
         onClose: (from: string) => {
           this.$emit('close', this.floatValue, from)
         },
-        ...this.floatValue.modal.props
+        ...this.floatValue.modal
       }, {
         default: (modalSlotProps: ModalViewSlotProps) => {
           return this.floatValue.content.render('content', modalSlotProps)

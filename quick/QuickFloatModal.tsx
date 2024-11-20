@@ -1,11 +1,11 @@
 import { defineComponent, h, PropType } from "vue"
 import { ModalProps } from "ant-design-vue"
-import ModalView, { ModalViewProps, ModalViewSlotProps } from "../src/ModalView"
+import ModalView, { ModalViewSlotProps } from "../src/ModalView"
 import FloatData, { FloatValue } from "./data/FloatData"
 import { contentRef } from "./QuickFloatValue"
 
 export interface QuickFloatModalProps {
-  modal: ModalViewProps
+  modal: FloatValue['modal']
   content: FloatValue['content']
   float?: FloatData
 }
@@ -45,27 +45,27 @@ export default defineComponent({
     getContent() {
       return !this.float ? this.$refs[contentRef] : this.floatValue!.ref!.getContent()
     },
-    show(showArgs?: any[], title?: string, option?: ModalProps) {
-      console.log(showArgs, this.float)
+    show(args: any[], title?: string, option?: ModalProps) {
       if (!this.float) {
         (this.$refs.modal as InstanceType<typeof ModalView>).show(title, option)
         this.$nextTick(() => {
-          if (this.content.onShow) {
-            this.content.onShow(this.getContent(), showArgs)
+          if (this.content.show) {
+            this.content.show.trigger(this.getContent(), args)
           }
         })
       } else {
         this.floatValue = this.float.push({
           name: title || this.modal.title || '浮窗',
           modal: {
-            props: {
-              title: title,
-              ...this.modal
-            }
+            title: title,
+            ...this.modal
           },
           content: {
-            ...this.content,
-            show: showArgs
+            render: this.content.render,
+            show: this.content.show ? {
+              trigger: this.content.show.trigger,
+              args: args
+            } : undefined
           }
         })
       }

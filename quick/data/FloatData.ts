@@ -7,13 +7,13 @@ let id = 1
 
 export interface FloatValueInitOption {
   name: string
-  modal: {
-    props: ModalViewProps
-  }
+  modal: ModalViewProps
   content: {
     render: (ref: string, modalSlotProps: ModalViewSlotProps,...args: any[]) => VNode
-    show?: any[]
-    onShow?: (content: any, args?: any[]) => void
+    show?: {
+      args: any[]
+      trigger: (content: any, args: any[]) => void
+    }
   }
 }
 
@@ -36,7 +36,6 @@ export class FloatValue extends Data {
     this.init = false
   }
   close() {
-    //
     this.show = false
   }
 }
@@ -55,8 +54,8 @@ class FloatData extends Data {
   }
   close(floatValue: FloatValue, _from: string) {
     const index = this.list.indexOf(floatValue)
-    floatValue.close()
     this.list.splice(index, 1)
+    floatValue.close()
     return index
   }
   replace(floatValue: FloatValue, floatValueInitOption?: Partial<FloatValueInitOption>, show?: boolean) {
