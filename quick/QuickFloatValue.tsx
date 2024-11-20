@@ -77,7 +77,6 @@ export default defineComponent({
       })
     },
     renderName() {
-      console.log(this)
       return h('div', {
         class: 'complex-quick-float-item-label',
         onClick: () => {
