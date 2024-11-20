@@ -1,12 +1,16 @@
 import { VNode } from "vue"
 import { Data } from "complex-data"
+import { MenuValue } from "complex-data/type"
 import { ModalViewProps, ModalViewSlotProps } from "../../src/ModalView"
 import QuickFloatValue from "../QuickFloatValue"
 
 let id = 1
 
 export interface FloatValueInitOption {
-  name: string
+  label: {
+    icon?: MenuValue['icon']
+    value: string | (() => VNode)
+  }
   modal: ModalViewProps
   content: {
     render: (ref: string, modalSlotProps: ModalViewSlotProps,...args: any[]) => VNode
@@ -20,8 +24,8 @@ export interface FloatValueInitOption {
 export class FloatValue extends Data {
   static $formatConfig = { name: 'FloatValue', level: 80, recommend: true } // 不通过通用格式化函数格式化实例判断值
   id: number
-  name: string
-  ref?: InstanceType<typeof QuickFloatValue>
+  label: FloatValueInitOption['label']
+  target?: InstanceType<typeof QuickFloatValue>
   modal: FloatValueInitOption['modal']
   content: FloatValueInitOption['content']
   show: boolean
@@ -29,7 +33,7 @@ export class FloatValue extends Data {
   constructor(initOption: FloatValueInitOption, show = true) {
     super()
     this.id = id++
-    this.name = initOption.name
+    this.label = initOption.label
     this.modal = initOption.modal
     this.content = initOption.content
     this.show = show

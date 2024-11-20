@@ -102,7 +102,10 @@ const config = {
       const styleName = 'complex-color-' + camelToLine(name, '-')
       innerHTML += `\n.${styleName}{ color: ${config.style.color[name as colorKeys]}; }`
     }
+    // AutoIndex样式覆盖
     innerHTML += `\n.complex-auto-index{ color: ${config.style.color.primary}; }`
+    // HighText样式覆盖
+    innerHTML += `\n.complex-high-text .complex-high-text-is-high{ color: ${config.style.color.primary}; }`
     // 设置样式规则
     style.innerHTML = innerHTML
     // 将样式元素节点添加到页面头部

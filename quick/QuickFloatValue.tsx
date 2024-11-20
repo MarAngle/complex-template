@@ -1,6 +1,7 @@
 import { defineComponent, h, PropType, markRaw } from "vue"
 import { FloatValue } from "./data/FloatData"
 import ModalView, { ModalViewSlotProps } from "./../src/ModalView"
+import icon from "../icon"
 
 export const contentRef = 'content'
 
@@ -34,10 +35,10 @@ export default defineComponent({
     }
   },
   mounted() {
-    this.floatValue.ref = markRaw(this) as any
+    this.floatValue.target = markRaw(this) as any
   },
   beforeUnmount() {
-    this.floatValue.ref = undefined
+    this.floatValue.target = undefined
   },
   methods: {
     getContent() {
@@ -49,7 +50,7 @@ export default defineComponent({
         this.floatValue.init = true
         this.$nextTick(() => {
           if (this.floatValue.content.show) {
-            this.floatValue.content.show.trigger(this.$refs.content, this.floatValue.content.show.args)
+            this.floatValue.content.show.trigger(this.getContent(), this.floatValue.content.show.args)
           }
         })
       }
@@ -76,15 +77,19 @@ export default defineComponent({
       })
     },
     renderName() {
+      console.log(this)
       return h('div', {
-        class: 'complex-quick-float-item-name',
+        class: 'complex-quick-float-item-label',
         onClick: () => {
           if (!this.floatValue.show) {
             this.floatValue.show = true
           }
         }
       }, {
-        default: () => this.floatValue.name
+        default: () => [
+          this.floatValue.label.icon ? icon.parse(this.floatValue.label.icon) : null,
+          typeof this.floatValue.label.value !== 'function' ? this.floatValue.label.value : this.floatValue.label.value()
+        ]
       })
     },
   },

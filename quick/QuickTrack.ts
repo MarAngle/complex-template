@@ -16,7 +16,6 @@ export interface QuickTrackInitOption {
 }
 
 // 需要检测在前进后退时的connect是否正确
-
 abstract class QuickTrack<
   VALUE extends any = Record<PropertyKey, any>,
   MAP extends Record<PropertyKey, any> = Record<PropertyKey, any>,

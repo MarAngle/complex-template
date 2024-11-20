@@ -43,7 +43,7 @@ export default defineComponent({
   },
   methods: {
     getContent() {
-      return !this.float ? this.$refs[contentRef] : this.floatValue!.ref!.getContent()
+      return !this.float ? this.$refs[contentRef] : this.floatValue?.target?.getContent()
     },
     show(args: any[], title?: string, option?: ModalProps) {
       if (!this.float) {
@@ -55,7 +55,9 @@ export default defineComponent({
         })
       } else {
         this.floatValue = this.float.push({
-          name: title || this.modal.title || '浮窗',
+          label: {
+            value: title || this.modal.title || '浮窗'
+          },
           modal: {
             title: title,
             ...this.modal

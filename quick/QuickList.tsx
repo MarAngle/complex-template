@@ -268,6 +268,7 @@ export default defineComponent({
       if (this.currentComponents.indexOf('info') > -1) {
         return h(QuickFloatModal, {
           ref: 'info-modal',
+          float: this.currentComponentsProps.infoModal?.float,
           modal: {
             menu: ['close'],
             ...this.currentComponentsProps.infoModal
@@ -275,6 +276,12 @@ export default defineComponent({
           content: {
             render: (ref) => {
               return h(InfoArea, this.$getInfoOption(ref))
+            },
+            show: {
+              args: [],
+              trigger(content: InstanceType<typeof InfoArea>, args: any[]) {
+                content.$show(...args)
+              }
             }
           }
         })
@@ -294,6 +301,7 @@ export default defineComponent({
       if (this.currentComponents.indexOf('edit') > -1) {
         return h(QuickFloatModal, {
           ref: 'edit-modal',
+          float: this.currentComponentsProps.editModal?.float,
           modal: {
             menu: ['cancel', 'submit'],
             submit: this.onEditSubmit,

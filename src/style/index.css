@@ -256,7 +256,7 @@
   display: none;
 }
 
-.complex-quick-float .complex-quick-float-item .complex-quick-float-item-name{
+.complex-quick-float .complex-quick-float-item .complex-quick-float-item-label{
   box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.1);
   padding: 8px 8px;
   margin-right: 8px;
