@@ -70,10 +70,10 @@ export default defineComponent({
         targetAttrs.props.data = option
         return h(ButtonView, config.component.parseAttrs(targetAttrs) as { data: ButtonEditOption })
       } else if (this.payload.target instanceof ButtonGroupEdit) {
-        const $data = this.payload.target
+        const { target } = this.payload
         return h('div', config.component.parseAttrs(targetAttrs), [
-          $data.$list.map((buttonOption, index) => {
-            const interval = (index !== $data.$list.length - 1) ? $data.interval : undefined
+          target.$list.map((buttonOption, index) => {
+            const interval = (index !== target.$list.length - 1) ? target.interval : undefined
             const option = {
               ...buttonOption
             }
@@ -97,26 +97,28 @@ export default defineComponent({
           })
         ])
       } else if (this.payload.target instanceof ContentEdit) {
-        const $data = this.payload.target
-        targetAttrs.pushStyle($data.$option.style)
-        return h('div', config.component.parseAttrs(targetAttrs), [$data.$option.data])
+        const { target } = this.payload
+        targetAttrs.pushStyle(target.$option.style)
+        return h('div', config.component.parseAttrs(targetAttrs), [target.$option.data])
       } else if (this.payload.target instanceof FormEdit) {
+        const { target } = this.payload
         // 额外则直接解析数据
         targetAttrs.merge(new AttrsValue({
           props: {
-            list: this.payload.target.$runtime.observeList as ObserveList,
-            data: this.payload.target.$runtime.form!.getData(),
-            type: this.payload.target.$runtime.type!,
-            gridParse: this.payload.target.$option.gridParse === false ? undefined : (this.payload.target.$option.gridParse || this.payload.target.$runtime.dictionary!.$layout.grid.getValue(this.payload.type)),
-            menu: this.payload.target.$option.menu,
+            list: target.$runtime.observeList as ObserveList,
+            data: target.$runtime.form!.getData(),
+            type: target.$runtime.type!,
+            gridParse: target.$option.gridParse === false ? undefined : (target.$option.gridParse || target.$runtime.dictionary!.$layout.grid.getValue(this.payload.type)),
+            menu: target.$option.menu,
             disabled: this.payload.disabled
           } as InfoViewProps
         }))
         return h(InfoView, config.component.parseAttrs(targetAttrs) as unknown as InfoViewProps)
       } else {
         // 额外则直接解析数据
-        let text = this.payload.targetData[this.payload.prop]
-        const parent = this.payload.target.$getParent() as DictionaryValue
+        const { target, targetData, prop } = this.payload
+        let text = targetData[prop]
+        const parent = target.$getParent() as DictionaryValue
         if (parent && parent.parse) {
           text = parent.parse(text, this.payload)
         }

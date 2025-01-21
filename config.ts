@@ -115,10 +115,10 @@ const config = {
     return gridValue
   },
   showValue(value: unknown): string | number | undefined {
-    if (getType(value) !== 'object') {
+    if (['object', 'array'].indexOf(getType(value)) === -1) {
       return value as string | number | undefined
     } else {
-      return JSON.stringify(value)
+      return (value as Record<PropertyKey, any> | any[]).toString()
     }
   },
   style: {
