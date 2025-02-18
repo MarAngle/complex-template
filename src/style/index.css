@@ -1,3 +1,4 @@
+/* Import Style */
 .complex-import .complex-import-file{
   display: none !important;
 }
@@ -36,6 +37,8 @@
   flex: none;
   margin-right: 12px;
 }
+
+/* Table Style */
 
 .complex-collapse-area-collapsed{
   overflow: hidden;
@@ -122,6 +125,7 @@
   word-break: break-all;
 }
 
+/* Edit Style */
 .complex-edit-inline .ant-form-item.ant-form-item-with-help{
   margin-bottom: 0;
 }
@@ -172,6 +176,7 @@
   display: none;
 }
 
+/* Search Style */
 .complex-search-area{
   display: flex;
   flex-direction: row;
@@ -214,6 +219,7 @@
   padding: 0px 11px;
 }
 
+/* Image Style */
 .complex-image-viewer .complex-image-viewer-empty{
   display: flex;
   flex-direction: column;
@@ -229,6 +235,22 @@
   cursor: pointer;
 }
 
+/* Flex Style */
+.complex-flex-box{
+  flex: none;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+.complex-flex-box.complex-flex-box-row{
+  flex-direction: row;
+}
+.complex-flex-box.complex-flex-box-column{
+  flex-direction: column;
+}
+
+/* QuickList Style */
 .complex-quick-list{
   padding: 0 16px;
   overflow: auto;
@@ -244,6 +266,7 @@
   margin-right: 0px;
 }
 
+/* QuickFloat Style */
 .complex-quick-float{
   position: fixed;
   z-index: 1000;
@@ -268,6 +291,7 @@
   margin-right: 0px;
 }
 
+/* Ant Style */
 .ant-btn > .complex-icon + span, .ant-btn > span + .complex-icon {
   margin-inline-start: 8px;
 }

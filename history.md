@@ -12,6 +12,9 @@
 ### Doing
 - 简化SimpleTable，可自定义组件，通过此组件实现ListEdit
 
+### 4.8.4
+- 添加FlexBox组件，实现基础大屏布局
+
 ### 4.8.3
 - 修正config.showValue未正确解析数组的BUG
 

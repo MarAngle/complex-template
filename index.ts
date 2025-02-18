@@ -10,6 +10,7 @@ import EditView from "./src/EditView"
 import EditArea from "./src/EditArea"
 import SearchArea from "./src/SearchArea"
 import ImageViewer from "./src/ImageViewer"
+import FlexBox from "./src/FlexBox"
 import QuickList from "./quick/QuickList"
 import QuickCascade from "./quick/QuickCascade"
 import QuickEdit from "./quick/QuickEdit"
@@ -28,6 +29,7 @@ export const ComplexEditView = EditView
 export const ComplexEditArea = EditArea
 export const ComplexSearchArea = SearchArea
 export const ComplexImageViewer = ImageViewer
+export const ComplexFlexBox = FlexBox
 export const ComplexQuickList = QuickList
 export const ComplexQuickCascade = QuickCascade
 export const ComplexQuickEdit = QuickEdit
